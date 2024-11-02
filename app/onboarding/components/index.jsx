@@ -78,13 +78,13 @@ export function StepFour() {
                 </section>
 
                 <section className="mt-10 flex flex-col gap-10 justify-center items-center">
-                    <Link href="#">
+                    <Link href="/signIn/patient">
                         <Button text="Sign In" />
                     </Link>
-                    <Link href="#">
+                    <Link href="/register/patient">
                         <Button text="Create Account" variant="secondary" />
                     </Link>
-                <Link href="/" className=".text-center text-pink font-medium mt-2">
+                <Link href="/signIn/midwife" className=".text-center text-pink font-medium mt-2">
                     I am a midwife
                 </Link>
                 </section>
