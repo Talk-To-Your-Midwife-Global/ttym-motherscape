@@ -1,8 +1,22 @@
-import Image from "next/image";
-export default function Home() {
+"use client"
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Loader } from "./components";
+
+
+export default function Page() {
+  const router = useRouter()
+
+  useEffect(()=> {
+    const timer = setTimeout(() => {
+      router.push('/onboarding/1');
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [])
+  
   return (
-    <section className="flex flex-col h-screen w-screen items-center justify-center">
-     
-    </section>
+    <Loader />
   );
 }
