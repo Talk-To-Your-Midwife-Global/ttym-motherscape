@@ -1,10 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
+  --background: #F8F8F8;
   --foreground: #16898e;
+  --secondary: #015364;
+  --main-text: #17252A;
+  --sub-text: #455A64;
+  --black: #030303;
+  --pink: #F26A8D;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -17,5 +23,5 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Montserrat", serif;
 }
