@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { SignInForm } from "../../components";
-import pregnantLogo from "../../../../public/images/pregnant-logo.svg"
+import pregnantLogo from "../../../../public/images/ttym-rounded-logo.svg"
 
 export default function Page() {
     return (
@@ -17,7 +17,7 @@ export default function Page() {
                 <section className="flex flex-col gap-4 items-center mb-10">
                     <Image src={pregnantLogo} alt="pregnant woman" />
                     <h2 className="text-mainText text-xl font-semibold">Welcome back</h2>
-                    <p className="text-subText">Sign in to be able to access your page</p>
+                    <p className="text-subText font-medium">Sign in to be able to access your page</p>
                 </section>
             </header>
             <SignInForm />
