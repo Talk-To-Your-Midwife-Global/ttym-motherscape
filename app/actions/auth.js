@@ -12,8 +12,9 @@ export async function signup(state, formData) {
     
     // validate user fields
     const validatedFields = SignUpFormSchema.safeParse({
+        name: formData.get('name'),
         email: formData.get('email'),
-        address: formData.get('address'),
+        phone: formData.get('phone'),
         password: formData.get('password')
     })
 
@@ -37,13 +38,14 @@ export async function signup(state, formData) {
           email: formData.get('email'),
           password: formData.get('password'),
           user_metadata: {
-            address: formData.get('address')
+            phone: formData.get('phone')
           },
           connection: 'Username-Password-Authentication',
         }),
       });
 
       const signUpResult = await signupResponse.json();
+      console.log(signUpResult);
 
       if (signUpResult) {
         return {
@@ -54,6 +56,9 @@ export async function signup(state, formData) {
     }catch(error) {
         // setup logging with slack
         console.log(error)  
+        return {
+            error: error.error_description
+        }
     }
 }
 
@@ -63,7 +68,7 @@ export async function signin(state, formData) {
         password: formData.get('password')
     })
 
-    // return early if ther is an error
+    // return early if there is an error
     if (!validatedFields.success) {
         return {
             state: {
@@ -89,6 +94,7 @@ export async function signin(state, formData) {
         });
 
         const loginResult = await loginResponse.json();
+        console.log(loginResult)
         if (loginResult.access_token) {
         // Save token in local storage or cookies
         let cookieStore = await cookies()
@@ -100,10 +106,16 @@ export async function signin(state, formData) {
         } else {
             return {
                 success: false
+                
             }
         }
     } catch (error) {
         console.log(error)
+        return {
+            state: {
+                error: error.error_description
+            }
+        }
     }
         
 }

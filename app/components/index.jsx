@@ -10,15 +10,15 @@ export function Loader() {
   );
 }
 
-export function Button({text="Button", variant="primary", type="link", href="/"}) {
+export function Button({text="Button", variant="primary", type="link", href="/", disabled=false}) {
   return (
-    <button className={`${variant == "primary" ? "bg-secondary text-white" : "bg-background text-secondary border border-secondary" }  w-[273px] h-[48px] rounded-[40px]`}>
-        {text}
+    <button disabled={disabled} className={`${variant == "primary" && disabled  ? "bg-[#A8CCD0] text-white"  : "bg-primaryColor text-white border border-secondary" } w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2`}>
+          {text}
     </button>
   )
 }
 
-export function IconButton({text="Button", icon="", variant="primary", type="link", href="/", disabled=true}) {
+export function IconButton({text="Button", icon="", variant="primary", type="link", href="/", disabled=false}) {
   return (
     <Link href={href}>
       <button disabled={disabled} className={`${variant == "primary" && disabled  ? "bg-[#A8CCD0] text-white"  : "bg-primaryColor text-white border border-secondary" } w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2`}>

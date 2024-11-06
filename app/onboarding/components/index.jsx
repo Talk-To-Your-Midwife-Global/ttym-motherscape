@@ -1,11 +1,10 @@
-// "use server"
 import Link from "next/link"
 import Image from "next/image"
-// import { cookies } from "next/headers"
+import { removeSpaces } from "@/app/lib/functions"
 import rafiki from "../../../public/images/rafiki.svg"
 import cuate from "../../../public/images/cuate.svg"
 import pana from "../../../public/images/pana.svg"
-import { Button, IconButton } from "@/app/components"
+import { IconButton } from "@/app/components"
 
 export function OnboardNav({url}) {
     return (
@@ -13,7 +12,7 @@ export function OnboardNav({url}) {
             <Link href={url}  className="bg-[#16898E1A] w-12 h-12 rounded-full flex justify-center items-center">
                 <span className="iconify material-symbols-light--chevron-right-rounded text-2xl"></span>
             </Link>
-            <Link href={url} className="text-primaryColor font-medium">Skip</Link>
+            <Link href='/onboarding/3' className="text-primaryColor font-medium">Skip</Link>
         </nav>
     )
 }
@@ -21,7 +20,7 @@ export function OnboardNav({url}) {
 export function OnboardHeader({heading, description}) {
     return (
         <header className="flex flex-col justify-center items-center my-5 px-[30px]">
-            <h2 className="text-4xl font-semibold text-tertiaryColor leading-normal">{heading}</h2>
+            <h2 className="text-4xl font-semibold text-tertiaryColor .leading-normal">{heading}</h2>
             <p className="text-tertiaryColor font-medium">{description}</p>
         </header>
     )
@@ -30,7 +29,7 @@ export function OnboardHeader({heading, description}) {
 export function PersonaCard({children, heading, description, onClick, shouldEnable,}) {
     return (
         <section tabIndex={0} onClick={() => {
-            onClick(heading.toLowerCase())
+            onClick(removeSpaces(heading.toLowerCase()))
             shouldEnable()
             }} className="flex gap-4 border-2 shadow-lg h-[110px] py-5 rounded-3xl mb-10 focus:border-primaryColor">
             <section className="pl-3">
@@ -74,20 +73,6 @@ export function StepTwo() {
     )
 }
 
-export function StepFour() {
-    return (
-        <section className="h-screen">
-            <OnboardNav url="/onboarding/4" />
-            <section className="flex flex-col justify-between">
-                <OnboardHeader heading="Want to talk to a midwife or a doctor" description="Get in touch with our midwives and doctors to help better your monthly flow" />
-                <section className="flex-1 fixed bottom-10">
-                    <Image src={pana} className="" alt="three women talking" />
-                </section>
-            </section>
-        </section>
-    )
-}
-
 export function StepThree() {
     return (
         <section className="h-screen">
@@ -99,11 +84,9 @@ export function StepThree() {
                 </section>
 
                 <section className="mt-10 flex flex-col gap-10 justify-center items-center">
-                    <Link href="/auth/signIn/patient">
-                        <IconButton icon="iconify lucide--arrow-right" text="Sign In" disabled={false}/>
-                    </Link>
-                    <Link href="/auth/register/patient">
-                        <Button text="Create Account" variant="secondary" />
+                    <IconButton href="/auth/register/" icon="iconify lucide--arrow-right" text="Create Account" disabled={false}/>
+                    <Link className="text-primaryColor font-bold" href="/auth/signIn/">
+                        Log In
                     </Link>
                 </section>
             </section>
