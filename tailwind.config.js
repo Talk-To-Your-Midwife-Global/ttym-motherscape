@@ -16,6 +16,9 @@ module.exports = {
         subText: "var(--sub-text)",
         black: "var(--black)",
         pink: "var(--pink)",
+        primaryText: "var(--primary-text-color)",
+        primaryColor: "var(--primary-color)",
+        tertiaryColor: "var(--tertiary-color)"
       },
     },
   },

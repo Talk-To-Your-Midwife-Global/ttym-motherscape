@@ -5,6 +5,9 @@
 
 :root {
   --background: #F8F8F8;
+  --primary-text-color: #1E1E1E;
+  --tertiary-color: #015364;
+  --primary-color: #0F969C;
   --foreground: #16898e;
   --secondary: #015364;
   --main-text: #17252A;
@@ -26,5 +29,5 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: "Montserrat", serif;
+  /* font-family: "Montserrat", serif; */
 }
