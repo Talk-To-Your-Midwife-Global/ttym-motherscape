@@ -1,10 +1,11 @@
 import Image from "next/image";
-
+import Link from "next/link";
 
 export function Loader() {
   return (
-    <div className="bg-foreground text-background flex h-screen w-screen items-center justify-center p-[20px]">    
-      <Image src="/icons/logo-white.svg" alt="logo" width={500} height={200} />
+    <div className="bg-foreground text-background flex flex-col h-screen w-screen items-center justify-center p-[20px] relative">    
+      <Image src="/icons/logo-colored.svg" alt="logo" width={200} height={200} />
+      <Image className="absolute bottom-10" src="/icons/wordmark-colored.svg" alt="logo" width={200} height={200} />
     </div>
   );
 }
@@ -17,10 +18,12 @@ export function Button({text="Button", variant="primary", type="link", href="/"}
   )
 }
 
-export function IconButton({text="Button", icon="", variant="primary", type="link", href="/"}) {
+export function IconButton({text="Button", icon="", variant="primary", type="link", href="/", disabled=true}) {
   return (
-    <button className={`${variant == "primary" ? "bg-secondary text-white" : "bg-background text-secondary border border-secondary" } w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2`}>
-        {text} <span className={icon}></span>
-    </button>
+    <Link href={href}>
+      <button disabled={disabled} className={`${variant == "primary" && disabled  ? "bg-[#A8CCD0] text-white"  : "bg-primaryColor text-white border border-secondary" } w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2`}>
+          {text} <span className={icon}></span>
+      </button>
+    </Link>
   )
 }
