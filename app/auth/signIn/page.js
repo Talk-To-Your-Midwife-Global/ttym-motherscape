@@ -34,7 +34,7 @@ export default function Page() {
                     <p className="text-subText font-medium">Sign in to be able to access your page</p>
                 </section>
                 <div className=" flex justify-center">
-                    {!state?.success ? <p className="text-red-600 flex items-center gap-2"> <span className="iconify lucide--info"></span>Incorrect email or passowrd</p>: ''}
+                    {!state?.success ? <p className="text-red-600 flex items-center gap-2"> <span className="iconify lucide--info"></span>Incorrect email or password</p>: ''}
                 </div>
             </header>
             <SignInForm action={action} state={state} />
