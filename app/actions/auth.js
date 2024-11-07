@@ -85,7 +85,7 @@ export async function signin(state, formData) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             client_id: process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID,
-            client_secret: process.env.AUTH0_CLIENT_SECRET,  // Set this in your server environment
+            client_secret: process.env.NEXT_PUBLIC_AUTH0_CLIENT_SECRET,  // Set this in your server environment
             username: formData.get('email'),
             password: formData.get('password'),
             realm: 'Username-Password-Authentication',
