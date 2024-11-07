@@ -8,6 +8,15 @@ import facebook from "../../../public/images/facebook.svg"
 import google from "../../../public/images/google.svg"
 import apple from "../../../public/images/apple.svg"
 
+export function HelpCenterLinks() {
+    return (
+        <section className="text-primaryText text-center text-sm font-medium">
+            <p className="mb-5">Already have an account? <Link className="text-primaryColor" href="auth/signIn">Sign In</Link> </p>
+            <p>Need help? Visit our <Link className="text-primaryColor" href="/help">help center</Link></p> {/** TODO:Create help center page */}
+        </section>
+    )
+}
+
 export function SignInForm({state, action}) {
     const [hidePassword, setHidePassword] = useState(true)
 
@@ -37,16 +46,12 @@ export function SignInForm({state, action}) {
                 </div>
                 <div className="bg-white border-2 w-full h-[42px] flex gap-2 items-center rounded-full pl-[15px] pr-[5px]">
                     <span className="iconify lucide--lock-keyhole font-medium"></span>
-                    <input type={hidePassword ? "password" : "text"} name="password" id="password" placeholder="Your password"  className="flex-1 outline-none bg-transparent text-mainText"/>
+                    <input type={hidePassword ? "password" : "text"} name="password" id="password" placeholder="••••••••••••••••"  className="flex-1 outline-none bg-transparent text-mainText"/>
                 </div>
+                {state?.errors?.email && <p className="text-red-500 text-sm">{state.errors.email}</p>}
                 <div className="flex justify-end gap-4 space-between">
-                    {/* <p className="text-red-600 text-sm text-right">
-                        <Link href="/auth/register/midwife">
-                            Don&apos;t have an account?
-                        </Link>
-                    </p> */}
                     <p className="text-red-600 text-sm text-right">
-                        <Link href="some">
+                        <Link href="auth/forgotPassword" className="font-medium"> {/** TODO: link to forgot password */}
                             Forgot Password?
                         </Link>
                     </p>
@@ -65,6 +70,7 @@ export function SignInForm({state, action}) {
                 <Image src={google} alt="google logo" />
                 <Image src={apple} alt="apple logo" />
             </section>
+            <HelpCenterLinks />
         </form>
     )
 }
@@ -74,6 +80,8 @@ export function SignUpForm({state, action}) {
     const [pass, setPass] = useState('')
     const [passCorrect, setPassCorrect] = useState(false)
     const [passErr, setPassErr] = useState('');
+    const [agreement, setAgreement] = useState(false)
+    const [enableButton, setEnableButton] = useState(false)
 
     const handlePasswordView = (event) => {
         event.preventDefault();
@@ -90,11 +98,30 @@ export function SignUpForm({state, action}) {
         if (value == pass) {
             setPassCorrect(true)
             setPassErr('')
-        }else {
+
+            if (enableButton) {
+                setEnableButton(true)
+            }
+        } else {
             setPassCorrect(false)
             setPassErr("Passwords do not match")
+            setEnableButton(false)
         }
     }
+
+    const handleAgreementChange = (event) => {
+        const {name, value} = event.target;
+
+        console.log(name, value)
+        if (value) {
+            setAgreement(true)
+            setEnableButton(true)
+        }else {
+            setAgreement(false)
+            setEnableButton(false)
+        }
+    }
+
     return (
         <form action={passCorrect ? action: "#"} className="px-[30px] flex flex-col gap-5">
             <div>
@@ -166,11 +193,18 @@ export function SignUpForm({state, action}) {
                 {passErr && <p className="text-red-500 text-sm"> {passErr} </p>}
             </div>
 
-            <section>
-                <p className="text-sm text-subText font-medium">By signing up, you will be agreeing to the terms and conditions  and the privacy of the application</p>
+            <section className="flex gap-4 ">
+                <div class="grid items-center justify-center">
+                    <input type="checkbox" name="agreement" checked={agreement} onChange={(e)=> handleAgreementChange(e)} id="checkbox_2" className="peer row-start-1 col-start-1 appearance-none w-4 h-4 border ring-transparent border-slate-300 rounded dark:border-slate-600 checked:bg-primaryColor checked:border-primaryColor dark:checked:border-primaryColor forced-colors:appearance-auto" />
+                    <svg viewBox="0 0 14 14" fill="none" className="invisible peer-checked:visible row-start-1 col-start-1 stroke-white dark:text-violet-300 forced-colors:hidden">
+                        <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </div>
+             
+                <p className="text-[10px] text-subText font-medium">By checking the box to create a TTYM Global account, you agree to the Terms and Conditions and Privacy Policy</p>
             </section>
 
-            <div className="flex flex-col justify-center items-center my-10">
+            <div className="flex flex-col justify-center items-center">
                 <Button disabled={!passCorrect} text="Create Account" />
             </div>
             <div className="relative flex flex-col items-center justify-center">
@@ -182,6 +216,7 @@ export function SignUpForm({state, action}) {
                 <Image src={google} alt="google logo" />
                 <Image src={apple} alt="apple logo" />
             </section>
+           <HelpCenterLinks />
         </form>
     )
 }

@@ -16,9 +16,10 @@ export default function Page() {
         router.push('/questions')
     }
     if (state?.error) {
-        console.log(error)
+        console.log(state.error)
         setMainErr(state.error)
     }
+    // console.log(state)
     return (
         <section>
             <header>
@@ -34,7 +35,7 @@ export default function Page() {
                     <p className="text-subText font-medium">Sign in to be able to access your page</p>
                 </section>
                 <div className=" flex justify-center">
-                    {!state?.success ? <p className="text-red-600 flex items-center gap-2"> <span className="iconify lucide--info"></span>Incorrect email or password</p>: ''}
+                    {state?.success == false ? <p className="text-red-600 flex items-center gap-2"> <span className="iconify lucide--info"></span>Incorrect email or password</p>: ''}
                 </div>
             </header>
             <SignInForm action={action} state={state} />
