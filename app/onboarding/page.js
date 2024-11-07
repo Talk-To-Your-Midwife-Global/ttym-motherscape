@@ -1,8 +1,8 @@
 "use client"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
 import { storeUserType } from "../actions"
 import { PersonaCard } from "./components"
+import midwife from "../../public/images/midwife.svg"
 import pregnantImage from "../../public/images/pregnant-woman.svg"
 import pregnantTimer from "../../public/images/pregnant-timer.svg"
 import redCalendar from "../../public/images/red-calendar.svg"
@@ -25,7 +25,7 @@ export default function Page() {
             </header>
             <section className="px-5">
                 <PersonaCard onClick={storeUserType} shouldEnable={handleButtonEnabler} heading="Midwife" description="Monitor your pregnancy milestones and access helpful tips.">
-                    <Image src={pregnantImage} width={100} height={200} alt="pregnant woman" />
+                    <Image src={midwife} width={100} height={200} alt="pregnant woman" />
                 </PersonaCard>
 
                 <PersonaCard onClick={storeUserType} shouldEnable={handleButtonEnabler} heading="Pregnancy Tracker" description="Monitor your pregnancy milestones and access helpful tips.">

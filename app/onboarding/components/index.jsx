@@ -6,13 +6,14 @@ import cuate from "../../../public/images/cuate.svg"
 import pana from "../../../public/images/pana.svg"
 import { IconButton } from "@/app/components"
 
-export function OnboardNav({url}) {
+export function OnboardNav({url, icon="lucide--chevron-right", last=false}) {
     return (
         <nav className="px-[20px] flex justify-between items-center my-5">
             <Link href={url}  className="bg-[#16898E1A] w-12 h-12 rounded-full flex justify-center items-center">
-                <span className="iconify material-symbols-light--chevron-right-rounded text-2xl"></span>
+                <span className={`iconify ${icon} text-2xl`}></span>
             </Link>
-            <Link href='/onboarding/3' className="text-primaryColor font-medium">Skip</Link>
+            {!last ?  <Link href='/onboarding/3' className="text-primaryColor font-medium">Skip</Link> : ''}
+           
         </nav>
     )
 }
@@ -76,7 +77,7 @@ export function StepTwo() {
 export function StepThree() {
     return (
         <section className="h-screen">
-            <OnboardNav url="/" />
+            <OnboardNav url="/onboarding/2" icon="lucide--chevron-left" last={true} />
             <section className="flex flex-col justify-between .items-center">
                 <OnboardHeader heading="Want to talk to a midwife or a doctor" description="Get in touch with our midwives and doctors to help better your monthly flow" />
                 <section className="flex-1">
