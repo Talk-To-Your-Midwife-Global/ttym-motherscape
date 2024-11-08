@@ -17,8 +17,8 @@ export function OnboardNav({url, icon="lucide--chevron-right", last=false}) {
 export function OnboardHeader({heading, description}) {
     return (
         <header className="flex flex-col justify-center items-center my-5 px-[20px]">
-            <h2 className="text-4xl w-full font-semibold text-tertiaryColor .leading-normal">{heading}</h2>
-            <p className="text-tertiaryColor font-medium">{description}</p>
+            <h2 className="text-3xl w-full font-semibold text-tertiaryColor lg:text-4xl .leading-normal">{heading}</h2>
+            <p className="text-tertiaryColor text-sm font-medium">{description}</p>
         </header>
     )
 }
@@ -44,11 +44,11 @@ export function PersonaCard({children, heading, description, onClick, shouldEnab
 
 export function StepOne({userType, children}) {
     return (
-        <section>
+        <section className="overflow-hidden w-screen h-svh">
             <OnboardNav url={`/onboarding/${userType}/2`} />
             <section className="flex flex-col justify-between">
                 <OnboardHeader heading="Track Your Cycle with Confidence!" description="Stay on top of your period, symptoms, and mood with personalized insights tailored to your unique cycle." />
-                <section className="flex-1 fixed bottom-0">
+                <section className="flex-1 relative -bottom-10">
                     {children}
                 </section>
             </section>
@@ -58,11 +58,11 @@ export function StepOne({userType, children}) {
 
 export function StepTwo({userType, children}) {
     return (
-        <section>
+        <section className="overflow-hidden w-screen h-svh">
             <OnboardNav url={`/onboarding/${userType}/3`} />
             <section className="flex flex-col justify-between">
                 <OnboardHeader heading="A Community to Rely on" description="A community forum to share your journey or listen to success stories" />
-                <section className="flex-1 fixed bottom-5">
+                <section className="flex-1 relative -bottom-10">
                     {children}
                 </section>
             </section>
@@ -72,7 +72,7 @@ export function StepTwo({userType, children}) {
 
 export function StepThree({children}) {
     return (
-        <section className="h-screen">
+        <section className="h-svh">
             <OnboardNav url="/onboarding/" icon="lucide--chevron-left" last={true} />
             <section className="flex flex-col justify-between">
                 <OnboardHeader heading="Want to talk to a midwife or a doctor" description="Get in touch with our midwives and doctors to help better your monthly flow" />
