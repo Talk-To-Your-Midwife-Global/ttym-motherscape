@@ -18,7 +18,7 @@ export default function Page() {
         <section>
             <header className="flex">
                 <nav className="my-5">
-                    <Link href="/onboarding/3" className="w-12 h-12 rounded-full flex justify-center items-center">
+                    <Link href={`/onboarding/${localStorage.getItem('userType')}/3`} className="w-12 h-12 rounded-full flex justify-center items-center">
                         <span className="iconify material-symbols-light--chevron-left-rounded font-medium text-3xl text-[#000]"></span>
                     </Link>
                 </nav>
