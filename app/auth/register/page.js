@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link";
 
-import {useActionState} from 'react'
+import {useActionState, useState} from 'react'
 import { useRouter } from "next/navigation";
 import { signup } from "@/app/actions/auth";
 
