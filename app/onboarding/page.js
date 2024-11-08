@@ -12,9 +12,12 @@ import { useState } from "react"
 export default function Page() {
 
     const [enable, setEnable] = useState(true)
+    const [routeName, setRouteName] = useState('')
 
-    const handleButtonEnabler = () => {
+    const handleButtonEnabler = (userType) => {
         setEnable(false)
+        setRouteName(userType)
+        localStorage.setItem('userType', userType)
     }
 
     return (
@@ -41,7 +44,7 @@ export default function Page() {
                 </PersonaCard>
             </section>
             <section className="fixed bottom-5 w-full flex justify-center">
-                <IconButton text="Continue" icon="iconify lucide--arrow-right" href="/onboarding/1" disabled={enable} />
+                <IconButton text="Continue" icon="iconify lucide--arrow-right" href={`/onboarding/${routeName}/1`} disabled={enable} />
             </section>
         </section>
     )
