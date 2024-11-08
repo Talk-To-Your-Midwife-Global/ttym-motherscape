@@ -99,7 +99,7 @@ export function SignUpForm({state, action}) {
             setPassCorrect(true)
             setPassErr('')
 
-            if (enableButton) {
+            if (agreement) {
                 setEnableButton(true)
             }
         } else {
@@ -144,11 +144,11 @@ export function SignUpForm({state, action}) {
 
            
             <div>
-                <label htmlFor="phone" className="font-medium text-mainText">Phone number</label>
+                <label htmlFor="phone" defaultValue="" className="font-medium text-mainText">Phone number</label>
                 <div className="bg-white border-2 w-full h-[42px] flex gap-2 items-center rounded-xl pl-[15px] pr-[5px]">
                     {/* <span className="iconify lucide--mail font-medium text-[#999999]"></span> */}
                     <select className="text-sm outline-none">
-                        <option value="GHA" selected>GHA</option>
+                        <option value="GHA">GHA</option>
                         <option value="NGN">NGN</option>
                     </select>
                     <input type="phone" name="phone" id="phone" placeholder="eg. +1 (555) 000-0000"  className="flex-1 outline-none bg-transparent text-mainText" value={state?.email && state.email}/>
@@ -194,10 +194,10 @@ export function SignUpForm({state, action}) {
             </div>
 
             <section className="flex gap-4 ">
-                <div class="grid items-center justify-center">
+                <div className="grid items-center justify-center">
                     <input type="checkbox" name="agreement" checked={agreement} onChange={(e)=> handleAgreementChange(e)} id="checkbox_2" className="peer row-start-1 col-start-1 appearance-none w-4 h-4 border ring-transparent border-slate-300 rounded dark:border-slate-600 checked:bg-primaryColor checked:border-primaryColor dark:checked:border-primaryColor forced-colors:appearance-auto" />
                     <svg viewBox="0 0 14 14" fill="none" className="invisible peer-checked:visible row-start-1 col-start-1 stroke-white dark:text-violet-300 forced-colors:hidden">
-                        <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M3 8L6 11L11 3.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                     </svg>
                 </div>
              
@@ -205,7 +205,7 @@ export function SignUpForm({state, action}) {
             </section>
 
             <div className="flex flex-col justify-center items-center">
-                <Button disabled={!passCorrect} text="Create Account" />
+                <Button disabled={!enableButton} text="Create Account" />
             </div>
             <div className="relative flex flex-col items-center justify-center">
                 <div className="h-[1px] w-full bg-[#9C979759] top-[10px] absolute "></div>
