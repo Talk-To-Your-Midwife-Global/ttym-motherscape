@@ -22,25 +22,25 @@ export default function Page() {
 
     return (
         <section className="flex flex-col">
-            <header className="px-[20px] py-10 font-medium">
+            <header className="px-[20px] pt-5 pb-7 font-medium">
                 <h1 className="text-2xl text-mainText font-medium">How can we help you today?</h1>
                 <p className="text-base text-subText ">Let&apos;s begin by telling us about you</p>
             </header>
             <section className="px-5">
                 <PersonaCard onClick={storeUserType} shouldEnable={handleButtonEnabler} heading="Midwife" description="Monitor your pregnancy milestones and access helpful tips.">
-                    <Image src={midwife} width={100} height={200} alt="pregnant woman" />
+                    <Image src={midwife} width={100} height={100} alt="midwife logo" />
                 </PersonaCard>
 
                 <PersonaCard onClick={storeUserType} shouldEnable={handleButtonEnabler} heading="Pregnancy Tracker" description="Monitor your pregnancy milestones and access helpful tips.">
-                    <Image src={pregnantImage} width={100} height={200} alt="pregnant woman" />
+                    <Image src={pregnantImage} width={100} height={100} alt="pregnant woman" />
                 </PersonaCard>
 
                 <PersonaCard onClick={storeUserType} shouldEnable={handleButtonEnabler} heading="Getting Pregnant" description="Track ovulation cycles and receive guidance to boost fertility.">
-                    <Image src={pregnantTimer} width={100} height={200} alt="pregnant woman" />
+                    <Image src={pregnantTimer} width={100} height={100} alt="pregnant woman and a timer" />
                 </PersonaCard>
 
                 <PersonaCard onClick={storeUserType} shouldEnable={handleButtonEnabler} heading="Menstrual Cycle Tracker" description="Keep tabs on your period, symptoms, and menstrual health.">
-                    <Image src={redCalendar} width={100} height={200} alt="pregnant woman" />
+                    <Image src={redCalendar} width={100} height={100} alt="red calendar" />
                 </PersonaCard>
             </section>
             <section className="fixed bottom-5 w-full flex justify-center">
