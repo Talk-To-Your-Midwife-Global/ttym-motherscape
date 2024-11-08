@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const { addIconSelectors } = require('@iconify/tailwind');
 module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -10,8 +11,18 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        secondary: "var(--secondary)",
+        mainText: "var(--main-text)",
+        subText: "var(--sub-text)",
+        black: "var(--black)",
+        pink: "var(--pink)",
+        primaryText: "var(--primary-text-color)",
+        primaryColor: "var(--primary-color)",
+        tertiaryColor: "var(--tertiary-color)"
       },
     },
   },
-  plugins: [],
+  plugins: [
+    addIconSelectors(['lucide', 'material-symbols-light'])
+  ],
 };
