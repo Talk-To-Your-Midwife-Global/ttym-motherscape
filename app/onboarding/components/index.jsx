@@ -1,9 +1,5 @@
 import Link from "next/link"
-import Image from "next/image"
 import { removeSpaces } from "@/app/lib/functions"
-import rafiki from "../../../public/images/rafiki.svg"
-import cuate from "../../../public/images/cuate.svg"
-import pana from "../../../public/images/pana.svg"
 import { IconButton } from "@/app/components"
 
 export function OnboardNav({url, icon="lucide--chevron-right", last=false}) {
@@ -46,42 +42,42 @@ export function PersonaCard({children, heading, description, onClick, shouldEnab
 
 
 
-export function StepOne() {
+export function StepOne({userType, children}) {
     return (
         <section>
-            <OnboardNav url="/onboarding/menstrualcycletracker/2" />
+            <OnboardNav url={`/onboarding/${userType}/2`} />
             <section className="flex flex-col justify-between">
                 <OnboardHeader heading="Track Your Cycle with Confidence!" description="Stay on top of your period, symptoms, and mood with personalized insights tailored to your unique cycle." />
                 <section className="flex-1 fixed bottom-0">
-                    <Image src={rafiki} className="" alt="image of a woman at different stages of pregnancy" />
+                    {children}
                 </section>
             </section>
         </section>
     )
 }
 
-export function StepTwo() {
+export function StepTwo({userType, children}) {
     return (
         <section>
-            <OnboardNav url="/onboarding/menstrualcycletracker/3" />
+            <OnboardNav url={`/onboarding/${userType}/3`} />
             <section className="flex flex-col justify-between">
                 <OnboardHeader heading="A Community to Rely on" description="A community forum to share your journey or listen to success stories" />
                 <section className="flex-1 fixed bottom-5">
-                    <Image src={cuate} className="" alt="three women talking" />
+                    {children}
                 </section>
             </section>
         </section>
     )
 }
 
-export function StepThree() {
+export function StepThree({children}) {
     return (
         <section className="h-screen">
             <OnboardNav url="/onboarding/" icon="lucide--chevron-left" last={true} />
             <section className="flex flex-col justify-between">
                 <OnboardHeader heading="Want to talk to a midwife or a doctor" description="Get in touch with our midwives and doctors to help better your monthly flow" />
                 <section className="flex-1">
-                    <Image src={pana} className="" alt="three women talking" />
+                    {children}
                 </section>
 
                 <section className="mt-10 flex flex-col gap-8 justify-center items-center">
