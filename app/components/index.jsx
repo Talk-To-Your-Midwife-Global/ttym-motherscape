@@ -3,10 +3,12 @@ import Link from "next/link";
 
 export function Loader() {
   return (
-    <div className="bg-foreground text-background flex flex-col h-screen w-screen items-center justify-center p-[20px] relative">    
-      <Image src="/icons/logo-colored.svg" alt="logo" width={200} height={200} />
-      <Image className="absolute bottom-10" src="/icons/wordmark-colored.svg" alt="logo" width={200} height={200} />
-    </div>
+    <section className="bg-foreground text-background flex flex-col h-svh w-screen items-center .justify-center p-[20px] relative"> 
+      <div className="flex-1 flex justify-center">
+        <Image src="/icons/logo-colored.svg" alt="logo" width={120} height={100} />
+      </div>   
+      <Image className=".absolute .bottom-10" src="/icons/wordmark-colored.svg" alt="logo" width={100} height={100} />
+    </section>
   );
 }
 
