@@ -17,7 +17,7 @@ export default function Page() {
     }
 
     const getUserRouteFromLocalStorage = () => {
-        JSON.parse(localStorage.getItem('userType'))
+        return localStorage.getItem('userType')
     }
 
     useEffect(() => {

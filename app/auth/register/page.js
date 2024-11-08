@@ -11,12 +11,13 @@ export default function Page() {
     const [state, action] = useActionState(signup, undefined)
     const [userRoute, setUserRoute] = useState('');
     const router = useRouter()
-    console.log(state)
+    
     if (state?.success) {
         router.push('/auth/signIn/')
     }
     const getUserRouteFromLocalStorage = () => {
-        JSON.parse(localStorage.getItem('userType'))
+        return localStorage.getItem('userType')
+
     }
 
     useEffect(() => {
