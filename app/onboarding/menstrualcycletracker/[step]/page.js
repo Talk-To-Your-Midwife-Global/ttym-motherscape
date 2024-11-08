@@ -1,4 +1,4 @@
-import { StepOne, StepTwo, StepThree } from "../components"
+import { StepOne, StepTwo, StepThree } from "../../components"
 
 export default async function Page({params}) {
     const step = await params;
