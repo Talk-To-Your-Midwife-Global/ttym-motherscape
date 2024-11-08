@@ -1,5 +1,31 @@
+"use client"
 import Image from "next/image";
 import Link from "next/link";
+import {motion, AnimatePresence} from "framer-motion"
+
+const pageTransitionVariants = {
+  hidden: { opacity: 0, x: 100 },
+  enter: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -100 },
+};
+
+export function PageSlideAnimator({children}) {
+  return (
+    <AnimatePresence mode="wait">
+    <motion.div
+      key={children?.key} // Unique key for each page
+      initial="hidden"
+      animate="enter"
+      exit="exit"
+      variants={pageTransitionVariants}
+      transition={{ type: 'tween', ease: 'easeInOut', duration: 0.5 }}
+      className="page-container"
+    >
+      {children}
+    </motion.div>
+  </AnimatePresence>
+  )
+}
 
 export function Loader() {
   return (
