@@ -12,7 +12,7 @@ export function OnboardNav({url, icon="lucide--chevron-right", last=false}) {
             <Link href={url}  className="bg-[#16898E1A] w-12 h-12 rounded-full flex justify-center items-center">
                 <span className={`iconify ${icon} text-2xl`}></span>
             </Link>
-            {!last ?  <Link href='/onboarding/3' className="text-primaryColor font-medium">Skip</Link> : ''}
+            {!last ?  <Link href='/onboarding/menstrualcycletracker/3' className="text-primaryColor font-medium">Skip</Link> : ''}
            
         </nav>
     )
@@ -31,7 +31,7 @@ export function PersonaCard({children, heading, description, onClick, shouldEnab
     return (
         <section tabIndex={0} onClick={() => {
             onClick(removeSpaces(heading.toLowerCase()))
-            shouldEnable()
+            shouldEnable(removeSpaces(heading.toLowerCase()))
             }} className="flex gap-4 border-2 shadow-lg h-[110px] py-5 rounded-3xl mb-10 focus:border-primaryColor">
             <section className="pl-3">
                 {children}
@@ -49,7 +49,7 @@ export function PersonaCard({children, heading, description, onClick, shouldEnab
 export function StepOne() {
     return (
         <section>
-            <OnboardNav url="/onboarding/2" />
+            <OnboardNav url="/onboarding/menstrualcycletracker/2" />
             <section className="flex flex-col justify-between">
                 <OnboardHeader heading="Track Your Cycle with Confidence!" description="Stay on top of your period, symptoms, and mood with personalized insights tailored to your unique cycle." />
                 <section className="flex-1 fixed bottom-10">
@@ -63,7 +63,7 @@ export function StepOne() {
 export function StepTwo() {
     return (
         <section>
-            <OnboardNav url="/onboarding/3" />
+            <OnboardNav url="/onboarding/menstrualcycletracker/3" />
             <section className="flex flex-col justify-between">
                 <OnboardHeader heading="A Community to Rely on" description="A community forum to share your journey or listen to success stories" />
                 <section className="flex-1 fixed bottom-10">
@@ -77,7 +77,7 @@ export function StepTwo() {
 export function StepThree() {
     return (
         <section className="h-screen">
-            <OnboardNav url="/onboarding/2" icon="lucide--chevron-left" last={true} />
+            <OnboardNav url="/onboarding/menstrualcycletracker/2" icon="lucide--chevron-left" last={true} />
             <section className="flex flex-col justify-between .items-center">
                 <OnboardHeader heading="Want to talk to a midwife or a doctor" description="Get in touch with our midwives and doctors to help better your monthly flow" />
                 <section className="flex-1">
