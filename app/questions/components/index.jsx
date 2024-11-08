@@ -61,14 +61,14 @@ export function QuestionParent({question}) {
         1: <BasicCycleInformation handleAnswers={handleQuestionAnswers} state={answers} submit={handleSubmit} />,
         2: <CycleRegularity handleAnswers={handleQuestionAnswers}  submit={handleSubmit} state={answers}/>,
         3: <LastPeriod handleAnswers={handleQuestionAnswers}  submit={handleSubmit}/>,
-        4: <SymptomsTracking handleAnswers={handleQuestionAnswers} submit={handleSubmit}/>,
+        4: <SymptomsTracking handleAnswers={handleQuestionAnswers} state={answers} submit={handleSubmit}/>,
         5: <NotificationPreferences handleAnswers={handleQuestionAnswers} submit={handleSubmit} state={answers}/>
         
     }
 
     return (
         <section>
-            <QuestionNav last={question == 6 ? true : false} url={`/questions/${question - 1}`} />
+            <QuestionNav last={question == 6 ? true : false} url={question > 1 ? `/questions/${question - 1}`: '#'} />
             <ProgressIndicator target={question}  />
             {questions[question]}
         </section>
