@@ -10,21 +10,15 @@ import pregnantLogo from "../../../public/images/ttym-rounded-logo.svg"
 
 export default function Page() {
     const [state, action] = useActionState(signin, undefined)
-    const [mainErr, setMainErr] = useState('')
     const router = useRouter()
     if (state?.success) {
         router.push('/questions')
     }
-    if (state?.error) {
-        console.log(state.error)
-        setMainErr(state.error)
-    }
-    // console.log(state)
     return (
         <section>
             <header>
                 <nav className="my-5">
-                    <Link href="/onboarding/3" className="w-12 h-12 rounded-full flex justify-center items-center">
+                    <Link href={`/onboarding/${localStorage.getItem('userType')}/3`} className="w-12 h-12 rounded-full flex justify-center items-center">
                         <span className="iconify material-symbols-light--chevron-left-rounded font-medium text-3xl text-[#000]"></span>
                     </Link>
                 </nav>
