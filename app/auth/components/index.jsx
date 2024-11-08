@@ -11,7 +11,7 @@ import apple from "../../../public/images/apple.svg"
 export function HelpCenterLinks() {
     return (
         <section className="text-primaryText text-center text-sm font-medium">
-            <p className="mb-5">Already have an account? <Link className="text-primaryColor" href="auth/signIn">Sign In</Link> </p>
+            <p className="mb-5">Already have an account? <Link className="text-primaryColor" href="/auth/signIn">Sign In</Link> </p>
             <p>Need help? Visit our <Link className="text-primaryColor" href="/help">help center</Link></p> {/** TODO:Create help center page */}
         </section>
     )
