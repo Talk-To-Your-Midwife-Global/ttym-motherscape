@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import { StepOne, StepTwo, StepThree } from "../../components"
 import rafiki from "../../../../public/images/rafiki.svg"

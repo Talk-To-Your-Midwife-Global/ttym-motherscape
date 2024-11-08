@@ -32,3 +32,9 @@ body {
   background: var(--background);
   /* font-family: "Montserrat", serif; */
 }
+
+.fade-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}

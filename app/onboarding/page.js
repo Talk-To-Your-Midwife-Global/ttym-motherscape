@@ -27,7 +27,7 @@ export default function Page() {
                 <p className="text-base text-subText ">Let&apos;s begin by telling us about you</p>
             </header>
             <section className="px-5">
-                <PersonaCard onClick={storeUserType} shouldEnable={handleButtonEnabler} heading="Midwife" description="Monitor your pregnancy milestones and access helpful tips.">
+                <PersonaCard onClick={storeUserType} shouldEnable={handleButtonEnabler} heading="Midwife" description="Connect with clients, provide guidance, and track patient progress.">
                     <Image src={midwife} width={100} height={100} alt="midwife logo" />
                 </PersonaCard>
 

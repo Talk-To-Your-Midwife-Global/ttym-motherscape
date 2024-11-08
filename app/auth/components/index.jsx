@@ -8,10 +8,10 @@ import facebook from "../../../public/images/facebook.svg"
 import google from "../../../public/images/google.svg"
 import apple from "../../../public/images/apple.svg"
 
-export function HelpCenterLinks() {
+export function HelpCenterLinks({signIn=true}) {
     return (
         <section className="text-primaryText text-center text-sm font-medium">
-            <p className="mb-5">Already have an account? <Link className="text-primaryColor" href="/auth/signIn">Sign In</Link> </p>
+            <p className="mb-5">Already have an account? <Link className="text-primaryColor" href={`/auth/${signIn ? 'sigIn' : 'register'}`}>{signIn ? 'sigIn' : 'signup'}</Link> </p>
             <p>Need help? Visit our <Link className="text-primaryColor" href="/help">help center</Link></p> {/** TODO:Create help center page */}
         </section>
     )
@@ -70,7 +70,7 @@ export function SignInForm({state, action}) {
                 <Image src={google} alt="google logo" />
                 <Image src={apple} alt="apple logo" />
             </section>
-            <HelpCenterLinks />
+            <HelpCenterLinks signIn={false} />
         </form>
     )
 }

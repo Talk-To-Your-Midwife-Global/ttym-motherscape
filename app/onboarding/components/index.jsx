@@ -1,14 +1,16 @@
+"use client"
 import Link from "next/link"
 import { removeSpaces } from "@/app/lib/functions"
 import { IconButton } from "@/app/components"
+import { PageSlideAnimator } from "@/app/components"
 
 export function OnboardNav({url, icon="lucide--chevron-right", last=false}) {
     return (
         <nav className="px-[20px] flex justify-between items-center my-5">
-            <Link href={url}  className="bg-[#16898E1A] w-12 h-12 rounded-full flex justify-center items-center">
-                <span className={`iconify ${icon} text-2xl`}></span>
-            </Link>
-            {!last ?  <Link href='/onboarding/menstrualcycletracker/3' className="text-primaryColor font-medium">Skip</Link> : ''}
+                <Link href={url}  className="bg-[#16898E1A] w-12 h-12 rounded-full flex justify-center items-center">
+                    <span className={`iconify ${icon} text-2xl`}></span>
+                </Link>
+             {!last ?  <Link href='/onboarding/menstrualcycletracker/3' className="text-primaryColor font-medium">Skip</Link> : ''}
            
         </nav>
     )
@@ -44,14 +46,17 @@ export function PersonaCard({children, heading, description, onClick, shouldEnab
 
 export function StepOne({userType, children}) {
     return (
+        
         <section className="overflow-hidden w-screen h-svh">
             <OnboardNav url={`/onboarding/${userType}/2`} />
-            <section className="flex flex-col justify-between">
-                <OnboardHeader heading="Track Your Cycle with Confidence!" description="Stay on top of your period, symptoms, and mood with personalized insights tailored to your unique cycle." />
-                <section className="flex-1 relative -bottom-10">
-                    {children}
+            <PageSlideAnimator>
+                <section className="flex flex-col justify-between">
+                    <OnboardHeader heading="Track Your Cycle with Confidence!" description="Stay on top of your period, symptoms, and mood with personalized insights tailored to your unique cycle." />
+                    <section className="flex-1 relative -bottom-10">
+                        {children}
+                    </section>
                 </section>
-            </section>
+            </PageSlideAnimator>
         </section>
     )
 }
@@ -60,12 +65,14 @@ export function StepTwo({userType, children}) {
     return (
         <section className="overflow-hidden w-screen h-svh">
             <OnboardNav url={`/onboarding/${userType}/3`} />
-            <section className="flex flex-col justify-between">
-                <OnboardHeader heading="A Community to Rely on" description="A community forum to share your journey or listen to success stories" />
-                <section className="flex-1 relative -bottom-10">
-                    {children}
+            <PageSlideAnimator>
+                <section className="flex flex-col justify-between">
+                    <OnboardHeader heading="A Community to Rely on" description="A community forum to share your journey or listen to success stories" />
+                    <section className="flex-1 relative -bottom-10">
+                        {children}
+                    </section>
                 </section>
-            </section>
+            </PageSlideAnimator>
         </section>
     )
 }
@@ -74,19 +81,21 @@ export function StepThree({children}) {
     return (
         <section className="h-svh">
             <OnboardNav url="/onboarding/" icon="lucide--chevron-left" last={true} />
-            <section className="flex flex-col justify-between">
-                <OnboardHeader heading="Want to talk to a midwife or a doctor" description="Get in touch with our midwives and doctors to help better your monthly flow" />
-                <section className="flex-1">
-                    {children}
-                </section>
+            <PageSlideAnimator>
+                <section className="flex flex-col justify-between">
+                    <OnboardHeader heading="Want to talk to a midwife or a doctor" description="Get in touch with our midwives and doctors to help better your monthly flow" />
+                    <section className="flex-1">
+                        {children}
+                    </section>
 
-                <section className="mt-10 flex flex-col gap-8 justify-center items-center">
-                    <IconButton href="/auth/register/" icon="iconify lucide--arrow-right" text="Create Account" disabled={false}/>
-                    <Link className="text-primaryColor font-bold" href="/auth/signIn/">
-                        Log In
-                    </Link>
+                    <section className="mt-10 flex flex-col gap-8 justify-center items-center">
+                        <IconButton href="/auth/register/" icon="iconify lucide--arrow-right" text="Create Account" disabled={false}/>
+                        <Link className="text-primaryColor font-bold" href="/auth/signIn/">
+                            Log In
+                        </Link>
+                    </section>
                 </section>
-            </section>
+            </PageSlideAnimator>
         </section>
     )
 }
