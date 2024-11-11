@@ -1,7 +1,9 @@
 "use client"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation";
+import { inter } from "@/app/fonts";
 import Link from "next/link"
+import { PageSlideAnimator } from "@/app/components";
 import { IconButton } from "@/app/components";
 
 function QuestionNav({url, icon="lucide--chevron-left", last=false,}) {
@@ -10,7 +12,7 @@ function QuestionNav({url, icon="lucide--chevron-left", last=false,}) {
             <Link href={url}  className=".bg-[#16898E1A] w-12 h-12 rounded-full flex justify-center items-center">
                 <span className={`iconify ${icon} text-2xl`}></span>
             </Link>
-            {!last ?  <Link href='/onboarding/3' className="text-mainText font-medium"><span className="iconify lucide--x text-2xl relative top-1"></span></Link> : ''}
+            {!last ?  <Link href='/questions/' className="text-mainText font-medium"><span className="iconify lucide--x text-2xl relative top-1"></span></Link> : ''}
            
         </nav>
     )
@@ -69,9 +71,11 @@ export function QuestionParent({question}) {
 
     return (
         <section>
-            <QuestionNav last={question == 6 ? true : false} url={question > 1 ? `/questions/${question - 1}`: '#'} />
+            <QuestionNav last={question == 6 ? true : false} url={question > 1 ? `/questions/${question - 1}`: '/questions/'} />
             <ProgressIndicator target={question}  />
-            {questions[question]}
+            <PageSlideAnimator>
+                {questions[question]}
+            </PageSlideAnimator>
         </section>
     )
 }
@@ -93,7 +97,7 @@ function BasicCycleInformation({handleAnswers, submit, state}) {
         submit()
     }
     return  (
-        <section>
+        <section className={`${inter.className} h-svh overflow-hidden`}>
             <QuestionHead text="Basic Cycle Information" />
             <form className="px-[20px] text-primaryText">
                 <div className="flex flex-col gap-2 mb-5">
@@ -119,7 +123,7 @@ function BasicCycleInformation({handleAnswers, submit, state}) {
                     </div>
                 </div>
             </form>
-            <div className="fixed bottom-10 w-full flex justify-center">
+            <div className="relative -bottom-[25%] w-full flex justify-center">
                 <IconButton text="Continue" onClick={handleSubmit} icon="iconify lucide--arrow-right" disabled={disableBtn} />
             </div>
         </section>
@@ -144,7 +148,7 @@ function CycleRegularity({handleAnswers, submit, state}) {
     }
 
     return (
-        <section>
+        <section className={`${inter.className} h-svh overflow-hidden`}> 
             <QuestionHead text="Cycle Regularity" />
             <form className="px-[20px] text-primaryText">
                 <div className="flex flex-col gap-2 mb-5">
@@ -165,7 +169,7 @@ function CycleRegularity({handleAnswers, submit, state}) {
                     <p>Irregular: Varies significantly from month to month. This helps the app adapt predictions based on consistency.</p> 
                 </div>
             </form>
-            <div className="fixed bottom-10 w-full flex justify-center">
+            <div className="relative -bottom-[25%] w-full flex justify-center">
                 <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn} />
             </div>
         </section>
@@ -189,19 +193,15 @@ function LastPeriod({handleAnswers, submit, state}) {
     }
 
     return (
-        <section>
+        <section className={`${inter.className} h-svh overflow-hidden`}>
             <QuestionHead text="Last Period Details" />
             <form className="px-[20px] text-primaryText">
                 <div className="flex flex-col gap-2 mb-5">
                     <label htmlFor="last-period" className="font-medium">When did your last period start?</label>
                     <input type="date" name="lastPeriod" id="last-period" onChange={handleChange}/>
                 </div>
-                <div className="text-sm text-[#667085] font-medium flex items-center gap-2">
-                    <span className="iconify lucide--info"></span>
-                   <p>Date message goes here</p> 
-                </div>
             </form>
-            <div className="fixed bottom-10 w-full flex justify-center">
+            <div className="relative -bottom-[45%] w-full flex justify-center">
                 <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn} />
             </div>
         </section>
@@ -245,16 +245,16 @@ function SymptomsTracking({handleAnswers, submit, state}) {
     const moodData = ['happy', 'sad', 'calm', 'energetic', 'mood swings', 'irritate', 'depressed', 'anxious', 'uneasy', 'horny', 'frustrated']
     const symptomsData = ['fine', 'cramps', 'acne', 'cravings', 'tender breast', 'fatigue', 'backache']
     return (
-        <section>
+        <section className={`${inter.className} h-[100%] .overflow-hidden`}>
             <QuestionHead text="Symptoms Tracking Preferences" />
             <form className="px-[20px] text-primaryText">
-                <div className="flex flex-col gap-2 mb-5">
+                <div className="flex flex-col gap-2 mb-8">
                     <label htmlFor="last-period" className="font-medium">Which symptoms would you like to track?</label>
                     <h3 className="text-xl text-primaryColor font-medium">Mood</h3>
                     <section className="flex flex-wrap gap-2">
                         {moodData.map((mood, index) => {
                             return <input type="button" value={mood} name="mood" key={index} onClick={() => handleMoodToggle(mood)}
-                            className={`cursor-pointer p-2 px-4 py-2 rounded-full border-2  ${
+                            className={`cursor-pointer text-sm p-2 px-4 py-2 capitalize2  rounded-full border-2 border-primaryColor ${
                               state.moods?.includes(mood) ? 'bg-primaryColor rounded-full text-white' : 'text-primaryColor  border-primaryColor '
                             }`}>
                             </input>  
@@ -263,10 +263,10 @@ function SymptomsTracking({handleAnswers, submit, state}) {
                 </div>
                 <div>
                     <h3 className="text-xl text-primaryColor font-medium">Symptoms</h3>
-                    <section className="flex flex-wrap gap-2">
+                    <section className="flex flex-wrap gap-2 mt-2">
                         {symptomsData.map((symptom, index) => {
                             return <input type="button" value={symptom} name="mood" key={index} onClick={() => handleSymptomsToggle(symptom)}
-                            className={`cursor-pointer p-2 px-4 py-2 rounded-full border-2  ${
+                            className={`cursor-pointer text-sm p-2 px-4 py-2 capitalize rounded-full border-2 border-primaryColor ${
                             state.symptoms?.includes(symptom) ? 'bg-primaryColor rounded-full text-white' : 'text-primaryColor  border-primaryColor '
                             }`}>
                             </input>  
@@ -274,7 +274,7 @@ function SymptomsTracking({handleAnswers, submit, state}) {
                     </section>
                 </div>
             </form>
-            <div className="fixed bottom-10 w-full flex justify-center">
+            <div className="my-[25%] w-full flex justify-center">
                 <IconButton text="Continue" onClick={handleSubmit} icon="iconify lucide--arrow-right" disabled={disableBtn} />
             </div>
         </section>
@@ -293,9 +293,11 @@ function NotificationPreferences({handleAnswers, submit, state}) {
         }
 
         handleAnswers({...state, [name]: value})
+
+        submit()
     }
     return  (
-        <section>
+        <section className={`${inter.className} h-svh overflow-hidden`}>
             <QuestionHead text="Notification Preferences" />
             <form className="px-[20px] text-primaryText">
                 <div className="flex flex-col gap-2 mb-5">
@@ -315,8 +317,9 @@ function NotificationPreferences({handleAnswers, submit, state}) {
                     </div>
                 </div>
             </form>
-            <div className="fixed bottom-10 w-full flex justify-center">
-                <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn} />
+            <div className="relative -bottom-[35%] w-full flex justify-center">
+                
+                <IconButton href="/dashboard" text="Continue" icon="iconify lucide--arrow-right" disabled={disableBtn} />
             </div>
         </section>
     )
