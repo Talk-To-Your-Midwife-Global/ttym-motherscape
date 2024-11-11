@@ -1,9 +1,9 @@
 'use server'
-import { SignUpFormSchema, SignInFormSchema } from "../auth/lib/definitions";
+import {SignUpFormSchema, SignInFormSchema, ForgotPasswordFormSchema} from "../auth/lib/definitions";
 import { cookies } from "next/headers";
 
 /**
- * 
+ * Validates sign up form fields
  * @param {action state} state 
  * @param {formData} formData 
  * @returns 
@@ -62,6 +62,12 @@ export async function signup(state, formData) {
     }
 }
 
+/**
+ * Validates sign in form fields
+ * @param {action state} state
+ * @param {formData} formData
+ * @returns
+ */
 export async function signin(state, formData) {
     const validatedFields = SignInFormSchema.safeParse({
         email: formData.get('email'),
@@ -85,7 +91,7 @@ export async function signin(state, formData) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             client_id: process.env.AUTH0_CLIENT_ID,
-            client_secret: process.env.AUTH0_CLIENT_SECRET,  // Set this in your server environment
+            client_secret: process.env.AUTH0_CLIENT_SECRET,
             username: formData.get('email'),
             password: formData.get('password'),
             realm: 'Username-Password-Authentication',
@@ -118,4 +124,30 @@ export async function signin(state, formData) {
         }
     }
         
+}
+
+/**
+ * Validates forgotPassword email form
+ * @param state
+ * @param formData
+ * @returns {Promise<{success: boolean}|{errors: {email?: string[]}}>}
+ */
+export async function forgotPassword(state, formData) {
+    const validateField = ForgotPasswordFormSchema.safeParse({
+        email: formData.get('email'),
+    })
+
+    if (!validateField.success) {
+        return {
+            errors: validateField.error.flatten().fieldErrors,
+        }
+    }
+
+    // TODO: You can remove this but make sure it is part of the return statement when the real thing is done
+    return {
+        success: true
+    }
+    // TODO: Make an api call to forgot password route
+
+    // Return a message indicating success
 }

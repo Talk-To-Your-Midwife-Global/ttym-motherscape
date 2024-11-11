@@ -9,6 +9,30 @@ const pageTransitionVariants = {
   exit: { opacity: 0, x: -100 },
 };
 
+const fadeVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+    exit: { opacity: 0 },
+};
+
+export function PageFadeAnimator({children}) {
+    return (
+        <AnimatePresence mode="wait">
+            <motion.div
+                key={children?.key}  // Unique key for each page transition
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                variants={fadeVariants}
+                transition={{ duration: 0.5 }} // Adjust duration for fade speed
+                className="fade-container"
+            >
+                {children}
+            </motion.div>
+        </AnimatePresence>
+    )
+}
+
 export function PageSlideAnimator({children}) {
   return (
     <AnimatePresence mode="wait">

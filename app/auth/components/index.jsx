@@ -11,9 +11,23 @@ import apple from "../../../public/images/apple.svg"
 export function HelpCenterLinks({signIn=true}) {
     return (
         <section className="text-primaryText text-center text-sm font-medium">
-            <p className="mb-5">Already have an account? <Link className="text-primaryColor" href={`/auth/${signIn ? 'sigIn' : 'register'}`}>{signIn ? 'sigIn' : 'signup'}</Link> </p>
-            <p>Need help? Visit our <Link className="text-primaryColor" href="/help">help center</Link></p> {/** TODO:Create help center page */}
+            <p className="mb-5">Already have an account?
+                <Link className="text-primaryColor" href={`/auth/${signIn ? 'signIn' : 'register'}`}>{signIn ? 'signIn' : 'signup'}</Link>
+            </p>
+            <p>Need help? Visit our
+                <Link className="text-primaryColor" href="/help">help center</Link></p> {/** TODO:Create help center page */}
         </section>
+    )
+}
+
+export function AuthNav({backUrl}) {
+    return (
+        <nav className="my-5">
+            <Link href={backUrl} className="w-12 h-12 rounded-full flex justify-center
+                    items-center">
+                <span className="iconify material-symbols-light--chevron-left-rounded font-medium text-3xl text-[#000]"></span>
+            </Link>
+        </nav>
     )
 }
 
@@ -51,7 +65,7 @@ export function SignInForm({state, action}) {
                 {state?.errors?.email && <p className="text-red-500 text-sm">{state.errors.email}</p>}
                 <div className="flex justify-end gap-4 space-between">
                     <p className="text-red-600 text-sm text-right">
-                        <Link href="auth/forgotPassword" className="font-medium"> {/** TODO: link to forgot password */}
+                        <Link href="/auth/forgotPassword" className="font-medium">
                             Forgot Password?
                         </Link>
                     </p>

@@ -28,8 +28,10 @@ export default function Page() {
         <section>
             <header>
                 <nav className="my-5">
-                    <Link href={`/onboarding/${userRoute}/3`} className="w-12 h-12 rounded-full flex justify-center items-center">
-                        <span className="iconify material-symbols-light--chevron-left-rounded font-medium text-3xl text-[#000]"></span>
+                    <Link href={`/onboarding/${userRoute}/3`} className="w-12 h-12 rounded-full flex justify-center
+                    items-center">
+                        <span className="iconify material-symbols-light--chevron-left-rounded font-medium text-3xl
+                        text-[#000]"></span>
                     </Link>
                 </nav>
 
@@ -39,7 +41,8 @@ export default function Page() {
                     <p className="text-subText font-medium">Sign in to be able to access your page</p>
                 </section>
                 <div className=" flex justify-center">
-                    {state?.success == false ? <p className="text-red-600 flex items-center gap-2"> <span className="iconify lucide--info"></span>Incorrect email or password</p>: ''}
+                    {state?.success == false ? <p className="text-red-600 flex items-center gap-2">
+                        <span className="iconify lucide--info"></span>Incorrect email or password</p>: ''}
                 </div>
             </header>
             <SignInForm action={action} state={state} />
