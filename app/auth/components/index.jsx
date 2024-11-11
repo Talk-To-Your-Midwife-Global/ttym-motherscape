@@ -65,7 +65,7 @@ export function SignInForm({state, action}) {
                 {state?.errors?.email && <p className="text-red-500 text-sm">{state.errors.email}</p>}
                 <div className="flex justify-end gap-4 space-between">
                     <p className="text-red-600 text-sm text-right">
-                        <Link href="auth/forgotPassword" className="font-medium"> {/** TODO: link to forgot password */}
+                        <Link href="/auth/forgotPassword" className="font-medium">
                             Forgot Password?
                         </Link>
                     </p>
