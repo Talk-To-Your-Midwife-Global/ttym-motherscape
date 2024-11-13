@@ -1,15 +1,28 @@
 'use server'
 import {SignUpFormSchema, SignInFormSchema, ForgotPasswordFormSchema} from "../auth/lib/definitions";
 import { cookies } from "next/headers";
+import {HOSTNAME} from "../config/main";
+
+
+async function patientOrMidwife() {
+    const cookieStore = await cookies()
+    if (cookieStore.has('ttym-user-type')) {
+        if (cookieStore.get('ttym-user-type') !== 'midwife' ) {
+            return 'PATIENT'
+        }else {
+            return 'MIDWIFE'
+        }
+    }
+}
 
 /**
  * Validates sign up form fields
- * @param {action state} state 
+ * @param {state} state
  * @param {formData} formData 
  * @returns 
  */
 export async function signup(state, formData) {
-    
+    const role = await patientOrMidwife()
     // validate user fields
     const validatedFields = SignUpFormSchema.safeParse({
         name: formData.get('name'),
