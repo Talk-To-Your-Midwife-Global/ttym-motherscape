@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export const config = {
     // match: ['/', '/onboarding', '/register', '/signIn']
-    matcher: ["/questions", '/dashboard']
+    matcher: ["/questions/:path*", '/dashboard/:path*']
 }
 
 export function middleware(request) {
