@@ -79,7 +79,7 @@ export async function signup(state, formData) {
 
 /**
  * Validates sign in form fields
- * @param {action state} state
+ * @param {state} state
  * @param {formData} formData
  * @returns
  */
@@ -99,46 +99,43 @@ export async function signin(state, formData) {
           }
     }
 
-    try { 
-            //   Automatic login and verification
-        const loginResponse = await fetch(`https://${process.env.AUTH0_DOMAIN}/oauth/token`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            client_id: process.env.AUTH0_CLIENT_ID,
-            client_secret: process.env.AUTH0_CLIENT_SECRET,
-            username: formData.get('email'),
-            password: formData.get('password'),
-            realm: 'Username-Password-Authentication',
-            grant_type: 'http://auth0.com/oauth/grant-type/password-realm',
-        }),
-        });
+    try {
+        console.log(HOSTNAME)
+        const response = await fetch(`http://${HOSTNAME}:8000/auth/login/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: formData.get('email'),
+                password: formData.get('password'),
+            })
+        })
 
-        const loginResult = await loginResponse.json();
-        console.log(loginResult)
-        if (loginResult.access_token) {
-        // Save token in local storage or cookies
-        let cookieStore = await cookies()
-        cookieStore.set('access_token', loginResult.access_token)
-        return {
-            success: true,
-            token: loginResult.access_token
-        }
+        const result = await response.json()
+        console.log(result)
+
+        if (result) {
+            let cookieStore = await cookies()
+            cookieStore.set('access_token', result.tokens.access)
+            cookieStore.set('refresh_token', result.tokens.refresh)
+            return {
+                success: true,
+                token: result.tokens.access
+            }
         } else {
             return {
                 success: false
-                
             }
         }
-    } catch (error) {
-        console.log(error)
+
+    }catch(errors) {
         return {
             state: {
                 error: error.error_description
             }
         }
     }
-        
 }
 
 /**
