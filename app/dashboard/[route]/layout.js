@@ -1,10 +1,14 @@
 import {NavItem} from "@/app/dashboard/components";
+import {PageFadeAnimator} from "@/app/components";
 
 export default async function DashboardLayout({children, params}) {
     const paramName = await params;
     return (
         <section>
-            {children}
+            <PageFadeAnimator>
+                {children}
+                <div className={`h-[100px]`}></div>
+            </PageFadeAnimator>
 
             <nav className={"bg-white w-screen fixed bottom-0 pt-1 h-[80px] flex justify-evenly shadow-lg"}>
                 <NavItem text={"me"} active={paramName.route === "me"}>

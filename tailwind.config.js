@@ -8,6 +8,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      dropShadow: {
+        "custom-green": "0px 14px 6px #0F969C21",
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
