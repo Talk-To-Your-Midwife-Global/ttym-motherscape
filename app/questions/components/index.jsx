@@ -39,7 +39,7 @@ function QuestionHead({text}) {
     )
 }
 
-export function QuestionParent({question}) {
+export  function QuestionParent({question, updateUser}) {
     const router = useRouter()
     const [answers, setAnswers] = useState({})
 
@@ -50,11 +50,18 @@ export function QuestionParent({question}) {
 
         console.log(answers)
     }
-    const handleSubmit = () => {
+    const handleSubmit =  () => {
         localStorage.setItem("answers", JSON.stringify({...JSON.parse(localStorage.getItem('answers')) || {}, ...answers}))
         const next = String(Number(question) + 1)
 
+        // After the final question
         if (next <= 5) {
+            console.log(JSON.parse(localStorage.getItem("answers")))
+            // const result = await updateUser(answers)
+            //
+            // if (result) {
+            //     setTimeout(() => router.push(`/questions/${next}`), 200)
+            // }
             setTimeout(() => router.push(`/questions/${next}`), 200)
         }
         
