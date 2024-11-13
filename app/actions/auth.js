@@ -41,34 +41,36 @@ export async function signup(state, formData) {
             errors: validatedFields.error.flatten().fieldErrors,
           }
     }
+
     // call the provider
     try {
-    const signupResponse = await fetch(`https://${process.env.AUTH0_DOMAIN}/dbconnections/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          client_id: process.env.AUTH0_CLIENT_ID,
-          email: formData.get('email'),
-          password: formData.get('password'),
-          user_metadata: {
-            phone: formData.get('phone')
-          },
-          connection: 'Username-Password-Authentication',
-        }),
-      });
+        const response = await fetch(`http://${HOSTNAME}:8000/auth/register/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                full_name: formData.get('name'),
+                email: formData.get('email'),
+                password: formData.get('password'),
+                phone_number: formData.get('phone'),
+                role: role,
+            }),
+        })
 
-      const signUpResult = await signupResponse.json();
-      console.log(signUpResult);
+        const result = await response.json()
+        console.log(result)
 
-      if (signUpResult) {
-        return {
-            success: true
+        if (result) {
+            return {
+                success: true
+            }
         }
-    }
 
-    }catch(error) {
-        // setup logging with slack
-        console.log(error)  
+    }catch(errors) {
+        console.log(errors)
+        // TODO: setup a logger here
+
         return {
             error: error.error_description
         }
