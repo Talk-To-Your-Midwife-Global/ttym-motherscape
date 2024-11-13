@@ -86,7 +86,7 @@ function BasicCycleInformation({handleAnswers, submit, state}) {
     const handleChange = (event) => {
         const {name, value} = event.target
 
-        if(name == 'periodLength' && value > 0) {
+        if(name === 'periodLength' && value > 0) {
             setDisableButton(false)
         }else {
             setDisableButton(true)
@@ -137,7 +137,7 @@ function CycleRegularity({handleAnswers, submit, state}) {
     const handleChange = (event) => {
         const {name, value} = event.target
 
-        if(name == 'cycleRegularity') {
+        if(name === 'cycleRegularity') {
             setDisableButton(false)
         }else {
             setDisableButton(true)
@@ -183,7 +183,7 @@ function LastPeriod({handleAnswers, submit, state}) {
         const {name, value} = event.target
         // console.log(name, value)
 
-        if(name == 'lastPeriod') {
+        if(name === 'periodStart') {
             setDisableButton(false)
         }else {
             setDisableButton(true)
@@ -198,7 +198,7 @@ function LastPeriod({handleAnswers, submit, state}) {
             <form className="px-[20px] text-primaryText">
                 <div className="flex flex-col gap-2 mb-5">
                     <label htmlFor="last-period" className="font-medium">When did your last period start?</label>
-                    <input type="date" name="lastPeriod" id="last-period" onChange={handleChange}/>
+                    <input type="date" name="periodStart" id="last-period" onChange={handleChange}/>
                 </div>
             </form>
             <div className="relative -bottom-[45%] w-full flex justify-center">
