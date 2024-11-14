@@ -24,12 +24,15 @@ export async function updateUser(info) {
                 period_length: info.periodLength,
                 is_regular_cycle: info.cycleRegularity,
                 period_start: info.periodStart,
-                moods: info.moods,
-                symptoms: info.symptoms,
+                tracking_pref: {
+                    mood: info.moods,
+                    symptoms: info.symptoms,
+                },
                 notification_pref: info.notificationPreference
             })
         })
         const json = await response.json()
+        console.log(json)
         if (json) {
             return {
                 success: true,
