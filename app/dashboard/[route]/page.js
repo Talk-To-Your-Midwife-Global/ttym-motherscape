@@ -1,6 +1,7 @@
 import {cookies} from "next/headers";
 import {Home} from "@/app/dashboard/components/home";
 import {HOSTNAME} from "@/app/config/main";
+import {CalendarMain} from "@/app/dashboard/components/calendar";
 
 async function getUser() {
     const cookieStore = await cookies();
@@ -23,7 +24,8 @@ export default async function Page({params}) {
     console.log(user)
 
     const views = {
-        'me': <Home />
+        'me': <Home />,
+        'calendar': <CalendarMain />,
     }
     return (
         <section>
