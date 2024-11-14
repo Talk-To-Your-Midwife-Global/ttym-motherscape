@@ -72,7 +72,7 @@ export async function signup(state, formData) {
         // TODO: setup a logger here
 
         return {
-            error: error.error_description
+            error: errors.error_description
         }
     }
 }
@@ -119,6 +119,11 @@ export async function signin(state, formData) {
             let cookieStore = await cookies()
             cookieStore.set('access_token', result.tokens.access)
             cookieStore.set('refresh_token', result.tokens.refresh)
+
+            if (result.last_login !== null) {
+                cookieStore.set('last_login', result.user.last_login)
+            }
+
             return {
                 success: true,
                 token: result.tokens.access
@@ -132,7 +137,7 @@ export async function signin(state, formData) {
     }catch(errors) {
         return {
             state: {
-                error: error.error_description
+                error: errors.error_description
             }
         }
     }
