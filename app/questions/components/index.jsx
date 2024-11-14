@@ -78,7 +78,7 @@ export  function QuestionParent({question, updateUser}) {
 
     return (
         <section>
-            <QuestionNav last={question == 6 ? true : false} url={question > 1 ? `/questions/${question - 1}`: '/questions/'} />
+            <QuestionNav last={question === 6 ? true : false} url={question > 1 ? `/questions/${question - 1}`: '/questions/'} />
             <ProgressIndicator target={question}  />
             <PageSlideAnimator>
                 {questions[question]}
