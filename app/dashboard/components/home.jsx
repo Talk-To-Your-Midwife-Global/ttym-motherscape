@@ -1,5 +1,5 @@
 "use client"
-import {Card, DashboardNav, InsightCard} from "@/app/dashboard/components/index";
+import {Calendar, Card, DashboardNav, InsightCard, ShortCalendar} from "@/app/dashboard/components/index";
 import {montserrat} from "@/app/fonts";
 import Image from "next/image";
 import Link from "next/link";
@@ -50,7 +50,9 @@ export function Home() {
             </header>
 
         {/*    Calendar goes here   */}
-
+            <section className={"my-5"}>
+                <ShortCalendar />
+            </section>
 
         {/*   Other details go here    */}
             <section className={"px-5 my-5 text-primaryText "}>
