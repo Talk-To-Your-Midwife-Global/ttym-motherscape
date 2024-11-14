@@ -45,10 +45,7 @@ export  function QuestionParent({question, updateUser}) {
 
 
     const handleQuestionAnswers = (questionAnswers) => {
-        setAnswers((prevState) => ({...prevState, ...questionAnswers})) 
-        console.log('qanswers', questionAnswers)
-
-        console.log(answers)
+        setAnswers((prevState) => ({...prevState, ...questionAnswers}))
     }
     const handleSubmit =  () => {
         localStorage.setItem("answers", JSON.stringify({...JSON.parse(localStorage.getItem('answers')) || {}, ...answers}))
@@ -56,13 +53,15 @@ export  function QuestionParent({question, updateUser}) {
 
         // After the final question
         if (next <= 5) {
-            console.log(JSON.parse(localStorage.getItem("answers")))
-            // const result = await updateUser(answers)
-            //
-            // if (result) {
-            //     setTimeout(() => router.push(`/questions/${next}`), 200)
-            // }
             setTimeout(() => router.push(`/questions/${next}`), 200)
+        } else {
+            const result =  updateUser(JSON.parse(localStorage.getItem("answers"))).then(res => {
+                if (res.success === true) {
+                    setTimeout(() => router.push(`/dashboard`), 200)
+                }else {
+                    setTimeout(() => router.push(`/questions`), 200)
+                }
+            })
         }
         
     }
@@ -151,7 +150,6 @@ function CycleRegularity({handleAnswers, submit, state}) {
         }
 
         handleAnswers({...state, [name]: value})
-        console.log(answers)
     }
 
     return (
@@ -166,8 +164,8 @@ function CycleRegularity({handleAnswers, submit, state}) {
                         </svg>
                         <select defaultValue="" className="w-full h-11 appearance-none forced-colors:appearance-auto row-start-1 col-start-1 rounded-lg bg-slate-50 hover:border-primaryColor hover:bg-white border-2 text-[#808080] px-2 outline-none" id="cycle-regularity"  name="cycleRegularity" onChange={handleChange}>
                             <option value="" disabled hidden>eg. regular</option>
-                            <option value="regular">Regular</option>
-                            <option value="irregular">Irregular</option>
+                            <option value={true}>Regular</option>
+                            <option value={false}>Irregular</option>
                         </select>
                     </div>
                 </div>
@@ -188,7 +186,6 @@ function LastPeriod({handleAnswers, submit, state}) {
 
     const handleChange = (event) => {
         const {name, value} = event.target
-        // console.log(name, value)
 
         if(name === 'periodStart') {
             setDisableButton(false)
