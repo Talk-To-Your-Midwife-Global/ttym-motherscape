@@ -59,7 +59,6 @@ export async function signup(state, formData) {
         })
 
         const result = await response.json()
-        console.log(result)
 
         if (result) {
             return {
@@ -100,7 +99,6 @@ export async function signin(state, formData) {
     }
 
     try {
-        console.log(HOSTNAME)
         const response = await fetch(`http://${HOSTNAME}:8000/auth/login/`, {
             method: 'POST',
             headers: {
@@ -113,8 +111,6 @@ export async function signin(state, formData) {
         })
 
         const result = await response.json()
-        console.log(result)
-
         if (result) {
             let cookieStore = await cookies()
             cookieStore.set('access_token', result.tokens.access)

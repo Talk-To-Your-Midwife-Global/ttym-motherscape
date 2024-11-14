@@ -24,3 +24,17 @@ export function relatableNumber(int) {
         return int.toString()
     }
 }
+
+export function matchUserStatus(userType) {
+    switch (userType) {
+        case "gettingpregnant":
+            return "GETTING PREGNANT";
+        case "menstrualcycletracker":
+            return "NORMAL";
+        case "pregnancytracker":
+            return "PREGNANT";
+
+        default:
+            return "NORMAL";
+    }
+}

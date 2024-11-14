@@ -56,7 +56,7 @@ export function NavItem({children, text="default", style="", withText=true, acti
 
 export function Card({head, status, children}) {
     return (
-        <aricle className={"bg-white rounded-md w-full h-16 shadow-md border my-5 flex items-center"}>
+        <article className={"bg-white rounded-md w-full h-16 shadow-md border my-5 flex items-center"}>
             <div className={"flex items-center px-2"}>
                 {children}
             </div>
@@ -65,7 +65,7 @@ export function Card({head, status, children}) {
                 <p> You are currently in: Menstrual Phase </p>
                 <p className={`text-[#72777A] text-sm`}>Period started 2 days ago</p>
             </div>
-        </aricle>
+        </article>
     )
 }
 

@@ -1,6 +1,7 @@
 "use server"
 import { cookies } from "next/headers"
 import {HOSTNAME} from "@/app/config/main";
+import {matchUserStatus} from "@/app/lib/functions";
 
 export async function storeUserType(userType) {
     const cookieStore = await cookies();
@@ -12,27 +13,30 @@ export async function storeUserType(userType) {
 
 export async function updateUser(info) {
     const cookieStore = await cookies();
+    const accessToken = cookieStore.get('access_token')?.value;
+    const userType = matchUserStatus(cookieStore.get('ttym-user-type')?.value);
+
     try {
-        const response = await fetch(`http://${HOSTNAME}/:8000/user/patient/update/`, {
+        const response = await fetch(`http://${HOSTNAME}:8000/user/patient/update/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + cookieStore.get('access_token')
+                'Authorization': 'Bearer ' + accessToken
             },
             body: JSON.stringify({
                 cycle_length: info.cycleInfo,
                 period_length: info.periodLength,
                 is_regular_cycle: info.cycleRegularity,
-                period_start: info.periodStart,
+                last_period_start: info.periodStart,
                 tracking_pref: {
-                    mood: info.moods,
+                    moods: info.moods,
                     symptoms: info.symptoms,
                 },
-                notification_pref: info.notificationPreference
+                notification_pref: info.notificationPreference,
+                status: userType
             })
         })
         const json = await response.json()
-        console.log(json)
         if (json) {
             return {
                 success: true,
@@ -41,7 +45,7 @@ export async function updateUser(info) {
             return {
                 success: false,
                 error: {
-                    error_description: "Something went wrong",
+                    error_description: json,
                 }
             }
         }
@@ -49,7 +53,7 @@ export async function updateUser(info) {
             return {
                 success: false,
                 error: {
-                    error_description: "Something went wrong",
+                    error_description: error,
                 }
             }
     }
