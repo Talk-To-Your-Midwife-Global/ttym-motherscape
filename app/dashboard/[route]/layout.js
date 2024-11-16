@@ -43,7 +43,7 @@ export default async function DashboardLayout({children, params}) {
                     </NavItem>
 
                     <NavItem text={"calendar"} withText={false}>
-                        <svg className={"relative bottom-10 drop-shadow-xl backdrop-blur-sm rounded-full w-fit h-fit p-0 .absolute"}
+                        <svg className={"relative bottom-10 drop-shadow-xl backdrop-blur-md rounded-full w-fit h-fit p-0 .absolute"}
                              width="72" height="76" viewBox="0 0 82 76"
                              fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="15.1821" y="2.48926" width="51.6361" height="51.6361" rx="25.8181" fill="#0F969C"
