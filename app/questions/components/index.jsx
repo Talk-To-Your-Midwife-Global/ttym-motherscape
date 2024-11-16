@@ -125,7 +125,7 @@ function BasicCycleInformation({handleAnswers, submit, state}) {
                 <div>
                     <div className="flex flex-col gap-2">
                         <label htmlFor="period-length" className="font-medium">How many days does your period usually last?</label>
-                        <input className="border-2 border-slate-300 text-[#808080] h-11 rounded-md bg-transparent px-[10px] outline-none" placeholder="Days of Period" type="number" name="periodLength" id="period-length" onChange={handleChange} />
+                        <input className="border-2 border-slate-300 text-[#808080] h-11 rounded-md bg-transparent px-[10px] outline-none" placeholder="Days of Period" type="number" min={1} max={60} name="periodLength" id="period-length" onChange={handleChange} />
                     </div>
                 </div>
             </form>
