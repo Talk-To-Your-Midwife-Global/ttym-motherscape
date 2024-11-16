@@ -89,7 +89,7 @@ export function CalendarMain({data}) {
                 </article>
 
                 <article
-                    className={`my-10 h-[160px] w-[150px] rounded-2xl shadow-md border-2 border-[#07226B] p-4 flex flex-col space-between`}>
+                    className={`my-10 h-[160px] carousel-items flex-shrink-0 w-42 rounded-2xl shadow-md border-2 border-[#07226B] p-4 flex flex-col space-between`}>
                     <div className={`flex-1`}>
                         <Image src={ovulationBlue} alt={'blue image depicting ovulation'}/>
                     </div>
@@ -100,7 +100,7 @@ export function CalendarMain({data}) {
                 </article>
 
                 <article
-                    className={`my-10 h-[160px] w-[130px] rounded-2xl shadow-md border-2 border-[#AF52DE] p-4 flex flex-col space-between`}>
+                    className={`my-10 h-[160px] carousel-items flex-shrink-0 w-42 rounded-2xl shadow-md border-2 border-[#AF52DE] p-4 flex flex-col space-between`}>
                     <div className={`flex-1`}>
                         <Image src={pregnancyPink} alt={'blue image depicting ovulation'}/>
                     </div>
@@ -115,18 +115,18 @@ export function CalendarMain({data}) {
             {
                !hideDailyTip && <section className={`flex justify-center items-center`}>
                 <PageFadeAnimator>
-                <article className={'bg-tertiaryColor text-white w-[380px] h-[140px] rounded-xl px-4 py-4'}>
-                    <header className={`flex space-between items-center w-full mb-2`}>
-                        <h2 className={'flex-1 text-xl font-semibold'}>Daily Tip</h2>
-                        <span tabIndex={0} onClick={()=> handleHideDailyTip()} className={'iconify lucide--x text-xl'}></span>
-                    </header>
-                    <p className={`font-light text-[13px]`}>
-                        Navigating your fertility path involves understanding when it&apos;s appropriate to seek
-                    </p>
-                    <div className={`flex justify-end mt-3`}>
-                        <Link href={"#"} className={'text-right text-sm'} >Learn more</Link>
-                    </div>
-                </article>
+                    <article className={'bg-tertiaryColor text-white w-[380px] h-[140px] rounded-xl px-4 py-4'}>
+                        <header className={`flex space-between items-center w-full mb-2`}>
+                            <h2 className={'flex-1 text-xl font-semibold'}>Daily Tip</h2>
+                            <span tabIndex={0} onClick={()=> handleHideDailyTip()} className={'iconify lucide--x text-xl'}></span>
+                        </header>
+                        <p className={`font-light text-[13px]`}>
+                            Navigating your fertility path involves understanding when it&apos;s appropriate to seek
+                        </p>
+                        <div className={`flex justify-end mt-3`}>
+                            <Link href={"#"} className={'text-right text-sm'} >Learn more</Link>
+                        </div>
+                    </article>
                 </PageFadeAnimator>
             </section>
             }
