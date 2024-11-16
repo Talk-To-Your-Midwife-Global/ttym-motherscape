@@ -115,7 +115,7 @@ export function CalendarMain({data}) {
             {
                !hideDailyTip && <section className={`flex justify-center items-center`}>
                 <PageFadeAnimator>
-                    <article className={'bg-tertiaryColor text-white w-[380px] h-[140px] rounded-xl px-4 py-4'}>
+                    <article className={'bg-tertiaryColor text-white max-w-[350px] h-[140px] rounded-xl px-4 py-4'}>
                         <header className={`flex space-between items-center w-full mb-2`}>
                             <h2 className={'flex-1 text-xl font-semibold'}>Daily Tip</h2>
                             <span tabIndex={0} onClick={()=> handleHideDailyTip()} className={'iconify lucide--x text-xl'}></span>
