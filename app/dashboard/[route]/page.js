@@ -3,6 +3,7 @@ import {Home} from "@/app/dashboard/components/home";
 import {HOSTNAME} from "@/app/config/main";
 import {CalendarMain} from "@/app/dashboard/components/calendar";
 import {menstrualCycleDateGenerator, necessaryDataForMenstrualUI} from "@/app/lib/functions";
+import {Logs} from "@/app/dashboard/components/logs";
 
 async function getUser() {
     const cookieStore = await cookies();
@@ -70,6 +71,7 @@ export default async function Page({params}) {
     const views = {
         'me': <Home user={user.user} data={userMenstrualCycle} />,
         'calendar': <CalendarMain data={userMenstrualCycle} />,
+        'logs': <Logs />,
     }
     return (
         <section>

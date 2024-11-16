@@ -246,7 +246,7 @@ export function InsightParent({head, desc, data}) {
     )
 }
 
-function CalendarTemplate({startWeek, endWeek, currentMonth, specialDates = [], action = {}}, withFlower = false) {
+function CalendarTemplate({startWeek, endWeek, currentMonth, specialDates = [], action = {}}, withFlower = true) {
     const days = []
     let day = startWeek;
     while (day <= endWeek) {
@@ -254,8 +254,8 @@ function CalendarTemplate({startWeek, endWeek, currentMonth, specialDates = [], 
         day = addDays(day, 1)
     }
     return (
-        <section className={`p-4 max-w-md .mx-auto text-primaryText`}>
-            <div className={`flex my-5`}>
+        <section className={`p-4 max-w-md text-primaryText`}>
+            <div className={`flex mb-5`}>
                 <div className={`flex-1 flex items-center gap-2`}>
                     <Image src={calendarIcon} alt={`Calendar icon`}/>
                     <h2> {format(currentMonth, "MMMM yyyy")} </h2>

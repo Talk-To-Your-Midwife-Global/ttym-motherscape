@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 //     matcher: ["/questions/:path*", '/dashboard/:path*']
 // }
 
-const protectedRoute = ['/questions', '/dashboard', '/dashboard/me', '/dashboard/calendar']
+const protectedRoute = ['/questions', '/dashboard', '/dashboard/me', '/dashboard/calendar', '/dashboard/logs', '/dashboard/community']
 const publicRoutes = ['/', '/auth/register', '/auth/signIn']
 
 export function middleware(request) {

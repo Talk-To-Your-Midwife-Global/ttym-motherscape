@@ -29,3 +29,7 @@ export async function unbookmarkPost(postId) {
         marked: false
     }
 }
+
+export async function moodsAndFeelingsForTheDay(state) {
+    // send to server
+}

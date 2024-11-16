@@ -54,7 +54,7 @@ export function Home({user, data}) {
 
         {/*    Calendar goes here   */}
             <section className={"mt-1"}>
-                <ShortCalendar specialDates={data?.calendar} action={{actionText: "See Details", link:"/dashboard/calendar"}}/>
+                <ShortCalendar withFlower={false} specialDates={data?.calendar} action={{actionText: "See Details", link:"/dashboard/calendar"}}/>
             </section>
 
         {/*   Other details go here    */}

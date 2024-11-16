@@ -8,7 +8,7 @@ export default function Error({ error, reset }) {
         // Log the error to an error reporting service
         console.error(error)
     }, [error])
-
+    // TODO: Edit this page
     return (
         <div>
             <h2>Something went wrong!</h2>
