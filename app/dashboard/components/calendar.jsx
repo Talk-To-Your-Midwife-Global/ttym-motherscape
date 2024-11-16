@@ -49,7 +49,7 @@ export function CalendarMain({data}) {
             {
                 viewLargeCalendar ?
                     <section>
-                        <Calendar action={{actionText: "Minimize Calendar", action: handleCalendarViewToggle}} specialDates={data?.calendar} />
+                        <Calendar action={{actionText: "Minimize Calendar", action: handleCalendarViewToggle}} specialDates={data?.calendar} withFlower={true} />
                         <div className={'text-[#72777A] text-[12px] px-5 flex gap-4'}>
                             <span className={`flex gap-2`}>
                                 <div className={'w-4 h-4 bg-[#F8CEDE] rounded-full'}> </div> <span>Recorded Flows</span>
@@ -63,7 +63,7 @@ export function CalendarMain({data}) {
                         </div>
                     </section>
                     : <ShortCalendar action={{actionText: "View Calendar", action: handleCalendarViewToggle}}
-                                     specialDates={data?.calendar} />
+                                     specialDates={data?.calendar} withFlower={true} />
             }
             <section className={`my-10`}>
                 <CircularProgressBar percentage={data?.percentageComplete} bg={`#F5F5F5`} foreBg={'#015364'}>

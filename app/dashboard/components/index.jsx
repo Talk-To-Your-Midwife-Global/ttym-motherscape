@@ -10,18 +10,16 @@ import {
     addDays,
     isSameMonth,
     isSameDay,
-    parseISO,
-    formatDistance,
-    differenceInDays
 } from "date-fns";
 import {montserrat} from "@/app/fonts";
 import Link from "next/link";
 import bloating from "@/public/images/bloating.png"
-import category from "../../../public/icons/category.svg"
-import dullBell from "../../../public/icons/notification.svg"
-import searchIcon from "../../../public/icons/search-icon.svg"
-import activeBell from "../../../public/icons/notification-active.svg"
+import category from "@/public/icons/category.svg"
+import dullBell from "@/public/icons/notification.svg"
+import searchIcon from "@/public/icons/search-icon.svg"
+import activeBell from "@/public/icons/notification-active.svg"
 import calendarIcon from "@/public/icons/calendar-three.svg"
+import nameFlower from "@/public/images/name-flower.svg"
 import {relatableDay, relatableNumber} from "@/app/lib/functions";
 import {bookmarkPost, unbookmarkPost} from "@/app/dashboard/actions/action";
 import drip from "@/public/icons/drip.svg";
@@ -248,9 +246,7 @@ export function InsightParent({head, desc, data}) {
     )
 }
 
-function CalendarTemplate({startWeek, endWeek, currentMonth, specialDates = [], action = {}}) {
-    // const styleDates = specialDates?.map(day => ({...day, date: parseISO(day.date)}))
-    console.log(specialDates)
+function CalendarTemplate({startWeek, endWeek, currentMonth, specialDates = [], action = {}}, withFlower = false) {
     const days = []
     let day = startWeek;
     while (day <= endWeek) {
@@ -263,9 +259,9 @@ function CalendarTemplate({startWeek, endWeek, currentMonth, specialDates = [], 
                 <div className={`flex-1 flex items-center gap-2`}>
                     <Image src={calendarIcon} alt={`Calendar icon`}/>
                     <h2> {format(currentMonth, "MMMM yyyy")} </h2>
+                    {withFlower && <Image src={nameFlower} alt={'pink flower'} />}
                 </div>
                 <div>
-                    {/*<Link href={`/dashboard/calendar`} className={`text-primaryColor`}> See Details</Link>*/}
                     <ActionLink text={action?.actionText} href={action?.link} onClick={action?.action}  />
                 </div>
             </div>
@@ -295,19 +291,19 @@ function CalendarTemplate({startWeek, endWeek, currentMonth, specialDates = [], 
     )
 }
 
-export function ShortCalendar({specialDates, action}) {
+export function ShortCalendar({specialDates, action, withFlower}) {
     const [currentMonth, setCurrentMonth] = useState(new Date())
     const startWeek = startOfWeek(new Date())
     const endWeek = endOfWeek(new Date())
 
     return (
         <div>
-            <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth} specialDates={specialDates} action={action}/>
+            <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth} specialDates={specialDates} action={action} withFlower={withFlower} />
         </div>
     )
 }
 
-export function Calendar({specialDates, action}) {
+export function Calendar({specialDates, action, withFlower}) {
     const [currentMonth, setCurrentMonth] = useState(new Date())
     const startMonth = startOfMonth(currentMonth)
     const endMonth = endOfMonth(currentMonth)
@@ -316,7 +312,7 @@ export function Calendar({specialDates, action}) {
 
     return (
         <div>
-            <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth} specialDates={specialDates} action={action}/>
+            <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth} specialDates={specialDates} action={action} withFlower={withFlower}/>
         </div>
     )
 }
