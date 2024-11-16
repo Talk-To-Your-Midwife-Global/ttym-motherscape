@@ -13,7 +13,7 @@ export default function Page() {
     const [userRoute, setUserRoute] = useState('');
     const router = useRouter()
     if (state?.success) {
-        router.push('/questions')
+        router.push(state?.route)
     }
 
     const getUserRouteFromLocalStorage = () => {

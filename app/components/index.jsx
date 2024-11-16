@@ -19,13 +19,12 @@ export function PageFadeAnimator({children}) {
     return (
         <AnimatePresence mode="wait">
             <motion.div
-                key={children?.key}  // Unique key for each page transition
+                key={children?.key}
                 initial="hidden"
                 animate="visible"
                 exit="exit"
                 variants={fadeVariants}
-                transition={{ duration: 0.5 }} // Adjust duration for fade speed
-                className="fade-container"
+                transition={{ duration: 0.5 }}
             >
                 {children}
             </motion.div>
@@ -37,7 +36,7 @@ export function PageSlideAnimator({children}) {
   return (
     <AnimatePresence mode="wait">
     <motion.div
-      key={children?.key} // Unique key for each page
+      key={children?.key}
       initial="hidden"
       animate="enter"
       exit="exit"
@@ -64,7 +63,7 @@ export function Loader() {
 
 export function Button({text="Button", variant="primary", type="link", href="/", disabled=false}) {
   return (
-    <button disabled={disabled} className={`${variant == "primary" && disabled  ? "bg-[#A8CCD0] text-white"  : "bg-primaryColor text-white border border-secondary" } w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2`}>
+    <button disabled={disabled} className={`${variant === "primary" && disabled  ? "bg-[#A8CCD0] text-white"  : "bg-primaryColor text-white border border-secondary" } w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2`}>
           {text}
     </button>
   )
@@ -73,9 +72,19 @@ export function Button({text="Button", variant="primary", type="link", href="/",
 export function IconButton({text="Button", icon="", variant="primary", type="link", href=" ", disabled=false, onClick=undefined}) {
   return (
     <Link href={href ? href : undefined }>
-      <button onClick={onClick ? () => onClick() : undefined} disabled={disabled} className={`${variant == "primary" && disabled  ? "bg-[#A8CCD0] text-white"  : "bg-primaryColor text-white border border-primaryColor " } w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2`}>
+      <button onClick={onClick ? () => onClick() : undefined} disabled={disabled} className={`${variant === "primary" && disabled  ? "bg-[#A8CCD0] text-white"  : "bg-primaryColor text-white border border-primaryColor " } w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2`}>
           {text} <span className={icon}></span>
       </button>
     </Link>
   )
+}
+
+export function ActionLink({text="Button", icon="", variant="primary", type="link", href=" ", disabled=false, onClick=undefined}) {
+    return (
+        <Link href={href ? href : undefined }>
+            <button onClick={onClick ? () => onClick() : undefined} disabled={disabled} className={`${variant === "primary" && disabled  ? "bg-[#A8CCD0] text-white"  : " text-primaryColor " } .w-[273px] h-[48px] flex items-center justify-center gap-2`}>
+                {text} <span className={icon}></span>
+            </button>
+        </Link>
+    )
 }

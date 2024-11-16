@@ -122,7 +122,9 @@ export async function signin(state, formData) {
 
             return {
                 success: true,
-                token: result.tokens.access
+                token: result.tokens.access,
+                route: result.last_login !== null ? '/dashboard' : '/questions'
+
             }
         } else {
             return {
@@ -137,6 +139,16 @@ export async function signin(state, formData) {
             }
         }
     }
+}
+
+export async function logout() {
+    const cookieStore = await cookies()
+    const items = ['access_token', 'refresh_token', 'last_login', 'ttym-user-type']
+    for(const item of items) {
+        cookieStore.delete(item)
+    }
+
+//TODO: Implement the logout
 }
 
 /**

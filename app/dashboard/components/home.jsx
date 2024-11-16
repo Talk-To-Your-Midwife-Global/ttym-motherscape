@@ -1,5 +1,9 @@
 "use client"
-import {Calendar, Card, DashboardNav, InsightCard, ShortCalendar} from "@/app/dashboard/components/index";
+import {
+    CycleCardMain,
+    InsightCard,
+    ShortCalendar
+} from "@/app/dashboard/components/index";
 import {montserrat} from "@/app/fonts";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,7 +24,7 @@ import eventImg1 from "@/public/images/event-1.png"
 import eventImg2 from "@/public/images/event-2.png"
 import {useState} from "react";
 
-export function Home() {
+export function Home({user, data}) {
     const faces = [
         {desc: "good", img: goodFace},
         {desc: "bad", img:badFace},
@@ -40,18 +44,17 @@ export function Home() {
         }
     }
     return (
-        <section className={"my-3"}>
+        <section className={"my-2"}>
             <header className={"px-5"}>
-                <DashboardNav/>
                 <section className={"text-primaryText"}>
                     <p className={`text-subText text-sm font-medium ${montserrat.className}`}>Welcome 👋</p>
-                    <p className={"flex items-center text-3xl"}>Trudy Akortia <Image src={flower} alt={"flower"}/></p>
+                    <p className={"flex items-center text-3xl"}> {user?.full_name} <Image src={flower} alt={"flower"}/></p>
                 </section>
             </header>
 
         {/*    Calendar goes here   */}
-            <section className={"my-5"}>
-                <ShortCalendar />
+            <section className={"mt-1"}>
+                <ShortCalendar specialDates={data?.calendar} action={{actionText: "See Details", link:"/dashboard/calendar"}}/>
             </section>
 
         {/*   Other details go here    */}
@@ -60,22 +63,7 @@ export function Home() {
                     <h2>Today&apos;s Update</h2>
                     <Image src={pinkFlower} alt={"Another flower"}/>
                 </header>
-                <section className={"mt-4"}>
-                    <Card>
-                        <Image src={drip} alt={"drip "} />
-                    </Card>
-                    <Card>
-                        <Image src={clock} alt={"drip "} />
-                    </Card>
-                    <Card>
-                        <Image src={cycle} alt={"drip "} />
-                    </Card>
-                    <Card>
-                        <Image src={pregnancyIcon} alt={"drip "} />
-                    </Card>
-
-
-                </section>
+               <CycleCardMain data={data} />
             </section>
 
             <section className={"text-primaryText "}>
@@ -99,7 +87,6 @@ export function Home() {
                             </p>
                         </div>
                     }
-
                 </section>
             </section>
 
