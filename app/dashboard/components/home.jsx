@@ -93,14 +93,18 @@ export function Home({user, data}) {
             <section className={"px-5 my-10 "}>
                 <header>
                     <div className={"flex justify-between"}>
-                        <h2 className={"text-primaryText font-bold text-xl"}>Cycle Insights</h2> <Link href={"/"}>See More</Link> {/* TODO: use the right link*/}
+                        <h2 className={"text-primaryText font-bold text-xl"}>Cycle Insights</h2> <Link href={"/"}>See
+                        More</Link> {/* TODO: use the right link*/}
                     </div>
-                    <p className={`${montserrat.className} text-subText`}>Personalized health tips based on logged data</p>
+                    <p className={`${montserrat.className} text-subText`}>Personalized health tips based on logged
+                        data</p>
                 </header>
-                <section className={'grid grid-cols-2 gap-4 py-5'}>
-                    {/* TODO: Empty state ui */}
-                    <InsightCard />
-                    <InsightCard />
+                <section className={`carousel flex overflow-x-auto scroll-smooth space-x-4 p-4`}>
+                    <InsightCard/>
+                    <InsightCard/>
+                    <InsightCard/>
+                    <InsightCard/>
+                    <InsightCard/>
                 </section>
             </section>
 

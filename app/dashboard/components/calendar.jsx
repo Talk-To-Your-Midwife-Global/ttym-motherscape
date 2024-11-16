@@ -72,9 +72,9 @@ export function CalendarMain({data}) {
                     <p className={`w-[200px] text-center text-subText`}> {phaseImages[data?.stage].msg} </p>
                 </CircularProgressBar>
             </section>
-            <section className={`flex gap-3 overflow-x-auto`}>
+            <section className={`carousel flex overflow-x-auto scroll-smooth space-x-4 my-4`}>
                 <article
-                    className={`my-10 h-[160px] w-[150px] rounded-2xl shadow-md border p-4 mx-4 flex flex-col space-between`}>
+                    className={`carousel-items flex-shrink-0 w-42 my-10 h-[160px] rounded-2xl shadow-md border p-4 mx-2 flex flex-col space-between`}>
                     <header className={`flex-1`}>
                         <h2 className={'font-medium text-primaryText'}>Log Time</h2>
                         <p className={`text-[10px] text-subText`}>Log how you feel today</p>

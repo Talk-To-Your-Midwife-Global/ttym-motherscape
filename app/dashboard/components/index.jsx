@@ -29,7 +29,7 @@ import pregnancyIcon from "@/public/icons/pregnancy.svg";
 import {ActionLink} from "@/app/components";
 
 
-export function DashboardNav() {
+export function DashboardNav({text=""}) {
     const [hasNotifications, setHasNotifications] = useState(false)
     const [toggleSearch, setToggleSearch] = useState(false)
 
@@ -207,7 +207,7 @@ export function InsightCard({img, tag, heading, reads,}) {
 
     }
     return (
-        <article className={`bg-white rounded-2xl px-5 py-4 h-[250px] drop-shadow-custom-green`}>
+        <article className={`bg-white carousel-item rounded-2xl px-5 py-4 h-[250px] flex-shrink-0 w-48 drop-shadow-custom-green`}>
             <div className={`border-2 border-black rounded-full w-20 h-20 flex items-center justify-center`}>
                 <Image src={bloating} alt={"image of a bloating stomach"}/>
             </div>
@@ -244,7 +244,7 @@ export function InsightParent({head, desc, data}) {
                 </div>
                 <p className={`${montserrat.className} text-subText`}>{desc}</p>
             </header>
-            <section className={'grid grid-cols-2 gap-4 py-5'}>
+            <section className={'`carousel flex overflow-x-auto scroll-smooth space-x-4 p-4'}>
                 {/* TODO: Empty state ui and loop instead */}
                 <InsightCard/>
                 <InsightCard/>
@@ -323,3 +323,4 @@ export function Calendar({specialDates, action, withFlower}) {
         </div>
     )
 }
+
