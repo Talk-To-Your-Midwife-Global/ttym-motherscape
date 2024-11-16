@@ -11,11 +11,11 @@ import apple from "../../../public/images/apple.svg"
 export function HelpCenterLinks({signIn=true}) {
     return (
         <section className="text-primaryText text-center text-sm font-medium">
-            <p className="mb-5">Already have an account?
-                <Link className="text-primaryColor" href={`/auth/${signIn ? 'signIn' : 'register'}`}>{signIn ? 'signIn' : 'signup'}</Link>
+            <p className="mb-5">{signIn ? "Already have an account?" : "Don't have an account?"}
+                <Link className="text-primaryColor" href={`/auth/${signIn ? 'signIn' : 'register'}`}>{signIn ? ' Sign In' : ' Sign Up'}</Link>
             </p>
             <p>Need help? Visit our
-                <Link className="text-primaryColor" href="/help">help center</Link></p> {/** TODO:Create help center page */}
+                <Link className="text-primaryColor" href="#"> help center</Link></p> {/** TODO:Create help center page */}
         </section>
     )
 }
@@ -141,7 +141,7 @@ export function SignUpForm({state, action}) {
             <div>
                 <label htmlFor="name" className="font-medium text-mainText">Name</label>
                 <div className="bg-white border-2 w-full h-[42px] flex gap-2 items-center rounded-xl pl-[15px] pr-[5px]">
-                    <span className="iconify lucide--map-pin font-medium text-[#999999]"></span>
+                    <span className="iconify mdi--person-outline font-medium text-[#999999]"></span>
                     <input type="text" name="name" id="name" placeholder="Full Name"  className="flex-1 outline-none bg-transparent text-mainText"/>
                 </div>
                 {state?.errors?.address && <p className="text-red-500 text-sm">{state.errors.address}</p>}
@@ -165,7 +165,7 @@ export function SignUpForm({state, action}) {
                         <option value="GHA">GHA</option>
                         <option value="NGN">NGN</option>
                     </select>
-                    <input type="phone" name="phone" id="phone" placeholder="eg. +1 (555) 000-0000"  className="flex-1 outline-none bg-transparent text-mainText" value={state?.email && state.email}/>
+                    <input type="text" name="phone" id="phone" placeholder="eg. +1 (555) 000-0000"  className="flex-1 outline-none bg-transparent text-mainText" value={state?.email && state.email}/>
                 </div>
                 {state?.errors?.email && <p className="text-red-500 text-sm">{state.errors.email}</p>}
             </div>

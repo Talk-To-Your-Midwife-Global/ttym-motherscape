@@ -43,7 +43,7 @@ export default function Page() {
                     <Image src={redCalendar} width={100} height={100} alt="red calendar" />
                 </PersonaCard>
             </section>
-            <section className="fixed bottom-5 w-full flex justify-center">
+            <section className=".fixed bottom-5 w-full flex justify-center">
                 <IconButton text="Continue" icon="iconify lucide--arrow-right" href={`/onboarding/${routeName}/1`} disabled={enable} />
             </section>
         </section>

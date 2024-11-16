@@ -8,6 +8,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      dropShadow: {
+        "custom-green": "0px 14px 6px #0F969C21",
+        "custom-black": "40px 44px 16px #0F969C21",
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -23,6 +27,6 @@ module.exports = {
     },
   },
   plugins: [
-    addIconSelectors(['lucide', 'material-symbols-light'])
+    addIconSelectors(['lucide', 'material-symbols-light', 'mdi'])
   ],
 };

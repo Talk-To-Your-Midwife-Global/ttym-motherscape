@@ -1,15 +1,28 @@
 'use server'
 import {SignUpFormSchema, SignInFormSchema, ForgotPasswordFormSchema} from "../auth/lib/definitions";
 import { cookies } from "next/headers";
+import {HOSTNAME} from "../config/main";
+
+
+async function patientOrMidwife() {
+    const cookieStore = await cookies()
+    if (cookieStore.has('ttym-user-type')) {
+        if (cookieStore.get('ttym-user-type') !== 'midwife' ) {
+            return 'PATIENT'
+        }else {
+            return 'MIDWIFE'
+        }
+    }
+}
 
 /**
  * Validates sign up form fields
- * @param {action state} state 
+ * @param {state} state
  * @param {formData} formData 
  * @returns 
  */
 export async function signup(state, formData) {
-    
+    const role = await patientOrMidwife()
     // validate user fields
     const validatedFields = SignUpFormSchema.safeParse({
         name: formData.get('name'),
@@ -28,43 +41,58 @@ export async function signup(state, formData) {
             errors: validatedFields.error.flatten().fieldErrors,
           }
     }
+
     // call the provider
     try {
-    const signupResponse = await fetch(`https://${process.env.AUTH0_DOMAIN}/dbconnections/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          client_id: process.env.AUTH0_CLIENT_ID,
-          email: formData.get('email'),
-          password: formData.get('password'),
-          user_metadata: {
-            phone: formData.get('phone')
-          },
-          connection: 'Username-Password-Authentication',
-        }),
-      });
-
-      const signUpResult = await signupResponse.json();
-      console.log(signUpResult);
-
-      if (signUpResult) {
-        return {
-            success: true
+        const response = await fetch(`http://${HOSTNAME}:8000/auth/register/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                full_name: formData.get('name'),
+                email: formData.get('email'),
+                password: formData.get('password'),
+                phone_number: formData.get('phone'),
+                role,
+            }),
+        })
+        const result = await response.json()
+        const errors = []
+        if (!response.ok) {
+            for(const key in result) {
+                errors.push(result[key][0])
+            }
+            console.log('Errors in auth.js signup')
+            console.log(errors)
+            return {
+                success: false,
+                error: errors
+            }
         }
-    }
-
-    }catch(error) {
-        // setup logging with slack
-        console.log(error)  
+        let cookieStore = await cookies()
+        cookieStore.set('access_token', result.tokens.access, {httpOnly: true, path: '/'})
+        cookieStore.set('refresh_token', result.tokens.refresh, {httpOnly: true, path: '/'})
+        console.log('successfully logged in')
+        console.log(result)
         return {
-            error: error.error_description
+            success: true,
+            token: result.tokens.access,
+            route: result.is_configured ? '/dashboard' : '/questions'
+        }
+    } catch(errors) {
+        console.log(errors)
+        // TODO: setup a logger here
+
+        return {
+            error: [errors.error_description]
         }
     }
 }
 
 /**
  * Validates sign in form fields
- * @param {action state} state
+ * @param {state} state
  * @param {formData} formData
  * @returns
  */
@@ -84,46 +112,59 @@ export async function signin(state, formData) {
           }
     }
 
-    try { 
-            //   Automatic login and verification
-        const loginResponse = await fetch(`https://${process.env.AUTH0_DOMAIN}/oauth/token`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            client_id: process.env.AUTH0_CLIENT_ID,
-            client_secret: process.env.AUTH0_CLIENT_SECRET,
-            username: formData.get('email'),
-            password: formData.get('password'),
-            realm: 'Username-Password-Authentication',
-            grant_type: 'http://auth0.com/oauth/grant-type/password-realm',
-        }),
-        });
+    try {
+        const response = await fetch(`http://${HOSTNAME}:8000/auth/login/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: formData.get('email'),
+                password: formData.get('password'),
+            })
+        })
 
-        const loginResult = await loginResponse.json();
-        console.log(loginResult)
-        if (loginResult.access_token) {
-        // Save token in local storage or cookies
+        const result = await response.json()
+        const errors = []
+        if(!response.ok) {
+            for (const key in result) {
+                errors.push(result[key][0])
+            }
+            return {
+                success: false,
+                error: errors
+            }
+        }
+
         let cookieStore = await cookies()
-        cookieStore.set('access_token', loginResult.access_token)
+        cookieStore.set('access_token', result.tokens.access)
+        cookieStore.set('refresh_token', result.tokens.refresh)
+
+        if (!result.is_configured) {
+            cookieStore.set('last_login', null)
+        } else {
+            cookieStore.set('last_login', result.user.last_login)
+        }
         return {
             success: true,
-            token: loginResult.access_token
+            token: result.tokens.access,
+            route: result.is_configured  ? '/dashboard' : '/questions'
         }
-        } else {
-            return {
-                success: false
-                
-            }
-        }
-    } catch (error) {
-        console.log(error)
+    } catch(errors) {
         return {
-            state: {
-                error: error.error_description
-            }
+            error: [errors.error_description]
         }
     }
-        
+}
+
+export async function logout() {
+    const cookieStore = await cookies()
+    const items = ['access_token', 'refresh_token', 'last_login', 'ttym-user-type']
+    for(const item of items) {
+        cookieStore.delete(item)
+    }
+
+//TODO: Implement the logout
 }
 
 /**
