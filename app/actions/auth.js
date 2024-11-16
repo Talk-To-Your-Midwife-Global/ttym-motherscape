@@ -63,8 +63,6 @@ export async function signup(state, formData) {
             for(const key in result) {
                 errors.push(result[key][0])
             }
-            console.log('Errors in auth.js signup')
-            console.log(errors)
             return {
                 success: false,
                 error: errors
@@ -73,12 +71,10 @@ export async function signup(state, formData) {
         let cookieStore = await cookies()
         cookieStore.set('access_token', result.tokens.access, {httpOnly: true, path: '/'})
         cookieStore.set('refresh_token', result.tokens.refresh, {httpOnly: true, path: '/'})
-        console.log('successfully logged in')
-        console.log(result)
         return {
             success: true,
             token: result.tokens.access,
-            route: result.is_configured ? '/dashboard' : '/questions'
+            route: '/questions'
         }
     } catch(errors) {
         console.log(errors)
@@ -148,7 +144,7 @@ export async function signin(state, formData) {
         return {
             success: true,
             token: result.tokens.access,
-            route: result.is_configured  ? '/dashboard' : '/questions'
+            route: result.user.is_configured  ? '/dashboard' : '/questions'
         }
     } catch(errors) {
         return {
