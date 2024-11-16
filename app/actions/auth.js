@@ -71,8 +71,6 @@ export async function signup(state, formData) {
         let cookieStore = await cookies()
         cookieStore.set('access_token', result.tokens.access)
         cookieStore.set('refresh_token', result.tokens.refresh)
-
-        console.log(result)
         return {
             success: true,
             token: result.tokens.access,
@@ -143,14 +141,12 @@ export async function signin(state, formData) {
         } else {
             cookieStore.set('last_login', result.user.last_login)
         }
-        console.log(result)
         return {
             success: true,
             token: result.tokens.access,
             route: result.is_configured  ? '/dashboard' : '/questions'
         }
-
-    }catch(errors) {
+    } catch(errors) {
         return {
             state: {
                 error: errors.error_description
