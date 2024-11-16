@@ -4,6 +4,7 @@ import {HOSTNAME} from "@/app/config/main";
 import {CalendarMain} from "@/app/dashboard/components/calendar";
 import {menstrualCycleDateGenerator, necessaryDataForMenstrualUI} from "@/app/lib/functions";
 import {Logs} from "@/app/dashboard/components/logs";
+import {Community} from "@/app/dashboard/components/community";
 
 async function getUser() {
     const cookieStore = await cookies();
@@ -51,7 +52,6 @@ async function getUserCycleInfo() {
     let res = await response.json();
     console.log(res)
     // Add menstrual dates to response
-    // res.calendar = menstrualCycleDateGenerator(res.period_start, res.period_length, "general", res.cycle_length)
     res = necessaryDataForMenstrualUI(res)
     return res
     } catch(error) {
@@ -72,6 +72,7 @@ export default async function Page({params}) {
         'me': <Home user={user.user} data={userMenstrualCycle} />,
         'calendar': <CalendarMain data={userMenstrualCycle} />,
         'logs': <Logs />,
+        'community': <Community />,
     }
     return (
         <section>
