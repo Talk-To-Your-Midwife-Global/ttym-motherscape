@@ -13,7 +13,9 @@ export default function Page() {
     const router = useRouter()
     
     if (state?.success) {
-        router.push('/auth/signIn/')
+        const timer = setTimeout(() => {
+            router.push('/auth/signIn/')
+        }, 200)
     }
     const getUserRouteFromLocalStorage = () => {
         return localStorage.getItem('userType')
