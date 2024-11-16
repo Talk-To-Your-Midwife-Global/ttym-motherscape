@@ -88,7 +88,7 @@ export function StepThree({children}) {
                         {children}
                     </section>
 
-                    <section className="mt-10 flex flex-col gap-8 justify-center items-center">
+                    <section className="my-10 flex flex-col gap-8 justify-center items-center">
                         <IconButton href="/auth/register/" icon="iconify lucide--arrow-right" text="Create Account" disabled={false}/>
                         <Link className="text-primaryColor font-bold" href="/auth/signIn/">
                             Log In
