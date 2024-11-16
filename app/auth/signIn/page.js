@@ -12,9 +12,7 @@ export default function Page() {
     const [state, action] = useActionState(signin, undefined)
     const [userRoute, setUserRoute] = useState('');
     const router = useRouter()
-    if (state?.success) {
-        router.push(state?.route)
-    }
+
 
     const getUserRouteFromLocalStorage = () => {
         return localStorage.getItem('userType')
@@ -22,6 +20,9 @@ export default function Page() {
 
     useEffect(() => {
         setUserRoute(getUserRouteFromLocalStorage())
+        if (state?.success) {
+            router.push(state?.route)
+        }
     }, [])
 
     return (

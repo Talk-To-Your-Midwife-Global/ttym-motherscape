@@ -54,25 +54,36 @@ export async function signup(state, formData) {
                 email: formData.get('email'),
                 password: formData.get('password'),
                 phone_number: formData.get('phone'),
-                role: role,
+                role,
             }),
         })
-
         const result = await response.json()
-        console.log(result)
-
-        if (result) {
+        const errors = []
+        if (!response.ok) {
+            for(const key in result) {
+                errors.push(result[key][0])
+            }
             return {
-                success: true
+                success: false,
+                error: errors
             }
         }
+        let cookieStore = await cookies()
+        cookieStore.set('access_token', result.tokens.access)
+        cookieStore.set('refresh_token', result.tokens.refresh)
 
-    }catch(errors) {
+        console.log(result)
+        return {
+            success: true,
+            token: result.tokens.access,
+            route: result.is_configured ? '/dashboard' : '/questions'
+        }
+    } catch(errors) {
         console.log(errors)
         // TODO: setup a logger here
 
         return {
-            error: errors.error_description
+            error: [errors.error_description]
         }
     }
 }
@@ -112,25 +123,31 @@ export async function signin(state, formData) {
         })
 
         const result = await response.json()
-        if (result) {
-            let cookieStore = await cookies()
-            cookieStore.set('access_token', result.tokens.access)
-            cookieStore.set('refresh_token', result.tokens.refresh)
-
-            if (result.last_login !== null) {
-                cookieStore.set('last_login', result.user.last_login)
+        const errors = []
+        if(!response.ok) {
+            for (const key in result) {
+                errors.push(result[key][0])
             }
-
             return {
-                success: true,
-                token: result.tokens.access,
-                route: result.last_login !== null ? '/dashboard' : '/questions'
-
+                success: false,
+                error: errors
             }
+        }
+
+        let cookieStore = await cookies()
+        cookieStore.set('access_token', result.tokens.access)
+        cookieStore.set('refresh_token', result.tokens.refresh)
+
+        if (!result.is_configured) {
+            cookieStore.set('last_login', null)
         } else {
-            return {
-                success: false
-            }
+            cookieStore.set('last_login', result.user.last_login)
+        }
+        console.log(result)
+        return {
+            success: true,
+            token: result.tokens.access,
+            route: result.is_configured  ? '/dashboard' : '/questions'
         }
 
     }catch(errors) {
