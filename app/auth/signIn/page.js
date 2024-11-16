@@ -11,6 +11,7 @@ import pregnantLogo from "../../../public/images/ttym-rounded-logo.svg"
 export default function Page() {
     const [state, action] = useActionState(signin, undefined)
     const [userRoute, setUserRoute] = useState('');
+    const [error, setError] = useState([]);
     const router = useRouter()
 
 
@@ -23,7 +24,7 @@ export default function Page() {
         if (state?.success) {
             router.push(state?.route)
         }
-    }, [])
+    }, [state?.success])
 
     return (
         <section>
@@ -42,8 +43,9 @@ export default function Page() {
                     <p className="text-subText font-medium">Sign in to be able to access your page</p>
                 </section>
                 <div className=" flex justify-center">
-                    {state?.success === false ? <p className="text-red-600 flex items-center gap-2">
-                        <span className="iconify lucide--info"></span>Incorrect email or password</p>: ''}
+                    {/*{state?.success === false ? <p className="text-red-600 flex items-center gap-2">*/}
+                    {/*    <span className="iconify lucide--info"></span>Incorrect email or password</p>: ''}*/}
+                    {error.length > 0 ? error.map((err, index )=> <p key={index} className={`text-red-500`}>{err}</p> ) : ""}
                 </div>
             </header>
             <SignInForm action={action} state={state} />

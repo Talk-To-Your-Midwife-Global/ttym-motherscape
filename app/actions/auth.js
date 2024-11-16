@@ -148,9 +148,7 @@ export async function signin(state, formData) {
         }
     } catch(errors) {
         return {
-            state: {
-                error: errors.error_description
-            }
+            error: [errors.error_description]
         }
     }
 }
