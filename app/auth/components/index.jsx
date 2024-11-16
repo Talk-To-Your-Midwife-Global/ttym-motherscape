@@ -11,11 +11,11 @@ import apple from "../../../public/images/apple.svg"
 export function HelpCenterLinks({signIn=true}) {
     return (
         <section className="text-primaryText text-center text-sm font-medium">
-            <p className="mb-5">Already have an account?
-                <Link className="text-primaryColor" href={`/auth/${signIn ? 'signIn' : 'register'}`}>{signIn ? 'signIn' : 'signup'}</Link>
+            <p className="mb-5">{signIn ? "Already have an account?" : "Don't have an account?"}
+                <Link className="text-primaryColor" href={`/auth/${signIn ? 'signIn' : 'register'}`}>{signIn ? ' Sign In' : ' Sign Up'}</Link>
             </p>
             <p>Need help? Visit our
-                <Link className="text-primaryColor" href="/help">help center</Link></p> {/** TODO:Create help center page */}
+                <Link className="text-primaryColor" href="#"> help center</Link></p> {/** TODO:Create help center page */}
         </section>
     )
 }
