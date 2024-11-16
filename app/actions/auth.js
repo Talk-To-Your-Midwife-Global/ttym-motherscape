@@ -59,6 +59,7 @@ export async function signup(state, formData) {
         })
 
         const result = await response.json()
+        console.log(result)
 
         if (result) {
             return {
