@@ -38,17 +38,24 @@ export function DashboardNav() {
             <div className={"bg-[#0F969C26] rounded-full w-fit h-fit p-4"}>
                 <Image src={category} alt={"some grid icon thingy"}/>
             </div>
-            <div className={`flex-1 w-1/4 `}>
-                <input className={`h-10 rounded-md outline-none border px-2 ${toggleSearch ? 'block': 'hidden'} `}
-                       type={"search"}/>
-            </div>
-            <div className={"bg-[#0F969C26] rounded-full w-fit h-fit p-4"} onClick={() => setToggleSearch(!toggleSearch)} >
-                <Image src={searchIcon} alt={"Search bar icon"}/>
-            </div>
-            {hasNotifications ?
-                <Image src={activeBell} alt={"active bell icon"}/> :
-                <Image src={dullBell} alt={"bell icon with no notification"}/>
+            {
+                text.length === 0 ?
+                <section className={`flex-1 w-2/4 flex justify-end`}>
+                    <div className={`flex-1 w-1/4`}>
+                        <input className={`h-10 rounded-md outline-none border px-2 ${toggleSearch ? 'block': 'hidden'} `}
+                               type={"search"}/>
+                    </div>
+                    <div className={"bg-[#0F969C26] rounded-full w-fit h-fit p-4"} onClick={() => setToggleSearch(!toggleSearch)} >
+                        <Image src={searchIcon} alt={"Search bar icon"}/>
+                    </div>
+                </section> :  <div className={`flex-1 text-center font-semibold text-xl text-[#000]`}> {text} </div>
             }
+            <div className={`bg-[#0F969C26] rounded-full w-[50px] h-[50px] p-4 flex items-center justify-center`}>
+                {hasNotifications ?
+                    <Image src={activeBell} alt={"active bell icon"}/> :
+                    <Image src={dullBell} alt={"bell icon with no notification"}/>
+                }
+            </div>
         </nav>
 )}
 
