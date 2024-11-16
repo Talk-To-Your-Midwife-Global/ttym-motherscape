@@ -63,14 +63,18 @@ export async function signup(state, formData) {
             for(const key in result) {
                 errors.push(result[key][0])
             }
+            console.log('Errors in auth.js signup')
+            console.log(errors)
             return {
                 success: false,
                 error: errors
             }
         }
         let cookieStore = await cookies()
-        cookieStore.set('access_token', result.tokens.access)
-        cookieStore.set('refresh_token', result.tokens.refresh)
+        cookieStore.set('access_token', result.tokens.access, {httpOnly: true, path: '/'})
+        cookieStore.set('refresh_token', result.tokens.refresh, {httpOnly: true, path: '/'})
+        console.log('successfully logged in')
+        console.log(result)
         return {
             success: true,
             token: result.tokens.access,
