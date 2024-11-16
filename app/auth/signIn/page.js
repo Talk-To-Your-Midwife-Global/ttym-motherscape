@@ -13,7 +13,7 @@ export default function Page() {
     const [userRoute, setUserRoute] = useState('');
     const router = useRouter()
     if (state?.success) {
-        router.push('/questions')
+        router.push(state?.route)
     }
 
     const getUserRouteFromLocalStorage = () => {
@@ -41,7 +41,7 @@ export default function Page() {
                     <p className="text-subText font-medium">Sign in to be able to access your page</p>
                 </section>
                 <div className=" flex justify-center">
-                    {state?.success == false ? <p className="text-red-600 flex items-center gap-2">
+                    {state?.success === false ? <p className="text-red-600 flex items-center gap-2">
                         <span className="iconify lucide--info"></span>Incorrect email or password</p>: ''}
                 </div>
             </header>

@@ -39,23 +39,29 @@ function QuestionHead({text}) {
     )
 }
 
-export function QuestionParent({question}) {
+export  function QuestionParent({question, updateUser}) {
     const router = useRouter()
     const [answers, setAnswers] = useState({})
 
 
     const handleQuestionAnswers = (questionAnswers) => {
-        setAnswers((prevState) => ({...prevState, ...questionAnswers})) 
-        console.log('qanswers', questionAnswers)
-
-        console.log(answers)
+        setAnswers((prevState) => ({...prevState, ...questionAnswers}))
     }
-    const handleSubmit = () => {
+    const handleSubmit =  () => {
         localStorage.setItem("answers", JSON.stringify({...JSON.parse(localStorage.getItem('answers')) || {}, ...answers}))
         const next = String(Number(question) + 1)
 
+        // After the final question
         if (next <= 5) {
             setTimeout(() => router.push(`/questions/${next}`), 200)
+        } else {
+            const result =  updateUser(JSON.parse(localStorage.getItem("answers"))).then(res => {
+                if (res.success === true) {
+                    setTimeout(() => router.push(`/dashboard`), 200)
+                }else {
+                    setTimeout(() => router.push(`/questions`), 200)
+                }
+            })
         }
         
     }
@@ -71,7 +77,7 @@ export function QuestionParent({question}) {
 
     return (
         <section>
-            <QuestionNav last={question == 6 ? true : false} url={question > 1 ? `/questions/${question - 1}`: '/questions/'} />
+            <QuestionNav last={question === 6 ? true : false} url={question > 1 ? `/questions/${question - 1}`: '/questions/'} />
             <ProgressIndicator target={question}  />
             <PageSlideAnimator>
                 {questions[question]}
@@ -86,7 +92,7 @@ function BasicCycleInformation({handleAnswers, submit, state}) {
     const handleChange = (event) => {
         const {name, value} = event.target
 
-        if(name == 'periodLength' && value > 0) {
+        if(name === 'periodLength' && value > 0) {
             setDisableButton(false)
         }else {
             setDisableButton(true)
@@ -137,14 +143,13 @@ function CycleRegularity({handleAnswers, submit, state}) {
     const handleChange = (event) => {
         const {name, value} = event.target
 
-        if(name == 'cycleRegularity') {
+        if(name === 'cycleRegularity') {
             setDisableButton(false)
         }else {
             setDisableButton(true)
         }
 
         handleAnswers({...state, [name]: value})
-        console.log(answers)
     }
 
     return (
@@ -159,8 +164,8 @@ function CycleRegularity({handleAnswers, submit, state}) {
                         </svg>
                         <select defaultValue="" className="w-full h-11 appearance-none forced-colors:appearance-auto row-start-1 col-start-1 rounded-lg bg-slate-50 hover:border-primaryColor hover:bg-white border-2 text-[#808080] px-2 outline-none" id="cycle-regularity"  name="cycleRegularity" onChange={handleChange}>
                             <option value="" disabled hidden>eg. regular</option>
-                            <option value="regular">Regular</option>
-                            <option value="irregular">Irregular</option>
+                            <option value={true}>Regular</option>
+                            <option value={false}>Irregular</option>
                         </select>
                     </div>
                 </div>
@@ -181,9 +186,8 @@ function LastPeriod({handleAnswers, submit, state}) {
 
     const handleChange = (event) => {
         const {name, value} = event.target
-        // console.log(name, value)
 
-        if(name == 'lastPeriod') {
+        if(name === 'periodStart') {
             setDisableButton(false)
         }else {
             setDisableButton(true)
@@ -198,7 +202,7 @@ function LastPeriod({handleAnswers, submit, state}) {
             <form className="px-[20px] text-primaryText">
                 <div className="flex flex-col gap-2 mb-5">
                     <label htmlFor="last-period" className="font-medium">When did your last period start?</label>
-                    <input type="date" name="lastPeriod" id="last-period" onChange={handleChange}/>
+                    <input type="date" name="periodStart" id="last-period" onChange={handleChange}/>
                 </div>
             </form>
             <div className="relative -bottom-[45%] w-full flex justify-center">

@@ -1,15 +1,9 @@
-"use client"
-import { Loader } from "../components";
+import Link from "next/link";
 
 export default function Page() {
-
-
     return (
-        <section>
-            {/* <Loader /> */}
-            <section className="absolute .text-white z-10">
-                <p>Analyzing data...</p>
-            </section>
+        <section className={"my-3"}>
+            <Link href={"/dashboard/me"} > Go to main dashboard</Link>
         </section>
     )
 }

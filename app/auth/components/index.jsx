@@ -165,7 +165,7 @@ export function SignUpForm({state, action}) {
                         <option value="GHA">GHA</option>
                         <option value="NGN">NGN</option>
                     </select>
-                    <input type="phone" name="phone" id="phone" placeholder="eg. +1 (555) 000-0000"  className="flex-1 outline-none bg-transparent text-mainText" value={state?.email && state.email}/>
+                    <input type="text" name="phone" id="phone" placeholder="eg. +1 (555) 000-0000"  className="flex-1 outline-none bg-transparent text-mainText" value={state?.email && state.email}/>
                 </div>
                 {state?.errors?.email && <p className="text-red-500 text-sm">{state.errors.email}</p>}
             </div>
