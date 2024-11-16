@@ -27,6 +27,6 @@ module.exports = {
     },
   },
   plugins: [
-    addIconSelectors(['lucide', 'material-symbols-light'])
+    addIconSelectors(['lucide', 'material-symbols-light', 'mdi'])
   ],
 };
