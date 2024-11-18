@@ -123,13 +123,13 @@ export async function signin(state, formData) {
         const result = await response.json()
         const errors = []
         if(!response.ok) {
-            for (const key in result) {
-                errors.push(result[key][0])
-            }
-            console.log(errors)
+            // for (const key in result) {
+            //     errors.push(result[key][0])
+            // }
+            // console.log(errors)
             return {
                 success: false,
-                error: errors
+                error: [result.message]
             }
         }
 
