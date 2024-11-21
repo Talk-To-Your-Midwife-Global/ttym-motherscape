@@ -7,6 +7,7 @@ export default async function DashboardLayout({children, params}) {
         "me": "",
         "logs": "Logs",
         "community": "Community",
+        "chat": "Chats"
     }
     return (
         <section>
