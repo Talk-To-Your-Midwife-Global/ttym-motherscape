@@ -11,7 +11,7 @@ export default function Error({ error, reset }) {
     }, [error])
     // TODO: Edit this page
     return (
-        <div className={`flex justify-center items-center w-full my-[50px]`}>
+        <div className={`flex justify-center items-center w-full h-screen`}>
             <section>
                 <h2 className={`text-primaryText text-2xl font-medium`}>Session has expired!</h2>
                 <Link href={"/auth/signIn"}>
@@ -27,7 +27,7 @@ export default function Error({ error, reset }) {
                 </button>
                 <br />
                 <button onClick={() => logout()}>
-                    Logout
+                    Login
                 </button>
             </section>
         </div>
