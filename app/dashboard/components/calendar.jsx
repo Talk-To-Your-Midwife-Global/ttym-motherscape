@@ -10,10 +10,11 @@ import ovulationBlue from "@/public/images/ovulation-phase-blue.svg"
 import pregnancyPink from "@/public/images/pregnancy-pink.svg"
 import {montserrat} from "@/app/fonts";
 import Link from "next/link";
-import {relatableDay} from "@/app/lib/functions";
+import {menstrualCycleDateGenerator, necessaryDataForMenstrualUI, relatableDay} from "@/app/lib/functions";
 import {PageFadeAnimator} from "@/app/components";
+import {useCycleInfo} from "@/app/dashboard/lib/functions";
 
-export function CalendarMain({data}) {
+export function CalendarMain({accessToken}) {
     const phaseImages = {
         "Menstrual": {
             img: menstrualPhase,
@@ -34,8 +35,14 @@ export function CalendarMain({data}) {
 
     }
 
+    const {data, error, isLoading} = useCycleInfo(accessToken);
+    const generalCycleInfo = necessaryDataForMenstrualUI(data || []);
+    const specialDates =  menstrualCycleDateGenerator(data?.period_start, data?.period_length, "general", data?.cycle_length);
+    // console.log(generalCycleInfo)
+
     const [viewLargeCalendar, setViewLargeCalendar] = useState(false);
     const [hideDailyTip, setHideDailyTip] = useState(false);
+
     const handleCalendarViewToggle = () => {
         setViewLargeCalendar(prevState => !prevState);
     }
@@ -44,12 +51,28 @@ export function CalendarMain({data}) {
         setHideDailyTip(true);
     }
 
+    if (isLoading) {
+        return (
+            <div>
+                loading...
+            </div>
+        )
+    }
+
+    if(error) {
+        return (
+            <div>
+                error
+                {error.message}
+            </div>
+        )
+    }
     return (
         <section>
             {
                 viewLargeCalendar ?
                     <section>
-                        <Calendar action={{actionText: "Minimize Calendar", action: handleCalendarViewToggle}} specialDates={data?.calendar} withFlower={true} />
+                        <Calendar action={{actionText: "Minimize Calendar", action: handleCalendarViewToggle}} accessToken={accessToken} specialDates={specialDates} withFlower={true} />
                         <div className={'text-[#72777A] text-[12px] px-5 flex gap-4'}>
                             <span className={`flex gap-2`}>
                                 <div className={'w-4 h-4 bg-[#F8CEDE] rounded-full'}> </div> <span>Recorded Flows</span>
@@ -63,13 +86,13 @@ export function CalendarMain({data}) {
                         </div>
                     </section>
                     : <ShortCalendar action={{actionText: "View Calendar", action: handleCalendarViewToggle}}
-                                     specialDates={data?.calendar} withFlower={true} />
+                                     specialDates={specialDates} accessToken={accessToken} withFlower={true} />
             }
             <section className={`my-10`}>
-                <CircularProgressBar percentage={data?.percentageComplete} bg={`#F5F5F5`} foreBg={'#015364'}>
-                    <h2 className={`text-3xl font-bold text-primaryText text-center`}>Day {data?.daysDone}</h2>
-                    <Image src={phaseImages[data?.stage].img} alt={"phase image"}/>
-                    <p className={`w-[200px] text-center text-subText`}> {phaseImages[data?.stage].msg} </p>
+                <CircularProgressBar percentage={generalCycleInfo?.percentageComplete} bg={`#F5F5F5`} foreBg={'#015364'}>
+                    <h2 className={`text-3xl font-bold text-primaryText text-center`}>Day {generalCycleInfo?.daysDone}</h2>
+                    <Image src={phaseImages[generalCycleInfo?.stage].img} alt={"phase image"}/>
+                    <p className={`w-[200px] text-center text-subText`}> {phaseImages[generalCycleInfo?.stage].msg} </p>
                 </CircularProgressBar>
             </section>
             <section className={`carousel flex overflow-x-auto scroll-smooth space-x-4 my-4`}>
@@ -95,7 +118,7 @@ export function CalendarMain({data}) {
                     </div>
                     <section className={`text-primaryText`}>
                         <h3 className={`${montserrat.className} text-[#0E0E0EB0] text-[12px]`}>Next Ovulation</h3>
-                        <p className={`text-2xl font-semibold`}>{relatableDay(data?.daysToOvulation)}</p>
+                        <p className={`text-2xl font-semibold`}>{relatableDay(generalCycleInfo?.daysToOvulation)}</p>
                     </section>
                 </article>
 
@@ -106,7 +129,7 @@ export function CalendarMain({data}) {
                     </div>
                     <section className={`text-primaryText`}>
                         <h3 className={`${montserrat.className} text-[#0E0E0EB0] text-[12px]`}>Pregnancy</h3>
-                        <p className={`text-2xl font-semibold`}>{data?.pregnancyProb} </p>
+                        <p className={`text-2xl font-semibold`}>{generalCycleInfo?.pregnancyProb} </p>
                     </section>
                 </article>
             </section>

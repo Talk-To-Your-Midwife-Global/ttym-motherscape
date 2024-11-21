@@ -1,5 +1,62 @@
 import {addDays, differenceInDays } from "date-fns";
 
+
+export function fetcher(url, token="") {
+    if(token.length > 1) {
+        console.log('fetcher ');
+        return fetch(url, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }).then(res => {
+            return res.json()
+        })
+    }
+    return fetch(url).then(res => res.json())
+}
+
+export function fetchUser(url, token) {
+    return fetch(url, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    }).then(res => {
+        return res.json()
+    })
+}
+
+export function fetchCycle(url, token) {
+    return fetch(url, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    }).then(res => {
+        const result = res.json()
+        return result
+    }).then(result => {
+        const formattedData = {
+                ...result,
+                dates: menstrualCycleDateGenerator(result.period_start, result.period_length, "general", result.cycle_length),
+                daysDone: computeDaysDone(result.period_start),
+                daysToPeriod: computeDaysToPeriod(result.period_start, result.cycle_length),
+                percentageComplete: computeCycleCompletion(computeDaysDone(result.period_start), result.cycle_length),
+            }
+            return formattedData
+    })
+}
+
+export function postFetcher(url, token, formBody) {
+    return fetch(url, {
+        method: 'POST',
+        headers: {
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(formBody)
+    }).then(res => {
+        return res.json()
+    })
+}
+
 /**
  * Remove spaces in a string
  * @param {string} sentence
@@ -68,10 +125,32 @@ export function matchUserStatus(userType) {
     }
 }
 
-// Convert this whole thing into a class soon
+export function necessaryDataForUser(allData) {
+    // console.log(allData)
+    return {
+        user: {
+            email: allData.user.email,
+            fullName: allData.user.full_name,
+            isConfigured: allData.user.is_configured,
+            isOnline: allData.user.is_online,
+            isVerified: allData.user.is_verified,
+            lastLogin: allData.user.last_login,
+            phoneNumber: allData.user.phone_number,
+            profilePic: allData.user.profile_pic,
+            role: allData.user.role,
+            username: allData.user.username,
+            isAssigned: true,
+        },
+        tokens: {
+            access: allData.tokens.access,
+            refresh: allData.tokens.refresh,
+        }
+    }
+}
 
+// Convert this whole thing into a class soon
 export function necessaryDataForMenstrualUI(allData) {
-    console.log('cycle legnth', allData.cycle_length)
+    // console.log('cycle legnth', allData.cycle_length)
     const dates = menstrualCycleDateGenerator(allData.period_start, allData.period_length, "general", allData.cycle_length)
     const daysDone = computeDaysDone(allData.period_start)
     const daysToPeriod = computeDaysToPeriod(allData.period_start, allData.cycle_length)

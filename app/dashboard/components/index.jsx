@@ -20,13 +20,20 @@ import searchIcon from "@/public/icons/search-icon.svg"
 import activeBell from "@/public/icons/notification-active.svg"
 import calendarIcon from "@/public/icons/calendar-three.svg"
 import nameFlower from "@/public/images/name-flower.svg"
-import {relatableDay, relatableNumber} from "@/app/lib/functions";
+import {
+    menstrualCycleDateGenerator,
+    necessaryDataForMenstrualUI,
+    relatableDay,
+    relatableNumber
+} from "@/app/lib/functions";
 import {bookmarkPost, unbookmarkPost} from "@/app/dashboard/actions/action";
 import drip from "@/public/icons/drip.svg";
 import clock from "@/public/icons/clock.svg";
 import cycle from "@/public/icons/cycle.svg";
 import pregnancyIcon from "@/public/icons/pregnancy.svg";
+import sarah from "@/public/images/sarah.png"
 import {ActionLink} from "@/app/components";
+import {useCycleInfo} from "@/app/dashboard/lib/functions";
 
 
 export function DashboardNav({text=""}) {
@@ -143,65 +150,74 @@ export const CircularProgressBar = ({children, percentage, bg = "currentColor", 
     );
 };
 
-export function CycleCardMain({data}) {
+export function CycleCardMain({accessToken}) {
+    const {data, error, isLoading} = useCycleInfo(accessToken);
+
+    const generalCycleInfo = necessaryDataForMenstrualUI(data || []);
+
+    if (isLoading) {
+        return (
+            <div>
+                loading...
+            </div>
+        )
+    }
+
+    if(error) {
+        return (
+            <div>
+                error
+                {error.message}
+            </div>
+        )
+    }
         return (
             <section className={"mt-4"}>
                 {
-                    data?.stage === "Menstrual" ?
+                    generalCycleInfo?.stage === "Menstrual" ?
                         <>
-                            <Card head={`You are currently in: ${data?.stage} Phase`}
+                            <Card head={`You are currently in: ${generalCycleInfo?.stage} Phase`}
                                   status={` Period started  days ago`}>
                                 <Image src={drip} alt={"drip "}/>
                             </Card>
-                            <Card head={`Period Length: ${data?.periodLength} days`}
-                                  status={data?.periodLength > 5 ? 'Abnormal' : 'Normal'}>
+                            <Card head={`Period Length: ${generalCycleInfo?.periodLength} days`}
+                                  status={generalCycleInfo?.periodLength > 5 ? 'Abnormal' : 'Normal'}>
                                 <Image src={clock} alt={"drip "}/>
                             </Card>
                         </> :
                         <>
-                            {/*<Card head={`Period begins: ${relatableDay(differenceInDays(data?.nextPeriodDate, new Date()))} `}*/}
-                            {/*      status={` ${differenceInDays(data?.nextPeriodDate, new Date())} days to go`}>*/}
-                            {/*    <Image src={drip} alt={"drip "}/>*/}
-                            {/*</Card>*/}
-                            <Card head={`Period begins: ${relatableDay(data?.daysToPeriod)} `}
-                                  status={`${data?.daysToPeriod} days to go`}>
+                            <Card head={`Period begins: ${relatableDay(generalCycleInfo?.daysToPeriod)} `}
+                                  status={`${generalCycleInfo?.daysToPeriod} days to go`}>
                                 <Image src={drip} alt={"drip "}/>
                             </Card>
-                            {/*<Card head={`You are currently in: ${data?.stage} Phase`}*/}
-                            {/*       status={`Day ${differenceInDays(new Date(), data?.period_start)} of ${data?.cycle_length}`}>*/}
-                            {/*    <Image src={clock} alt={"drip "}/>*/}
-                            {/*</Card>*/}
-                            <Card head={`You are currently in: ${data?.stage} Phase`}
-                                  status={`Day ${data?.daysDone} of ${data?.cycleLength}`}>
+                            <Card head={`You are currently in: ${generalCycleInfo?.stage} Phase`}
+                                  status={`Day ${generalCycleInfo?.daysDone} of ${generalCycleInfo?.cycleLength}`}>
                                 <Image src={clock} alt={"drip "}/>
                             </Card>
                         </>
 
                 }
-                <Card head={`Cycle Length: ${data?.cycleLength} days`}
-                      status={data?.cycleLength >= 26 && data?.cycleLength <= 31 ? 'Normal' : 'Abnormal'}>
+                <Card head={`Cycle Length: ${generalCycleInfo?.cycleLength} days`}
+                      status={generalCycleInfo?.cycleLength >= 26 && generalCycleInfo?.cycleLength <= 31 ? 'Normal' : 'Abnormal'}>
                     <Image src={cycle} alt={"drip"}/>
                 </Card>
-                <Card head={`Pregnancy`} status={data?.stage === "Ovulation" ? "High" : 'Low'}>
+                <Card head={`Pregnancy`} status={generalCycleInfo?.stage === "Ovulation" ? "High" : 'Low'}>
                     <Image src={pregnancyIcon} alt={"drip "}/>
                 </Card>
             </section>
         )
-
-
 }
 
-export function InsightCard({img, tag, heading, reads,}) {
+export function InsightCard({insight, accessToken}) {
     const [bookmarked, setBookmarked] = useState(false)
 
     const handlePostBookmarking = async (id) => {
         setBookmarked(prevState => !prevState)
-
         if (bookmarked) {
-            const marked = await unbookmarkPost(id)
+            const marked = await unbookmarkPost(id, accessToken)
             setBookmarked(marked.marked)
         } else {
-            const marked = await bookmarkPost(id)
+            const marked = await bookmarkPost(id, accessToken)
             setBookmarked(marked.marked)
         }
 
@@ -209,11 +225,11 @@ export function InsightCard({img, tag, heading, reads,}) {
     return (
         <article className={`bg-white carousel-item rounded-2xl px-5 py-4 h-[250px] flex-shrink-0 w-48 drop-shadow-custom-green`}>
             <div className={`border-2 border-black rounded-full w-20 h-20 flex items-center justify-center`}>
-                <Image src={bloating} alt={"image of a bloating stomach"}/>
+                <Image src={`http://${process.env.NEXT_PUBLIC_HOSTNAME}:8000${insight?.image}`} width={200} height={200} alt={"image of a bloating stomach"}/>
             </div>
             <header>
-                <h3 className={`${montserrat.className} text-subText text-sm uppercase my-3 font-medium`}>bloating</h3>
-                <h2 className={`text-primaryText font-semibold w-full`}>What can help me stop bloating</h2>
+                <h3 className={`${montserrat.className} text-subText text-sm uppercase my-3 font-medium`}>{insight?.tags[0].name}</h3>
+                <h2 className={`text-primaryText font-semibold w-full`}> {insight?.title} </h2>
             </header>
             <section className={`my-4 flex gap-4 items-center`}>
                 <div onClick={() => {
@@ -228,9 +244,25 @@ export function InsightCard({img, tag, heading, reads,}) {
                               strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                 </div>
-                <span className={"text-sm"}> {relatableNumber(2000)} read</span>
+                <span className={"text-sm"}>{relatableNumber(Number(insight?.reads))} reads</span>
             </section>
         </article>
+    )
+}
+
+export function ChatCard() {
+    return (
+        <section className={`w-full grid gap-2 grid-cols-3`}>
+            <Image src={sarah} alt={"user profile image"} />
+            <div className={`flex`}>
+
+                {/* number of unread messages in the chat */}
+                <div>
+                    <span className={`bg-red-600 text-white text-center p-2 w-3 h-3 rounded-full`}>3</span>
+                </div>
+            </div>
+            <div></div>
+        </section>
     )
 }
 
@@ -298,11 +330,34 @@ function CalendarTemplate({startWeek, endWeek, currentMonth, specialDates = [], 
     )
 }
 
-export function ShortCalendar({specialDates, action, withFlower}) {
+export function ShortCalendar({action, withFlower, accessToken}) {
+    // const [dates, setDates] = useState([])
+    const {data, error, isLoading} = useCycleInfo(accessToken);
+    // console.log('short calendar')
+    // console.log(data)
+    const specialDates =  menstrualCycleDateGenerator(data?.period_start, data?.period_length, "general", data?.cycle_length);
+    // console.log(otherData)
+
     const [currentMonth, setCurrentMonth] = useState(new Date())
     const startWeek = startOfWeek(new Date())
     const endWeek = endOfWeek(new Date())
 
+    if (isLoading) {
+        return (
+            <div>
+                loading...
+            </div>
+        )
+    }
+
+    if(error) {
+        return (
+            <div>
+                error
+                {error.message}
+            </div>
+        )
+    }
     return (
         <div>
             <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth} specialDates={specialDates} action={action} withFlower={withFlower} />
@@ -310,12 +365,35 @@ export function ShortCalendar({specialDates, action, withFlower}) {
     )
 }
 
-export function Calendar({specialDates, action, withFlower}) {
+export function Calendar({action, withFlower, accessToken}) {
+    const {data, error, isLoading} = useCycleInfo(accessToken);
+    // console.log('short calendar')
+    // console.log(data)
+    const specialDates = menstrualCycleDateGenerator(data?.period_start, data?.period_length, "general", data?.cycle_length);
+    // console.log(otherData)
+
     const [currentMonth, setCurrentMonth] = useState(new Date())
     const startMonth = startOfMonth(currentMonth)
     const endMonth = endOfMonth(currentMonth)
     const startWeek = startOfWeek(startMonth)
     const endWeek = endOfWeek(endMonth)
+
+    if (isLoading) {
+        return (
+            <div>
+                loading...
+            </div>
+        )
+    }
+
+    if(error) {
+        return (
+            <div>
+                error
+                {error.message}
+            </div>
+        )
+    }
 
     return (
         <div>
