@@ -1,8 +1,28 @@
 'use server'
+// import {SignJWT, JWTVer} from 'jose'
 import {SignUpFormSchema, SignInFormSchema, ForgotPasswordFormSchema} from "../auth/lib/definitions";
 import { cookies } from "next/headers";
 import {HOSTNAME} from "../config/main";
 
+
+// const secretKey = 'somekeybiIwillmakeinenvironmentvairables'
+// const key = new TextEncoder().encode(secretKey);
+//
+// export async function encrypt(payload) {
+//     return await SignJWT(payload)
+//         .setProtectedHeader({alg: 'HS256'})
+//         .setIssuedAt()
+//         .setExpirationTime('time goes here')
+//         .sign(key)
+// }
+//
+// export async function decrypt(input) {
+//     const {payload} = await JWTVerify(input, key,  {
+//         algorithms: ['HS256'],
+//     })
+//
+//     return payload
+// }
 
 async function patientOrMidwife() {
     const cookieStore = await cookies()
@@ -121,6 +141,7 @@ export async function signin(state, formData) {
         })
 
         const result = await response.json()
+        // console.log
         const errors = []
         if(!response.ok) {
             // for (const key in result) {
