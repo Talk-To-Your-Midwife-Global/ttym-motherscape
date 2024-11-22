@@ -155,7 +155,7 @@ export function CalendarMain({accessToken}) {
             }
             </section>
 
-            <InsightParent head={"Daily Insights"} desc={"Personalized health tips based on logged data"} />
+            <InsightParent head={"Daily Insights"} desc={"Personalized health tips based on logged data"} accessToken={accessToken} />
         </section>
     )
 }

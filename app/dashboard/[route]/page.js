@@ -14,7 +14,7 @@ export default async function Page({params}) {
     const views = {
         'me': <Home accessToken={accessToken} />,
         'calendar': <CalendarMain accessToken={accessToken} />,
-        'logs': <Logs />,
+        'logs': <Logs accessToken={accessToken} />,
         'community': <Community />,
         'chat': <Chat />
     }

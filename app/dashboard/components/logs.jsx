@@ -3,13 +3,17 @@ import {useState} from "react";
 import {inter} from "@/app/fonts";
 import {IconButton} from "@/app/components";
 import {ShortCalendar} from "@/app/dashboard/components/index";
+import {logLog} from "@/app/dashboard/actions/action";
 
-export function Logs({submit}) {
+export function Logs({accessToken}) {
     const [disableBtn, setDisableButton] = useState(true)
     const [feelingState, setFeelingState] = useState({moods: [], symptoms: []})
-
-    const handleSubmit = () => {
-        submit()
+    const userType = localStorage.getItem('userType') !== "midwife" ? "PATIENTLOG" : "MIDWIFELOG"
+    console.log(userType)
+    const handleSubmit = async () => {
+        console.log(feelingState)
+        const res = await logLog(feelingState, accessToken, userType)
+        console.log(res)
     }
 
     const handleMoodToggle = (item) => {

@@ -1,6 +1,6 @@
 'use server'
 import {cookies} from "next/headers";
-import useSWR from "swr";
+
 /**
  * Send daily feeling
  * @param feeling
@@ -46,6 +46,12 @@ export async function bookmarkPost(postId, accessToken) {
     }
 }
 
+/**
+ * Un bookmark a post
+ * @param postId
+ * @param accessToken
+ * @returns {Promise<{marked: boolean}>}
+ */
 export async function unbookmarkPost(postId, accessToken) {
     const response = await fetch(`http://${process.env.NEXT_PUBLIC_HOSTNAME}:8000/user/bookmark/${postId}`, {
         headers: {
@@ -62,6 +68,34 @@ export async function unbookmarkPost(postId, accessToken) {
     }
 }
 
-export async function moodsAndFeelingsForTheDay(state) {
-    // send to server
+export async function moodsAndFeelingsForTheDay(state, accessToken) {
+   // do something
+}
+
+export async function logLog(state, accessToken, userType) {
+    // console.log(state)
+    const response = await fetch(`http://${process.env.NEXT_PUBLIC_HOSTNAME}:8000/logs/`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({
+            type: userType,
+            entry: state
+        })
+    })
+    const res = await response.json()
+    if(!response.ok) {
+        return {
+            success: false,
+            data: res
+        }
+    }
+
+    return {
+        data: res
+    }
+
+
 }

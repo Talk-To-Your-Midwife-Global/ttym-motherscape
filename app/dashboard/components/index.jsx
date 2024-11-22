@@ -33,7 +33,7 @@ import cycle from "@/public/icons/cycle.svg";
 import pregnancyIcon from "@/public/icons/pregnancy.svg";
 import sarah from "@/public/images/sarah.png"
 import {ActionLink} from "@/app/components";
-import {useCycleInfo} from "@/app/dashboard/lib/functions";
+import {useCycleInfo, useInsightsInfo} from "@/app/dashboard/lib/functions";
 
 
 export function DashboardNav({text=""}) {
@@ -210,6 +210,7 @@ export function CycleCardMain({accessToken}) {
 
 export function InsightCard({insight, accessToken}) {
     const [bookmarked, setBookmarked] = useState(false)
+    // console.log(insight)
 
     const handlePostBookmarking = async (id) => {
         setBookmarked(prevState => !prevState)
@@ -266,7 +267,8 @@ export function ChatCard() {
     )
 }
 
-export function InsightParent({head, desc, data}) {
+export function InsightParent({head, desc, accessToken}) {
+    const {insights, isLoadingInsights, insightError } = useInsightsInfo()
     return (
         <section className={"px-5 my-10 "}>
             <header>
@@ -278,8 +280,12 @@ export function InsightParent({head, desc, data}) {
             </header>
             <section className={'`carousel flex overflow-x-auto scroll-smooth space-x-4 p-4'}>
                 {/* TODO: Empty state ui and loop instead */}
-                <InsightCard/>
-                <InsightCard/>
+                {
+                    insights &&
+                    insights?.data?.map(insight => (
+                        <InsightCard key={insight.id} insight={insight} accessToken={accessToken} />
+                    ))
+                }
             </section>
         </section>
     )

@@ -2,8 +2,8 @@ import {InsightCard} from "@/app/dashboard/components/index";
 import {useInsightsInfo} from "@/app/dashboard/lib/functions";
 
 export function Insights({accessToken}) {
-
     const {insights, isLoadingInsights, insightError} = useInsightsInfo();
+    // console.log(insights)
     if(isLoadingInsights) {
         return (
             <div>
@@ -22,6 +22,7 @@ export function Insights({accessToken}) {
     return (
         <section className={`carousel flex overflow-x-auto scroll-smooth space-x-4 p-4`}>
             {
+                insights &&
                 insights?.data?.map(insight => (
                     <InsightCard key={insight.id} insight={insight} accessToken={accessToken} />
                 ))
