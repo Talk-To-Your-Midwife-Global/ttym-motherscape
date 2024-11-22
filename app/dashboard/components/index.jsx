@@ -13,7 +13,6 @@ import {
 } from "date-fns";
 import {montserrat} from "@/app/fonts";
 import Link from "next/link";
-import bloating from "@/public/images/bloating.png"
 import category from "@/public/icons/category.svg"
 import dullBell from "@/public/icons/notification.svg"
 import searchIcon from "@/public/icons/search-icon.svg"

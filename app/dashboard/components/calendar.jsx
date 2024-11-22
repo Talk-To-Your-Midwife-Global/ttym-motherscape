@@ -73,9 +73,9 @@ export function CalendarMain({accessToken}) {
                 viewLargeCalendar ?
                     <section>
                         <Calendar action={{actionText: "Minimize Calendar", action: handleCalendarViewToggle}} accessToken={accessToken} specialDates={specialDates} withFlower={true} />
-                        <div className={'text-[#72777A] text-[12px] px-5 flex gap-4'}>
-                            <span className={`flex gap-2`}>
-                                <div className={'w-4 h-4 bg-[#F8CEDE] rounded-full'}> </div> <span>Recorded Flows</span>
+                        <div className={'text-[#72777A] text-[10px] px-5 flex gap-3'}>
+                            <span className={`flex gap-2 w-fit `}>
+                                <div className={'w-4 h-4 bg-[#F8CEDE] rounded-full'}> </div> <span className="w-fit">Recorded Flows</span>
                             </span>
                             <span className={`flex gap-2`}>
                                 <div className={'w-4 h-4 border border-dashed border-[#E82A73] rounded-full'}> </div> <span>Predicted Period</span>
@@ -91,7 +91,7 @@ export function CalendarMain({accessToken}) {
             <section className={`my-10`}>
                 <CircularProgressBar percentage={generalCycleInfo?.percentageComplete} bg={`#F5F5F5`} foreBg={'#015364'}>
                     <h2 className={`text-3xl font-bold text-primaryText text-center`}>Day {generalCycleInfo?.daysDone}</h2>
-                    <Image src={phaseImages[generalCycleInfo?.stage].img} alt={"phase image"}/>
+                    <Image src={phaseImages[generalCycleInfo?.stage]?.img} alt={"phase image"}/>
                     <p className={`w-[200px] text-center text-subText`}> {phaseImages[generalCycleInfo?.stage].msg} </p>
                 </CircularProgressBar>
             </section>
