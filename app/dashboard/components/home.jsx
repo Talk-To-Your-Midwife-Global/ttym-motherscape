@@ -1,7 +1,6 @@
 "use client"
 import {
     CycleCardMain,
-    InsightCard,
     ShortCalendar
 } from "@/app/dashboard/components/index";
 import {montserrat} from "@/app/fonts";
@@ -20,6 +19,7 @@ import {useState} from "react";
 import {Events} from "@/app/dashboard/components/events";
 import {useUserInfo} from "@/app/dashboard/lib/functions";
 import {Insights} from "@/app/dashboard/components/insights";
+import {Loader} from "@/app/components";
 
 export function Home({data, accessToken}) {
     const faces = [
@@ -45,7 +45,7 @@ export function Home({data, accessToken}) {
 
     if (isLoading) {
         return  (
-            <div> Is loading </div>
+            <Loader />
         )
     }
     if (error) {

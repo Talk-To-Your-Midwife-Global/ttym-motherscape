@@ -24,11 +24,13 @@ export function Chat({isPaired = true}) {
 
                 <section>
                     <ChatCard />
+                    <ChatCard />
+                    <ChatCard />
                 </section>
             </section>
         )
     }
-    if (isPaired === false)
+    if (isPaired === true)
     {
         return(
             <section>
