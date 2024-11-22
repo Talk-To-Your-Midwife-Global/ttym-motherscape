@@ -41,9 +41,9 @@ export function DashboardNav({text=""}) {
 
     return (
         <nav className={"flex items-center gap-3 mt-5"}>
-            <div className={"bg-[#0F969C26] rounded-full w-fit h-fit p-4"}>
-                <Image src={category} alt={"some grid icon thingy"}/>
-            </div>
+            {/*<div className={"bg-[#0F969C26] rounded-full w-fit h-fit p-4"}>*/}
+            {/*    <Image src={category} alt={"some grid icon thingy"}/>*/}
+            {/*</div>*/}
             {
                 text.length === 0 ?
                 <section className={`flex-1 w-2/4 flex justify-end`}>

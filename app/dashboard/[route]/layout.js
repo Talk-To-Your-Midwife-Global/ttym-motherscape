@@ -1,5 +1,6 @@
 import {DashboardNav, NavItem} from "@/app/dashboard/components";
 import {PageFadeAnimator} from "@/app/components";
+import {SideNav} from "@/app/dashboard/components/sideNav";
 
 export default async function DashboardLayout({children, params}) {
     const paramName = await params;
@@ -14,6 +15,10 @@ export default async function DashboardLayout({children, params}) {
             <header className={"px-5"}>
                 <DashboardNav text={shouldName[paramName.route]}/>
             </header>
+            <div className={`w-screen h-screen z-10 absolute top-0`}>
+                <SideNav />
+
+            </div>
                 <PageFadeAnimator>
                     {children}
                     <div className={`h-[100px]`}></div>
