@@ -1,19 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #FCFCFC;
-  --primary-text-color: #1E1E1E;
-  --tertiary-color: #015364;
-  --primary-color: #0F969C;
-  --foreground: #16898e;
-  --secondary: #015364;
-  --main-text: #17252A;
-  --sub-text: #455A64;
-  --black: #030303;
-  --pink: #F26A8D;
+    --background: #FCFCFC;
+    --primary-text-color: #1E1E1E;
+    --tertiary-color: #015364;
+    --primary-color: #0F969C;
+    --foreground: #16898e;
+    --secondary: #015364;
+    --main-text: #17252A;
+    --sub-text: #455A64;
+    --black: #030303;
+    --pink: #F26A8D;
 }
 
 
@@ -24,94 +25,99 @@
   }
 } */
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  /* font-family: "Montserrat", serif; */
+    color: var(--foreground);
+    background: var(--background);
+    /* font-family: "Montserrat", serif; */
 }
 
 .fade-container {
-  /*position: absolute;*/
-  width: 100%;
-  height: 100%;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
 }
 
 .background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 300px;
-  background: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    background: #fff;
+    z-index: 1;
 }
 
 .icon-placeholder {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  flex: 40px 0;
-  margin-right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex: 40px 0;
+    margin-right: 20px;
 }
 
 .text-placeholder {
-  border-radius: 5px;
-  width: 200px;
-  height: 20px;
-  flex: 1;
+    border-radius: 5px;
+    width: 200px;
+    height: 20px;
+    flex: 1;
 }
 
 .refresh {
-  padding: 10px;
-  position: absolute;
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 10px;
-  width: 20px;
-  height: 20px;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
+    padding: 10px;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    width: 20px;
+    height: 20px;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 }
 
 
 .button {
-  outline: none;
-  border: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  cursor: pointer;
-  position: absolute;
-  top: 18px;
-  left: 15px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: transparent;
+    outline: none;
+    border: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    cursor: pointer;
+    position: absolute;
+    top: 18px;
+    left: 15px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: transparent;
+    z-index: 20;
 }
 
 .ul,
 .li {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 .ul {
-  padding: 25px;
-  position: absolute;
-  top: 100px;
-  width: 230px;
+    padding: 25px;
+    position: fixed;
+    top: 60px;
+    width: 270px;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
 }
 
 .li {
-  list-style: none;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
+    list-style: none;
+    margin-bottom: 20px;
+    display: flex;
+    cursor: pointer;
 }

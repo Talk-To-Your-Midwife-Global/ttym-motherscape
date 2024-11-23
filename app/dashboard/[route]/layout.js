@@ -1,9 +1,13 @@
 import {DashboardNav, NavItem} from "@/app/dashboard/components";
 import {PageFadeAnimator} from "@/app/components";
 import {SideNav} from "@/app/dashboard/components/sideNav";
+import {cookies} from "next/headers";
 
 export default async function DashboardLayout({children, params}) {
     const paramName = await params;
+    const cookieStore = await cookies()
+    const accessToken = cookieStore.get('access_token')?.value
+
     const shouldName = {
         "me": "",
         "logs": "Logs",
@@ -15,10 +19,10 @@ export default async function DashboardLayout({children, params}) {
             <header className={"px-5"}>
                 <DashboardNav text={shouldName[paramName.route]}/>
             </header>
-            <div className={`w-screen h-screen z-10 absolute top-0`}>
-                <SideNav />
+            {/*<div className={}>*/}
+                 <SideNav accessToken={accessToken} />
 
-            </div>
+            {/*</div>*/}
                 <PageFadeAnimator>
                     {children}
                     <div className={`h-[100px]`}></div>

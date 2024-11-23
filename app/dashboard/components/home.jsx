@@ -20,22 +20,23 @@ import {useState} from "react";
 import {Events} from "@/app/dashboard/components/events";
 import {useUserInfo} from "@/app/dashboard/lib/functions";
 import {Insights} from "@/app/dashboard/components/insights";
+import {MiniLoader} from "@/app/components";
 
 export function Home({data, accessToken}) {
     const faces = [
         {desc: "good", img: goodFace},
-        {desc: "bad", img:badFace},
+        {desc: "bad", img: badFace},
         {desc: "angry", img: angryFace},
-        {desc:"tired", img:tiredFace},
+        {desc: "tired", img: tiredFace},
         {desc: "happy", img: happyFace},
         {desc: "neutral", img: neutralFace}
     ]
     const [feelingRecorded, setFeelingRecorded] = useState(false)
-    const {user, isLoading, error}  = useUserInfo(accessToken)
+    const {user, isLoading, error} = useUserInfo(accessToken)
     // console.log(user)
 
     const handleFeeling = async (feeling) => {
-        const response =  await sendCurrentFeeling(feeling)
+        const response = await sendCurrentFeeling(feeling)
         if (response.success) {
             setFeelingRecorded(response.success)
         } else {
@@ -43,15 +44,14 @@ export function Home({data, accessToken}) {
         }
     }
 
-    if (isLoading) {
-        return  (
-            <div> Is loading </div>
-        )
-    }
+    if (isLoading) return (
+        <MiniLoader/>
+    )
+
     if (error) {
         console.log(error)
         return (
-            <div> errorL {error}</div>
+            <div> error {error}</div>
         )
     }
 
@@ -60,22 +60,24 @@ export function Home({data, accessToken}) {
             <header className={"px-5"}>
                 <section className={"text-primaryText"}>
                     <p className={`text-subText text-sm font-medium ${montserrat.className}`}>Welcome 👋</p>
-                    <p className={"flex items-center text-3xl"}> {user?.user.full_name} <Image src={flower} alt={"flower"}/></p>
+                    <p className={"flex items-center text-3xl"}> {user?.user.full_name} <Image src={flower}
+                                                                                               alt={"flower"}/></p>
                 </section>
             </header>
 
-        {/*    Calendar goes here   */}
+            {/*    Calendar goes here   */}
             <section className={"mt-1"}>
-                <ShortCalendar withFlower={false} specialDates={data?.calendar} accessToken={accessToken} action={{actionText: "See Details", link:"/dashboard/calendar"}}/>
+                <ShortCalendar withFlower={false} specialDates={data?.calendar} accessToken={accessToken}
+                               action={{actionText: "See Details", link: "/dashboard/calendar"}}/>
             </section>
 
-        {/*   Other details go here    */}
+            {/*   Other details go here    */}
             <section className={"px-5 my-5 text-primaryText "}>
                 <header className={"flex justify-between items-center font-bold text-xl"}>
                     <h2>Today&apos;s Update</h2>
                     <Image src={pinkFlower} alt={"Another flower"}/>
                 </header>
-               <CycleCardMain data={data} accessToken={accessToken}/>
+                <CycleCardMain data={data} accessToken={accessToken}/>
             </section>
 
             <section className={"text-primaryText "}>
@@ -85,13 +87,13 @@ export function Home({data, accessToken}) {
                 <section className={"flex justify-evenly"}>
                     {!feelingRecorded ?
                         faces.map(face => {
-                                return (
-                                    <div key={face.desc} className={"flex flex-col items-center"}>
-                                        <Image onClick={async () => handleFeeling(face.desc)} src={face.img} alt={"face"} />
-                                        <p> {face.desc} </p>
-                                    </div>
-                                )
-                            })
+                            return (
+                                <div key={face.desc} className={"flex flex-col items-center"}>
+                                    <Image onClick={async () => handleFeeling(face.desc)} src={face.img} alt={"face"}/>
+                                    <p> {face.desc} </p>
+                                </div>
+                            )
+                        })
                         :
                         <div className={"bg-white p-4 rounded-md w-full mx-5"}>
                             <p className={`text-primaryColor`}>
@@ -105,13 +107,15 @@ export function Home({data, accessToken}) {
             <section className={"px-5 my-10 "}>
                 <header>
                     <div className={"flex justify-between"}>
-                        <h2 className={"text-primaryText font-bold text-xl"}>Cycle Insights</h2> <Link href={"/"}>See More</Link> {/* TODO: use the right link*/}
+                        <h2 className={"text-primaryText font-bold text-xl"}>Cycle Insights</h2> <Link href={"/"}>See
+                        More</Link> {/* TODO: use the right link*/}
                     </div>
-                    <p className={`${montserrat.className} text-subText`}>Personalized health tips based on logged data</p>
+                    <p className={`${montserrat.className} text-subText`}>Personalized health tips based on logged
+                        data</p>
                 </header>
-                <Insights accessToken={accessToken} />
+                <Insights accessToken={accessToken}/>
             </section>
-            <Events accessToken={accessToken} />
+            <Events accessToken={accessToken}/>
         </section>
     )
 }

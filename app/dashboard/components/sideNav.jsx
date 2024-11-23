@@ -1,10 +1,7 @@
 "use client"
 import * as React from "react";
-import { useRef } from "react";
-import { motion, sync, useCycle } from "framer-motion";
-// import { useDimensions } from "./use-dimensions";
-// import { MenuToggle } from "MenuToggle";
-// import { Navigation } from "./Navigation";
+import {useEffect, useRef, useState} from "react";
+import {motion, sync, useCycle} from "framer-motion";
 import {MenuToggle} from "@/app/dashboard/components/menuToggle";
 import {Navigation} from "@/app/dashboard/components/navigation";
 import {useDimensions} from "@/app/dashboard/components/use-dimensions";
@@ -29,10 +26,26 @@ const sidebar = {
     }
 };
 
-export const SideNav = () => {
-    const [isOpen, toggleOpen] = useCycle(false, true);
+export const SideNav = ({accessToken}) => {
+    const [isOpen, toggleOpen] = useState(false);
     const containerRef = useRef(null);
-    const { height } = useDimensions(containerRef);
+    const {height} = useDimensions(containerRef);
+
+    // Hide side nav when use click anywhere else on the screen
+    useEffect(() => {
+        const handleClickAnywhere = (event) => {
+            if (containerRef.current && !containerRef.current.contains(event.target)) {
+                toggleOpen(false)
+            }
+        }
+
+        document.addEventListener("click", handleClickAnywhere)
+
+        return () => {
+            document.removeEventListener("click", handleClickAnywhere)
+        }
+
+    }, [isOpen])
 
     return (
         <motion.nav
@@ -41,9 +54,9 @@ export const SideNav = () => {
             custom={height}
             ref={containerRef}
         >
-            <motion.div className="background" variants={sidebar} />
-            <Navigation />
-            <MenuToggle toggle={() => toggleOpen()} />
+            <motion.div className="background" variants={sidebar}/>
+            <Navigation accessToken={accessToken}/>
+            <MenuToggle toggle={toggleOpen} isOpen={isOpen}/>
         </motion.nav>
     );
 };
