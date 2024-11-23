@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {
     format,
     startOfMonth,
@@ -32,7 +32,7 @@ import clock from "@/public/icons/clock.svg";
 import cycle from "@/public/icons/cycle.svg";
 import pregnancyIcon from "@/public/icons/pregnancy.svg";
 import sarah from "@/public/images/sarah.png"
-import {ActionLink} from "@/app/components";
+import {ActionLink, MiniLoader} from "@/app/components";
 import {useCycleInfo, useInsightsInfo} from "@/app/dashboard/lib/functions";
 
 
@@ -199,16 +199,16 @@ export function CycleCardMain({accessToken}) {
                         </Card>
                     </>
 
-                }
-                <Card head={`Cycle Length: ${generalCycleInfo?.cycleLength} days`}
-                      status={generalCycleInfo?.cycleLength >= 26 && generalCycleInfo?.cycleLength <= 31 ? 'Normal' : 'Abnormal'}>
-                    <Image src={cycle} alt={"drip"}/>
-                </Card>
-                <Card head={`Pregnancy`} status={generalCycleInfo?.stage === "Ovulation" ? "High" : 'Low'}>
-                    <Image src={pregnancyIcon} alt={"drip "}/>
-                </Card>
-            </section>
-        )
+            }
+            <Card head={`Cycle Length: ${generalCycleInfo?.cycleLength} days`}
+                  status={generalCycleInfo?.cycleLength >= 26 && generalCycleInfo?.cycleLength <= 31 ? 'Normal' : 'Abnormal'}>
+                <Image src={cycle} alt={"drip"}/>
+            </Card>
+            <Card head={`Pregnancy`} status={generalCycleInfo?.stage === "Ovulation" ? "High" : 'Low'}>
+                <Image src={pregnancyIcon} alt={"drip "}/>
+            </Card>
+        </section>
+    )
 }
 
 export function InsightCard({insight, accessToken}) {
@@ -289,14 +289,15 @@ export function ChatCard() {
     return (
         <section className={`w-full flex gap-3 mb-5`}>
             <div className={`overflow-hidden w-[55px] h-[55px] relative`}>
-                <Image src={sarah} alt={"user profile image"} width={55} height={55} />
-                <div className={`absolute w-2 h-2 bg-[#0FE16D] z-10 bottom-0 right-2 rounded-full`}></div>
+                <Image src={sarah} alt={"user profile image"} width={55} height={55}/>
+                <div className={`absolute w-2 h-2 bg-[#0FE16D] z-2 bottom-0 right-2 rounded-full`}></div>
             </div>
             <section className={`flex text-primaryText`}>
                 <div className={`grow`}>
                     <div className={`flex gap-2`}>
                         <h2 className={`font-semibold text-lg`}>Global Midwife</h2>
-                        <span className={`bg-[#F04A4C] text-white text-[12px] .p-1 w-[20px] h-[20px] flex items-center justify-center rounded-full`}>2</span>
+                        <span
+                            className={`bg-[#F04A4C] text-white text-[12px] .p-1 w-[20px] h-[20px] flex items-center justify-center rounded-full`}>2</span>
 
                     </div>
                     <h3 className={`text-sm font-light ${montserrat.className}`}>How are you doing today?</h3>
@@ -305,16 +306,17 @@ export function ChatCard() {
             </section>
             <div className={`flex-1 items-center justify-items-end relative`}>
                 <div tabIndex={0} onClick={() => setShowOptions(!showOptions)}>
-                    <Image src={optionsIcon} alt={"chat card options icon"} />
+                    <Image src={optionsIcon} alt={"chat card options icon"}/>
                 </div>
                 {
                     showOptions &&
-                        <section ref={optionsRef} className={`flex  text-primaryText absolute shadow-lg bg-white .px-5 right-5 w-[150px] h-[100px] rounded-xl z-20 ` }>
+                    <section ref={optionsRef}
+                             className={`flex  text-primaryText absolute shadow-lg bg-white .px-5 right-5 w-[150px] h-[100px] rounded-xl z-20 `}>
                         <ul className={`flex flex-col gap-4 space-evenly p-5 text-sm`}>
-                            <li onClick={()=> handleAddUserToFavList()}>Add to Favorite</li>
-                            <li onClick={()=> handleMarkMessageAsRead()}>Mark as read</li>
+                            <li onClick={() => handleAddUserToFavList()}>Add to Favorite</li>
+                            <li onClick={() => handleMarkMessageAsRead()}>Mark as read</li>
                         </ul>
-                </section>
+                    </section>
                 }
             </div>
         </section>
@@ -323,6 +325,17 @@ export function ChatCard() {
 
 export function InsightParent({head, desc, accessToken}) {
     const {insights, isLoadingInsights, insightError} = useInsightsInfo()
+
+    if (isLoadingInsights) {
+        return <MiniLoader/>
+    }
+
+    if (insightError) {
+        return <section>
+            <p>Error loading insights {insightError.message}</p>
+        </section>
+    }
+
     return (
         <section className={"px-5 my-10 "}>
             <header>
@@ -358,10 +371,10 @@ function CalendarTemplate({startWeek, endWeek, currentMonth, specialDates = [], 
                 <div className={`flex-1 flex items-center gap-2`}>
                     <Image src={calendarIcon} alt={`Calendar icon`}/>
                     <h2> {format(currentMonth, "MMMM yyyy")} </h2>
-                    {withFlower && <Image src={nameFlower} alt={'pink flower'} />}
+                    {withFlower && <Image src={nameFlower} alt={'pink flower'}/>}
                 </div>
                 <div>
-                    <ActionLink text={action?.actionText} href={action?.link} onClick={action?.action}  />
+                    <ActionLink text={action?.actionText} href={action?.link} onClick={action?.action}/>
                 </div>
             </div>
             <div className={`grid grid-cols-7 gap-2`}>
@@ -395,7 +408,7 @@ export function ShortCalendar({action, withFlower, accessToken}) {
     const {data, error, isLoading} = useCycleInfo(accessToken);
     // console.log('short calendar')
     // console.log(data)
-    const specialDates =  menstrualCycleDateGenerator(data?.period_start, data?.period_length, "general", data?.cycle_length);
+    const specialDates = menstrualCycleDateGenerator(data?.period_start, data?.period_length, "general", data?.cycle_length);
     // console.log(otherData)
 
     const [currentMonth, setCurrentMonth] = useState(new Date())
@@ -410,7 +423,7 @@ export function ShortCalendar({action, withFlower, accessToken}) {
         )
     }
 
-    if(error) {
+    if (error) {
         return (
             <div>
                 error
@@ -420,7 +433,8 @@ export function ShortCalendar({action, withFlower, accessToken}) {
     }
     return (
         <div>
-            <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth} specialDates={specialDates} action={action} withFlower={withFlower} />
+            <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth}
+                              specialDates={specialDates} action={action} withFlower={withFlower}/>
         </div>
     )
 }
@@ -446,7 +460,7 @@ export function Calendar({action, withFlower, accessToken}) {
         )
     }
 
-    if(error) {
+    if (error) {
         return (
             <div>
                 error
@@ -457,7 +471,8 @@ export function Calendar({action, withFlower, accessToken}) {
 
     return (
         <div>
-            <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth} specialDates={specialDates} action={action} withFlower={withFlower}/>
+            <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth}
+                              specialDates={specialDates} action={action} withFlower={withFlower}/>
         </div>
     )
 }
