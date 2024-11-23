@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import {
     format,
     startOfMonth,
@@ -36,7 +36,7 @@ import {ActionLink} from "@/app/components";
 import {useCycleInfo, useInsightsInfo} from "@/app/dashboard/lib/functions";
 
 
-export function DashboardNav({text=""}) {
+export function DashboardNav({text = ""}) {
     const [hasNotifications, setHasNotifications] = useState(false)
     const [toggleSearch, setToggleSearch] = useState(false)
 
@@ -47,15 +47,17 @@ export function DashboardNav({text=""}) {
             </div>
             {
                 text.length === 0 ?
-                <section className={`flex-1 w-2/4 flex justify-end`}>
-                    <div className={`flex-1 w-1/4`}>
-                        <input className={`h-10 rounded-md outline-none border px-2 ${toggleSearch ? 'block': 'hidden'} `}
-                               type={"search"}/>
-                    </div>
-                    <div className={"bg-[#0F969C26] rounded-full w-fit h-fit p-4"} onClick={() => setToggleSearch(!toggleSearch)} >
-                        <Image src={searchIcon} alt={"Search bar icon"}/>
-                    </div>
-                </section> :  <div className={`flex-1 text-center font-semibold text-xl text-[#000]`}> {text} </div>
+                    <section className={`flex-1 w-2/4 flex justify-end`}>
+                        <div className={`flex-1 w-1/4`}>
+                            <input
+                                className={`h-10 rounded-md outline-none border px-2 ${toggleSearch ? 'block' : 'hidden'} `}
+                                type={"search"}/>
+                        </div>
+                        <div className={"bg-[#0F969C26] rounded-full w-fit h-fit p-4"}
+                             onClick={() => setToggleSearch(!toggleSearch)}>
+                            <Image src={searchIcon} alt={"Search bar icon"}/>
+                        </div>
+                    </section> : <div className={`flex-1 text-center font-semibold text-xl text-[#000]`}> {text} </div>
             }
             <div className={`bg-[#0F969C26] rounded-full w-[50px] h-[50px] p-4 flex items-center justify-center`}>
                 {hasNotifications ?
@@ -64,11 +66,13 @@ export function DashboardNav({text=""}) {
                 }
             </div>
         </nav>
-)}
+    )
+}
 
-export function NavItem({children, text="default", style="", withText=true, active=false}) {
+export function NavItem({children, text = "default", style = "", withText = true, active = false}) {
     return (
-        <section className={`${montserrat.className} ${active ? 'text-primaryColor' : 'text-[#0000004D]'} ${style} w-[35px]`}>
+        <section
+            className={`${montserrat.className} ${active ? 'text-primaryColor' : 'text-[#0000004D]'} ${style} w-[35px]`}>
             <Link className={"flex flex-col justify-end gap-2 items-center"} href={"/dashboard/" + text}>
                 <div className={"pt-3"}>
                     {children}
@@ -77,7 +81,6 @@ export function NavItem({children, text="default", style="", withText=true, acti
                 {withText && <p className={"capitalize text-sm font-medium"}>
                     {text}
                 </p>}
-
             </Link>
         </section>
     )
@@ -98,7 +101,7 @@ export function Card({head, status, children}) {
     )
 }
 
-export const CircularProgressBar = ({children, percentage, bg = "currentColor", foreBg = "currentColor" }) => {
+export const CircularProgressBar = ({children, percentage, bg = "currentColor", foreBg = "currentColor"}) => {
     const [percent, setPercent] = useState(0)
     const radius = 150;
     const circumference = 2 * Math.PI * radius;
@@ -140,7 +143,7 @@ export const CircularProgressBar = ({children, percentage, bg = "currentColor", 
                     r={radius}
                     cx="200"
                     cy="170"
-                    style={{ transition: 'stroke-dashoffset 0.1s ease' }}
+                    style={{transition: 'stroke-dashoffset 0.1s ease'}}
                 />
             </svg>
             <div className={'absolute flex flex-col items-center justify-center gap-5'}>
@@ -163,7 +166,7 @@ export function CycleCardMain({accessToken}) {
         )
     }
 
-    if(error) {
+    if (error) {
         return (
             <div>
                 error
@@ -171,30 +174,30 @@ export function CycleCardMain({accessToken}) {
             </div>
         )
     }
-        return (
-            <section className={"mt-4"}>
-                {
-                    generalCycleInfo?.stage === "Menstrual" ?
-                        <>
-                            <Card head={`You are currently in: ${generalCycleInfo?.stage} Phase`}
-                                  status={` Period started  days ago`}>
-                                <Image src={drip} alt={"drip "}/>
-                            </Card>
-                            <Card head={`Period Length: ${generalCycleInfo?.periodLength} days`}
-                                  status={generalCycleInfo?.periodLength > 5 ? 'Abnormal' : 'Normal'}>
-                                <Image src={clock} alt={"drip "}/>
-                            </Card>
-                        </> :
-                        <>
-                            <Card head={`Period begins: ${relatableDay(generalCycleInfo?.daysToPeriod)} `}
-                                  status={`${generalCycleInfo?.daysToPeriod} days to go`}>
-                                <Image src={drip} alt={"drip "}/>
-                            </Card>
-                            <Card head={`You are currently in: ${generalCycleInfo?.stage} Phase`}
-                                  status={`Day ${generalCycleInfo?.daysDone} of ${generalCycleInfo?.cycleLength}`}>
-                                <Image src={clock} alt={"drip "}/>
-                            </Card>
-                        </>
+    return (
+        <section className={"mt-4"}>
+            {
+                generalCycleInfo?.stage === "Menstrual" ?
+                    <>
+                        <Card head={`You are currently in: ${generalCycleInfo?.stage} Phase`}
+                              status={` Period started  days ago`}>
+                            <Image src={drip} alt={"drip "}/>
+                        </Card>
+                        <Card head={`Period Length: ${generalCycleInfo?.periodLength} days`}
+                              status={generalCycleInfo?.periodLength > 5 ? 'Abnormal' : 'Normal'}>
+                            <Image src={clock} alt={"drip "}/>
+                        </Card>
+                    </> :
+                    <>
+                        <Card head={`Period begins: ${relatableDay(generalCycleInfo?.daysToPeriod)} `}
+                              status={`${generalCycleInfo?.daysToPeriod} days to go`}>
+                            <Image src={drip} alt={"drip "}/>
+                        </Card>
+                        <Card head={`You are currently in: ${generalCycleInfo?.stage} Phase`}
+                              status={`Day ${generalCycleInfo?.daysDone} of ${generalCycleInfo?.cycleLength}`}>
+                            <Image src={clock} alt={"drip "}/>
+                        </Card>
+                    </>
 
                 }
                 <Card head={`Cycle Length: ${generalCycleInfo?.cycleLength} days`}
@@ -224,9 +227,11 @@ export function InsightCard({insight, accessToken}) {
 
     }
     return (
-        <article className={`bg-white carousel-item rounded-2xl px-5 py-4 h-[250px] flex-shrink-0 w-48 drop-shadow-custom-green`}>
+        <article
+            className={`bg-white carousel-item rounded-2xl px-5 py-4 h-[250px] flex-shrink-0 w-48 drop-shadow-custom-green`}>
             <div className={`border-2 border-black rounded-full w-20 h-20 flex items-center justify-center`}>
-                <Image src={`http://${process.env.NEXT_PUBLIC_HOSTNAME}:8000${insight?.image}`} width={200} height={200} alt={"image of a bloating stomach"}/>
+                <Image src={`http://${process.env.NEXT_PUBLIC_HOSTNAME}:8000${insight?.image}`} width={200} height={200}
+                       alt={"image of a bloating stomach"}/>
             </div>
             <header>
                 <h3 className={`${montserrat.className} text-subText text-sm uppercase my-3 font-medium`}>{insight?.tags[0].name}</h3>
@@ -234,10 +239,11 @@ export function InsightCard({insight, accessToken}) {
             </header>
             <section className={`my-4 flex gap-4 items-center`}>
                 <div onClick={() => {
-                   handlePostBookmarking(1) // TODO: Fix this
+                    handlePostBookmarking(1) // TODO: Fix this
 
-                }} className={` ${bookmarked ? 'text-primaryColor': 'text-transparent'}`}>
-                    <svg width="12" height="14" viewBox="0 0 12 14" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                }} className={` ${bookmarked ? 'text-primaryColor' : 'text-transparent'}`}>
+                    <svg width="12" height="14" viewBox="0 0 12 14" fill="currentColor"
+                         xmlns="http://www.w3.org/2000/svg">
                         <path fillRule="evenodd" clipRule="evenodd"
                               d="M10.7627 3.48C10.7627 1.70968 9.55237 1 7.80979 1H3.71753C2.0285 1 0.762695 1.66129 0.762695 3.36194V12.8374C0.762695 13.3045 1.26528 13.5987 1.67237 13.3703L5.77947 11.0665L9.85108 13.3665C10.2588 13.5961 10.7627 13.3019 10.7627 12.8342V3.48Z"
                               stroke="#0F969C" strokeWidth="0.965323" strokeLinecap="round" strokeLinejoin="round"/>
@@ -316,7 +322,7 @@ export function ChatCard() {
 }
 
 export function InsightParent({head, desc, accessToken}) {
-    const {insights, isLoadingInsights, insightError } = useInsightsInfo()
+    const {insights, isLoadingInsights, insightError} = useInsightsInfo()
     return (
         <section className={"px-5 my-10 "}>
             <header>
@@ -331,7 +337,7 @@ export function InsightParent({head, desc, accessToken}) {
                 {
                     insights &&
                     insights?.data?.map(insight => (
-                        <InsightCard key={insight.id} insight={insight} accessToken={accessToken} />
+                        <InsightCard key={insight.id} insight={insight} accessToken={accessToken}/>
                     ))
                 }
             </section>
