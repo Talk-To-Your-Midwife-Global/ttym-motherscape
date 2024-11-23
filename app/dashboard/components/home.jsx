@@ -107,7 +107,8 @@ export function Home({data, accessToken}) {
             <section className={"px-5 my-10 "}>
                 <header>
                     <div className={"flex justify-between"}>
-                        <h2 className={"text-primaryText font-bold text-xl"}>Cycle Insights</h2> <Link href={"/"}>See
+                        <h2 className={"text-primaryText font-bold text-xl"}>Cycle Insights</h2> <Link
+                        href={"/dashboard/community"}>See
                         More</Link> {/* TODO: use the right link*/}
                     </div>
                     <p className={`${montserrat.className} text-subText`}>Personalized health tips based on logged
