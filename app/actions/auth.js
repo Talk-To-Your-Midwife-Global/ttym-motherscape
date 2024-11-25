@@ -2,7 +2,7 @@
 // import {SignJWT, JWTVer} from 'jose'
 import {SignUpFormSchema, SignInFormSchema, ForgotPasswordFormSchema} from "../auth/lib/definitions";
 import {cookies} from "next/headers";
-import {HOSTNAME} from "../config/main";
+// import {HOSTNAME} from "../config/main";
 
 
 // const secretKey = 'somekeybiIwillmakeinenvironmentvairables'
@@ -63,9 +63,10 @@ export async function signup(state, formData) {
         }
     }
 
+    console.log(HOSTNAME)
     // call the provider
     try {
-        const response = await fetch(`http://${HOSTNAME}:8000/auth/register/`, {
+        const response = await fetch(`http://${process.env.HOSTNAME}:8000/auth/register/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -131,7 +132,7 @@ export async function signin(state, formData) {
     }
 
     try {
-        const response = await fetch(`http://${HOSTNAME}:8000/auth/login/`, {
+        const response = await fetch(`http://${process.env.HOSTNAME}:8000/auth/login/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
