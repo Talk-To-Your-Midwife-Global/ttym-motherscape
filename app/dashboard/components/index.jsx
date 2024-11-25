@@ -34,6 +34,7 @@ import pregnancyIcon from "@/public/icons/pregnancy.svg";
 import sarah from "@/public/images/sarah.png"
 import {ActionLink, MiniLoader} from "@/app/components";
 import {useCycleInfo, useInsightsInfo} from "@/app/dashboard/lib/functions";
+import {useRouter} from "next/navigation";
 
 
 export function DashboardNav({text = ""}) {
@@ -258,6 +259,7 @@ export function InsightCard({insight, accessToken}) {
 }
 
 export function ChatCard() {
+    const router = useRouter()
     const [showOptions, setShowOptions] = useState(false)
     const optionsRef = useRef(null);
 
@@ -275,6 +277,11 @@ export function ChatCard() {
         console.log('marked message as read')
     }
 
+    const handleMoveToChat = (identifier) => {
+        // do something
+        router.push(`/chatroom/${identifier}/`)
+
+    }
     /**
      * Remove pop-up when user click anywhere on the screen
      */
@@ -292,7 +299,7 @@ export function ChatCard() {
                 <Image src={sarah} alt={"user profile image"} width={55} height={55}/>
                 <div className={`absolute w-2 h-2 bg-[#0FE16D] z-2 bottom-0 right-2 rounded-full`}></div>
             </div>
-            <section className={`flex text-primaryText`}>
+            <section className={`flex text-primaryText`} tabIndex={0} onClick={() => handleMoveToChat('identifier')}>
                 <div className={`grow`}>
                     <div className={`flex gap-2`}>
                         <h2 className={`font-semibold text-lg`}>Global Midwife</h2>
