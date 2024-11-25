@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {
     format,
     startOfMonth,
@@ -19,6 +19,7 @@ import searchIcon from "@/public/icons/search-icon.svg"
 import activeBell from "@/public/icons/notification-active.svg"
 import calendarIcon from "@/public/icons/calendar-three.svg"
 import nameFlower from "@/public/images/name-flower.svg"
+import optionsIcon from "@/public/icons/options.svg"
 import {
     menstrualCycleDateGenerator,
     necessaryDataForMenstrualUI,
@@ -31,8 +32,9 @@ import clock from "@/public/icons/clock.svg";
 import cycle from "@/public/icons/cycle.svg";
 import pregnancyIcon from "@/public/icons/pregnancy.svg";
 import sarah from "@/public/images/sarah.png"
-import {ActionLink} from "@/app/components";
+import {ActionLink, MiniLoader} from "@/app/components";
 import {useCycleInfo, useInsightsInfo} from "@/app/dashboard/lib/functions";
+import {useRouter} from "next/navigation";
 
 
 export function DashboardNav({text = ""}) {
@@ -41,9 +43,9 @@ export function DashboardNav({text = ""}) {
 
     return (
         <nav className={"flex items-center gap-3 mt-5"}>
-            {/*<div className={"bg-[#0F969C26] rounded-full w-fit h-fit p-4"}>*/}
-            {/*    <Image src={category} alt={"some grid icon thingy"}/>*/}
-            {/*</div>*/}
+            <div className={"bg-[#0F969C26] rounded-full w-fit h-fit p-4"}>
+                <Image src={category} alt={"some grid icon thingy"}/>
+            </div>
             {
                 text.length === 0 ?
                     <section className={`flex-1 w-2/4 flex justify-end`}>
@@ -257,23 +259,90 @@ export function InsightCard({insight, accessToken}) {
 }
 
 export function ChatCard() {
-    return (
-        <section className={`w-full grid gap-2 grid-cols-3`}>
-            <Image src={sarah} alt={"user profile image"}/>
-            <div className={`flex`}>
+    const router = useRouter()
+    const [showOptions, setShowOptions] = useState(false)
+    const optionsRef = useRef(null);
 
-                {/* number of unread messages in the chat */}
-                <div>
-                    <span className={`bg-red-600 text-white text-center p-2 w-3 h-3 rounded-full`}>3</span>
-                </div>
+    const handleClickOutside = () => {
+        setShowOptions(false)
+    }
+
+    const handleAddUserToFavList = (userInfo) => {
+        // TODO: add user to fav list
+        console.log('added user to fav list')
+    }
+
+    const handleMarkMessageAsRead = (userInfo) => {
+        // TODO: mark message as read
+        console.log('marked message as read')
+    }
+
+    const handleMoveToChat = (identifier) => {
+        // do something
+        router.push(`/chatroom/${identifier}/`)
+
+    }
+    /**
+     * Remove pop-up when user click anywhere on the screen
+     */
+    useEffect(() => {
+        document.addEventListener('click', handleClickOutside)
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside)
+        }
+    })
+
+    return (
+        <section className={`w-full flex gap-3 mb-5`}>
+            <div className={`overflow-hidden w-[55px] h-[55px] relative`}>
+                <Image src={sarah} alt={"user profile image"} width={55} height={55}/>
+                <div className={`absolute w-2 h-2 bg-[#0FE16D] z-2 bottom-0 right-2 rounded-full`}></div>
             </div>
-            <div></div>
+            <section className={`flex text-primaryText`} tabIndex={0} onClick={() => handleMoveToChat('identifier')}>
+                <div className={`grow`}>
+                    <div className={`flex gap-2`}>
+                        <h2 className={`font-semibold text-lg`}>Global Midwife</h2>
+                        <span
+                            className={`bg-[#F04A4C] text-white text-[12px] .p-1 w-[20px] h-[20px] flex items-center justify-center rounded-full`}>2</span>
+
+                    </div>
+                    <h3 className={`text-sm font-light ${montserrat.className}`}>How are you doing today?</h3>
+                    <p className={`text-[10px] text-[#797C7B80] font-light`}>2 min ago</p>
+                </div>
+            </section>
+            <div className={`flex-1 items-center justify-items-end relative`}>
+                <div tabIndex={0} onClick={() => setShowOptions(!showOptions)}>
+                    <Image src={optionsIcon} alt={"chat card options icon"}/>
+                </div>
+                {
+                    showOptions &&
+                    <section ref={optionsRef}
+                             className={`flex  text-primaryText absolute shadow-lg bg-white .px-5 right-5 w-[150px] h-[100px] rounded-xl z-20 `}>
+                        <ul className={`flex flex-col gap-4 space-evenly p-5 text-sm`}>
+                            <li onClick={() => handleAddUserToFavList()}>Add to Favorite</li>
+                            <li onClick={() => handleMarkMessageAsRead()}>Mark as read</li>
+                        </ul>
+                    </section>
+                }
+            </div>
         </section>
     )
 }
 
 export function InsightParent({head, desc, accessToken}) {
     const {insights, isLoadingInsights, insightError} = useInsightsInfo()
+
+    if (isLoadingInsights) {
+        return <MiniLoader/>
+    }
+
+    if (insightError) {
+        return <section>
+            <p>Error loading insights {insightError.message}</p>
+        </section>
+    }
+
     return (
         <section className={"px-5 my-10 "}>
             <header>

@@ -121,3 +121,71 @@ body {
     display: flex;
     cursor: pointer;
 }
+
+/*Chat styles go here*/
+.chat-container {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.chat-ul,
+.chat-li {
+    padding: 0;
+    margin: 0;
+}
+
+.chat-ul {
+    list-style: none;
+    position: fixed;
+    bottom: 160px;
+    left: 0;
+    top: 0;
+    overflow-y: scroll;
+    min-height: 50vh;
+    height: 85vh;
+    width: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.chat-li {
+    width: fit-content;
+    background: #E4E4E4D4;
+    color: #383737;
+    margin: 10px;
+    flex: 0 0 fit-content;
+    border-radius: 50px 50px 50px 10px;
+    position: relative;
+    text-wrap: wrap;
+    align-self: flex-start;
+}
+
+.response-li {
+    width: fit-content;
+    background: #0F969C21;
+    color: #0F969C;
+    margin: 10px;
+    flex: 0 0 fit-content;
+    border-radius: 50px 50px 10px 50px;
+    position: relative;
+    text-wrap: wrap;
+    align-self: flex-end;
+}
+
+.chat-button {
+    outline: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+.chat-add {
+    position: fixed;
+    bottom: 0;
+    height: 100px;
+    border-top: 2px solid #16898E59;
+    font-size: 28px;
+    display: flex;
+    background: white;
+}

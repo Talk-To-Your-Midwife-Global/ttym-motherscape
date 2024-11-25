@@ -12,11 +12,11 @@ export default async function Page({params}) {
     const accessToken = cookieStore.get('access_token')?.value;
 
     const views = {
-        'me': <Home accessToken={accessToken} />,
-        'calendar': <CalendarMain accessToken={accessToken} />,
-        'logs': <Logs accessToken={accessToken} />,
-        'community': <Community />,
-        'chat': <Chat />
+        'me': <Home accessToken={accessToken}/>,
+        'calendar': <CalendarMain accessToken={accessToken}/>,
+        'logs': <Logs accessToken={accessToken}/>,
+        'community': <Community accessToken={accessToken}/>,
+        'chat': <Chat/>
     }
     return (
         <section>
