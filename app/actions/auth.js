@@ -1,7 +1,7 @@
 'use server'
 // import {SignJWT, JWTVer} from 'jose'
 import {SignUpFormSchema, SignInFormSchema, ForgotPasswordFormSchema} from "../auth/lib/definitions";
-import { cookies } from "next/headers";
+import {cookies} from "next/headers";
 import {HOSTNAME} from "../config/main";
 
 
@@ -24,12 +24,13 @@ import {HOSTNAME} from "../config/main";
 //     return payload
 // }
 
+
 async function patientOrMidwife() {
     const cookieStore = await cookies()
     if (cookieStore.has('ttym-user-type')) {
-        if (cookieStore.get('ttym-user-type') !== 'midwife' ) {
+        if (cookieStore.get('ttym-user-type') !== 'midwife') {
             return 'PATIENT'
-        }else {
+        } else {
             return 'MIDWIFE'
         }
     }
@@ -38,8 +39,8 @@ async function patientOrMidwife() {
 /**
  * Validates sign up form fields
  * @param {state} state
- * @param {formData} formData 
- * @returns 
+ * @param {formData} formData
+ * @returns
  */
 export async function signup(state, formData) {
     const role = await patientOrMidwife()
@@ -59,7 +60,7 @@ export async function signup(state, formData) {
                 address: formData.get('address'),
             },
             errors: validatedFields.error.flatten().fieldErrors,
-          }
+        }
     }
 
     // call the provider
@@ -80,7 +81,7 @@ export async function signup(state, formData) {
         const result = await response.json()
         const errors = []
         if (!response.ok) {
-            for(const key in result) {
+            for (const key in result) {
                 errors.push(result[key][0])
             }
             return {
@@ -96,7 +97,7 @@ export async function signup(state, formData) {
             token: result.tokens.access,
             route: '/questions'
         }
-    } catch(errors) {
+    } catch (errors) {
         console.log(errors)
         // TODO: setup a logger here
 
@@ -125,7 +126,7 @@ export async function signin(state, formData) {
                 email: formData.get('email'),
             },
             errors: validatedFields.error.flatten().fieldErrors,
-          }
+        }
     }
 
     try {
@@ -143,7 +144,7 @@ export async function signin(state, formData) {
         const result = await response.json()
         // console.log
         const errors = []
-        if(!response.ok) {
+        if (!response.ok) {
             // for (const key in result) {
             //     errors.push(result[key][0])
             // }
@@ -166,9 +167,9 @@ export async function signin(state, formData) {
         return {
             success: true,
             token: result.tokens.access,
-            route: result.user.is_configured  ? '/dashboard' : '/questions'
+            route: result.user.is_configured ? '/dashboard' : '/questions'
         }
-    } catch(errors) {
+    } catch (errors) {
         return {
             error: [errors.error_description]
         }
@@ -178,7 +179,7 @@ export async function signin(state, formData) {
 export async function logout() {
     const cookieStore = await cookies()
     const items = ['access_token', 'refresh_token', 'last_login', 'ttym-user-type']
-    for(const item of items) {
+    for (const item of items) {
         cookieStore.delete(item)
     }
 
