@@ -84,6 +84,7 @@ export async function signup(state, formData) {
             for (const key in result) {
                 errors.push(result[key][0])
             }
+            console.log(errors)
             return {
                 success: false,
                 error: errors
@@ -148,7 +149,7 @@ export async function signin(state, formData) {
             // for (const key in result) {
             //     errors.push(result[key][0])
             // }
-            // console.log(errors)
+            console.log(result.message)
             return {
                 success: false,
                 error: [result.message]
