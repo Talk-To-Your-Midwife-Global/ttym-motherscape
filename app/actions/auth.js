@@ -63,7 +63,7 @@ export async function signup(state, formData) {
         }
     }
 
-    console.log(HOSTNAME)
+    //  console.log(HOSTNAME)
     // call the provider
     try {
         const response = await fetch(`http://${process.env.HOSTNAME}:8000/auth/register/`, {
