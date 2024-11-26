@@ -1,1 +1,1 @@
-export const HOSTNAME = process.env.HOSTNAME
+export const HOSTNAME = 'ec2-35-179-93-166.eu-west-2.compute.amazonaws.com'
