@@ -66,19 +66,20 @@ export async function signup(state, formData) {
     //  console.log(HOSTNAME)
     // call the provider
     try {
-        const response = await fetch(`http://${process.env.HOSTNAME}:8000/auth/register/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                full_name: formData.get('name'),
-                email: formData.get('email'),
-                password: formData.get('password'),
-                phone_number: formData.get('phone'),
-                role,
-            }),
-        })
+        const response =
+            await fetch(`http://ec2-35-179-93-166.eu-west-2.compute.amazonaws.com:8000/auth/register/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    full_name: formData.get('name'),
+                    email: formData.get('email'),
+                    password: formData.get('password'),
+                    phone_number: formData.get('phone'),
+                    role,
+                }),
+            })
         const result = await response.json()
         const errors = []
         if (!response.ok) {
