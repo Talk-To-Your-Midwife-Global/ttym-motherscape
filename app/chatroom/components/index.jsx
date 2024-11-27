@@ -3,13 +3,66 @@ import Image from "next/image";
 import Link from "next/link";
 import sarah from "@/public/images/sarah.png";
 import {montserrat} from "@/app/fonts";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {motion, AnimatePresence} from "framer-motion";
 import {addChat} from "@/app/chatroom/lib";
+import {socket} from "@/app/socket";
 // import { CloseButton } from "./CloseButton";
 // import { add, remove } from "./array-utils";
 
+export function ChatPage() {
+    // const [isConnected, setIsConnected] = useState(false);
+    // const [transport, setTransport] = useState("N/A");
+
+    // useEffect(() => {
+    //     if (socket.connected) {
+    //         console.log('connected');
+    //         onConnect()
+    //     }
+    //
+    //     function onConnect() {
+    //         setIsConnected(true);
+    //         setTransport(socket.io.engine.transport.name)
+    //
+    //         socket.on('upgrade', (transport) => {
+    //             setTransport(transport.name);
+    //         })
+    //     }
+    //
+    //     function onDisconnect() {
+    //         setIsConnected(false);
+    //         setTransport("N/A");
+    //
+    //     }
+    //
+    //     socket.on('connect', onConnect)
+    //     socket.on('disconnect', onDisconnect)
+    //
+    //     return () => {
+    //         socket.off('connect', onConnect);
+    //         socket.off('disconnect', onDisconnect);
+    //     }
+    //
+    // }, [])
+
+
+    return (
+        <>
+            <ChatHeader/>
+
+            <ChatContainer/>
+
+            <div className={`fixed top-[300px]`}>
+                {/*<p>Status: {isConnected ? "connected" : "disconnected"}</p>*/}
+                {/*<p>Transport: {transport}</p>*/}
+            </div>
+
+        </>
+    )
+}
+
 export function ChatHeader() {
+
     return (
         <header className={`w-full fixed top-0 bg-white flex gap-3 .my-5 px-5 py-4 border-b border-[#E4E4E4D4] z-10`}>
             <div className={`.w-full flex text-primaryText items-center justify-center text-2xl`}>

@@ -3,14 +3,20 @@ import useSWR from "swr";
 import {fetcher} from "@/app/lib/functions";
 import {montserrat} from "@/app/fonts";
 import Image from "next/image";
+import {SmallEmptyState} from "@/app/components";
 
 export function Events({accessToken}) {
-    const {data, error, isLoading} = useSWR([`http://${process.env.NEXT_PUBLIC_HOSTNAME}:8000/events/`, accessToken], ([url, accessToken]) => fetcher(url, accessToken));
+    const {
+        data,
+        error,
+        isLoading
+    } = useSWR([`http://${process.env.NEXT_PUBLIC_HOSTNAME}/events/`, accessToken], ([url, accessToken]) => fetcher(url, accessToken));
 
     if (error) {
         console.log(error)
         return <div> Error; Could not get events </div>
-    };
+    }
+
     if (isLoading) return <div>Loading events...</div>
 
     return (
@@ -24,13 +30,20 @@ export function Events({accessToken}) {
             </header>
             <section className={"mt-4 flex items-center px-4 carousel  overflow-x-auto scroll-smooth space-x-4 p-4"}>
                 {/* Make it a carousel TODO:Make it a carousel*/}
-                {data?.map(event => {
+                {data && data?.map(event => {
                     return (
-                        <div key={event.id} className={"flex justify-between overflow-hidden gap-3 bg-white carousel-item rounded-2xl px-5 py-4 h-[250px] flex-shrink-0 w-52"}>
-                            <Image src={`http://${process.env.NEXT_PUBLIC_HOSTNAME}:8000${event.thumbnail}`} width={200} height={200} alt={`event`}/>
+                        <div key={event.id}
+                             className={"flex justify-between overflow-hidden gap-3 bg-white carousel-item rounded-2xl px-5 py-4 h-[250px] flex-shrink-0 w-52"}>
+                            <Image src={`http://${process.env.NEXT_PUBLIC_HOSTNAME}${event.thumbnail}`} width={200}
+                                   height={200} alt={`event`}/>
                         </div>
                     )
-                } )}
+                })}
+                {
+                    data.length < 1 && <div>
+                        <SmallEmptyState/>
+                    </div>
+                }
             </section>
         </section>
     )

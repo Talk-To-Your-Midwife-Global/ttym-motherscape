@@ -1,8 +1,8 @@
-import {addDays, differenceInDays } from "date-fns";
+import {addDays, differenceInDays} from "date-fns";
 
 
-export function fetcher(url, token="") {
-    if(token.length > 1) {
+export function fetcher(url, token = "") {
+    if (token.length > 1) {
         console.log('fetcher ');
         return fetch(url, {
             headers: {
@@ -21,6 +21,7 @@ export function fetchUser(url, token) {
             "Authorization": `Bearer ${token}`
         }
     }).then(res => {
+        // console.log(res)
         return res.json()
     })
 }
@@ -35,13 +36,13 @@ export function fetchCycle(url, token) {
         return result
     }).then(result => {
         const formattedData = {
-                ...result,
-                dates: menstrualCycleDateGenerator(result.period_start, result.period_length, "general", result.cycle_length),
-                daysDone: computeDaysDone(result.period_start),
-                daysToPeriod: computeDaysToPeriod(result.period_start, result.cycle_length),
-                percentageComplete: computeCycleCompletion(computeDaysDone(result.period_start), result.cycle_length),
-            }
-            return formattedData
+            ...result,
+            dates: menstrualCycleDateGenerator(result.period_start, result.period_length, "general", result.cycle_length),
+            daysDone: computeDaysDone(result.period_start),
+            daysToPeriod: computeDaysToPeriod(result.period_start, result.cycle_length),
+            percentageComplete: computeCycleCompletion(computeDaysDone(result.period_start), result.cycle_length),
+        }
+        return formattedData
     })
 }
 
@@ -64,7 +65,7 @@ export function postFetcher(url, token, formBody) {
  */
 export function removeSpaces(sentence) {
     return sentence.replace(/\s+/g, '');
-  }
+}
 
 /**
  * Makes a number in the thousands more relatable
@@ -209,7 +210,7 @@ function computeDaysToPeriod(periodStart, cycleLength) {
  * @param cycleLength
  * @returns {number|*}
  */
-function computeDaysToOvulation(done, toPeriod,  cycleLength) {
+function computeDaysToOvulation(done, toPeriod, cycleLength) {
     // Confirm if user has crossed the current cycle's ovulation
     if (done > Math.round(cycleLength / 2)) {
         return toPeriod + (cycleLength - 14)
@@ -227,14 +228,14 @@ function computeDaysToOvulation(done, toPeriod,  cycleLength) {
  * @param cycleLength
  * @returns {({date: *, style: string}|{date: Date, style: string})[]}
  */
-export function menstrualCycleDateGenerator(lmp, periodLength, stage="general", cycleLength=28) {
+export function menstrualCycleDateGenerator(lmp, periodLength, stage = "general", cycleLength = 28) {
     const lastCycleDay = addDays(lmp, cycleLength)
     const menstrualDates = generateMenstrualDates(lmp, periodLength);
     const follicularDates = generateFollicularDates(lmp, lastCycleDay)
     const ovulationDates = generateOvulationDates(lastCycleDay)
     const lutealDates = generateLutealDates(lastCycleDay)
 
-    switch(stage.toLowerCase()) {
+    switch (stage.toLowerCase()) {
         case "menstrual":
             return menstrualDates;
         case "follicular":
@@ -319,7 +320,7 @@ function generateLutealDates(lastCycleDay) {
  * @param style
  * @returns {{date: *, style: string}[]}
  */
-function generateDays(start, end, style="") {
+function generateDays(start, end, style = "") {
     const days = []
     let day = start
     while (day <= end) {

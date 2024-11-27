@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import {fetchCycle, fetcher, fetchUser} from "@/app/lib/functions";
 
-const HOSTNAME = `http://${process.env.NEXT_PUBLIC_HOSTNAME}:8000`;
+const HOSTNAME = `http://${process.env.NEXT_PUBLIC_HOSTNAME}`;
 
 export function useUserInfo(accessToken) {
     const {

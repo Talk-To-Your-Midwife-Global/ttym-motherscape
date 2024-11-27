@@ -1,10 +1,11 @@
 import {InsightCard} from "@/app/dashboard/components/index";
 import {useInsightsInfo} from "@/app/dashboard/lib/functions";
+import {SmallEmptyState} from "@/app/components";
 
 export function Insights({accessToken}) {
     const {insights, isLoadingInsights, insightError} = useInsightsInfo();
     // console.log(insights)
-    if(isLoadingInsights) {
+    if (isLoadingInsights) {
         return (
             <div>
                 Loading insights
@@ -24,9 +25,13 @@ export function Insights({accessToken}) {
             {
                 insights &&
                 insights?.data?.map(insight => (
-                    <InsightCard key={insight.id} insight={insight} accessToken={accessToken} />
+                    <InsightCard key={insight.id} insight={insight} accessToken={accessToken}/>
                 ))
             }
+            {
+                insights.length < 1 && <div><SmallEmptyState/></div>
+            }
+
         </section>
     )
 }

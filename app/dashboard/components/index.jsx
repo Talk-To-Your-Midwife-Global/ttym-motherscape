@@ -230,8 +230,9 @@ export function InsightCard({insight, accessToken}) {
     return (
         <article
             className={`bg-white carousel-item rounded-2xl px-5 py-4 h-[250px] flex-shrink-0 w-48 drop-shadow-custom-green`}>
-            <div className={`border-2 border-black rounded-full w-20 h-20 flex items-center justify-center`}>
-                <Image src={`http://${process.env.NEXT_PUBLIC_HOSTNAME}:8000${insight?.image}`} width={200} height={200}
+            <div
+                className={`border-2 border-black rounded-full w-20 h-20 flex items-center justify-center overflow-hidden`}>
+                <Image src={`http://${process.env.NEXT_PUBLIC_HOSTNAME}${insight?.image}`} width={200} height={200}
                        alt={"image of a bloating stomach"}/>
             </div>
             <header>

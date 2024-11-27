@@ -118,3 +118,11 @@ export function ActionLink({
         </Link>
     )
 }
+
+export function SmallEmptyState() {
+    return (
+        <section>
+            Empty State UI goes here...
+        </section>
+    )
+}

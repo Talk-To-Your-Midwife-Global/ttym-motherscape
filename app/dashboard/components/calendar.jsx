@@ -24,11 +24,11 @@ export function CalendarMain({accessToken}) {
             img: follicularPhase,
             msg: "You are currently in your Follicular Phase"
         },
-        "ovulation": {
+        "Ovulation": {
             img: ovulationPhase,
             msg: "You are currently in your Ovulation Phase"
         },
-        "luteal": {
+        "Luteal": {
             img: lutealPhase,
             msg: "You are currently in your Luteal Phase"
         },
@@ -36,9 +36,10 @@ export function CalendarMain({accessToken}) {
     }
 
     const {data, error, isLoading} = useCycleInfo(accessToken);
+    console.log(data)
     const generalCycleInfo = necessaryDataForMenstrualUI(data || []);
-    const specialDates =  menstrualCycleDateGenerator(data?.period_start, data?.period_length, "general", data?.cycle_length);
-    // console.log(generalCycleInfo)
+    const specialDates = menstrualCycleDateGenerator(data?.period_start, data?.period_length, "general", data?.cycle_length);
+    console.log(generalCycleInfo)
 
     const [viewLargeCalendar, setViewLargeCalendar] = useState(false);
     const [hideDailyTip, setHideDailyTip] = useState(false);
@@ -59,7 +60,7 @@ export function CalendarMain({accessToken}) {
         )
     }
 
-    if(error) {
+    if (error) {
         return (
             <div>
                 error
@@ -72,13 +73,20 @@ export function CalendarMain({accessToken}) {
             {
                 viewLargeCalendar ?
                     <section>
-                        <Calendar action={{actionText: "Minimize Calendar", action: handleCalendarViewToggle}} accessToken={accessToken} specialDates={specialDates} withFlower={true} />
+                        <Calendar action={{
+                            actionText: "Minimize Calendar",
+                            action: handleCalendarViewToggle
+                        }}
+                                  accessToken={accessToken}
+                                  specialDates={specialDates}
+                                  withFlower={true}/>
                         <div className={'text-[#72777A] text-[10px] px-5 flex gap-3'}>
                             <span className={`flex gap-2 w-fit `}>
                                 <div className={'w-4 h-4 bg-[#F8CEDE] rounded-full'}> </div> <span className="w-fit">Recorded Flows</span>
                             </span>
                             <span className={`flex gap-2`}>
-                                <div className={'w-4 h-4 border border-dashed border-[#E82A73] rounded-full'}> </div> <span>Predicted Period</span>
+                                <div
+                                    className={'w-4 h-4 border border-dashed border-[#E82A73] rounded-full'}> </div> <span>Predicted Period</span>
                             </span>
                             <span className={`flex gap-2`}>
                                 <div className={'w-4 h-4 bg-[#DEE4F5] rounded-full'}> </div> <span>Fertile Window</span>
@@ -86,13 +94,14 @@ export function CalendarMain({accessToken}) {
                         </div>
                     </section>
                     : <ShortCalendar action={{actionText: "View Calendar", action: handleCalendarViewToggle}}
-                                     specialDates={specialDates} accessToken={accessToken} withFlower={true} />
+                                     specialDates={specialDates} accessToken={accessToken} withFlower={true}/>
             }
             <section className={`my-10`}>
-                <CircularProgressBar percentage={generalCycleInfo?.percentageComplete} bg={`#F5F5F5`} foreBg={'#015364'}>
+                <CircularProgressBar percentage={generalCycleInfo?.percentageComplete} bg={`#F5F5F5`}
+                                     foreBg={'#015364'}>
                     <h2 className={`text-3xl font-bold text-primaryText text-center`}>Day {generalCycleInfo?.daysDone}</h2>
                     <Image src={phaseImages[generalCycleInfo?.stage]?.img} alt={"phase image"}/>
-                    <p className={`w-[200px] text-center text-subText`}> {phaseImages[generalCycleInfo?.stage].msg} </p>
+                    <p className={`w-[200px] text-center text-subText`}> {phaseImages[generalCycleInfo?.stage]?.msg} </p>
                 </CircularProgressBar>
             </section>
             <section className={`carousel flex overflow-x-auto scroll-smooth space-x-4 my-4`}>
@@ -135,27 +144,29 @@ export function CalendarMain({accessToken}) {
             </section>
             <section>
 
-            {
-               !hideDailyTip && <section className={`flex justify-center items-center`}>
-                <PageFadeAnimator>
-                    <article className={'bg-tertiaryColor text-white max-w-[350px] h-[140px] rounded-xl px-4 py-4'}>
-                        <header className={`flex space-between items-center w-full mb-2`}>
-                            <h2 className={'flex-1 text-xl font-semibold'}>Daily Tip</h2>
-                            <span tabIndex={0} onClick={()=> handleHideDailyTip()} className={'iconify lucide--x text-xl'}></span>
-                        </header>
-                        <p className={`font-light text-[13px]`}>
-                            Navigating your fertility path involves understanding when it&apos;s appropriate to seek
-                        </p>
-                        <div className={`flex justify-end mt-3`}>
-                            <Link href={"#"} className={'text-right text-sm'} >Learn more</Link>
-                        </div>
-                    </article>
-                </PageFadeAnimator>
-            </section>
-            }
+                {
+                    !hideDailyTip && <section className={`flex justify-center items-center`}>
+                        <PageFadeAnimator>
+                            <article className={'bg-tertiaryColor text-white max-w-[350px] h-[140px] rounded-xl px-4 py-4'}>
+                                <header className={`flex space-between items-center w-full mb-2`}>
+                                    <h2 className={'flex-1 text-xl font-semibold'}>Daily Tip</h2>
+                                    <span tabIndex={0} onClick={() => handleHideDailyTip()}
+                                          className={'iconify lucide--x text-xl'}></span>
+                                </header>
+                                <p className={`font-light text-[13px]`}>
+                                    Navigating your fertility path involves understanding when it&apos;s appropriate to seek
+                                </p>
+                                <div className={`flex justify-end mt-3`}>
+                                    <Link href={"#"} className={'text-right text-sm'}>Learn more</Link>
+                                </div>
+                            </article>
+                        </PageFadeAnimator>
+                    </section>
+                }
             </section>
 
-            <InsightParent head={"Daily Insights"} desc={"Personalized health tips based on logged data"} accessToken={accessToken} />
+            <InsightParent head={"Daily Insights"} desc={"Personalized health tips based on logged data"}
+                           accessToken={accessToken}/>
         </section>
     )
 }

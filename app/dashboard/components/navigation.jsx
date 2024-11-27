@@ -29,8 +29,14 @@ export function Navigation({accessToken}) {
     console.log(accessToken)
     const {user, isLoading, error} = useUserInfo(accessToken);
     console.log(user)
+
     if (isLoading) {
         return <p>Loading</p>
+    }
+
+    if (error) {
+        console.log(error)
+        return <p> Error {error.message} </p>
     }
 
     return (
