@@ -2,7 +2,7 @@
 // import {SignJWT, JWTVer} from 'jose'
 import {SignUpFormSchema, SignInFormSchema, ForgotPasswordFormSchema} from "../auth/lib/definitions";
 import {cookies} from "next/headers";
-// import {HOSTNAME} from "../config/main";
+import {HOSTNAME} from "../config/main";
 
 
 // const secretKey = 'somekeybiIwillmakeinenvironmentvairables'
@@ -67,7 +67,7 @@ export async function signup(state, formData) {
     // call the provider
     try {
         const response =
-            await fetch(`http://ec2-35-179-93-166.eu-west-2.compute.amazonaws.com:8000/auth/register/`, {
+            await fetch(`https://${HOSTNAME}/auth/register/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ export async function signin(state, formData) {
     }
 
     try {
-        const response = await fetch(`http://${process.env.HOSTNAME}:8000/auth/login/`, {
+        const response = await fetch(`https://${HOSTNAME}/auth/login/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -151,7 +151,7 @@ export async function signin(state, formData) {
             // for (const key in result) {
             //     errors.push(result[key][0])
             // }
-            console.log(result.message)
+            console.log(result)
             return {
                 success: false,
                 error: [result.message]
