@@ -67,7 +67,7 @@ export async function signup(state, formData) {
     // call the provider
     try {
         const response =
-            await fetch(`https://${HOSTNAME}/auth/register/`, {
+            await fetch(`http://${HOSTNAME}/auth/register/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ export async function signin(state, formData) {
     }
 
     try {
-        const response = await fetch(`https://${HOSTNAME}/auth/login/`, {
+        const response = await fetch(`http://${HOSTNAME}/auth/login/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
