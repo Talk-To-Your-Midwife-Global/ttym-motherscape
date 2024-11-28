@@ -259,7 +259,8 @@ export function InsightCard({insight, accessToken}) {
     )
 }
 
-export function ChatCard() {
+export function ChatCard({key, info}) {
+    console.log(info)
     const router = useRouter()
     const [showOptions, setShowOptions] = useState(false)
     const optionsRef = useRef(null);
@@ -280,7 +281,7 @@ export function ChatCard() {
 
     const handleMoveToChat = (identifier) => {
         // do something
-        router.push(`/chatroom/${identifier}/`)
+        router.push(`/chatroom/${info?.id}/`)
 
     }
     /**
@@ -295,7 +296,7 @@ export function ChatCard() {
     })
 
     return (
-        <section className={`w-full flex gap-3 mb-5`}>
+        <section key={key} className={`w-full flex gap-3 mb-5`}>
             <div className={`overflow-hidden w-[55px] h-[55px] relative`}>
                 <Image src={sarah} alt={"user profile image"} width={55} height={55}/>
                 <div className={`absolute w-2 h-2 bg-[#0FE16D] z-2 bottom-0 right-2 rounded-full`}></div>
@@ -303,12 +304,12 @@ export function ChatCard() {
             <section className={`flex text-primaryText`} tabIndex={0} onClick={() => handleMoveToChat('identifier')}>
                 <div className={`grow`}>
                     <div className={`flex gap-2`}>
-                        <h2 className={`font-semibold text-lg`}>Global Midwife</h2>
+                        <h2 className={`font-semibold text-lg`}>{info?.person?.full_name} </h2>
                         <span
                             className={`bg-[#F04A4C] text-white text-[12px] .p-1 w-[20px] h-[20px] flex items-center justify-center rounded-full`}>2</span>
 
                     </div>
-                    <h3 className={`text-sm font-light ${montserrat.className}`}>How are you doing today?</h3>
+                    <h3 className={`text-sm font-light ${montserrat.className}`}>{info?.preview}</h3>
                     <p className={`text-[10px] text-[#797C7B80] font-light`}>2 min ago</p>
                 </div>
             </section>

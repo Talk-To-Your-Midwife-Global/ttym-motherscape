@@ -6,56 +6,43 @@ import {montserrat} from "@/app/fonts";
 import {useEffect, useState} from "react";
 import {motion, AnimatePresence} from "framer-motion";
 import {addChat} from "@/app/chatroom/lib";
-import {socket} from "@/app/socket";
-// import { CloseButton } from "./CloseButton";
-// import { add, remove } from "./array-utils";
+import {useWebSocket} from "@/app/hooks/useWebSocket";
 
-export function ChatPage() {
+export function ChatPage({chatId, accessToken}) {
     // const [isConnected, setIsConnected] = useState(false);
     // const [transport, setTransport] = useState("N/A");
+    const [messages, setMessages] = useState([]);
+    const {
+        isConnected,
+        onEvent,
+        sendMessage,
+        newEvent
+    } = useWebSocket(`ws://${process.env.NEXT_PUBLIC_HOSTNAME}/ws/`, accessToken)
 
-    // useEffect(() => {
-    //     if (socket.connected) {
-    //         console.log('connected');
-    //         onConnect()
-    //     }
-    //
-    //     function onConnect() {
-    //         setIsConnected(true);
-    //         setTransport(socket.io.engine.transport.name)
-    //
-    //         socket.on('upgrade', (transport) => {
-    //             setTransport(transport.name);
-    //         })
-    //     }
-    //
-    //     function onDisconnect() {
-    //         setIsConnected(false);
-    //         setTransport("N/A");
-    //
-    //     }
-    //
-    //     socket.on('connect', onConnect)
-    //     socket.on('disconnect', onDisconnect)
-    //
-    //     return () => {
-    //         socket.off('connect', onConnect);
-    //         socket.off('disconnect', onDisconnect);
-    //     }
-    //
-    // }, [])
+    const handleNewMessage = (data) => {
+        console.log(data)
+        console.log('messages', messages)
+        setMessages(prevMessages => [...prevMessages, data?.messages])
+        console.log(messages)
+    }
 
+    const handleViewMessages = (data) => {
+        console.log(data)
+        setMessages([...messages, data?.messages].flat().reverse())
+        // setMessages([...messages, data?.messages].flat())
+    }
+    // console.log(isConnected);
+
+    useEffect(() => {
+        onEvent('message.send', handleNewMessage);
+        onEvent('message.list', handleViewMessages)
+        sendMessage('message.list', {connectionId: chatId, page: 0})
+    }, [isConnected])
 
     return (
         <>
             <ChatHeader/>
-
-            <ChatContainer/>
-
-            <div className={`fixed top-[300px]`}>
-                {/*<p>Status: {isConnected ? "connected" : "disconnected"}</p>*/}
-                {/*<p>Transport: {transport}</p>*/}
-            </div>
+            <ChatContainer messages={messages} forwardMessage={sendMessage} chatId={chatId}/>
 
         </>
     )
@@ -86,16 +73,24 @@ export function ChatHeader() {
 }
 
 
-export const ChatContainer = () => {
-    const [chats, setChats] = useState([{}]);
+export const ChatContainer = ({forwardMessage, messages, chatId}) => {
+    // const [chats, setChats] = useState([{}]);
     const [currentMessage, setCurrentMessage] = useState("");
 
     const handleChange = (e) => {
         setCurrentMessage(e.target.value);
+        console.log(messages)
     }
 
     const handleSendChat = () => {
-        setChats(addChat(chats, currentMessage))
+        console.log(currentMessage, chatId)
+
+        forwardMessage('message.send', {
+            connectionId: chatId,
+            message: currentMessage
+        })
+
+        // setChats(addChat(messages, currentMessage))
         setCurrentMessage("")
 
     }
@@ -104,32 +99,32 @@ export const ChatContainer = () => {
         <div className="chat-container">
             <ul className={`chat-ul`}>
                 <AnimatePresence initial={false} mode="popLayout">
-                    {chats.map((chat, index) => (
-                        (index % 2) === 0 ? (<motion.li
-                            key={index}
-                            className={`chat-li`}
-                            layout
-                            initial={{opacity: 0, y: 50, scale: 0.3}}
-                            animate={{opacity: 1, y: 0, scale: 1}}
-                            exit={{opacity: 0, scale: 0.5, transition: {duration: 0.2}}}
-                        >
-                            {/*<CloseButton*/}
-                            {/*    close={() => setNotifications(remove(notifications, id))}*/}
-                            {/*/>*/}
-                            <MyChatCard message={chat?.message}/>
+                    {messages.map((chat, index) => {
+                        console.log(chat);
+                        return (
+                            !chat?.is_mine ? (<motion.li
+                                key={chat.id}
+                                className={`chat-li`}
+                                layout
+                                initial={{opacity: 0, y: 50, scale: 0.3}}
+                                animate={{opacity: 1, y: 0, scale: 1}}
+                                exit={{opacity: 0, scale: 0.5, transition: {duration: 0.2}}}
+                            >
+                                <MyChatCard message={chat?.text}/>
 
-                        </motion.li>) : (<motion.li
-                            key={index + 24}
-                            className={`response-li`}
-                            layout
-                            initial={{opacity: 0, y: 50, scale: 0.3}}
-                            animate={{opacity: 1, y: 0, scale: 1}}
-                            exit={{opacity: 0, scale: 0.5, transition: {duration: 0.2}}}
-                        >
-                            <ResponseChatCard message={chat?.message}/>
-                        </motion.li>)
+                            </motion.li>) : (<motion.li
+                                key={chat.id}
+                                className={`response-li`}
+                                layout
+                                initial={{opacity: 0, y: 50, scale: 0.3}}
+                                animate={{opacity: 1, y: 0, scale: 1}}
+                                exit={{opacity: 0, scale: 0.5, transition: {duration: 0.2}}}
+                            >
+                                <ResponseChatCard message={chat?.text}/>
+                            </motion.li>)
 
-                    ))}
+                        )
+                    })}
                 </AnimatePresence>
             </ul>
             <section

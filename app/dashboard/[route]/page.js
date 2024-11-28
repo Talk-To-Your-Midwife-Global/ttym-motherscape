@@ -16,7 +16,7 @@ export default async function Page({params}) {
         'calendar': <CalendarMain accessToken={accessToken}/>,
         'logs': <Logs accessToken={accessToken}/>,
         'community': <Community accessToken={accessToken}/>,
-        'chat': <Chat/>
+        'chat': <Chat accessToken={accessToken}/>
     }
     return (
         <section>
