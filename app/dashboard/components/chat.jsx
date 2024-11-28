@@ -7,42 +7,52 @@ import {ChatCard} from "@/app/dashboard/components/index";
 import {useWebSocket} from "@/app/hooks/useWebSocket";
 import {useEffect, useState} from "react";
 
-export function Chat({accessToken, isPddaired = true}) {
-    const [isPaired, setIsPaired] = useState(false);
+export function Chat({accessToken}) {
+    const [isPaired, setIsPaired] = useState({status: false, pending: false});
     const [chatList, setChatList] = useState([]);
-    
+
     const {
         isConnected,
         onEvent,
         sendMessage,
-        newEvent
     } = useWebSocket(`ws://${process.env.NEXT_PUBLIC_HOSTNAME}/ws/`, accessToken)
 
     const handleIsAssigned = (data) => {
         console.log(data)
         if (data.length > 0) {
-            setIsPaired(true)
-            console.log(chatList.length)
+            setIsPaired({...isPaired, status: true})
+            console.log('isPaired in handleAssigned', isPaired)
             setChatList(prevList => data.filter(person => person.person.id !== prevList.includes(person.person.id)));
-            console.log(chatList.length)
-            console.log(chatList)
         } else {
+            setIsPaired({...isPaired, status: false})
+        }
+    }
 
+    const handlePendingAssignment = (data) => {
+        console.log('request.list', data)
+        if (data.length > 0) {
+            console.log(data)
+            setIsPaired(prevState => ({...prevState, pending: true}));
+        } else {
+            setIsPaired({...isPaired, status: true, pending: false});
         }
     }
 
     const requestMidwife = () => {
         sendMessage('request.midwife');
+        setIsPaired(prevState => ({...prevState, pending: true}));
     }
 
     useEffect(() => {
         onEvent('chat.list', handleIsAssigned);
-        onEvent('register.midwife', handleIsAssigned);
+        // onEvent('request.midwife', handleIsAssigned);
         onEvent('connect.new', handleIsAssigned)
+        onEvent('request.list', handlePendingAssignment)
         sendMessage('chat.list')
-    }, [isConnected, newEvent]);
+        sendMessage('request.list');
+    }, [isConnected]);
 
-    if (isPaired) {
+    if (isPaired === true) {
         return (
             <section className="mt-10 flex flex-col gap-2 .items-center px-5">
                 <div>
@@ -73,26 +83,28 @@ export function Chat({accessToken, isPddaired = true}) {
             </section>
         )
     }
-    if (!isPaired === true) {
-        return (
-            <section>
-                <section className={'mt-10 flex flex-col gap-2 items-center'}>
-                    <Image src={messageImage} alt="Chat"/>
-                    <div className={`flex flex-col gap-3 justify-center`}>
-                        <p className={`${montserrat.className} text-primaryText text-sm flex flex-col items-center`}>
-                            Hold on, you will be paired with the
-                            <span className={`text-primaryColor font-medium`}>Global Midwife</span>
-                        </p>
-                        <span className={`text-center`}> or </span>
-                        <button onClick={() => requestMidwife()}
-                                className={`p-2 rounded-md text-white bg-primaryColor`}>
-                            Speak to a midwife today
-                        </button>
-                    </div>
-                </section>
+
+    return (
+        <section>
+            <section className={'mt-10 flex flex-col gap-2 items-center'}>
+                <Image src={messageImage} alt="Chat"/>
+                <div className={`flex flex-col gap-3 justify-center`}>
+                    {
+                        isPaired.pending ?
+                            <p className={`${montserrat.className} text-primaryText text-sm flex flex-col items-center`}>
+                                Hold on, you are being paired with a
+                                <span className={`text-primaryColor font-medium`}>Global Midwife</span>
+                            </p>
+                            :
+                            <button onClick={() => requestMidwife()}
+                                    className={`p-2 rounded-md text-white bg-primaryColor`}>
+                                Speak to a midwife today
+                            </button>
+                    }
+                </div>
             </section>
-        )
-    }
+        </section>
+    )
 
 
 }
