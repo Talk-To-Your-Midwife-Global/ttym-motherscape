@@ -126,7 +126,7 @@ body {
 .chat-container {
     width: 100vw;
     height: 100vh;
-    overflow: hidden;
+    overflow: scroll;
 }
 
 .chat-ul,
@@ -147,7 +147,6 @@ body {
     width: inherit;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
 }
 
 .chat-li {

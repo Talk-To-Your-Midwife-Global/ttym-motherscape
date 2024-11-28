@@ -3,9 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import sarah from "@/public/images/sarah.png";
 import {montserrat} from "@/app/fonts";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 import {motion, AnimatePresence} from "framer-motion";
-import {addChat} from "@/app/chatroom/lib";
 import {useWebSocket} from "@/app/hooks/useWebSocket";
 
 export function ChatPage({chatId, accessToken}) {
@@ -16,7 +15,6 @@ export function ChatPage({chatId, accessToken}) {
         isConnected,
         onEvent,
         sendMessage,
-        newEvent
     } = useWebSocket(`ws://${process.env.NEXT_PUBLIC_HOSTNAME}/ws/`, accessToken)
 
     const handleNewMessage = (data) => {
@@ -76,7 +74,7 @@ export function ChatHeader() {
 export const ChatContainer = ({forwardMessage, messages, chatId}) => {
     // const [chats, setChats] = useState([{}]);
     const [currentMessage, setCurrentMessage] = useState("");
-
+    const messagesEndRef = useRef(null);
     const handleChange = (e) => {
         setCurrentMessage(e.target.value);
         console.log(messages)
@@ -95,11 +93,15 @@ export const ChatContainer = ({forwardMessage, messages, chatId}) => {
 
     }
 
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({behavior: "smooth"})
+    }, [messages])
+
     return (
         <div className="chat-container">
             <ul className={`chat-ul`}>
                 <AnimatePresence initial={false} mode="popLayout">
-                    {messages.map((chat, index) => {
+                    {messages.map((chat) => {
                         console.log(chat);
                         return (
                             !chat?.is_mine ? (<motion.li
@@ -126,6 +128,7 @@ export const ChatContainer = ({forwardMessage, messages, chatId}) => {
                         )
                     })}
                 </AnimatePresence>
+                <div ref={messagesEndRef}></div>
             </ul>
             <section
                 className="chat-add w-full flex  bg-[#F3F6F6] items-center ">
