@@ -180,13 +180,53 @@ export async function signin(state, formData) {
 }
 
 export async function logout() {
+    console.log('logging out')
     const cookieStore = await cookies()
+    const accessToken = cookieStore.get('access_token')?.value;
+    const refreshToken = cookieStore.get('refresh_token')?.value;
+
     const items = ['access_token', 'refresh_token', 'last_login', 'ttym-user-type']
-    for (const item of items) {
-        cookieStore.delete(item)
+
+    try {
+        const response = await fetch(`http://${HOSTNAME}/auth/logout/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({
+                refresh_token: refreshToken,
+            })
+        })
+
+        const result = await response.json()
+        const errors = []
+        if (!response.ok) {
+            console.log(result)
+            for (const key in result) {
+                errors.push(result[key][0])
+            }
+            console.log({
+                    success: false,
+                    error: errors
+                }
+            )
+        }
+        console.log('log out success')
+        for (const item of items) {
+            cookieStore.delete(item)
+        }
+
+        return {
+            success: true,
+        }
+    } catch (errors) {
+        return {
+            error: errors
+        }
     }
 
-//TODO: Implement the logout
+
 }
 
 /**
