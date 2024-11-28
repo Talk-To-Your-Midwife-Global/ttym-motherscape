@@ -18,7 +18,7 @@ import happyFace from "@/public/icons/faces/happy.svg"
 import neutralFace from "@/public/icons/faces/neutral.svg"
 import {useState} from "react";
 import {Events} from "@/app/dashboard/components/events";
-import {useUserInfo} from "@/app/dashboard/lib/functions";
+import {useUserInfo} from "@/app/dashboard/lib/dataFetching";
 import {Insights} from "@/app/dashboard/components/insights";
 import {MiniLoader} from "@/app/components";
 

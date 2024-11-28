@@ -10,6 +10,7 @@ import {useEffect, useState} from "react";
 export function Chat({accessToken, isPddaired = true}) {
     const [isPaired, setIsPaired] = useState(false);
     const [chatList, setChatList] = useState([]);
+    
     const {
         isConnected,
         onEvent,

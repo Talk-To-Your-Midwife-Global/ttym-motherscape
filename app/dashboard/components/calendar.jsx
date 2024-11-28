@@ -12,7 +12,7 @@ import {montserrat} from "@/app/fonts";
 import Link from "next/link";
 import {menstrualCycleDateGenerator, necessaryDataForMenstrualUI, relatableDay} from "@/app/lib/functions";
 import {PageFadeAnimator} from "@/app/components";
-import {useCycleInfo} from "@/app/dashboard/lib/functions";
+import {useCycleInfo} from "@/app/dashboard/lib/dataFetching";
 
 export function CalendarMain({accessToken}) {
     const phaseImages = {

@@ -1,5 +1,5 @@
 import {InsightCard} from "@/app/dashboard/components/index";
-import {useInsightsInfo} from "@/app/dashboard/lib/functions";
+import {useInsightsInfo} from "@/app/dashboard/lib/dataFetching";
 import {SmallEmptyState} from "@/app/components";
 
 export function Insights({accessToken}) {

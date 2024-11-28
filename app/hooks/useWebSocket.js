@@ -5,7 +5,7 @@ export const useWebSocket = (url, token) => {
     const [newEvent, setNewEvent] = useState("");
     const [ws, setWs] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
-    const eventHanlders = useRef({})
+    const eventHandlers = useRef({})
 
     useEffect(() => {
         const socket = new WebSocket(`${url}?token=${token}`);
@@ -24,8 +24,8 @@ export const useWebSocket = (url, token) => {
                 const parsed = JSON.parse(event.data);
                 const {source, data} = parsed;
 
-                if (eventHanlders.current[source]) {
-                    eventHanlders.current[source](data);
+                if (eventHandlers.current[source]) {
+                    eventHandlers.current[source](data);
                 } else {
                     console.warn('Event type does not have a handler')
                 }
@@ -48,7 +48,7 @@ export const useWebSocket = (url, token) => {
     }, [url]);
 
     const onEvent = useCallback((eventType, handler) => {
-        eventHanlders.current[eventType] = handler;
+        eventHandlers.current[eventType] = handler;
     }, [])
 
 

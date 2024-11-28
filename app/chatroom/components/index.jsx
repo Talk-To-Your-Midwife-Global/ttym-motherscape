@@ -8,9 +8,8 @@ import {motion, AnimatePresence} from "framer-motion";
 import {useWebSocket} from "@/app/hooks/useWebSocket";
 
 export function ChatPage({chatId, accessToken}) {
-    // const [isConnected, setIsConnected] = useState(false);
-    // const [transport, setTransport] = useState("N/A");
     const [messages, setMessages] = useState([]);
+    const [friend, setFriend] = useState({});
     const {
         isConnected,
         onEvent,
@@ -25,11 +24,13 @@ export function ChatPage({chatId, accessToken}) {
     }
 
     const handleViewMessages = (data) => {
-        console.log(data)
+        console.log(data.friend);
+        const friendData = data?.friend;
+        // const {friendData: friend} = data;
+        setFriend(friendData);
+        console.log('Friend data', friend);
         setMessages([...messages, data?.messages].flat().reverse())
-        // setMessages([...messages, data?.messages].flat())
     }
-    // console.log(isConnected);
 
     useEffect(() => {
         onEvent('message.send', handleNewMessage);
@@ -39,14 +40,14 @@ export function ChatPage({chatId, accessToken}) {
 
     return (
         <>
-            <ChatHeader/>
+            <ChatHeader info={friend}/>
             <ChatContainer messages={messages} forwardMessage={sendMessage} chatId={chatId}/>
-
         </>
     )
 }
 
-export function ChatHeader() {
+export function ChatHeader({info}) {
+    const userHasProfilePic = info.profile_pic;
 
     return (
         <header className={`w-full fixed top-0 bg-white flex gap-3 .my-5 px-5 py-4 border-b border-[#E4E4E4D4] z-10`}>
@@ -57,9 +58,18 @@ export function ChatHeader() {
             </div>
             <section className={`flex items-center gap-3 relative .bottom-10`}>
                 {/* eslint-disable-next-line react/jsx-no-undef */}
-                <Image src={sarah} alt={"your profile image"} width={50} height={30}/>
+                {userHasProfilePic ?
+                    <Image src={`http://${process.env.NEXT_PUBLIC_HOSTNAME}${info?.profile_pic || '/media/'}`}
+                           alt={"user profile image"} width={55} height={55} className={`overflow-hidden rounded-full`}
+                    /> :
+                    <div
+                        className={`w-[55px] h-[55px] rounded-full overflow-hidden flex items-center justify-center border-2 bg-[#E4E4E4D4]`}>
+                        <span className={`iconify lucide--user text-2xl text-primaryText`}></span>
+                    </div>
+                }
+                
                 <div>
-                    <h2 className={`text-primaryText text-md font-medium w-[160px]`}> Global Midwife </h2>
+                    <h2 className={`text-primaryText text-md font-medium w-[160px]`}>{info?.full_name}</h2>
                     <div className={`flex gap-2 items-center`}>
                         <p className={`text-subText text-[10px] ${montserrat.className}`}>Active now</p>
                         <div className={`.absolute w-2 h-2 bg-[#0FE16D] z-2 bottom-0 right-2 rounded-full`}></div>
@@ -72,7 +82,6 @@ export function ChatHeader() {
 
 
 export const ChatContainer = ({forwardMessage, messages, chatId}) => {
-    // const [chats, setChats] = useState([{}]);
     const [currentMessage, setCurrentMessage] = useState("");
     const messagesEndRef = useRef(null);
     const handleChange = (e) => {
@@ -87,8 +96,6 @@ export const ChatContainer = ({forwardMessage, messages, chatId}) => {
             connectionId: chatId,
             message: currentMessage
         })
-
-        // setChats(addChat(messages, currentMessage))
         setCurrentMessage("")
 
     }
@@ -112,7 +119,7 @@ export const ChatContainer = ({forwardMessage, messages, chatId}) => {
                                 animate={{opacity: 1, y: 0, scale: 1}}
                                 exit={{opacity: 0, scale: 0.5, transition: {duration: 0.2}}}
                             >
-                                <MyChatCard message={chat?.text}/>
+                                <UserChatCard message={chat?.text}/>
 
                             </motion.li>) : (<motion.li
                                 key={chat.id}
@@ -149,7 +156,7 @@ export const ChatContainer = ({forwardMessage, messages, chatId}) => {
 };
 
 
-export function MyChatCard({message}) {
+export function UserChatCard({message}) {
     return (
         <div className={`pl-4 pr-3 py-5 flex items-center justify-center max-w-[300px] text-wrap`}>
             <p>{message}</p>

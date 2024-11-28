@@ -33,8 +33,9 @@ import cycle from "@/public/icons/cycle.svg";
 import pregnancyIcon from "@/public/icons/pregnancy.svg";
 import sarah from "@/public/images/sarah.png"
 import {ActionLink, MiniLoader} from "@/app/components";
-import {useCycleInfo, useInsightsInfo} from "@/app/dashboard/lib/functions";
+import {useCycleInfo, useInsightsInfo} from "@/app/dashboard/lib/dataFetching";
 import {useRouter} from "next/navigation";
+import {getRelativeTime} from "@/app/dashboard/lib/functions";
 
 
 export function DashboardNav({text = ""}) {
@@ -264,6 +265,7 @@ export function ChatCard({key, info}) {
     const router = useRouter()
     const [showOptions, setShowOptions] = useState(false)
     const optionsRef = useRef(null);
+    const userHasProfilePic = info.person.profile_pic;
 
     const handleClickOutside = () => {
         setShowOptions(false)
@@ -279,8 +281,7 @@ export function ChatCard({key, info}) {
         console.log('marked message as read')
     }
 
-    const handleMoveToChat = (identifier) => {
-        // do something
+    const handleMoveToChat = () => {
         router.push(`/chatroom/${info?.id}/`)
 
     }
@@ -298,19 +299,27 @@ export function ChatCard({key, info}) {
     return (
         <section key={key} className={`w-full flex gap-3 mb-5`}>
             <div className={`overflow-hidden w-[55px] h-[55px] relative`}>
-                <Image src={sarah} alt={"user profile image"} width={55} height={55}/>
+                {userHasProfilePic ?
+                    <Image src={`http://${process.env.NEXT_PUBLIC_HOSTNAME}${info?.person.profile_pic || '/media/'}`}
+                           alt={"user profile image"} width={55} height={55} className={`overflow-hidden rounded-full`}
+                    /> :
+                    <div
+                        className={`w-[55px] h-[55px] rounded-full overflow-hidden flex items-center justify-center border-2 bg-[#E4E4E4D4]`}>
+                        <span className={`iconify lucide--user text-2xl text-primaryText`}></span>
+                    </div>
+                }
                 <div className={`absolute w-2 h-2 bg-[#0FE16D] z-2 bottom-0 right-2 rounded-full`}></div>
             </div>
             <section className={`flex text-primaryText`} tabIndex={0} onClick={() => handleMoveToChat('identifier')}>
                 <div className={`grow`}>
                     <div className={`flex gap-2`}>
                         <h2 className={`font-semibold text-lg`}>{info?.person?.full_name} </h2>
-                        <span
-                            className={`bg-[#F04A4C] text-white text-[12px] .p-1 w-[20px] h-[20px] flex items-center justify-center rounded-full`}>2</span>
+                        {/*<span*/}
+                        {/*    className={`bg-[#F04A4C] text-white text-[12px] .p-1 w-[20px] h-[20px] flex items-center justify-center rounded-full`}>2</span>*/}
 
                     </div>
                     <h3 className={`text-sm font-light ${montserrat.className}`}>{info?.preview}</h3>
-                    <p className={`text-[10px] text-[#797C7B80] font-light`}>2 min ago</p>
+                    <p className={`text-[10px] text-[#797C7B80] font-light`}>{getRelativeTime(info?.person.last_updated)}</p>
                 </div>
             </section>
             <div className={`flex-1 items-center justify-items-end relative`}>
