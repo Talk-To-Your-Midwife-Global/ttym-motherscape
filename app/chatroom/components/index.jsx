@@ -1,7 +1,6 @@
 "use client"
 import Image from "next/image";
 import Link from "next/link";
-import sarah from "@/public/images/sarah.png";
 import {montserrat} from "@/app/fonts";
 import {useEffect, useState, useRef} from "react";
 import {motion, AnimatePresence} from "framer-motion";
@@ -17,18 +16,12 @@ export function ChatPage({chatId, accessToken}) {
     } = useWebSocket(`ws://${process.env.NEXT_PUBLIC_HOSTNAME}/ws/`, accessToken)
 
     const handleNewMessage = (data) => {
-        console.log(data)
-        console.log('messages', messages)
         setMessages(prevMessages => [...prevMessages, data?.messages])
-        console.log(messages)
     }
 
     const handleViewMessages = (data) => {
-        console.log(data.friend);
         const friendData = data?.friend;
-        // const {friendData: friend} = data;
         setFriend(friendData);
-        console.log('Friend data', friend);
         setMessages([...messages, data?.messages].flat().reverse())
     }
 
@@ -41,7 +34,8 @@ export function ChatPage({chatId, accessToken}) {
     return (
         <>
             <ChatHeader info={friend}/>
-            <ChatContainer messages={messages} forwardMessage={sendMessage} chatId={chatId}/>
+            <ChatContainer messages={messages} forwardMessage={sendMessage} profileImg={friend.profile_pic}
+                           chatId={chatId}/>
         </>
     )
 }
@@ -82,7 +76,7 @@ export function ChatHeader({info}) {
 }
 
 
-export const ChatContainer = ({forwardMessage, messages, chatId}) => {
+export const ChatContainer = ({forwardMessage, messages, chatId, profileImg}) => {
     const [currentMessage, setCurrentMessage] = useState("");
     const messagesEndRef = useRef(null);
     const handleChange = (e) => {
@@ -120,6 +114,7 @@ export const ChatContainer = ({forwardMessage, messages, chatId}) => {
                                 animate={{opacity: 1, y: 0, scale: 1}}
                                 exit={{opacity: 0, scale: 0.5, transition: {duration: 0.2}}}
                             >
+                                {/*<MiniProfileImage profileImg={profileImg}/>*/}
                                 <UserChatCard message={chat?.text}/>
 
                             </motion.li>) : (<motion.li
@@ -139,7 +134,7 @@ export const ChatContainer = ({forwardMessage, messages, chatId}) => {
                 <div ref={messagesEndRef}></div>
             </ul>
             <section
-                className="chat-add w-full flex  bg-[#F3F6F6] items-center ">
+                className="chat-add w-full flex  bg-[#F3F6F6] items-center rounded-lg ">
                 <div className={'bg-[#F3F6F6] py-2 rounded-xl text-sm flex-1 mx-5'}>
                     <input type={'text'} onChange={handleChange}
                            value={currentMessage}
@@ -155,6 +150,25 @@ export const ChatContainer = ({forwardMessage, messages, chatId}) => {
         </div>
     );
 };
+
+export function MiniProfileImage({profileImg}) {
+    const userHasProfilePic = true;
+    const profileImage = `http://${process.env.NEXT_PUBLIC_HOSTNAME}${profileImg || '/media/'}`
+    return (
+        <section className={`mr-10`}>
+            {userHasProfilePic ?
+                <Image src={profileImage}
+                       alt={"user profile image"} width={45} height={45} priority={true}
+                       className={`overflow-hidden rounded-full absolute left-0`}
+                /> :
+                <div
+                    className={`w-[55px] h-[55px] .absolute rounded-full overflow-hidden flex items-center justify-center border-2 bg-[#E4E4E4D4]`}>
+                    <span className={`iconify lucide--user text-2xl text-primaryText`}></span>
+                </div>
+            }
+        </section>
+    )
+}
 
 
 export function UserChatCard({message}) {

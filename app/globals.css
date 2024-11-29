@@ -156,9 +156,10 @@ body {
     margin: 10px;
     flex: 0 0 fit-content;
     border-radius: 50px 50px 50px 10px;
-    position: relative;
+    /*position: relative;*/
     text-wrap: wrap;
     align-self: flex-start;
+    /*margin-left: 50px;*/
 }
 
 .response-li {
@@ -167,7 +168,7 @@ body {
     color: #0F969C;
     margin: 10px;
     flex: 0 0 fit-content;
-    border-radius: 50px 50px 10px 50px;
+    border-radius: 10px 20px 10px 20px;
     position: relative;
     text-wrap: wrap;
     align-self: flex-end;

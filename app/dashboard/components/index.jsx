@@ -323,7 +323,7 @@ export function ChatCard({key, info}) {
                     </div>
                     {userHasNewMessages &&
                         <div>
-                            <h3 className={`text-sm font-light ${montserrat.className}`}>{info?.preview}</h3>
+                            <h3 className={`text-sm font-light w-[200px] h-[20px] truncate ${montserrat.className}`}>{info?.preview}</h3>
                             <p className={`text-[10px] text-[#797C7B80] font-light`}>{lastMessageTime}</p>
                         </div>
                     }
