@@ -1,11 +1,12 @@
 "use client"
 import Image from "next/image"
-import messageImage from "@/public/images/message-undraw.svg"
-// import voice from "@/public/icons/voice.svg"
+import {useEffect, useState} from "react";
+import {useWebSocket} from "@/app/hooks/useWebSocket";
 import {montserrat} from "@/app/fonts";
 import {ChatCard} from "@/app/dashboard/components/index";
-import {useWebSocket} from "@/app/hooks/useWebSocket";
-import {useEffect, useState} from "react";
+import messageImage from "@/public/images/message-undraw.svg"
+
+// import voice from "@/public/icons/voice.svg"
 
 export function Chat({accessToken}) {
     const [isPaired, setIsPaired] = useState({status: false, pending: false});
@@ -18,21 +19,17 @@ export function Chat({accessToken}) {
     } = useWebSocket(`ws://${process.env.NEXT_PUBLIC_HOSTNAME}/ws/`, accessToken)
 
     const handleIsAssigned = (data) => {
-        console.log(data)
-        if (data.length > 0) {
-            setIsPaired({...isPaired, status: true})
-            console.log('isPaired in handleAssigned', isPaired)
+        if (data) {
+            setIsPaired(prevState => ({...prevState, pending: true, status: true}));
             setChatList(prevList => data.filter(person => person.person.id !== prevList.includes(person.person.id)));
         } else {
-            setIsPaired({...isPaired, status: false})
+            setIsPaired({...isPaired, status: false, pending: true})
         }
     }
 
     const handlePendingAssignment = (data) => {
-        console.log('request.list', data)
         if (data.length > 0) {
-            console.log(data)
-            setIsPaired(prevState => ({...prevState, pending: true}));
+            setIsPaired(({...isPaired, pending: true}));
         } else {
             setIsPaired({...isPaired, status: true, pending: false});
         }
@@ -45,14 +42,13 @@ export function Chat({accessToken}) {
 
     useEffect(() => {
         onEvent('chat.list', handleIsAssigned);
-        // onEvent('request.midwife', handleIsAssigned);
         onEvent('connect.new', handleIsAssigned)
         onEvent('request.list', handlePendingAssignment)
-        sendMessage('chat.list')
         sendMessage('request.list');
+        sendMessage('chat.list')
     }, [isConnected]);
 
-    if (isPaired === true) {
+    if (isPaired.status === true) {
         return (
             <section className="mt-10 flex flex-col gap-2 .items-center px-5">
                 <div>

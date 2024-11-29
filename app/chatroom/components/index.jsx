@@ -60,14 +60,15 @@ export function ChatHeader({info}) {
                 {/* eslint-disable-next-line react/jsx-no-undef */}
                 {userHasProfilePic ?
                     <Image src={`http://${process.env.NEXT_PUBLIC_HOSTNAME}${info?.profile_pic || '/media/'}`}
-                           alt={"user profile image"} width={55} height={55} className={`overflow-hidden rounded-full`}
+                           alt={"user profile image"} width={55} height={55} priority={true}
+                           className={`overflow-hidden rounded-full`}
                     /> :
                     <div
                         className={`w-[55px] h-[55px] rounded-full overflow-hidden flex items-center justify-center border-2 bg-[#E4E4E4D4]`}>
                         <span className={`iconify lucide--user text-2xl text-primaryText`}></span>
                     </div>
                 }
-                
+
                 <div>
                     <h2 className={`text-primaryText text-md font-medium w-[160px]`}>{info?.full_name}</h2>
                     <div className={`flex gap-2 items-center`}>

@@ -266,6 +266,8 @@ export function ChatCard({key, info}) {
     const [showOptions, setShowOptions] = useState(false)
     const optionsRef = useRef(null);
     const userHasProfilePic = info.person.profile_pic;
+    const userHasNewMessages = info?.preview !== "No messages yet...";
+    const lastMessageTime = getRelativeTime(new Date(info.last_updated))
 
     const handleClickOutside = () => {
         setShowOptions(false)
@@ -310,7 +312,8 @@ export function ChatCard({key, info}) {
                 }
                 <div className={`absolute w-2 h-2 bg-[#0FE16D] z-2 bottom-0 right-2 rounded-full`}></div>
             </div>
-            <section className={`flex text-primaryText`} tabIndex={0} onClick={() => handleMoveToChat('identifier')}>
+            <section className={`flex items-center text-primaryText`} tabIndex={0}
+                     onClick={() => handleMoveToChat('identifier')}>
                 <div className={`grow`}>
                     <div className={`flex gap-2`}>
                         <h2 className={`font-semibold text-lg`}>{info?.person?.full_name} </h2>
@@ -318,18 +321,22 @@ export function ChatCard({key, info}) {
                         {/*    className={`bg-[#F04A4C] text-white text-[12px] .p-1 w-[20px] h-[20px] flex items-center justify-center rounded-full`}>2</span>*/}
 
                     </div>
-                    <h3 className={`text-sm font-light ${montserrat.className}`}>{info?.preview}</h3>
-                    <p className={`text-[10px] text-[#797C7B80] font-light`}>{getRelativeTime(info?.person.last_updated)}</p>
+                    {userHasNewMessages &&
+                        <div>
+                            <h3 className={`text-sm font-light ${montserrat.className}`}>{info?.preview}</h3>
+                            <p className={`text-[10px] text-[#797C7B80] font-light`}>{lastMessageTime}</p>
+                        </div>
+                    }
                 </div>
             </section>
-            <div className={`flex-1 items-center justify-items-end relative`}>
+            <div className={`flex-1 flex items-center justify-end relative`}>
                 <div tabIndex={0} onClick={() => setShowOptions(!showOptions)}>
                     <Image src={optionsIcon} alt={"chat card options icon"}/>
                 </div>
                 {
                     showOptions &&
                     <section ref={optionsRef}
-                             className={`flex  text-primaryText absolute shadow-lg bg-white .px-5 right-5 w-[150px] h-[100px] rounded-xl z-20 `}>
+                             className={`flex text-primaryText absolute shadow-lg bg-white right-5 top-10 w-[150px] h-[100px] rounded-xl z-20 `}>
                         <ul className={`flex flex-col gap-4 space-evenly p-5 text-sm`}>
                             <li onClick={() => handleAddUserToFavList()}>Add to Favorite</li>
                             <li onClick={() => handleMarkMessageAsRead()}>Mark as read</li>
