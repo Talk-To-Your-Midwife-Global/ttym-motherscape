@@ -11,6 +11,7 @@ import messageImage from "@/public/images/message-undraw.svg"
 export function Chat({accessToken}) {
     const [isPaired, setIsPaired] = useState({status: false, pending: false});
     const [chatList, setChatList] = useState([]);
+    const chatDisplay = JSON.parse(localStorage.getItem("chatDisplay"));
 
     const {
         isConnected,
@@ -19,7 +20,9 @@ export function Chat({accessToken}) {
     } = useWebSocket(`ws://${process.env.NEXT_PUBLIC_HOSTNAME}/ws/`, accessToken)
 
     const handleIsAssigned = (data) => {
-        if (data) {
+        console.log('handleAssigned', data);
+        if (data.length > 0) {
+            localStorage.setItem("chatDisplay", JSON.stringify(true));
             setIsPaired(prevState => ({...prevState, pending: true, status: true}));
             setChatList(prevList => data.filter(person => person.person.id !== prevList.includes(person.person.id)));
         } else {
@@ -28,7 +31,9 @@ export function Chat({accessToken}) {
     }
 
     const handlePendingAssignment = (data) => {
-        if (data.length > 0) {
+        console.log('pending assignment', data[0]?.status);
+        if (data[0].length > 0 && data[0]?.status === "pending-them") {
+            localStorage.setItem("chatDisplay", JSON.stringify(false));
             setIsPaired(({...isPaired, pending: true}));
         } else {
             setIsPaired({...isPaired, status: true, pending: false});
@@ -48,7 +53,7 @@ export function Chat({accessToken}) {
         sendMessage('chat.list')
     }, [isConnected]);
 
-    if (isPaired.status === true) {
+    if (chatDisplay) {
         return (
             <section className="mt-10 flex flex-col gap-2 .items-center px-5">
                 <div>

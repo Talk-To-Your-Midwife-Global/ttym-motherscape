@@ -16,7 +16,7 @@ export function getRelativeTime(date) {
         const count = Math.floor(seconds / interval.seconds);
         if (count >= 1) {
             if (interval.label === "hour" && count === 1) {
-                return "an hour ago"; // Handle "an" case for "hour"
+                return "An hour ago"; // Handle "an" case for "hour"
             }
             return `${count} ${interval.label}${count > 1 ? "s" : ""} ago`;
         }

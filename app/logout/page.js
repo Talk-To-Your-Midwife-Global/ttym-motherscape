@@ -8,11 +8,12 @@ import {montserrat} from "@/app/fonts";
 
 export default function Page() {
     const router = useRouter()
+
     useEffect(() => {
         async function LogOut() {
             const response = await logout()
-            console.log(response)
             if (response?.success) {
+                localStorage.removeItem("chatDisplay")
                 router.push("/")
             }
         }
