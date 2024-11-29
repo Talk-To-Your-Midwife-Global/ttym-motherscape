@@ -12,17 +12,19 @@ export default function Page() {
         async function LogOut() {
             const response = await logout()
             console.log(response)
+            if (response?.success) {
+                router.push("/")
+            }
         }
 
         LogOut()
-        router.push("/")
     }, [])
 
     return (
         <section className={`flex items-center justify-center w-full h-svh`}>
             <div className={`flex flex-col gap-3 justify-center items-center`}>
                 <Image src={Logo} width={200} height={200} alt={"TTYM logo"}/>
-                <p className={`text-primaryText ${montserrat.className} text-sm`}>Successfully logged out</p>
+                <p className={`text-primaryText ${montserrat.className} text-sm`}>Logging out...</p>
             </div>
         </section>
     )
