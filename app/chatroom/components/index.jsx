@@ -28,7 +28,7 @@ export function ChatPage({chatId, accessToken}) {
     useEffect(() => {
         onEvent('message.send', handleNewMessage);
         onEvent('message.list', handleViewMessages)
-        sendMessage('message.list', {connectionId: chatId, page: 0})
+        sendMessage('message.list', {connection_id: chatId, page: 0})
     }, [isConnected])
 
     return (
@@ -88,7 +88,7 @@ export const ChatContainer = ({forwardMessage, messages, chatId, profileImg}) =>
         console.log(currentMessage, chatId)
 
         forwardMessage('message.send', {
-            connectionId: chatId,
+            connection_id: chatId,
             message: currentMessage
         })
         setCurrentMessage("")
