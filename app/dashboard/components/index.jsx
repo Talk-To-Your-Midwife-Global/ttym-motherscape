@@ -35,6 +35,7 @@ import sarah from "@/public/images/sarah.png"
 import {ActionLink, MiniLoader} from "@/app/components";
 import {useCycleInfo, useInsightsInfo} from "@/app/dashboard/lib/dataFetching";
 import {useRouter} from "next/navigation";
+import {PUBLICHOSTNAME} from "@/app/config/main";
 import {getRelativeTime} from "@/app/dashboard/lib/functions";
 
 
@@ -233,7 +234,7 @@ export function InsightCard({insight, accessToken}) {
             className={`bg-white carousel-item rounded-2xl px-5 py-4 h-[250px] flex-shrink-0 w-48 drop-shadow-custom-green`}>
             <div
                 className={`border-2 border-black rounded-full w-20 h-20 flex items-center justify-center overflow-hidden`}>
-                <Image src={`http://${process.env.NEXT_PUBLIC_HOSTNAME}${insight?.image}`} width={200} height={200}
+                <Image src={`${PUBLICHOSTNAME}${insight?.image}`} width={200} height={200}
                        alt={"image of a bloating stomach"}/>
             </div>
             <header>
@@ -302,7 +303,7 @@ export function ChatCard({key, info}) {
         <section key={key} className={`w-full flex gap-3 mb-5`}>
             <div className={`overflow-hidden w-[55px] h-[55px] relative`}>
                 {userHasProfilePic ?
-                    <Image src={`http://${process.env.NEXT_PUBLIC_HOSTNAME}${info?.person.profile_pic || '/media/'}`}
+                    <Image src={`${PUBLICHOSTNAME}${info?.person.profile_pic || '/media/'}`}
                            alt={"user profile image"} width={55} height={55} className={`overflow-hidden rounded-full`}
                     /> :
                     <div

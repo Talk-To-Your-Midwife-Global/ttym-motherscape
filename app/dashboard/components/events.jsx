@@ -3,6 +3,7 @@ import useSWR from "swr";
 import {fetcher} from "@/app/lib/functions";
 import {montserrat} from "@/app/fonts";
 import Image from "next/image";
+import {PUBLICHOSTNAME} from "@/app/config/main";
 import {SmallEmptyState} from "@/app/components";
 
 export function Events({accessToken}) {
@@ -10,7 +11,7 @@ export function Events({accessToken}) {
         data,
         error,
         isLoading
-    } = useSWR([`http://${process.env.NEXT_PUBLIC_HOSTNAME}/events/`, accessToken], ([url, accessToken]) => fetcher(url, accessToken));
+    } = useSWR([`${PUBLICHOSTNAME}/events/`, accessToken], ([url, accessToken]) => fetcher(url, accessToken));
 
     if (error) {
         console.log(error)
@@ -34,7 +35,7 @@ export function Events({accessToken}) {
                     return (
                         <div key={event.id}
                              className={"flex justify-between overflow-hidden gap-3 bg-white carousel-item rounded-2xl px-5 py-4 h-[250px] flex-shrink-0 w-52"}>
-                            <Image src={`http://${process.env.NEXT_PUBLIC_HOSTNAME}${event.thumbnail}`} width={200}
+                            <Image src={`${PUBLICHOSTNAME}${event.thumbnail}`} width={200}
                                    height={200} alt={`event`}/>
                         </div>
                     )

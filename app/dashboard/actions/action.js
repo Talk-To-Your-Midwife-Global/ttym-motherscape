@@ -30,7 +30,7 @@ export async function setCookies(newCookies) {
  */
 export async function bookmarkPost(postId, accessToken) {
     // TODO: Make this actually work
-    const response = await fetch(`http://${process.env.NEXT_PUBLIC_HOSTNAME}/user/bookmark/${postId}`, {
+    const response = await fetch(`${PUBLICHOSTNAME}/user/bookmark/${postId}`, {
         headers: {
             "Authorization": `Bearer ${accessToken}`
         }
@@ -53,7 +53,7 @@ export async function bookmarkPost(postId, accessToken) {
  * @returns {Promise<{marked: boolean}>}
  */
 export async function unbookmarkPost(postId, accessToken) {
-    const response = await fetch(`http://${process.env.NEXT_PUBLIC_HOSTNAME}/user/bookmark/${postId}`, {
+    const response = await fetch(`${PUBLICHOSTNAME}/user/bookmark/${postId}`, {
         headers: {
             "Authorization": `Bearer ${accessToken}`
         }
@@ -74,7 +74,7 @@ export async function moodsAndFeelingsForTheDay(state, accessToken) {
 
 export async function logLog(state, accessToken, userType) {
     // console.log(state)
-    const response = await fetch(`http://${process.env.NEXT_PUBLIC_HOSTNAME}/logs/`, {
+    const response = await fetch(`${PUBLICHOSTNAME}/logs/`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",

@@ -4,6 +4,7 @@ import Link from "next/link";
 import {montserrat} from "@/app/fonts";
 import {useEffect, useState, useRef} from "react";
 import {motion, AnimatePresence} from "framer-motion";
+import {PUBLICHOSTNAME} from "@/app/config/main";
 import {useWebSocket} from "@/app/hooks/useWebSocket";
 
 export function ChatPage({chatId, accessToken}) {
@@ -53,7 +54,7 @@ export function ChatHeader({info}) {
             <section className={`flex items-center gap-3 relative .bottom-10`}>
                 {/* eslint-disable-next-line react/jsx-no-undef */}
                 {userHasProfilePic ?
-                    <Image src={`http://${process.env.NEXT_PUBLIC_HOSTNAME}${info?.profile_pic || '/media/'}`}
+                    <Image src={`${PUBLICHOSTNAME}${info?.profile_pic || '/media/'}`}
                            alt={"user profile image"} width={55} height={55} priority={true}
                            className={`overflow-hidden rounded-full`}
                     /> :
@@ -153,7 +154,7 @@ export const ChatContainer = ({forwardMessage, messages, chatId, profileImg}) =>
 
 export function MiniProfileImage({profileImg}) {
     const userHasProfilePic = true;
-    const profileImage = `http://${process.env.NEXT_PUBLIC_HOSTNAME}${profileImg || '/media/'}`
+    const profileImage = `${PUBLICHOSTNAME}${profileImg || '/media/'}`
     return (
         <section className={`mr-10`}>
             {userHasProfilePic ?
