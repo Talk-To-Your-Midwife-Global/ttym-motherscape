@@ -9,6 +9,7 @@ export function fetcher(url, token = "") {
                 "Authorization": `Bearer ${token}`
             }
         }).then(res => {
+            console.log(res);
             return res.json()
         })
     }

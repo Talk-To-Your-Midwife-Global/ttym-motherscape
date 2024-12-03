@@ -1,7 +1,7 @@
 "use client"
 import {useEffect, useState} from "react";
 import {inter} from "@/app/fonts";
-import {IconButton} from "@/app/components";
+import {IconButton, MiniLoader} from "@/app/components";
 import {ShortCalendar} from "@/app/dashboard/components/index";
 import {logLog} from "@/app/dashboard/actions/action";
 import {useLogsInfo} from "@/app/dashboard/lib/dataFetching";
@@ -10,10 +10,12 @@ import {useLogsInfo} from "@/app/dashboard/lib/dataFetching";
 export function Logs({accessToken}) {
     const [disableBtn, setDisableButton] = useState(true)
     const [feelingState, setFeelingState] = useState({moods: [], symptoms: []})
-    const userType = localStorage.getItem('userType') !== "midwife" ? "PATIENTLOG" : "MIDWIFELOG"
-    console.log(userType)
 
-    const {logs, isLoadingLogs, logsError} = useLogsInfo(accessToken);
+    // const {logs, isLoadingLogs, logsError} = useLogsInfo(accessToken);
+    //
+    // if (isLoadingLogs) {
+    //     return <MiniLoader/>
+    // }
 
     const handleSubmit = async () => {
         console.log(feelingState)
@@ -53,6 +55,9 @@ export function Logs({accessToken}) {
         //     Run a function that gets the particular day selected and updates feelingState
         // const dayLogs = getDayLogs('2024-11-23')
         // setFeelingState(dayLogs.entry)
+        const userType = localStorage.getItem('userType') !== "midwife" ? "PATIENTLOG" : "MIDWIFELOG"
+        console.log(userType)
+
     }, [feelingState])
 
     return (

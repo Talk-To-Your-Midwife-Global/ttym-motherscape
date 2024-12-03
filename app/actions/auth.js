@@ -188,7 +188,7 @@ export async function logout() {
     const items = ['access_token', 'refresh_token', 'last_login', 'ttym-user-type']
 
     try {
-        const response = await fetch(`http://${HOSTNAME}/auth/logout/`, {
+        const response = await fetch(`${HOSTNAME}/auth/logout/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
