@@ -23,6 +23,9 @@ export default function Page() {
         setUserRoute(getUserRouteFromLocalStorage())
         if (state?.success) {
             router.push(state?.route)
+        } else if(state?.success === false) {
+            // console.log('Error routing stage', state?.error)
+            setError([...state?.error])
         }
     }, [state?.success])
 
@@ -42,11 +45,12 @@ export default function Page() {
                     <h2 className="text-mainText text-xl font-semibold">Welcome back</h2>
                     <p className="text-subText font-medium">Sign in to be able to access your page</p>
                 </section>
-                <div className=" flex justify-center">
-                    {/*{state?.success === false ? <p className="text-red-600 flex items-center gap-2">*/}
-                    {/*    <span className="iconify lucide--info"></span>Incorrect email or password</p>: ''}*/}
-                    {error.length > 0 ? error.map((err, index )=> <p key={index} className={`text-red-500`}>{err}</p> ) : ""}
-                </div>
+                {error.length > 0 ?
+                    <div className=" flex items-center gap-1 px-6">
+                        <span className={`iconify lucide--info text-red-500`}></span>
+                        {error?.map((err, index )=> <p key={index} className={`text-red-500`}>{err}</p> )}
+                    </div>
+                    : ""}
             </header>
             <SignInForm action={action} state={state} />
         </section>

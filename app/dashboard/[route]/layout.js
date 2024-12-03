@@ -1,18 +1,28 @@
 import {DashboardNav, NavItem} from "@/app/dashboard/components";
 import {PageFadeAnimator} from "@/app/components";
+import {SideNav} from "@/app/dashboard/components/sideNav";
+import {cookies} from "next/headers";
 
 export default async function DashboardLayout({children, params}) {
     const paramName = await params;
+    const cookieStore = await cookies()
+    const accessToken = cookieStore.get('access_token')?.value
+
     const shouldName = {
         "me": "",
         "logs": "Logs",
         "community": "Community",
+        "chat": "Chats"
     }
     return (
         <section>
             <header className={"px-5"}>
                 <DashboardNav text={shouldName[paramName.route]}/>
             </header>
+            {/*<div className={}>*/}
+                 <SideNav accessToken={accessToken} />
+
+            {/*</div>*/}
                 <PageFadeAnimator>
                     {children}
                     <div className={`h-[100px]`}></div>
