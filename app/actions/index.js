@@ -17,7 +17,7 @@ export async function updateUser(info) {
     const userType = matchUserStatus(cookieStore.get('ttym-user-type')?.value);
 
     try {
-        const response = await fetch(`http://${HOSTNAME}/user/patient/update/`, {
+        const response = await fetch(`${HOSTNAME}/user/patient/update/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

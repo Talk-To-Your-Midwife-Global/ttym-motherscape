@@ -17,7 +17,7 @@ export function Chat({accessToken}) {
         isConnected,
         onEvent,
         sendMessage,
-    } = useWebSocket(`ws://${process.env.NEXT_PUBLIC_HOSTNAME}/ws/`, accessToken)
+    } = useWebSocket(`wss://${process.env.NEXT_PUBLIC_HOSTNAME}/ws/`, accessToken)
 
     const handleIsAssigned = (data) => {
         console.log('handleAssigned', data);

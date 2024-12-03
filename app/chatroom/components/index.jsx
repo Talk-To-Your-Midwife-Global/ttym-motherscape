@@ -14,7 +14,7 @@ export function ChatPage({chatId, accessToken}) {
         isConnected,
         onEvent,
         sendMessage,
-    } = useWebSocket(`ws://${process.env.NEXT_PUBLIC_HOSTNAME}/ws/`, accessToken)
+    } = useWebSocket(`wss://${process.env.NEXT_PUBLIC_HOSTNAME}/ws/`, accessToken)
 
     const handleNewMessage = (data) => {
         setMessages(prevMessages => [...prevMessages, data?.messages])
