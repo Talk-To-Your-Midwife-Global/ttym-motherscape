@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@iconify-json/lucide": "^1.2.11",
+    "@iconify-json/lucide": "^1.2.13",
     "@iconify-json/material-symbols-light": "^1.2.6",
     "@iconify-json/mdi": "^1.2.1",
     "@iconify/tailwind": "^1.1.3",
