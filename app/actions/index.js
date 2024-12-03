@@ -1,5 +1,5 @@
 "use server"
-import { cookies } from "next/headers"
+import {cookies} from "next/headers"
 import {HOSTNAME} from "@/app/config/main";
 import {matchUserStatus} from "@/app/lib/functions";
 
@@ -17,7 +17,7 @@ export async function updateUser(info) {
     const userType = matchUserStatus(cookieStore.get('ttym-user-type')?.value);
 
     try {
-        const response = await fetch(`http://${HOSTNAME}:8000/user/patient/update/`, {
+        const response = await fetch(`${HOSTNAME}/user/patient/update/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -49,12 +49,12 @@ export async function updateUser(info) {
                 }
             }
         }
-        } catch (error) {
-            return {
-                success: false,
-                error: {
-                    error_description: error,
-                }
+    } catch (error) {
+        return {
+            success: false,
+            error: {
+                error_description: error,
             }
+        }
     }
 }

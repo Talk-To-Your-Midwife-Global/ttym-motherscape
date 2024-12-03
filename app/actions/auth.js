@@ -1,15 +1,36 @@
 'use server'
+// import {SignJWT, JWTVer} from 'jose'
 import {SignUpFormSchema, SignInFormSchema, ForgotPasswordFormSchema} from "../auth/lib/definitions";
-import { cookies } from "next/headers";
+import {cookies} from "next/headers";
 import {HOSTNAME} from "../config/main";
+
+
+// const secretKey = 'somekeybiIwillmakeinenvironmentvairables'
+// const key = new TextEncoder().encode(secretKey);
+//
+// export async function encrypt(payload) {
+//     return await SignJWT(payload)
+//         .setProtectedHeader({alg: 'HS256'})
+//         .setIssuedAt()
+//         .setExpirationTime('time goes here')
+//         .sign(key)
+// }
+//
+// export async function decrypt(input) {
+//     const {payload} = await JWTVerify(input, key,  {
+//         algorithms: ['HS256'],
+//     })
+//
+//     return payload
+// }
 
 
 async function patientOrMidwife() {
     const cookieStore = await cookies()
     if (cookieStore.has('ttym-user-type')) {
-        if (cookieStore.get('ttym-user-type') !== 'midwife' ) {
+        if (cookieStore.get('ttym-user-type') !== 'midwife') {
             return 'PATIENT'
-        }else {
+        } else {
             return 'MIDWIFE'
         }
     }
@@ -18,8 +39,8 @@ async function patientOrMidwife() {
 /**
  * Validates sign up form fields
  * @param {state} state
- * @param {formData} formData 
- * @returns 
+ * @param {formData} formData
+ * @returns
  */
 export async function signup(state, formData) {
     const role = await patientOrMidwife()
@@ -39,30 +60,33 @@ export async function signup(state, formData) {
                 address: formData.get('address'),
             },
             errors: validatedFields.error.flatten().fieldErrors,
-          }
+        }
     }
 
+    //  console.log(HOSTNAME)
     // call the provider
     try {
-        const response = await fetch(`http://${HOSTNAME}:8000/auth/register/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                full_name: formData.get('name'),
-                email: formData.get('email'),
-                password: formData.get('password'),
-                phone_number: formData.get('phone'),
-                role,
-            }),
-        })
+        const response =
+            await fetch(`${HOSTNAME}/auth/register/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    full_name: formData.get('name'),
+                    email: formData.get('email'),
+                    password: formData.get('password'),
+                    phone_number: formData.get('phone'),
+                    role,
+                }),
+            })
         const result = await response.json()
         const errors = []
         if (!response.ok) {
-            for(const key in result) {
+            for (const key in result) {
                 errors.push(result[key][0])
             }
+            console.log(errors)
             return {
                 success: false,
                 error: errors
@@ -76,7 +100,7 @@ export async function signup(state, formData) {
             token: result.tokens.access,
             route: '/questions'
         }
-    } catch(errors) {
+    } catch (errors) {
         console.log(errors)
         // TODO: setup a logger here
 
@@ -105,11 +129,11 @@ export async function signin(state, formData) {
                 email: formData.get('email'),
             },
             errors: validatedFields.error.flatten().fieldErrors,
-          }
+        }
     }
 
     try {
-        const response = await fetch(`http://${HOSTNAME}:8000/auth/login/`, {
+        const response = await fetch(`${HOSTNAME}/auth/login/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -121,15 +145,16 @@ export async function signin(state, formData) {
         })
 
         const result = await response.json()
+        console.log(result);
         const errors = []
-        if(!response.ok) {
-            for (const key in result) {
-                errors.push(result[key][0])
-            }
-            console.log(errors)
+        if (!response.ok) {
+            // for (const key in result) {
+            //     errors.push(result[key][0])
+            // }
+            console.log(result)
             return {
                 success: false,
-                error: errors
+                error: [result.message]
             }
         }
 
@@ -145,9 +170,9 @@ export async function signin(state, formData) {
         return {
             success: true,
             token: result.tokens.access,
-            route: result.user.is_configured  ? '/dashboard' : '/questions'
+            route: result.user.is_configured ? '/dashboard' : '/questions'
         }
-    } catch(errors) {
+    } catch (errors) {
         return {
             error: [errors.error_description]
         }
@@ -155,13 +180,53 @@ export async function signin(state, formData) {
 }
 
 export async function logout() {
+    console.log('logging out')
     const cookieStore = await cookies()
+    const accessToken = cookieStore.get('access_token')?.value;
+    const refreshToken = cookieStore.get('refresh_token')?.value;
+
     const items = ['access_token', 'refresh_token', 'last_login', 'ttym-user-type']
-    for(const item of items) {
-        cookieStore.delete(item)
+
+    try {
+        const response = await fetch(`${HOSTNAME}/auth/logout/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({
+                refresh_token: refreshToken,
+            })
+        })
+
+        const result = await response.json()
+        const errors = []
+        if (!response.ok) {
+            console.log(result)
+            for (const key in result) {
+                errors.push(result[key][0])
+            }
+            console.log({
+                    success: false,
+                    error: errors
+                }
+            )
+        }
+        console.log('log out success')
+        for (const item of items) {
+            cookieStore.delete(item)
+        }
+
+        return {
+            success: true,
+        }
+    } catch (errors) {
+        return {
+            error: errors
+        }
     }
 
-//TODO: Implement the logout
+
 }
 
 /**
