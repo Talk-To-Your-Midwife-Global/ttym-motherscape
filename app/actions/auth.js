@@ -106,7 +106,7 @@ export async function signup(state, formData) {
         return {
             success: true,
             token: result.tokens.access,
-            route: '/questions'
+            route: `/questions`
         }
     } catch (errors) {
         console.log(errors)
@@ -178,7 +178,7 @@ export async function signin(state, formData) {
         return {
             success: true,
             token: result.tokens.access,
-            route: result.user.is_configured ? '/dashboard' : '/questions'
+            route: result.user.is_configured ? '/dashboard' : `/questions`
         }
     } catch (errors) {
         return {
