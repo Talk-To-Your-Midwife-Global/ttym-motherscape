@@ -5,11 +5,15 @@ import {IconButton, MiniLoader} from "@/app/components";
 import {ShortCalendar} from "@/app/dashboard/components/index";
 import {logLog} from "@/app/dashboard/actions/action";
 import {useLogsInfo} from "@/app/dashboard/lib/dataFetching";
+import {PUBLICHOSTNAME} from "@/app/config/main";
+import {formatDate} from "@/app/lib/functions";
 
 
 export function Logs({accessToken}) {
     const [disableBtn, setDisableButton] = useState(true)
     const [feelingState, setFeelingState] = useState({moods: [], symptoms: []})
+    const [day, setDay] = useState(new Date());
+    const [userType, setUserType] = useState("");
 
     // const {logs, isLoadingLogs, logsError} = useLogsInfo(accessToken);
     //
@@ -55,10 +59,28 @@ export function Logs({accessToken}) {
         //     Run a function that gets the particular day selected and updates feelingState
         // const dayLogs = getDayLogs('2024-11-23')
         // setFeelingState(dayLogs.entry)
-        const userType = localStorage.getItem('userType') !== "midwife" ? "PATIENTLOG" : "MIDWIFELOG"
-        console.log(userType)
 
-    }, [feelingState])
+        console.log(userType)
+        setUserType(localStorage.getItem('userType') !== "midwife" ? "PATIENTLOG" : "MIDWIFELOG")
+        console.log(PUBLICHOSTNAME)
+
+        async function getUserLogs() {
+            const response = await fetch(`${PUBLICHOSTNAME}/logs?date=${formatDate(day)}`, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                }
+            })
+
+            const logs = await response.json();
+            console.log({...logs[0]?.entry})
+            setFeelingState({...logs[0]?.entry});
+
+
+        }
+
+        getUserLogs()
+
+    }, [])
 
     return (
         <section className={`${inter.className} h-[100%] mt-5`}>
