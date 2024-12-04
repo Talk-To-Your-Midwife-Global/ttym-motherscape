@@ -36,6 +36,14 @@ async function patientOrMidwife() {
     }
 }
 
+export async function returnTypeOfPatient() {
+    const cookieStore = await cookies();
+    if (cookieStore.has('ttym-user-type')) {
+        return cookieStore.get('ttym-user-type')?.value || null;
+    }
+
+}
+
 /**
  * Validates sign up form fields
  * @param {state} state
