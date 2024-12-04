@@ -68,6 +68,15 @@ export function removeSpaces(sentence) {
     return sentence.replace(/\s+/g, '');
 }
 
+export function formatDate(date) {
+    // const today = new Date(); // Get the current date
+    const year = date.getFullYear(); // Get the full year (YYYY)
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Get the month (MM, zero-based, so add 1 and pad with zero if necessary)
+    const day = String(date.getDate()).padStart(2, '0'); // Get the day (DD, pad with zero if necessary)
+
+    return `${year}-${month}-${day}`; // Return the formatted date
+}
+
 /**
  * Makes a number in the thousands more relatable
  * @param int

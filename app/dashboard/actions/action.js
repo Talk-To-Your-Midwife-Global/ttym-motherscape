@@ -1,5 +1,6 @@
 'use server'
 import {cookies} from "next/headers";
+import {PUBLICHOSTNAME} from "@/app/config/main";
 
 /**
  * Send daily feeling
