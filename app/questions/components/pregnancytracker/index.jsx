@@ -19,7 +19,7 @@ function QuestionNav({url, icon = "lucide--chevron-left", last = false,}) {
     )
 }
 
-function ProgressIndicator({target = 0, total = 5}) {
+function ProgressIndicator({target = 0, total = 3}) {
     return (
         <div className="flex space-x-2 px-[20px]">
             {Array.from({length: total}).map((_, index) => (
@@ -44,7 +44,6 @@ export function PregnancyQuestionParent({question, updateUser}) {
     const router = useRouter()
     const [answers, setAnswers] = useState({})
 
-
     const handleQuestionAnswers = (questionAnswers) => {
         setAnswers((prevState) => ({...prevState, ...questionAnswers}))
     }
@@ -53,7 +52,7 @@ export function PregnancyQuestionParent({question, updateUser}) {
         const next = String(Number(question) + 1)
 
         // After the final question
-        if (next <= 5) {
+        if (next <= 3) {
             setTimeout(() => router.push(`/questions/${next}`), 200)
         } else {
             const result = updateUser(JSON.parse(localStorage.getItem("answers"))).then(res => {
@@ -67,17 +66,16 @@ export function PregnancyQuestionParent({question, updateUser}) {
     }
 
     const questions = {
-        1: <BasicCycleInformation handleAnswers={handleQuestionAnswers} state={answers} submit={handleSubmit}/>,
-        2: <CycleRegularity handleAnswers={handleQuestionAnswers} submit={handleSubmit} state={answers}/>,
-        3: <LastPeriod handleAnswers={handleQuestionAnswers} submit={handleSubmit}/>,
-        4: <SymptomsTracking handleAnswers={handleQuestionAnswers} state={answers} submit={handleSubmit}/>,
-        5: <NotificationPreferences handleAnswers={handleQuestionAnswers} submit={handleSubmit} state={answers}/>
-
+        1: <GeneralInformation handleAnswers={handleQuestionAnswers} state={answers} submit={handleSubmit}/>,
+        2: <HealthAndMedicalHistory handleAnswers={handleQuestionAnswers} submit={handleSubmit} state={answers}/>,
+        // 3: <LifeStyle handleAnswers={handleQuestionAnswers} submit={handleSubmit}/>,
+        3: <SymptomsTracking handleAnswers={handleQuestionAnswers} state={answers} submit={handleSubmit}/>,
+        // 4: <NotificationPreferences handleAnswers={handleQuestionAnswers} submit={handleSubmit} state={answers}/>
     }
 
     return (
         <section>
-            <QuestionNav last={question === 6 ? true : false}
+            <QuestionNav last={question === questions.length}
                          url={question > 1 ? `/questions/${question - 1}` : '/questions/'}/>
             <ProgressIndicator target={question}/>
             <PageSlideAnimator>
@@ -87,13 +85,13 @@ export function PregnancyQuestionParent({question, updateUser}) {
     )
 }
 
-function BasicCycleInformation({handleAnswers, submit, state}) {
+function GeneralInformation({handleAnswers, submit, state}) {
     const [disableBtn, setDisableButton] = useState(true)
 
     const handleChange = (event) => {
         const {name, value} = event.target
 
-        if (name === 'periodLength' && value > 0) {
+        if (name === 'age' && value > 0) {
             setDisableButton(false)
         } else {
             setDisableButton(true)
@@ -105,11 +103,24 @@ function BasicCycleInformation({handleAnswers, submit, state}) {
     }
     return (
         <section className={`${inter.className} h-svh overflow-hidden`}>
-            <QuestionHead text="Basic Cycle Information"/>
+            <QuestionHead text="General Information"/>
             <form className="px-[20px] text-primaryText">
                 <div className="flex flex-col gap-2 mb-5">
-                    <label htmlFor="cycle-info" className="font-medium">Pregnant woman k3?
-                        cycle?</label>
+                    <label htmlFor="dueDate" className="font-normal">What is your estimated due date (if
+                        known)?</label>
+                    <input type="date" name="dueDate" id="dueDate"
+                           className={`border-2 border-slate-300 .text-[#808080] h-11 rounded-md bg-transparent px-[10px] outline-none w-full`}
+                           onChange={handleChange}/>
+                </div>
+                <div className="flex flex-col gap-2 mb-5">
+                    <label htmlFor="last-period" className="font-normal">Do you know the date of your last menstrual
+                        period (LMP)?</label>
+                    <input type="date" name="lmp" id="last-period"
+                           className={`border-2 border-slate-300 .text-[#808080] h-11 rounded-md bg-transparent px-[10px] outline-none w-full`}
+                           onChange={handleChange}/>
+                </div>
+                <div className="flex flex-col gap-2 mb-5">
+                    <label htmlFor="isFirstPregnancy" className="font-normal">Is this your first pregnancy?</label>
                     <div className="grid">
                         <svg
                             className="pointer-events-none z-10 right-1 relative col-start-1 row-start-1 h-4 w-4 self-center justify-self-end forced-colors:hidden"
@@ -119,29 +130,26 @@ function BasicCycleInformation({handleAnswers, submit, state}) {
                                   clipRule="evenodd"></path>
                         </svg>
                         <select defaultValue=""
-                                className="w-full h-11 appearance-none forced-colors:appearance-auto row-start-1 col-start-1 rounded-lg bg-slate-50 hover:border-primaryColor hover:bg-white border-2 text-[#808080] px-2 outline-none"
-                                name="cycleInfo" onChange={handleChange}>
-                            <option value="" disabled hidden>Average Length</option>
-                            <option value="25">25 days</option>
-                            <option value="26">26 days</option>
-                            <option value="27">27 days</option>
-                            <option value="28">28 days</option>
+                                className="w-full h-11 appearance-none forced-colors:appearance-auto row-start-1 col-start-1 rounded-lg bg-slate-50 hover:border-primaryColor hover:bg-white border-2 .text-[#808080] px-2 outline-none"
+                                name="isFirstPregnancy" onChange={handleChange}>
+                            <option value="" disabled hidden>Yes/No</option>
+                            <option value={"true"}>Yes</option>
+                            <option value={"false"}>No</option>
                         </select>
                     </div>
                 </div>
 
                 <div>
                     <div className="flex flex-col gap-2">
-                        <label htmlFor="period-length" className="font-medium">How many days does your period usually
-                            last?</label>
+                        <label htmlFor="age" className="font-normal">How old are you?</label>
                         <input
-                            className="border-2 border-slate-300 text-[#808080] h-11 rounded-md bg-transparent px-[10px] outline-none"
-                            placeholder="Days of Period" type="number" min={1} max={60} name="periodLength"
-                            id="period-length" onChange={handleChange}/>
+                            className="border-2 border-slate-300 .text-[#808080] h-11 rounded-md bg-transparent px-[10px] outline-none"
+                            placeholder="Age eg. 16" type="number" min={8} name="age"
+                            id="age" onChange={handleChange}/>
                     </div>
                 </div>
             </form>
-            <div className="relative -bottom-[25%] w-full flex justify-center">
+            <div className="relative -bottom-[10%] w-full flex justify-center">
                 <IconButton text="Continue" onClick={handleSubmit} icon="iconify lucide--arrow-right"
                             disabled={disableBtn}/>
             </div>
@@ -149,214 +157,170 @@ function BasicCycleInformation({handleAnswers, submit, state}) {
     )
 }
 
-function CycleRegularity({handleAnswers, submit, state}) {
-    const [answers, setAnswers] = useState({})
-    const [disableBtn, setDisableButton] = useState(true)
-
+function HealthAndMedicalHistory({handleAnswers, submit, state}) {
     const handleChange = (event) => {
         const {name, value} = event.target
-
-        if (name === 'cycleRegularity') {
-            setDisableButton(false)
-        } else {
-            setDisableButton(true)
-        }
-
+        console.log(name, value);
         handleAnswers({...state, [name]: value})
     }
 
     return (
-        <section className={`${inter.className} h-svh overflow-hidden`}>
-            <QuestionHead text="Cycle Regularity"/>
+        <section className={`${inter.className} .h-svh overflow-hidden`}>
+            <QuestionHead text="Health and Medical History"/>
             <form className="px-[20px] text-primaryText">
-                <div className="flex flex-col gap-2 mb-5">
-                    <label htmlFor="cycle-regularity" className="font-medium">Is your cycle regular or
-                        irregular?</label>
-                    <div className="grid">
-                        <svg
-                            className="pointer-events-none z-10 right-1 relative col-start-1 row-start-1 h-4 w-4 self-center justify-self-end forced-colors:hidden"
-                            viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-                            <path fillRule="evenodd"
-                                  d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
-                                  clipRule="evenodd"></path>
-                        </svg>
-                        <select defaultValue=""
-                                className="w-full h-11 appearance-none forced-colors:appearance-auto row-start-1 col-start-1 rounded-lg bg-slate-50 hover:border-primaryColor hover:bg-white border-2 text-[#808080] px-2 outline-none"
-                                id="cycle-regularity" name="cycleRegularity" onChange={handleChange}>
-                            <option value="" disabled hidden>eg. regular</option>
-                            <option value={true}>Regular</option>
-                            <option value={false}>Irregular</option>
-                        </select>
+                <div className={`mb-5`}>
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="existingConditions" className="font-normal">Do you have any pre-existing medical
+                            conditions?</label>
+                        <input
+                            className="border-2 border-slate-300 .text-[#808080] h-11 rounded-md bg-transparent px-[10px] outline-none"
+                            placeholder="Eg. Hypertension, diabetes..." type="text" name="existingConditions"
+                            id="existingConditions" onChange={handleChange}/>
                     </div>
                 </div>
-                <div className="text-sm text-[#667085] font-medium flex flex-col gap-5">
-                    <p>Regular: Roughly the same number of days each cycle.</p>
-                    <p>Irregular: Varies significantly from month to month. This helps the app adapt predictions based
-                        on consistency.</p>
+
+                <div className={`mb-5`}>
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="existingMedications" className="font-normal">Are you currently taking any
+                            medications or supplements?</label>
+                        <input
+                            className="border-2 border-slate-300 .text-[#808080] h-11 rounded-md bg-transparent px-[10px] outline-none"
+                            placeholder="Eg. Folic acid" type="text" name="existingMedications"
+                            id="existingMedications" onChange={handleChange}/>
+                    </div>
+                </div>
+
+                <div className={`mb-5`}>
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="allergies" className="font-normal">Do you have any known allergies?</label>
+                        <input
+                            className="border-2 border-slate-300 .text-[#808080] h-11 rounded-md bg-transparent px-[10px] outline-none"
+                            placeholder="Eg. Peanuts, milk..." type="text" name="allergies"
+                            id="allergies" onChange={handleChange}/>
+                    </div>
+                </div>
+
+                <div>
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="pastComplications" className="font-normal">Have you had any complications in
+                            previous pregnancies (if applicable)?</label>
+                        <input
+                            className="border-2 border-slate-300 .text-[#808080] h-11 rounded-md bg-transparent px-[10px] outline-none"
+                            placeholder="Eg. Ectopic pregnancy" type="text" name="pastComplications"
+                            id="pastComplications" onChange={handleChange}/>
+                    </div>
                 </div>
             </form>
-            <div className="relative -bottom-[25%] w-full flex justify-center">
-                <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn}/>
+            <div className="relative my-10 .-bottom-[15%] w-full flex justify-center">
+                <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right"/>
             </div>
         </section>
     )
 }
 
-function LastPeriod({handleAnswers, submit, state}) {
-    const [disableBtn, setDisableButton] = useState(true)
-
-    const handleChange = (event) => {
-        const {name, value} = event.target
-
-        if (name === 'periodStart') {
-            setDisableButton(false)
-        } else {
-            setDisableButton(true)
-        }
-
-        handleAnswers({...state, [name]: value})
-    }
-
-    return (
-        <section className={`${inter.className} h-svh overflow-hidden`}>
-            <QuestionHead text="Last Period Details"/>
-            <form className="px-[20px] text-primaryText">
-                <div className="flex flex-col gap-2 mb-5">
-                    <label htmlFor="last-period" className="font-medium">When did your last period start?</label>
-                    <input type="date" name="periodStart" id="last-period" onChange={handleChange}/>
-                </div>
-            </form>
-            <div className="relative -bottom-[45%] w-full flex justify-center">
-                <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn}/>
-            </div>
-        </section>
-    )
-}
 
 function SymptomsTracking({handleAnswers, submit, state}) {
-    const [disableBtn, setDisableButton] = useState(true)
+    const handleChange = (event) => {
+        const {name, value} = event.target
+        handleAnswers({...state, [name]: value})
+    }
 
     const handleSubmit = (event) => {
         submit()
     }
 
-    const handleMoodToggle = (item) => {
-        if (state?.moods) {
-            handleAnswers({
-                moods: state?.moods?.includes(item)
-                    ? state?.moods.filter((i) => i !== item)
-                    : [...state.moods, item]
-            })
-        }
-        setDisableButton(false)
-    };
-
-    const handleSymptomsToggle = (item) => {
-        handleAnswers({
-            symptoms: state?.symptoms?.includes(item)
-                ? state?.symptoms.filter((i) => i !== item)
-                : [...state.symptoms, item]
-        })
-        setDisableButton(false)
-    };
-    // Initialize the moods and symptoms to avoid array method errors; important!
-    useEffect(() => {
-        handleAnswers({
-            moods: [],
-            symptoms: []
-        })
-    }, [])
-
-    const moodData = ['happy', 'sad', 'calm', 'energetic', 'mood swings', 'irritate', 'depressed', 'anxious', 'uneasy', 'horny', 'frustrated']
-    const symptomsData = ['fine', 'cramps', 'acne', 'cravings', 'tender breast', 'fatigue', 'backache']
     return (
         <section className={`${inter.className} h-[100%] .overflow-hidden`}>
-            <QuestionHead text="Symptoms Tracking Preferences"/>
+            <QuestionHead text="Current Symptoms and Experiences"/>
             <form className="px-[20px] text-primaryText">
-                <div className="flex flex-col gap-2 mb-8">
-                    <label htmlFor="last-period" className="font-medium">Which symptoms would you like to track?</label>
-                    <h3 className="text-xl text-primaryColor font-medium">Mood</h3>
-                    <section className="flex flex-wrap gap-2">
-                        {moodData.map((mood, index) => {
-                            return <input type="button" value={mood} name="mood" key={index}
-                                          onClick={() => handleMoodToggle(mood)}
-                                          className={`cursor-pointer text-sm p-2 px-4 py-2 capitalize2  rounded-full border-2 border-primaryColor ${
-                                              state.moods?.includes(mood) ? 'bg-primaryColor rounded-full text-white' : 'text-primaryColor  border-primaryColor '
-                                          }`}>
-                            </input>
-                        })}
-                    </section>
+                <div className={`mb-5`}>
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="symtoms" className="font-normal">Are you experiencing any symptoms currently
+                            (e.g., nausea, fatigue, mood changes)?</label>
+                        <input
+                            className="border-2 border-slate-300 .text-[#808080] h-11 rounded-md bg-transparent px-[10px] outline-none"
+                            placeholder="(e.g., nausea, fatigue, mood changes)" type="text" name="symptoms"
+                            id="symptoms" onChange={handleChange}/>
+                    </div>
                 </div>
-                <div>
-                    <h3 className="text-xl text-primaryColor font-medium">Symptoms</h3>
-                    <section className="flex flex-wrap gap-2 mt-2">
-                        {symptomsData.map((symptom, index) => {
-                            return <input type="button" value={symptom} name="mood" key={index}
-                                          onClick={() => handleSymptomsToggle(symptom)}
-                                          className={`cursor-pointer text-sm p-2 px-4 py-2 capitalize rounded-full border-2 border-primaryColor ${
-                                              state.symptoms?.includes(symptom) ? 'bg-primaryColor rounded-full text-white' : 'text-primaryColor  border-primaryColor '
-                                          }`}>
-                            </input>
-                        })}
-                    </section>
+                <div className={`mb-5`}>
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="changesInHealth" className="font-normal">Have you noticed any significant
+                            changes in
+                            your health or body recently?</label>
+                        <input
+                            className="border-2 border-slate-300 .text-[#808080] h-11 rounded-md bg-transparent px-[10px] outline-none"
+                            placeholder="eg bloating, fatigue" type="text" name="changesInHealth"
+                            id="changesInHealth" onChange={handleChange}/>
+                    </div>
                 </div>
-            </form>
-            <div className="my-[25%] w-full flex justify-center">
-                <IconButton text="Continue" onClick={handleSubmit} icon="iconify lucide--arrow-right"
-                            disabled={disableBtn}/>
-            </div>
-        </section>
-    )
-}
 
-function NotificationPreferences({handleAnswers, submit, state}) {
-    const [disableBtn, setDisableButton] = useState(true)
-
-    const handleChange = (event) => {
-        const {name, value} = event.target
-
-        if (name === 'notificationPreference') {
-            setDisableButton(false)
-        } else {
-            setDisableButton(true)
-        }
-
-        handleAnswers({...state, [name]: value})
-
-        submit()
-    }
-    return (
-        <section className={`${inter.className} h-svh overflow-hidden`}>
-            <QuestionHead text="Notification Preferences"/>
-            <form className="px-[20px] text-primaryText">
-                <div className="flex flex-col gap-2 mb-5">
-                    <label htmlFor="cycle-info" className="font-medium">Would you like reminders before your period
-                        starts? If yes, how many days before?</label>
-
-                    <div className="grid">
-                        <svg
-                            className="pointer-events-none z-10 right-1 relative col-start-1 row-start-1 h-4 w-4 self-center justify-self-end forced-colors:hidden"
-                            viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-                            <path fillRule="evenodd"
-                                  d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
-                                  clipRule="evenodd"></path>
-                        </svg>
-                        <select defaultValue=""
-                                className="w-full h-11 appearance-none forced-colors:appearance-auto row-start-1 col-start-1 rounded-lg bg-slate-50 hover:border-primaryColor hover:bg-white border-2 text-[#808080] px-2 outline-none"
-                                name="notificationPreference" onChange={handleChange}>
-                            <option value="" hidden disabled>eg. 1 day</option>
-                            <option value="1">1 day</option>
-                            <option value="2">2 days</option>
-                            <option value="3">3 days</option>
-                            <option value="5">5 days</option>
-                        </select>
+                <div className={`mb-5`}>
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="lookInto" className="font-normal">Do you have any specific concerns about
+                            your pregnancy that you would like the app to address?</label>
+                        <input
+                            className="border-2 border-slate-300 .text-[#808080] h-11 rounded-md bg-transparent px-[10px] outline-none"
+                            placeholder="eg. health food" type="text" name="lookInto"
+                            id="lookInto" onChange={handleChange}/>
                     </div>
                 </div>
             </form>
-            <div className="relative -bottom-[35%] w-full flex justify-center">
-
-                <IconButton href="/dashboard" text="Continue" icon="iconify lucide--arrow-right" disabled={disableBtn}/>
+            <div className="my-[25%] w-full flex justify-center">
+                <IconButton text="Continue" onClick={handleSubmit} icon="iconify lucide--arrow-right"/>
             </div>
         </section>
     )
 }
+
+// function NotificationPreferences({handleAnswers, submit, state}) {
+//     const [disableBtn, setDisableButton] = useState(true)
+//
+//     const handleChange = (event) => {
+//         const {name, value} = event.target
+//
+//         if (name === 'notificationPreference') {
+//             setDisableButton(false)
+//         } else {
+//             setDisableButton(true)
+//         }
+//
+//         handleAnswers({...state, [name]: value})
+//
+//         submit()
+//     }
+//     return (
+//         <section className={`${inter.className} h-svh overflow-hidden`}>
+//             <QuestionHead text="Notification Preferences"/>
+//             <form className="px-[20px] text-primaryText">
+//                 <div className="flex flex-col gap-2 mb-5">
+//                     <label htmlFor="cycle-info" className="font-medium">What type of reminders would you like to receive
+//                         (e.g., doctor’s appointments, health tips, hydration)?</label>
+//
+//                     <div className="grid">
+//                         <svg
+//                             className="pointer-events-none z-10 right-1 relative col-start-1 row-start-1 h-4 w-4 self-center justify-self-end forced-colors:hidden"
+//                             viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+//                             <path fillRule="evenodd"
+//                                   d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
+//                                   clipRule="evenodd"></path>
+//                         </svg>
+//                         <select defaultValue=""
+//                                 className="w-full h-11 appearance-none forced-colors:appearance-auto row-start-1 col-start-1 rounded-lg bg-slate-50 hover:border-primaryColor hover:bg-white border-2 text-[#808080] px-2 outline-none"
+//                                 name="notificationPreference" onChange={handleChange}>
+//                             <option value="" hidden disabled>eg. 1 day</option>
+//                             <option value="1">1 day</option>
+//                             <option value="2">2 days</option>
+//                             <option value="3">3 days</option>
+//                             <option value="5">5 days</option>
+//                         </select>
+//                     </div>
+//                 </div>
+//             </form>
+//             <div className="relative -bottom-[35%] w-full flex justify-center">
+//
+//                 <IconButton href="/dashboard" text="Continue" icon="iconify lucide--arrow-right" disabled={disableBtn}/>
+//             </div>
+//         </section>
+//     )
+// }

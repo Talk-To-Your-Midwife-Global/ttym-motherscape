@@ -1,26 +1,46 @@
 import {cookies} from "next/headers";
-import {Home} from "@/app/dashboard/components/home";
 import {CalendarMain} from "@/app/dashboard/components/calendar";
 import {Logs} from "@/app/dashboard/components/logs";
 import {Community} from "@/app/dashboard/components/community";
 import {Chat} from "@/app/dashboard/components/chat";
+import {MenstrualHome} from "@/app/dashboard/components/menstrualcycletracker/home.jsx";
+import {PregnancyHome} from "@/app/dashboard/components/pregnancytracker/home";
 
 
 export default async function Page({params}) {
     const routeName = await params;
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('access_token')?.value;
+    const userType = cookieStore.get('ttym-user-type')?.value;
 
-    const views = {
-        'me': <Home accessToken={accessToken}/>,
+    const menstrualViews = {
+        'me': <MenstrualHome accessToken={accessToken}/>,
         'calendar': <CalendarMain accessToken={accessToken}/>,
         'logs': <Logs accessToken={accessToken}/>,
         'community': <Community accessToken={accessToken}/>,
         'chat': <Chat accessToken={accessToken}/>
     }
-    return (
-        <section>
-            {views[routeName.route]}
-        </section>
-    )
+
+    const pregnancyViews = {
+        'me': <PregnancyHome accessToken={accessToken}/>,
+        'calendar': <CalendarMain accessToken={accessToken}/>,
+        'logs': <Logs accessToken={accessToken}/>,
+        'chat': <Chat accessToken={accessToken}/>,
+        'community': <Community accessToken={accessToken}/>
+    }
+    if (userType === "menstrualcycletracker") {
+        return (
+            <section>
+                {menstrualViews[routeName.route]}
+            </section>
+        )
+    }
+
+    if (userType === "pregnancytracker") {
+        return (
+            <section>
+                {pregnancyViews[routeName.route]}
+            </section>
+        )
+    }
 }
