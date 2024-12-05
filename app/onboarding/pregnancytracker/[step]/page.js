@@ -25,7 +25,7 @@ export default async function Page({params}) {
         </StepTwo>,
         '3': <StepThree
             title={"You’re Not Alone!"}
-            description={"Join a supportive community of moms-to-be and connect with experts who can answer your questions and guide you.w"}
+            description={"Join a supportive community of moms-to-be and connect with experts who can answer your questions and guide you."}
 
         >
             <Image src={cuate} className="" alt="three women talking"/>

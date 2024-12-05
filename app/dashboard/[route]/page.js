@@ -1,10 +1,11 @@
 import {cookies} from "next/headers";
-import {CalendarMain} from "@/app/dashboard/components/calendar";
+import {CalendarMain} from "@/app/dashboard/components/menstrualcycletracker/calendar";
 import {Logs} from "@/app/dashboard/components/logs";
 import {Community} from "@/app/dashboard/components/community";
 import {Chat} from "@/app/dashboard/components/chat";
 import {MenstrualHome} from "@/app/dashboard/components/menstrualcycletracker/home.jsx";
 import {PregnancyHome} from "@/app/dashboard/components/pregnancytracker/home";
+import {PregnantCalendarMain} from "@/app/dashboard/components/pregnancytracker/calendar";
 
 
 export default async function Page({params}) {
@@ -23,7 +24,7 @@ export default async function Page({params}) {
 
     const pregnancyViews = {
         'me': <PregnancyHome accessToken={accessToken}/>,
-        'calendar': <CalendarMain accessToken={accessToken}/>,
+        'calendar': <PregnantCalendarMain accessToken={accessToken}/>,
         'logs': <Logs accessToken={accessToken}/>,
         'chat': <Chat accessToken={accessToken}/>,
         'community': <Community accessToken={accessToken}/>

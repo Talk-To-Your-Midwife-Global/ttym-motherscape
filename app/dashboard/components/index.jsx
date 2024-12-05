@@ -112,15 +112,15 @@ export function NavItem({children, text = "default", style = "", withText = true
     )
 }
 
-export function Card({head, status, children}) {
+export function Card({head, status, highlight = "", children}) {
     return (
-        <article className={"bg-white rounded-md w-full h-16 drop-shadow-sm border my-5 flex items-center"}>
+        <article className={"bg-white rounded-lg w-full h-16 drop-shadow-sm border my-5 flex items-center"}>
             <div className={"flex items-center px-2"}>
                 {children}
             </div>
 
-            <div className={"flex-1 "}>
-                <p> {head} </p>
+            <div className={"flex-1"}>
+                <p> {head} <span className="text-primaryColor font-medium text-sm">{highlight}</span></p>
                 <p className={`text-[#72777A] text-sm`}>{status}</p>
             </div>
         </article>
@@ -178,6 +178,52 @@ export const CircularProgressBar = ({children, percentage, bg = "currentColor", 
         </div>
     );
 };
+
+export function PregnancyProgressBar({trimester, weeks, daysRemaining, progress}) {
+    return (
+        <div className="flex flex-col gap-4 items-start w-full .max-w-lg p-4 border rounded-md shadow-lg bg-white">
+            <span className="text-primaryText text-sm font-medium">{trimester}</span>
+            <div className="flex justify-between w-full .flex-col">
+                <span className="text-md text-primaryText font-bold">{weeks} weeks</span>
+                <span className="text-primaryText text-sm">{daysRemaining} days to childbirth</span>
+            </div>
+
+
+            {/* Progress Bar */}
+            <div className="relative w-full h-4 bg-gray-200  rounded-full">
+
+                <div className="bg-red-400 h-4 rounded-l-full w-[120px]">
+                    {/* Segment 1 */}
+                    <div
+                        className="absolute top-0 left-0 h-4 bg-tertiaryColor rounded-l-full"
+                        style={{width: `${progress.segment1}%`}}
+                    ></div>
+                </div>
+
+                {/* Segment 2 */}
+                <div className="bg-[#0F969C26] absolute top-0 left-[calc(40%)]  h-4 .rounded-l-full w-[90px]">
+                    <div
+                        className="absolute top-0 .left-[calc(40%)] h-4 bg-primaryColor"
+                        style={{width: `${progress.segment2}%`}}
+                    ></div>
+                </div>
+
+                {/* Segment 3 */}
+                <div
+                    className="absolute top-0 left-[calc(70%)] h-4 bg-cyan-200 rounded-r-full"
+                    style={{width: `${progress.segment3}%`}}
+                ></div>
+
+                {/* Circle Indicator */}
+                <div
+                    className="absolute top-1/2 left-[calc(40%)] transform -translate-y-1/2 w-6 h-6 bg-white border-4 border-tertiaryColor rounded-full"
+                    style={{left: `calc(${progress.circlePosition}% - 12px)`}}
+                ></div>
+            </div>
+        </div>
+
+    );
+}
 
 export function MenstrualCycleCardMain({accessToken}) {
     const {data, error, isLoading} = useCycleInfo(accessToken);
@@ -262,7 +308,7 @@ export function PregnancyCycleCardMain({accessToken}) {
                   status={`Current Week Of Pregnancy`}>
                 <Image src={cycleCalendarIcon} alt={"calendar icon"}/>
             </Card>
-            <Card head={`You are currently in your: 2nd Trimester`}
+            <Card head={`You are currently in your:`} highlight={'2nd Trimester'}
                   status={'5 Months Pregnant'}>
                 <Image src={cycleTimeCircleIcon} alt={"A clock"}/>
             </Card>

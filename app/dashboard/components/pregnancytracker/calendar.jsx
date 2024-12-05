@@ -1,20 +1,27 @@
 "use client"
 import Image from "next/image"
 import {useState} from "react";
-import {Calendar, CircularProgressBar, InsightParent, ShortCalendar} from "@/app/dashboard/components/index";
+import {
+    Calendar,
+    CircularProgressBar,
+    InsightParent,
+    PregnancyProgressBar,
+    ShortCalendar
+} from "@/app/dashboard/components";
 import menstrualPhase from "@/public/images/menstrual-phase.svg"
 import follicularPhase from "@/public/images/follicular-phase.svg"
 import ovulationPhase from "@/public/images/ovulation-phase.svg"
 import lutealPhase from "@/public/images/luteal-phase.svg"
 import ovulationBlue from "@/public/images/ovulation-phase-blue.svg"
 import pregnancyPink from "@/public/images/pregnancy-pink.svg"
+import bro from "@/public/images/pregnant/bro.svg"
 import {montserrat} from "@/app/fonts";
 import Link from "next/link";
 import {menstrualCycleDateGenerator, necessaryDataForMenstrualUI, relatableDay} from "@/app/lib/functions";
 import {PageFadeAnimator} from "@/app/components";
 import {useCycleInfo} from "@/app/dashboard/lib/dataFetching";
 
-export function CalendarMain({accessToken}) {
+export function PregnantCalendarMain({accessToken}) {
     const phaseImages = {
         "Menstrual": {
             img: menstrualPhase,
@@ -96,14 +103,40 @@ export function CalendarMain({accessToken}) {
                     : <ShortCalendar action={{actionText: "View Calendar", action: handleCalendarViewToggle}}
                                      specialDates={specialDates} accessToken={accessToken} withFlower={true}/>
             }
-            <section className={`my-10`}>
-                <CircularProgressBar percentage={generalCycleInfo?.percentageComplete} bg={`#F5F5F5`}
-                                     foreBg={'#015364'}>
-                    <h2 className={`text-3xl font-bold text-primaryText text-center relative top-5`}>Day {generalCycleInfo?.daysDone}</h2>
-                    <Image src={phaseImages[generalCycleInfo?.stage]?.img} alt={"phase image"}
-                           className={`relative top-5`}/>
-                    <p className={`w-[200px] text-center text-subText text-sm relative top-5`}> {phaseImages[generalCycleInfo?.stage]?.msg} </p>
-                </CircularProgressBar>
+            <section className={`my-10 flex flex-col items-center justify-center`}>
+                <section
+                    className={`w-[340px] h-[340px] rounded-full border-2 border-primaryColor shadow-[10px_14px_106px_4px_rgba(15,150,156,0.5)] flex items-center justify-center`}>
+                    <Image src={bro} alt={'baby'}/>
+                </section>
+                <p className="text-primaryText font-bold relative my-10">
+                    Your baby is in a size of: 🍏
+                </p>
+
+                <section className="mb-10 w-full flex flex-col justify-center items-center">
+                    <section className=" flex justify-center gap-[35px]">
+                        {Array.from([1, 2, 3, 4, 5, 6, 7]).map((item, index) => {
+                            return (
+                                <span key={index}
+                                      className={`.text-lg text-primaryText ${index === 3 && "bg-primaryColor text-white p-3 rounded-full w-[60px] h-[60px] flex items-center justify-center relative bottom-2 text-2xl"}`}>{item}</span>
+                            )
+                        })}
+                    </section>
+                    <p className="font-semibold text-primaryText">Current Week</p>
+                </section>
+
+                <section className="max-w-[340px] w-full">
+                    <PregnancyProgressBar
+                        trimester="2nd trimester"
+                        weeks={16}
+                        daysRemaining={171}
+                        progress={{
+                            segment1: 39,
+                            segment2: 20,
+                            segment3: 30,
+                            circlePosition: 45,
+                        }}
+                    />
+                </section>
             </section>
             <section className={`carousel flex overflow-x-auto scroll-smooth space-x-4 my-4`}>
                 <article
