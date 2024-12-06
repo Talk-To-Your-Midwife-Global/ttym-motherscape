@@ -627,10 +627,9 @@ export function FeelingsInsightsAndEvents({accessToken}) {
                         <div className={"bg-white py-4 rounded-md w-full mx-5"}>
                             <p className={`text-primaryText`}>
                                 You are feeling <span
-                                className={'text-primaryColor'}>{feeling.feeling}</span> with {feeling.number} other
-                                expectant mothers
+                                className={'text-primaryColor'}>{feeling.feeling}</span> with {feeling.number} others
                             </p>
-                            <div className="flex items-end justify-end">
+                            <div className="flex my-3 .items-end .justify-end">
                                 <span className="text-sm text-right text-pink">Learn more about your emotions</span>
                             </div>
                         </div>
