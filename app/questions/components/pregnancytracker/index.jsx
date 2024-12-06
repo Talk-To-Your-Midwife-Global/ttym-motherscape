@@ -56,6 +56,7 @@ export function PregnancyQuestionParent({question, updateUser}) {
             setTimeout(() => router.push(`/questions/${next}`), 200)
         } else {
             const result = updateUser(JSON.parse(localStorage.getItem("answers"))).then(res => {
+                console.log(res);
                 if (res.success === true) {
                     setTimeout(() => router.push(`/dashboard`), 200)
                 } else {
@@ -101,6 +102,12 @@ function GeneralInformation({handleAnswers, submit, state}) {
     const handleSubmit = () => {
         submit()
     }
+
+    useEffect(() => {
+        handleAnswers({
+            dueDate: null
+        })
+    }, [disableBtn])
     return (
         <section className={`${inter.className} h-svh overflow-hidden`}>
             <QuestionHead text="General Information"/>

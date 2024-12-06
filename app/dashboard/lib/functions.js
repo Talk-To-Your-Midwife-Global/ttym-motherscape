@@ -24,3 +24,36 @@ export function getRelativeTime(date) {
 
     return "just now";
 }
+
+export function convertCommaStringToArray(string) {
+    console.log(string.split(',').map(item => item.trim()))
+    return string.split(',').map(item => item.trim());
+}
+
+export function formatNumberWithOrdinal(num) {
+    if (typeof num !== 'number' || isNaN(num)) {
+        throw new Error('Input must be a valid number');
+    }
+
+    const absNum = Math.abs(num);
+    const suffix = (absNum % 10 === 1 && absNum % 100 !== 11) ? 'st' :
+        (absNum % 10 === 2 && absNum % 100 !== 12) ? 'nd' :
+            (absNum % 10 === 3 && absNum % 100 !== 13) ? 'rd' : 'th';
+
+    return `${num}${suffix}`;
+}
+
+export function computeNumberOfMonthsFromDays(days) {
+    if (days < 31) {
+        return 0
+    }
+    return days % 30;
+}
+
+export function poundsToGrams(pounds) {
+    if (typeof pounds !== 'number' || isNaN(pounds)) {
+        throw new Error('Input must be a valid number');
+    }
+    const grams = pounds * 453.592;
+    return parseFloat(grams.toFixed(2)); // Round to 2 decimal points
+}

@@ -1,6 +1,6 @@
 import {QuestionParent} from "../components/menstrualcycletracker";
 import {PregnancyQuestionParent} from "@/app/questions/components/pregnancytracker";
-import {updateUser} from "@/app/actions";
+import {updateUser, updatePregnantUser} from "@/app/actions";
 import {returnTypeOfPatient} from "@/app/actions/auth";
 
 export default async function Page({params}) {
@@ -15,7 +15,7 @@ export default async function Page({params}) {
 
     if (patientType === "pregnancytracker") {
         return (
-            <PregnancyQuestionParent updateUser={updateUser} question={question}/>
+            <PregnancyQuestionParent updateUser={updatePregnantUser} question={question}/>
         )
     }
 }

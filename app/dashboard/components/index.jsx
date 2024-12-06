@@ -276,47 +276,22 @@ export function MenstrualCycleCardMain({accessToken}) {
     )
 }
 
-export function PregnancyCycleCardMain({accessToken}) {
-    const {data, error, isLoading} = useCycleInfo(accessToken);
-    const generalCycleInfo = necessaryDataForMenstrualUI(data || []);
-
-    if (isLoading) return <div>loading...</div>
-    if (error) {
-        return (
-            <div>
-                error
-                {error.message}
-            </div>
-        )
-    }
-    // const {data, error, isLoading} = usePregnancyInfo(accessToken);
-    // const generalCycleInfo = necessaryDataForMenstrualUI(data || []);
-
-    // if (isLoading) return <div>loading...</div>
-    // if (error) {
-    //     return (
-    //         <div>
-    //             error
-    //             {error.message}
-    //         </div>
-    //     )
-    // }
-
+export function PregnancyCycleCardMain({data, accessToken}) {
     return (
         <section className={"mt-4"}>
-            <Card head={`Week 20 of 40`}
+            <Card head={`Week ${data?.week} of 40`}
                   status={`Current Week Of Pregnancy`}>
                 <Image src={cycleCalendarIcon} alt={"calendar icon"}/>
             </Card>
-            <Card head={`You are currently in your:`} highlight={'2nd Trimester'}
-                  status={'5 Months Pregnant'}>
+            <Card head={`You are currently in your:`} highlight={`${data?.trimester} Trimester`}
+                  status={`${data?.month} Months Pregnant`}>
                 <Image src={cycleTimeCircleIcon} alt={"A clock"}/>
             </Card>
-            <Card head={`16cm long`}
+            <Card head={`${data?.length || 0}cm long`}
                   status={'Baby Size'}>
                 <Image src={cycleGraphIcon} alt={"graph icon"}/>
             </Card>
-            <Card head={`320g`} status={'Baby Weight'}>
+            <Card head={`${data?.weight}g`} status={'Baby Weight'}>
                 <Image src={cycleWeightIcon} alt={"weight icon"}/>
             </Card>
         </section>

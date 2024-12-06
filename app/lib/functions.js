@@ -1,4 +1,5 @@
 import {addDays, differenceInDays} from "date-fns";
+import {computeNumberOfMonthsFromDays, formatNumberWithOrdinal, poundsToGrams} from "@/app/dashboard/lib/functions";
 
 
 export function fetcher(url, token = "") {
@@ -44,6 +45,21 @@ export function fetchCycle(url, token) {
             percentageComplete: computeCycleCompletion(computeDaysDone(result.period_start), result.cycle_length),
         }
         return formattedData
+    })
+}
+
+export function fetchPregnancy(url, token) {
+    return fetch(url, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    }).then(res => {
+        return res.json()
+    }).then(result => {
+        result = necessaryDataForPregnancyUI(result)
+        return {
+            ...result
+        }
     })
 }
 
@@ -156,6 +172,21 @@ export function necessaryDataForUser(allData) {
             access: allData.tokens.access,
             refresh: allData.tokens.refresh,
         }
+    }
+}
+
+export function necessaryDataForPregnancyUI(data) {
+    return {
+        days: data.days,
+        week: data.week,
+        trimester: formatNumberWithOrdinal(data.trimester),
+        expectedDate: data.expected_date,
+        size: data.size,
+        weight: poundsToGrams(data.weight),
+        length: data.length,
+        event: data.event,
+        month: computeNumberOfMonthsFromDays(data.days),
+        percentage: computeCycleCompletion(data.week, 40),
     }
 }
 
