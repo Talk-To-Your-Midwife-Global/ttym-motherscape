@@ -57,3 +57,11 @@ export function poundsToGrams(pounds) {
     const grams = pounds * 453.592;
     return parseFloat(grams.toFixed(2)); // Round to 2 decimal points
 }
+
+export function generateNumbers(k) {
+   
+    const intervalStart = (k - 3) > 0 ? (k - 3) : 0;
+    const intervalEnd = k + 3;
+
+    return Array.from({length: intervalEnd - intervalStart + 1}, (_, index) => intervalStart + index);
+}

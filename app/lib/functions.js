@@ -176,18 +176,47 @@ export function necessaryDataForUser(allData) {
 }
 
 export function necessaryDataForPregnancyUI(data) {
+    console.log(data);
     return {
-        days: data.days,
+        days: data.day,
         week: data.week,
         trimester: formatNumberWithOrdinal(data.trimester),
         expectedDate: data.expected_date,
         size: data.size,
+        countdown: data.countdown,
         weight: poundsToGrams(data.weight),
         length: data.length,
         event: data.event,
-        month: computeNumberOfMonthsFromDays(data.days),
+        month: computeNumberOfMonthsFromDays(data.day),
         percentage: computeCycleCompletion(data.week, 40),
+        progressBarValues: computeProgressBarValues(data.day, data.week),
     }
+}
+
+function computeProgressBarValues(days, week) {
+    const month = computeNumberOfMonthsFromDays(days);
+    console.log(month);
+    let result = {
+        segment1: 0,
+        segment2: 0,
+        segment3: 0,
+        circlePosition: 0
+    }
+    if (month <= 3) {
+        result.segment1 = week * 3.34;
+
+    } else if (month > 3 && month <= 6) {
+        result.segment1 = 40
+        result.segment2 = week * 8.4;
+    } else {
+        result.segment1 = 40
+        result.segment2 = 100;
+        result.segment3 = week * 2.3;
+    }
+    result.circlePosition = week * 2.5;
+    console.log(result);
+    return result;
+
 }
 
 // Convert this whole thing into a class soon

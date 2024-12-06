@@ -192,7 +192,7 @@ export function PregnancyProgressBar({trimester, weeks, daysRemaining, progress}
             {/* Progress Bar */}
             <div className="relative w-full h-4 bg-gray-200  rounded-full">
 
-                <div className="bg-red-400 h-4 rounded-l-full w-[120px]">
+                <div className="bg-gray-200  h-4 rounded-l-full w-[120px]">
                     {/* Segment 1 */}
                     <div
                         className="absolute top-0 left-0 h-4 bg-tertiaryColor rounded-l-full"
@@ -597,9 +597,14 @@ export function FeelingsInsightsAndEvents({accessToken}) {
         {desc: "neutral", img: neutralFace}
     ]
     const [feelingRecorded, setFeelingRecorded] = useState(false)
+    const [feeling, setFeeling] = useState({feeling: '', number: 0});
 
-    const handleFeeling = async (feeling) => {
+    const handleFeeling = (selectedFeeling) => {
+        console.log(selectedFeeling)
         // TODO: Use random generator
+        const randomNumber = Math.floor(Math.random() * 100, 1);
+        setFeeling({...feeling, feeling: selectedFeeling, number: randomNumber})
+        setFeelingRecorded(true);
     }
 
     return (
@@ -613,16 +618,21 @@ export function FeelingsInsightsAndEvents({accessToken}) {
                         faces.map(face => {
                             return (
                                 <div key={face.desc} className={"flex flex-col items-center"}>
-                                    <Image onClick={async () => handleFeeling(face.desc)} src={face.img} alt={"face"}/>
+                                    <Image onClick={() => handleFeeling(face.desc)} src={face.img} alt={"face"}/>
                                     <p> {face.desc} </p>
                                 </div>
                             )
                         })
                         :
-                        <div className={"bg-white p-4 rounded-md w-full mx-5"}>
-                            <p className={`text-primaryColor`}>
-                                Feeling recorded today
+                        <div className={"bg-white py-4 rounded-md w-full mx-5"}>
+                            <p className={`text-primaryText`}>
+                                You are feeling <span
+                                className={'text-primaryColor'}>{feeling.feeling}</span> with {feeling.number} other
+                                expectant mothers
                             </p>
+                            <div className="flex items-end justify-end">
+                                <span className="text-sm text-right text-pink">Learn more about your emotions</span>
+                            </div>
                         </div>
                     }
                 </section>
