@@ -1,6 +1,7 @@
 "use client"
 import Image from "next/image";
 import Link from "next/link";
+import EmptyPageClip from "@/public/images/empty-articles.svg";
 import {motion, AnimatePresence} from "framer-motion"
 
 const pageTransitionVariants = {
@@ -119,10 +120,13 @@ export function ActionLink({
     )
 }
 
-export function SmallEmptyState() {
+export function SmallEmptyState({text}) {
     return (
-        <section>
-            Empty State UI goes here...
+        <section className={'flex flex-col gap-2 justify-center items-center w-[350px] h-full'}>
+            <div>
+                <Image src={EmptyPageClip} alt={"Empty coach cards"} className={`relative right-5`}/>
+            </div>
+            <p className={`text-primaryText font-medium `}>{text}</p>
         </section>
     )
 }

@@ -13,7 +13,8 @@ export default function Page() {
         async function LogOut() {
             const response = await logout()
             if (response?.success) {
-                localStorage.removeItem("chatDisplay")
+                localStorage.removeItem("chatDisplay");
+                localStorage.removeItem('answers');
                 router.push("/")
             }
         }

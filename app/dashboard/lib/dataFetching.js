@@ -1,6 +1,7 @@
 import useSWR from 'swr'
-import {fetchCycle, fetcher, fetchUser} from "@/app/lib/functions";
+import {fetchCycle, fetcher, fetchPregnancy, fetchUser} from "@/app/lib/functions";
 import {PUBLICHOSTNAME} from "@/app/config/main";
+import {error} from "next/dist/build/output/log";
 
 export function useUserInfo(accessToken) {
     const {
@@ -29,6 +30,20 @@ export function useCycleInfo(accessToken) {
     }
 }
 
+export function usePregnancyInfo(accessToken) {
+    const {
+        data,
+        isLoading,
+        error
+    } = useSWR([`${PUBLICHOSTNAME}/user/pregnancy`, accessToken], ([url, accessToken]) => fetchPregnancy(url, accessToken))
+
+    return {
+        pregnancyData: data,
+        pregnancyError: error,
+        pregnancyLoading: isLoading,
+    }
+}
+
 export function useInsightsInfo() {
     const {data, isLoading, error} = useSWR([`${PUBLICHOSTNAME}/insights/`], ([url]) => fetcher(url));
     // console.log(data)
@@ -52,3 +67,4 @@ export function useLogsInfo(accessToken) {
         logsError: error,
     }
 }
+

@@ -42,7 +42,7 @@ export function Events({accessToken}) {
                 })}
                 {
                     data.length < 1 && <div>
-                        <SmallEmptyState/>
+                        <SmallEmptyState text={"No events at the moment"}/>
                     </div>
                 }
             </section>

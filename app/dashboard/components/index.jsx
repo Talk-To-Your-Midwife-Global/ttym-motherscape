@@ -31,13 +31,36 @@ import drip from "@/public/icons/drip.svg";
 import clock from "@/public/icons/clock.svg";
 import cycle from "@/public/icons/cycle.svg";
 import pregnancyIcon from "@/public/icons/pregnancy.svg";
-import sarah from "@/public/images/sarah.png"
 import {ActionLink, MiniLoader} from "@/app/components";
 import {useCycleInfo, useInsightsInfo} from "@/app/dashboard/lib/dataFetching";
 import {useRouter} from "next/navigation";
 import {PUBLICHOSTNAME} from "@/app/config/main";
 import {getRelativeTime} from "@/app/dashboard/lib/functions";
+import {Insights} from "@/app/dashboard/components/insights";
+import {Events} from "@/app/dashboard/components/events";
+import goodFace from "@/public/icons/faces/good.svg";
+import badFace from "@/public/icons/faces/bad.svg";
+import angryFace from "@/public/icons/faces/angry.svg";
+import tiredFace from "@/public/icons/faces/tired.svg";
+import happyFace from "@/public/icons/faces/happy.svg";
+import neutralFace from "@/public/icons/faces/neutral.svg";
+import flower from "@/public/images/name-flower.svg";
+import cycleCalendarIcon from "@/public/icons/pregnant/cyclecalendar.svg"
+import cycleTimeCircleIcon from "@/public/icons/pregnant/cycletimecircle.svg"
+import cycleGraphIcon from "@/public/icons/pregnant/cyclegraph.svg"
+import cycleWeightIcon from "@/public/icons/pregnant/cycleweight.svg"
 
+export function DashboardHeader(user) {
+    return (
+        <header className={"px-5"}>
+            <section className={"text-primaryText"}>
+                <p className={`text-subText text-sm font-medium ${montserrat.className}`}>Welcome 👋</p>
+                <p className={"flex items-center text-3xl"}> {user?.user.full_name} <Image src={flower}
+                                                                                           alt={"flower"}/></p>
+            </section>
+        </header>
+    )
+}
 
 export function DashboardNav({text = ""}) {
     const [hasNotifications, setHasNotifications] = useState(false)
@@ -89,15 +112,15 @@ export function NavItem({children, text = "default", style = "", withText = true
     )
 }
 
-export function Card({head, status, children}) {
+export function Card({head, status, highlight = "", children}) {
     return (
-        <article className={"bg-white rounded-md w-full h-16 drop-shadow-sm border my-5 flex items-center"}>
+        <article className={"bg-white rounded-lg w-full h-16 drop-shadow-sm border my-5 flex items-center"}>
             <div className={"flex items-center px-2"}>
                 {children}
             </div>
 
-            <div className={"flex-1 "}>
-                <p> {head} </p>
+            <div className={"flex-1"}>
+                <p> {head} <span className="text-primaryColor font-medium text-sm">{highlight}</span></p>
                 <p className={`text-[#72777A] text-sm`}>{status}</p>
             </div>
         </article>
@@ -124,7 +147,7 @@ export const CircularProgressBar = ({children, percentage, bg = "currentColor", 
     }, [percent])
 
     return (
-        <div className="flex gap-3 items-center justify-center relative">
+        <div className="flex gap-3 mb-10 items-center justify-center relative">
             <svg width="550" height="340" className="-rotate-90">
                 <circle
                     className="text-gray-300"
@@ -132,7 +155,7 @@ export const CircularProgressBar = ({children, percentage, bg = "currentColor", 
                     strokeWidth="25"
                     fill="transparent"
                     r={radius}
-                    cx="200"
+                    cx="170"
                     cy="170"
                 />
                 <circle
@@ -144,7 +167,7 @@ export const CircularProgressBar = ({children, percentage, bg = "currentColor", 
                     strokeLinecap="round"
                     fill="transparent"
                     r={radius}
-                    cx="200"
+                    cx="170"
                     cy="170"
                     style={{transition: 'stroke-dashoffset 0.1s ease'}}
                 />
@@ -156,19 +179,57 @@ export const CircularProgressBar = ({children, percentage, bg = "currentColor", 
     );
 };
 
-export function CycleCardMain({accessToken}) {
-    const {data, error, isLoading} = useCycleInfo(accessToken);
+export function PregnancyProgressBar({trimester, weeks, daysRemaining, progress}) {
+    return (
+        <div className="flex flex-col gap-4 items-start w-full .max-w-lg p-4 border rounded-md shadow-lg bg-white">
+            <span className="text-primaryText text-sm font-medium">{trimester}</span>
+            <div className="flex justify-between w-full .flex-col">
+                <span className="text-md text-primaryText font-bold">{weeks} weeks</span>
+                <span className="text-primaryText text-sm">{daysRemaining} days to childbirth</span>
+            </div>
 
+
+            {/* Progress Bar */}
+            <div className="relative w-full h-4 bg-gray-200  rounded-full">
+
+                <div className="bg-gray-200  h-4 rounded-l-full w-[120px]">
+                    {/* Segment 1 */}
+                    <div
+                        className="absolute top-0 left-0 h-4 bg-tertiaryColor rounded-l-full"
+                        style={{width: `${progress.segment1}%`}}
+                    ></div>
+                </div>
+
+                {/* Segment 2 */}
+                <div className="bg-[#0F969C26] absolute top-0 left-[calc(40%)]  h-4 .rounded-l-full w-[90px]">
+                    <div
+                        className="absolute top-0 .left-[calc(40%)] h-4 bg-primaryColor"
+                        style={{width: `${progress.segment2}%`}}
+                    ></div>
+                </div>
+
+                {/* Segment 3 */}
+                <div
+                    className="absolute top-0 left-[calc(70%)] h-4 bg-cyan-200 rounded-r-full"
+                    style={{width: `${progress.segment3}%`}}
+                ></div>
+
+                {/* Circle Indicator */}
+                <div
+                    className="absolute top-1/2 left-[calc(40%)] transform -translate-y-1/2 w-6 h-6 bg-white border-4 border-tertiaryColor rounded-full"
+                    style={{left: `calc(${progress.circlePosition}% - 12px)`}}
+                ></div>
+            </div>
+        </div>
+
+    );
+}
+
+export function MenstrualCycleCardMain({accessToken}) {
+    const {data, error, isLoading} = useCycleInfo(accessToken);
     const generalCycleInfo = necessaryDataForMenstrualUI(data || []);
 
-    if (isLoading) {
-        return (
-            <div>
-                loading...
-            </div>
-        )
-    }
-
+    if (isLoading) return <div>loading...</div>
     if (error) {
         return (
             <div>
@@ -177,6 +238,7 @@ export function CycleCardMain({accessToken}) {
             </div>
         )
     }
+
     return (
         <section className={"mt-4"}>
             {
@@ -214,9 +276,31 @@ export function CycleCardMain({accessToken}) {
     )
 }
 
+export function PregnancyCycleCardMain({data, accessToken}) {
+    return (
+        <section className={"mt-4"}>
+            <Card head={`Week ${data?.week} of 40`}
+                  status={`Current Week Of Pregnancy`}>
+                <Image src={cycleCalendarIcon} alt={"calendar icon"}/>
+            </Card>
+            <Card head={`You are currently in your:`} highlight={`${data?.trimester} Trimester`}
+                  status={`${data?.month} Months Pregnant`}>
+                <Image src={cycleTimeCircleIcon} alt={"A clock"}/>
+            </Card>
+            <Card head={`${data?.length || 0}cm long`}
+                  status={'Baby Size'}>
+                <Image src={cycleGraphIcon} alt={"graph icon"}/>
+            </Card>
+            <Card head={`${data?.weight}g`} status={'Baby Weight'}>
+                <Image src={cycleWeightIcon} alt={"weight icon"}/>
+            </Card>
+        </section>
+    )
+}
+
+
 export function InsightCard({insight, accessToken}) {
     const [bookmarked, setBookmarked] = useState(false)
-    // console.log(insight)
 
     const handlePostBookmarking = async (id) => {
         setBookmarked(prevState => !prevState)
@@ -503,3 +587,69 @@ export function Calendar({action, withFlower, accessToken}) {
     )
 }
 
+export function FeelingsInsightsAndEvents({accessToken}) {
+    const faces = [
+        {desc: "good", img: goodFace},
+        {desc: "bad", img: badFace},
+        {desc: "angry", img: angryFace},
+        {desc: "tired", img: tiredFace},
+        {desc: "happy", img: happyFace},
+        {desc: "neutral", img: neutralFace}
+    ]
+    const [feelingRecorded, setFeelingRecorded] = useState(false)
+    const [feeling, setFeeling] = useState({feeling: '', number: 0});
+
+    const handleFeeling = (selectedFeeling) => {
+        console.log(selectedFeeling)
+        // TODO: Use random generator
+        const randomNumber = Math.floor(Math.random() * 100, 1);
+        setFeeling({...feeling, feeling: selectedFeeling, number: randomNumber})
+        setFeelingRecorded(true);
+    }
+
+    return (
+        <section>
+            <section className={"text-primaryText "}>
+                <header className={"px-5 font-bold text-xl"}>
+                    <h2>How do you feel today?</h2>
+                </header>
+                <section className={"flex justify-evenly"}>
+                    {!feelingRecorded ?
+                        faces.map(face => {
+                            return (
+                                <div key={face.desc} className={"flex flex-col items-center"}>
+                                    <Image onClick={() => handleFeeling(face.desc)} src={face.img} alt={"face"}/>
+                                    <p> {face.desc} </p>
+                                </div>
+                            )
+                        })
+                        :
+                        <div className={"bg-white py-4 rounded-md w-full mx-5"}>
+                            <p className={`text-primaryText`}>
+                                You are feeling <span
+                                className={'text-primaryColor'}>{feeling.feeling}</span> with {feeling.number} others
+                            </p>
+                            <div className="flex my-3 .items-end .justify-end">
+                                <span className="text-sm text-right text-pink">Learn more about your emotions</span>
+                            </div>
+                        </div>
+                    }
+                </section>
+            </section>
+
+            <section className={"px-5 my-10 "}>
+                <header>
+                    <div className={"flex justify-between"}>
+                        <h2 className={"text-primaryText font-bold text-xl"}>Cycle Insights</h2> <Link
+                        href={"/dashboard/community"}>See
+                        More</Link> {/* TODO: use the right link*/}
+                    </div>
+                    <p className={`${montserrat.className} text-subText`}>Personalized health tips based on logged
+                        data</p>
+                </header>
+                <Insights accessToken={accessToken}/>
+            </section>
+            <Events accessToken={accessToken}/>
+        </section>
+    )
+}

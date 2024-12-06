@@ -64,7 +64,6 @@ export function QuestionParent({question, updateUser}) {
                 }
             })
         }
-
     }
 
     const questions = {
@@ -127,6 +126,15 @@ function BasicCycleInformation({handleAnswers, submit, state}) {
                             <option value="26">26 days</option>
                             <option value="27">27 days</option>
                             <option value="28">28 days</option>
+                            <option value="29">29 days</option>
+                            <option value="30">30 days</option>
+                            <option value="31">31 days</option>
+                            <option value="32">32 days</option>
+                            <option value="33">33 days</option>
+                            <option value="34">34 days</option>
+                            <option value="35">35 days</option>
+                            <option value="36">Above 35</option>
+
                         </select>
                     </div>
                 </div>
