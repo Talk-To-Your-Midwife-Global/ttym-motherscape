@@ -4,13 +4,13 @@ import {removeSpaces} from "@/app/lib/functions"
 import {IconButton} from "@/app/components"
 import {PageSlideAnimator} from "@/app/components"
 
-export function OnboardNav({url, icon = "lucide--chevron-right", last = false}) {
+export function OnboardNav({url, userType = "menstrualcycletracker", icon = "lucide--chevron-right", last = false}) {
     return (
         <nav className="px-[20px] flex justify-between items-center my-5">
             <Link href={url} className="bg-[#16898E1A] w-12 h-12 rounded-full flex justify-center items-center">
                 <span className={`iconify ${icon} text-2xl`}></span>
             </Link>
-            {!last ? <Link href='/onboarding/menstrualcycletracker/3'
+            {!last ? <Link href={`/onboarding/${userType}/3`}
                            className="text-primaryColor font-medium">Skip</Link> : ''}
 
         </nav>
@@ -48,7 +48,7 @@ export function StepOne({userType, children, title, description}) {
     return (
 
         <section className="overflow-hidden w-screen h-svh">
-            <OnboardNav url={`/onboarding/${userType}/2`}/>
+            <OnboardNav userType={userType} url={`/onboarding/${userType}/2`}/>
             <PageSlideAnimator>
                 <section className="flex flex-col justify-between">
                     <OnboardHeader heading={title} description={description}/>
@@ -64,7 +64,7 @@ export function StepOne({userType, children, title, description}) {
 export function StepTwo({userType, children, title, description}) {
     return (
         <section className="overflow-hidden w-screen h-svh">
-            <OnboardNav url={`/onboarding/${userType}/3`}/>
+            <OnboardNav userType={userType} url={`/onboarding/${userType}/3`}/>
             <PageSlideAnimator>
                 <section className="flex flex-col justify-between">
                     <OnboardHeader heading={title} description={description}/>
@@ -77,10 +77,10 @@ export function StepTwo({userType, children, title, description}) {
     )
 }
 
-export function StepThree({children, title, description}) {
+export function StepThree({userType, children, title, description}) {
     return (
         <section className="h-svh">
-            <OnboardNav url="/onboarding/" icon="lucide--chevron-left" last={true}/>
+            <OnboardNav userType={userType} url="/onboarding/" icon="lucide--chevron-left" last={true}/>
             <PageSlideAnimator>
                 <section className="flex flex-col justify-between">
                     <OnboardHeader heading={title} description={description}/>

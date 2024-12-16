@@ -6,9 +6,10 @@ import pana from "../../../../public/images/pregnant/pana.svg"
 
 export default async function Page({params}) {
     const step = await params;
+    const userType = "pregnancytracker";
     const view = {
         '1': <StepOne
-            userType="pregnancytracker"
+            userType={userType}
             title={"Welcome to Your Pregnancy Journey"}
             description={"Track your pregnancy, stay informed, and connect with professionals."}
 
@@ -16,7 +17,7 @@ export default async function Page({params}) {
             <Image src={pana} className="" alt="image of a woman at different stages of pregnancy"/>
         </StepOne>,
         '2': <StepTwo
-            userType="pregnancytracker"
+            userType={userType}
             title={"Your Journey, Your Way!"}
             description={"Set your due date, track milestones, and receive insights tailored to your unique pregnancy journey. Start personalizing your experience now!"}
 
@@ -24,6 +25,7 @@ export default async function Page({params}) {
             <Image src={rafiki} className="" alt="three women talking"/>
         </StepTwo>,
         '3': <StepThree
+            userType={userType}
             title={"You’re Not Alone!"}
             description={"Join a supportive community of moms-to-be and connect with experts who can answer your questions and guide you."}
 
