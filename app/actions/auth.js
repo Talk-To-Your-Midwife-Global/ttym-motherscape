@@ -51,8 +51,6 @@ export async function returnTypeOfPatient() {
  * @returns
  */
 export async function signup(state, formData) {
-    const role = await patientOrMidwife()
-    // validate user fields
     const validatedFields = SignUpFormSchema.safeParse({
         name: formData.get('name'),
         email: formData.get('email'),
@@ -65,7 +63,6 @@ export async function signup(state, formData) {
         return {
             state: {
                 email: formData.get('email'),
-                address: formData.get('address'),
             },
             errors: validatedFields.error.flatten().fieldErrors,
         }
@@ -85,28 +82,28 @@ export async function signup(state, formData) {
                     email: formData.get('email'),
                     password: formData.get('password'),
                     phone_number: formData.get('phone'),
-                    role,
+                    role: 'PATIENT',
                 }),
             })
-        const result = await response.json()
         const errors = []
         if (!response.ok) {
-            for (const key in result) {
-                errors.push(result[key][0])
-            }
-            console.log(errors)
+            // for (const key in result) {
+            //     errors.push(result[key][0])
+            // }
+            console.log(response)
             return {
                 success: false,
                 error: errors
             }
         }
+        const result = await response.json()
         let cookieStore = await cookies()
         cookieStore.set('access_token', result.tokens.access, {httpOnly: true, path: '/'})
         cookieStore.set('refresh_token', result.tokens.refresh, {httpOnly: true, path: '/'})
         return {
             success: true,
             token: result.tokens.access,
-            route: `/questions`
+            route: `/onboarding`
         }
     } catch (errors) {
         console.log(errors)

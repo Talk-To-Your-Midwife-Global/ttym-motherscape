@@ -89,11 +89,8 @@ export function StepThree({children, title, description}) {
                     </section>
 
                     <section className="my-10 flex flex-col gap-8 justify-center items-center">
-                        <IconButton href="/auth/register/" icon="iconify lucide--arrow-right" text="Create Account"
+                        <IconButton href="/questions/" icon="iconify lucide--arrow-right" text="Continue"
                                     disabled={false}/>
-                        <Link className="text-primaryColor font-bold" href="/auth/signIn/">
-                            Log In
-                        </Link>
                     </section>
                 </section>
             </PageSlideAnimator>
