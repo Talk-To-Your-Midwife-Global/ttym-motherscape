@@ -69,9 +69,7 @@ export function PregnancyQuestionParent({question, updateUser}) {
     const questions = {
         1: <GeneralInformation handleAnswers={handleQuestionAnswers} state={answers} submit={handleSubmit}/>,
         2: <HealthAndMedicalHistory handleAnswers={handleQuestionAnswers} submit={handleSubmit} state={answers}/>,
-        // 3: <LifeStyle handleAnswers={handleQuestionAnswers} submit={handleSubmit}/>,
         3: <SymptomsTracking handleAnswers={handleQuestionAnswers} state={answers} submit={handleSubmit}/>,
-        // 4: <NotificationPreferences handleAnswers={handleQuestionAnswers} submit={handleSubmit} state={answers}/>
     }
 
     return (
@@ -87,17 +85,18 @@ export function PregnancyQuestionParent({question, updateUser}) {
 }
 
 function GeneralInformation({handleAnswers, submit, state}) {
-    const [disableBtn, setDisableButton] = useState(true)
+    const [disableBtn, setDisableButton] = useState(true);
+    const [answersState, setAnswersState] = useState({})
+    const [count, setCount] = useState(0);
 
     const handleChange = (event) => {
         const {name, value} = event.target
-
-        if (name === 'age' && value > 0) {
-            setDisableButton(false)
-        } else {
-            setDisableButton(true)
+        const shouldContinue = (name === "dueDate" && (answersState?.isFirstPregnancy)) || (name === "isFirstPregnancy" && (answersState?.dueDate || answersState?.lmp))
+        if (shouldContinue) {
+            setDisableButton(false);
         }
-        handleAnswers({...state, [name]: value})
+        setAnswersState((prevState) => ({...prevState, [name]: true}));
+        handleAnswers({...state, [name]: value});
     }
     const handleSubmit = () => {
         submit()
@@ -146,15 +145,15 @@ function GeneralInformation({handleAnswers, submit, state}) {
                     </div>
                 </div>
 
-                <div>
-                    <div className="flex flex-col gap-2">
-                        <label htmlFor="age" className="font-normal">How old are you?</label>
-                        <input
-                            className="border-2 border-slate-300 .text-[#808080] h-11 rounded-md bg-transparent px-[10px] outline-none"
-                            placeholder="Age eg. 16" type="number" min={8} name="age"
-                            id="age" onChange={handleChange}/>
-                    </div>
-                </div>
+                {/*<div>*/}
+                {/*    <div className="flex flex-col gap-2">*/}
+                {/*        <label htmlFor="age" className="font-normal">How old are you?</label>*/}
+                {/*        <input*/}
+                {/*            className="border-2 border-slate-300 .text-[#808080] h-11 rounded-md bg-transparent px-[10px] outline-none"*/}
+                {/*            placeholder="Age eg. 16" type="number" min={8} name="age"*/}
+                {/*            id="age" onChange={handleChange}/>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
             </form>
             <div className="relative -bottom-[10%] w-full flex justify-center">
                 <IconButton text="Continue" onClick={handleSubmit} icon="iconify lucide--arrow-right"
@@ -232,7 +231,7 @@ function SymptomsTracking({handleAnswers, submit, state}) {
         handleAnswers({...state, [name]: value})
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = () => {
         submit()
     }
 
@@ -279,55 +278,3 @@ function SymptomsTracking({handleAnswers, submit, state}) {
         </section>
     )
 }
-
-// function NotificationPreferences({handleAnswers, submit, state}) {
-//     const [disableBtn, setDisableButton] = useState(true)
-//
-//     const handleChange = (event) => {
-//         const {name, value} = event.target
-//
-//         if (name === 'notificationPreference') {
-//             setDisableButton(false)
-//         } else {
-//             setDisableButton(true)
-//         }
-//
-//         handleAnswers({...state, [name]: value})
-//
-//         submit()
-//     }
-//     return (
-//         <section className={`${inter.className} h-svh overflow-hidden`}>
-//             <QuestionHead text="Notification Preferences"/>
-//             <form className="px-[20px] text-primaryText">
-//                 <div className="flex flex-col gap-2 mb-5">
-//                     <label htmlFor="cycle-info" className="font-medium">What type of reminders would you like to receive
-//                         (e.g., doctor’s appointments, health tips, hydration)?</label>
-//
-//                     <div className="grid">
-//                         <svg
-//                             className="pointer-events-none z-10 right-1 relative col-start-1 row-start-1 h-4 w-4 self-center justify-self-end forced-colors:hidden"
-//                             viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-//                             <path fillRule="evenodd"
-//                                   d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
-//                                   clipRule="evenodd"></path>
-//                         </svg>
-//                         <select defaultValue=""
-//                                 className="w-full h-11 appearance-none forced-colors:appearance-auto row-start-1 col-start-1 rounded-lg bg-slate-50 hover:border-primaryColor hover:bg-white border-2 text-[#808080] px-2 outline-none"
-//                                 name="notificationPreference" onChange={handleChange}>
-//                             <option value="" hidden disabled>eg. 1 day</option>
-//                             <option value="1">1 day</option>
-//                             <option value="2">2 days</option>
-//                             <option value="3">3 days</option>
-//                             <option value="5">5 days</option>
-//                         </select>
-//                     </div>
-//                 </div>
-//             </form>
-//             <div className="relative -bottom-[35%] w-full flex justify-center">
-//
-//                 <IconButton href="/dashboard" text="Continue" icon="iconify lucide--arrow-right" disabled={disableBtn}/>
-//             </div>
-//         </section>
-//     )
-// }
