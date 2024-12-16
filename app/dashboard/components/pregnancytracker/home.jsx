@@ -18,7 +18,7 @@ export function PregnancyHome({data, accessToken}) {
     )
 
     if (error || pregnancyError) {
-        console.log(error)
+        console.log(error, pregnancyError)
         return (
             <div> errorL {error}</div>
         )
