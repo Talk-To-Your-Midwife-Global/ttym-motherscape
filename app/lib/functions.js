@@ -85,12 +85,11 @@ export function removeSpaces(sentence) {
 }
 
 export function formatDate(date) {
-    // const today = new Date(); // Get the current date
-    const year = date.getFullYear(); // Get the full year (YYYY)
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Get the month (MM, zero-based, so add 1 and pad with zero if necessary)
-    const day = String(date.getDate()).padStart(2, '0'); // Get the day (DD, pad with zero if necessary)
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
 
-    return `${year}-${month}-${day}`; // Return the formatted date
+    return `${year}-${month}-${day}`;
 }
 
 /**
@@ -179,6 +178,7 @@ export function necessaryDataForPregnancyUI(data) {
     console.log(data);
     return {
         days: data.day,
+        today: formatDate(new Date()),
         week: data.week,
         trimester: formatNumberWithOrdinal(data.trimester),
         expectedDate: data.expected_date,

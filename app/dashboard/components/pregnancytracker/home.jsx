@@ -1,18 +1,18 @@
 "use client"
 import {
-    MenstrualCycleCardMain, DashboardHeader, FeelingsInsightsAndEvents,
+    DashboardHeader, FeelingsInsightsAndEvents,
     ShortCalendar, PregnancyCycleCardMain, CircularProgressBar
 } from "@/app/dashboard/components/index";
-import Image from "next/image";
-import pinkFlower from "@/public/images/flowers-1.svg"
 import {usePregnancyInfo, useUserInfo} from "@/app/dashboard/lib/dataFetching";
 import {MiniLoader} from "@/app/components";
 import Link from "next/link";
 
-export function PregnancyHome({data, accessToken}) {
+export function PregnancyHome({accessToken}) {
     const {user, isLoading, error} = useUserInfo(accessToken)
     const {pregnancyData, pregnancyLoading, pregnancyError} = usePregnancyInfo(accessToken)
     console.log(pregnancyData);
+    // const today = new Date();
+
     if (isLoading || pregnancyLoading) return (
         <MiniLoader/>
     )
@@ -29,7 +29,7 @@ export function PregnancyHome({data, accessToken}) {
             <section className={"mt-1"}>
                 <ShortCalendar
                     withFlower={false}
-                    specialDates={data?.calendar}
+                    specialDates={[{date: pregnancyData?.today, style: "border border-tertiaryColor p-3"}]}
                     accessToken={accessToken}
                     action={
                         {actionText: "See Details", link: "/dashboard/calendar"}
