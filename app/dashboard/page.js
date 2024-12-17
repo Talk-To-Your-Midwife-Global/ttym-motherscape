@@ -15,7 +15,7 @@ export default function Page() {
         if (message < messages.length) {
             const timer = setTimeout(() => {
                 setMessage(prevState => prevState + 1);
-            }, 3000)
+            }, 1000)
 
             return () => {
                 clearTimeout(timer)

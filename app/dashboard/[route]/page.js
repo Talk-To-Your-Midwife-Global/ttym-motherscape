@@ -29,19 +29,19 @@ export default async function Page({params}) {
         'chat': <Chat accessToken={accessToken}/>,
         'community': <Community accessToken={accessToken}/>
     }
-    if (userType === "menstrualcycletracker") {
-        return (
-            <section>
-                {menstrualViews[routeName.route]}
-            </section>
-        )
-    }
+    // if (userType === "menstrualcycletracker") {
+    //     return (
+    //         <section>
+    //             {menstrualViews[routeName.route]}
+    //         </section>
+    //     )
+    // }
 
-    if (userType === "pregnancytracker") {
-        return (
-            <section>
-                {pregnancyViews[routeName.route]}
-            </section>
-        )
-    }
+    // if (userType === "pregnancytracker") {
+    return (
+        <section>
+            {pregnancyViews[routeName.route]}
+        </section>
+    )
+    // }
 }

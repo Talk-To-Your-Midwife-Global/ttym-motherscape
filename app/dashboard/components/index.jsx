@@ -589,7 +589,7 @@ export function Calendar({action, withFlower, accessToken}) {
 
 export function FeelingsInsightsAndEvents({accessToken}) {
     const faces = [
-        {desc: "good", img: goodFace},
+        {desc: "good", img: goodFace, color: "#251FD1"},
         {desc: "bad", img: badFace},
         {desc: "angry", img: angryFace},
         {desc: "tired", img: tiredFace},
@@ -601,41 +601,54 @@ export function FeelingsInsightsAndEvents({accessToken}) {
 
     const handleFeeling = (selectedFeeling) => {
         console.log(selectedFeeling)
-        // TODO: Use random generator
         const randomNumber = Math.floor(Math.random() * 100, 1);
         setFeeling({...feeling, feeling: selectedFeeling, number: randomNumber})
         setFeelingRecorded(true);
     }
 
+    const getRespectiveImage = (feelingName) => {
+        const respectiveFeeling = faces.filter((face) => face.desc === feelingName);
+        console.log(respectiveFeeling);
+        return respectiveFeeling[0].img;
+    }
     return (
         <section>
-            <section className={"text-primaryText "}>
-                <header className={"px-5 font-bold text-xl"}>
-                    <h2>How do you feel today?</h2>
-                </header>
-                <section className={"flex justify-evenly"}>
-                    {!feelingRecorded ?
-                        faces.map(face => {
+            {!feelingRecorded ?
+                <section className={"text-primaryText "}>
+                    <header className={"px-5 font-bold text-xl"}>
+                        <h2>How do you feel today?</h2>
+                    </header>
+                    <section className={"flex justify-evenly my-5"}>
+                        {faces.map(face => {
                             return (
-                                <div key={face.desc} className={"flex flex-col items-center"}>
+                                <div key={face.desc} className={"flex flex-col items-center justify-evenly"}>
                                     <Image onClick={() => handleFeeling(face.desc)} src={face.img} alt={"face"}/>
                                     <p> {face.desc} </p>
                                 </div>
                             )
                         })
-                        :
-                        <div className={"bg-white py-4 rounded-md w-full mx-5"}>
-                            <p className={`text-primaryText`}>
-                                You are feeling <span
-                                className={'text-primaryColor'}>{feeling.feeling}</span> with {feeling.number} others
-                            </p>
-                            <div className="flex my-3 .items-end .justify-end">
-                                <span className="text-sm text-right text-pink">Learn more about your emotions</span>
-                            </div>
+                        }
+                    </section>
+                </section> :
+                <div className={"bg-tertiaryColor text-white p-4 rounded-3xl  mx-5"}>
+                    <heading className="text-white flex justify-between text-xl">
+                        <div className="text-white flex gap-2">
+                            <h2 className='capitalize'>Feeling {feeling.feeling}?</h2>
+                            <Image className={'text-white'} src={getRespectiveImage(feeling.feeling)}
+                                   alt={"face"}/>
                         </div>
-                    }
-                </section>
-            </section>
+                        <span className="iconify lucide--x"></span>
+                    </heading>
+                    <p className={`font-extralight text-sm my-4`}>
+                        You are feeling <span>{feeling.feeling}</span> with <b>{feeling.number} others</b>
+                    </p>
+                    <div className="flex mt-3 .items-end justify-end mt-5">
+                        <Link href="/dashboard/community">
+                            <span className="text-sm text-left underline">Learn more about your emotions</span>
+                        </Link>
+                    </div>
+                </div>
+            }
 
             <section className={"px-5 my-10 "}>
                 <header>

@@ -39,10 +39,11 @@ export function PregnancyHome({data, accessToken}) {
 
             <section className={"px-5 mt-10 mb-10 text-primaryText "}>
                 <Link href="/dashboard/calendar">
-                    <CircularProgressBar percentage={pregnancyData?.percentage}>
+                    <CircularProgressBar foreBg="#015364" bg="#F5F5F5" percentage={pregnancyData?.percentage}>
                         <p className="relative top-5">Week</p>
                         <b className="text-primaryColor font-bold text-[80px]">{pregnancyData?.week}</b>
-                        <p className={`w-[200px] text-sm text-center relative bottom-5`}> {pregnancyData?.event}</p>
+                        <p className={`w-[200px] text-sm text-center relative bottom-5`}>You are currently in
+                            your {pregnancyData?.trimester} Trimester</p>
                     </CircularProgressBar>
                 </Link>
                 <header className={"flex justify-between items-center font-bold text-xl"}>

@@ -10,7 +10,7 @@ import {MiniLoader} from "@/app/components";
 
 export function MenstrualHome({data, accessToken}) {
     const {user, isLoading, error} = useUserInfo(accessToken)
-    // console.log(user
+    console.log(user);
     if (isLoading) return (
         <MiniLoader/>
     )
