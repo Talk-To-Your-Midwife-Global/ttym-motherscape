@@ -596,7 +596,6 @@ export function FeelingsInsightsAndEvents({accessToken}) {
     const [feeling, setFeeling] = useState({feeling: '', number: 0});
 
     const handleFeeling = (selectedFeeling) => {
-        console.log(selectedFeeling)
         const randomNumber = Math.floor(Math.random() * 100, 1);
         setFeeling({...feeling, feeling: selectedFeeling, number: randomNumber})
         setFeelingRecorded(true);
@@ -604,7 +603,6 @@ export function FeelingsInsightsAndEvents({accessToken}) {
 
     const getRespectiveImage = (feelingName) => {
         const respectiveFeeling = faces.filter((face) => face.desc === feelingName);
-        console.log(respectiveFeeling);
         return respectiveFeeling[0].img;
     }
     return (

@@ -74,8 +74,6 @@ export function Logs({accessToken}) {
             const logs = await response.json();
             console.log({...logs[0]?.entry})
             setFeelingState({...logs[0]?.entry});
-
-
         }
 
         getUserLogs()

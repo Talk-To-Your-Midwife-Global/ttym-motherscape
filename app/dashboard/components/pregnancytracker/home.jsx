@@ -29,7 +29,7 @@ export function PregnancyHome({accessToken}) {
             <section className={"mt-1"}>
                 <ShortCalendar
                     withFlower={false}
-                    specialDates={[{date: pregnancyData?.today, style: "border border-tertiaryColor p-3"}]}
+                    specialDates={[{date: pregnancyData?.today, style: "border border-tertiaryColor"}]}
                     accessToken={accessToken}
                     action={
                         {actionText: "See Details", link: "/dashboard/calendar"}
