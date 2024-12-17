@@ -468,7 +468,14 @@ export function InsightParent({head, desc, accessToken}) {
     )
 }
 
-function CalendarTemplate({startWeek, endWeek, currentMonth, specialDates = [], action = {}}, withFlower = true) {
+function CalendarTemplate({
+                              startWeek,
+                              endWeek,
+                              currentMonth,
+                              specialDates = [],
+                              action = {},
+                              dateClick = undefined
+                          }, withFlower = true) {
     const days = []
     let day = startWeek;
     while (day <= endWeek) {
@@ -499,7 +506,7 @@ function CalendarTemplate({startWeek, endWeek, currentMonth, specialDates = [], 
                         const customStyle = specialDates.find((styleDate) => isSameDay(styleDate.date, day))?.style
 
                         return (
-                            <div key={index} className={`p-2 text-center rounded-full
+                            <div key={index} onClick={() => dateClick(day)} className={`p-2 text-center rounded-full
                                 ${isCurrentMonth ? 'text-gray-900' : 'text-gray-400'}
                                 ${customStyle && customStyle}
                             `}>
@@ -513,7 +520,7 @@ function CalendarTemplate({startWeek, endWeek, currentMonth, specialDates = [], 
     )
 }
 
-export function ShortCalendar({action, withFlower, accessToken, specialDates}) {
+export function ShortCalendar({action, withFlower, accessToken, specialDates, dateClick = undefined}) {
     // const [dates, setDates] = useState([])
     const {data, error, isLoading} = useCycleInfo(accessToken);
     // console.log('short calendar')
@@ -544,7 +551,8 @@ export function ShortCalendar({action, withFlower, accessToken, specialDates}) {
     return (
         <div>
             <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth}
-                              specialDates={specialDates} action={action} withFlower={withFlower}/>
+                              specialDates={specialDates} action={action} dateClick={dateClick}
+                              withFlower={withFlower}/>
         </div>
     )
 }

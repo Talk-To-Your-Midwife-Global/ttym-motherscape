@@ -1,12 +1,12 @@
 "use client"
 import {useEffect, useState} from "react";
 import {inter} from "@/app/fonts";
-import {IconButton, MiniLoader} from "@/app/components";
+import {IconButton} from "@/app/components";
 import {ShortCalendar} from "@/app/dashboard/components/index";
 import {logLog} from "@/app/dashboard/actions/action";
-import {useLogsInfo} from "@/app/dashboard/lib/dataFetching";
 import {PUBLICHOSTNAME} from "@/app/config/main";
 import {formatDate} from "@/app/lib/functions";
+import {compareDesc} from "date-fns";
 
 
 export function Logs({accessToken}) {
@@ -15,19 +15,35 @@ export function Logs({accessToken}) {
     const [day, setDay] = useState(new Date());
     const [userType, setUserType] = useState("");
 
-    // const {logs, isLoadingLogs, logsError} = useLogsInfo(accessToken);
-    //
-    // if (isLoadingLogs) {
-    //     return <MiniLoader/>
-    // }
+    async function getUserLogs() {
+        try {
+            const response = await fetch(`${PUBLICHOSTNAME}/logs?date=${formatDate(day)}`, {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                }
+            })
+            if (!response.ok) {
+                throw new Error("Could not fetch logs");
+            }
+            const logs = await response.json();
+            const hasLogs = logs.length > 0;
+
+            if (hasLogs) {
+                setFeelingState({...logs[0]?.entry});
+            } else {
+                setFeelingState({moods: [], symptoms: []});
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     const handleSubmit = async () => {
-        console.log(feelingState)
         const res = await logLog(feelingState, accessToken, userType)
-        console.log(res)
     }
 
     const handleMoodToggle = (item) => {
+        console.log(feelingState);
         setFeelingState({
             symptoms: feelingState?.symptoms,
             moods: feelingState?.moods?.includes(item)
@@ -47,43 +63,28 @@ export function Logs({accessToken}) {
         setDisableButton(false)
     };
 
-    // const getDayLogs = (date) => {
-    //     return logs.filter(log => log.date_created === date)
-    //
-    // }
+    const handleViewDayLogs = (day) => {
+        const notBeyondToday = !(compareDesc(new Date(), day) === 1);
+        if (notBeyondToday) {
+            setDay(day);
+            getUserLogs();
+        }
+    }
 
     const moodData = ['happy', 'sad', 'calm', 'energetic', 'mood swings', 'irritated', 'depressed', 'anxious', 'uneasy', 'mixed feelings', 'horny', 'frustrated']
     const symptomsData = ['fine', 'cramps', 'acne', 'cravings', 'headache', 'tender breast', 'fatigue', 'backache', 'abdominal pain', 'swelling', 'vaginal discharge', 'heart burn', 'constipation', 'nausea', 'diarrhea', 'insomnia', 'morning sickness', 'dizziness', 'shortness of breath', 'frequent urination']
 
     useEffect(() => {
-        //     Run a function that gets the particular day selected and updates feelingState
-        // const dayLogs = getDayLogs('2024-11-23')
-        // setFeelingState(dayLogs.entry)
-
-        console.log(userType)
         setUserType(localStorage.getItem('userType') !== "midwife" ? "PATIENTLOG" : "MIDWIFELOG")
-        console.log(PUBLICHOSTNAME)
-
-        async function getUserLogs() {
-            const response = await fetch(`${PUBLICHOSTNAME}/logs?date=${formatDate(day)}`, {
-                headers: {
-                    "Authorization": `Bearer ${accessToken}`
-                }
-            })
-
-            const logs = await response.json();
-            console.log({...logs[0]?.entry})
-            setFeelingState({...logs[0]?.entry});
-        }
-
         getUserLogs()
-
     }, [])
 
     return (
         <section className={`${inter.className} h-[100%] mt-5`}>
-            <ShortCalendar specialDates={[{date: new Date(), style: 'border border-primaryColor'}]}
-                           action={{actionText: "View Calendar", link: "/dashboard/calendar"}}/>
+            <ShortCalendar specialDates={[{date: day, style: 'border border-primaryColor'}]}
+                           action={{actionText: "View Calendar", link: "/dashboard/calendar"}}
+                           dateClick={handleViewDayLogs}
+            />
             <form className="px-[20px] text-primaryText">
                 <div className="flex flex-col gap-2 mb-8">
                     <h3 className="text-xl font-semibold">Mood</h3>
