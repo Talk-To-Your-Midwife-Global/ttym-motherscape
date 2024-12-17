@@ -300,7 +300,7 @@ export function PregnancyCycleCardMain({data, accessToken}) {
 
 
 export function InsightCard({insight, accessToken}) {
-    const [bookmarked, setBookmarked] = useState(false)
+    const [bookmarked, setBookmarked] = useState(false);
 
     const handlePostBookmarking = async (id) => {
         setBookmarked(prevState => !prevState)

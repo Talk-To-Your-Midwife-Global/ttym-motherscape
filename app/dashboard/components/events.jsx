@@ -24,10 +24,10 @@ export function Events({accessToken}) {
         <section className={"px-5 my-10 h-[300px]"}>
             <header>
                 <div className={"flex justify-between"}>
-                    <h2 className={"text-primaryText font-bold text-xl"}>Upcoming Event</h2> <Link href={"/"}>See
-                    More</Link> {/* TODO: use the right link*/}
+                    <h2 className={"text-primaryText font-bold text-xl"}>Upcoming Events</h2>
+                    {/*<Link href={"/"}>See More</Link> /!* TODO: use the right link*!/*/}
                 </div>
-                <p className={`${montserrat.className} text-subText`}>Live Health Talk event by your Global midwife</p>
+                <p className={`${montserrat.className} text-subText`}>Live Health Talk events by your Global midwife</p>
             </header>
             <section className={"mt-4 flex items-center px-4 carousel  overflow-x-auto scroll-smooth space-x-4 p-4"}>
                 {/* Make it a carousel TODO:Make it a carousel*/}
