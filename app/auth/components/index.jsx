@@ -71,6 +71,9 @@ export function SignInForm({state, action}) {
                 </div>
                 {state?.errors?.email && <p className="text-red-500 text-sm">{state.errors.email}</p>}
                 <div className="flex justify-end gap-4 space-between">
+                    <p className="text-sm font-medium text-gray-500">
+                        <Link href="/auth/register/">Don&apos;t have an account?</Link>
+                    </p>
                     <p className="text-red-600 text-sm text-right">
                         <Link href="/auth/forgotPassword" className="font-medium">
                             Forgot Password?

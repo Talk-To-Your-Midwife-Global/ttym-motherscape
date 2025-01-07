@@ -16,7 +16,5 @@ export default function Page() {
         return () => clearTimeout(timer);
     }, [])
 
-    return (
-        <Loader/>
-    );
+    return (<Loader/>);
 }
