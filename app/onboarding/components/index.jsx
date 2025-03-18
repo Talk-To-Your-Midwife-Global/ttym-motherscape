@@ -26,7 +26,12 @@ export function OnboardHeader({heading, description}) {
     )
 }
 
-export function PersonaCard({children, heading, description, onClick, shouldEnable,}) {
+export function PersonaCard({children, heading, description, onClick, shouldEnable, color}) {
+    const base = "flex flex-col gap-4 justify-center items-center border-2 shadow-lg h-[200px] py-3 rounded-3xl mb-8 focus:border-primaryColor";
+    const colors = {
+        0: `${base} bg-[#F2F3F4]`,
+        1: `${base} bg-[#FFF4F0]`
+    }
     return (
         <section tabIndex={0} onClick={() => {
             onClick(removeSpaces(heading.toLowerCase()))
