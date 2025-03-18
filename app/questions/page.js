@@ -16,7 +16,8 @@ export default function Page() {
                 <p className="text-subText">Let&apos;s set up your profile to help us get a better prediction.</p>
             </div>
             <div className="relative -bottom-10 w-full flex items-center justify-center">
-                <IconButton onClick={undefined} href="/questions/1" text="Get Started" icon="iconify lucide--arrow-right" />
+                <IconButton onClick={undefined} href="/questions/1" text="Get Started"
+                            icon="iconify lucide--arrow-right"/>
             </div>
         </section>
     )
