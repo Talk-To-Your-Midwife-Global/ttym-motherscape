@@ -2,8 +2,8 @@
 import Image from "next/image"
 import {storeUserType} from "../actions"
 import {PersonaCard} from "./components"
-import pregnantImage from "../../public/images/pregnant-woman.svg"
-import redCalendar from "../../public/images/red-calendar.svg"
+import pregnantImage from "../../public/images/pregnancy-profile-img.png"
+import redCalendar from "../../public/images/tracker-profile-image.png"
 import {IconButton} from "../components"
 import {useState} from "react"
 
