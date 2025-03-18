@@ -24,10 +24,10 @@ export default function Page() {
                 <h1 className="text-2xl text-mainText font-medium">How can we help you today?</h1>
                 <p className="text-base text-subText ">Let&apos;s begin by telling us about you</p>
             </header>
-            <section className="px-5">
-                <PersonaCard onClick={storeUserType} shouldEnable={handleButtonEnabler} heading="Pregnancy Tracker"
-                             description="Monitor your pregnancy milestones and access helpful tips.">
-                    <Image src={pregnantImage} width={100} height={100} alt="pregnant woman"/>
+            <section className="px-5 grid grid-cols-2 gap-5">
+                <PersonaCard onClick={storeUserType} color={1} shouldEnable={handleButtonEnabler}
+                             heading="Track my pregnancy">
+                    <Image src={pregnantImage} width={80} height={100} alt="pregnant woman"/>
                 </PersonaCard>
                 <PersonaCard onClick={storeUserType} shouldEnable={handleButtonEnabler}
                              heading="Menstrual Cycle Tracker"
