@@ -41,8 +41,7 @@ export function PersonaCard({children, heading, description, onClick, shouldEnab
                 {children}
             </section>
             <section>
-                <h2 className="text-lg text-primaryText font-medium">{heading}</h2>
-                <p className="text-sm text-primaryText pr-2">{description}</p>
+                <h2 className="text-sm text-primaryText font-medium">{heading}</h2>
             </section>
         </section>
     )
