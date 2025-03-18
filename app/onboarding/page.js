@@ -30,9 +30,9 @@ export default function Page() {
                     <Image src={pregnantImage} width={80} height={100} alt="pregnant woman"/>
                 </PersonaCard>
                 <PersonaCard onClick={storeUserType} shouldEnable={handleButtonEnabler}
-                             heading="Menstrual Cycle Tracker"
-                             description="Keep tabs on your period, symptoms, and menstrual health.">
-                    <Image src={redCalendar} width={100} height={100} alt="red calendar"/>
+                             heading="Track my period"
+                             color={2}>
+                    <Image src={redCalendar} width={200} height={100} alt="red calendar"/>
                 </PersonaCard>
             </section>
             <section className=".fixed relative -bottom-10 w-full flex justify-center">
