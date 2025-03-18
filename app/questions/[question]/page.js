@@ -7,7 +7,7 @@ export default async function Page({params}) {
     const {question} = await params;
     const patientType = await returnTypeOfPatient();
 
-    if (patientType === "menstrualcycletracker") {
+    if (patientType === "trackmyperiod") {
         return (
             <QuestionParent updateUser={updateUser} question={question}/>
         )
