@@ -144,7 +144,7 @@ export function matchUserStatus(userType) {
             return "GETTING PREGNANT";
         case "menstrualcycletracker":
             return "NORMAL";
-        case "pregnancytracker":
+        case "trackmypregnancy":
             return "PREGNANT";
         default:
             return "NORMAL";
