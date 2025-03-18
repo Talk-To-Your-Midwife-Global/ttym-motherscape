@@ -36,7 +36,7 @@ export function PersonaCard({children, heading, description, onClick, shouldEnab
         <section tabIndex={0} onClick={() => {
             onClick(removeSpaces(heading.toLowerCase()))
             shouldEnable(removeSpaces(heading.toLowerCase()))
-        }} className="flex gap-4 border-2 shadow-lg h-[100px] py-3 rounded-3xl mb-8 focus:border-primaryColor">
+        }} className={color ? colors[color % 2] : ''}>
             <section className="pl-3">
                 {children}
             </section>
