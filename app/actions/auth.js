@@ -2,7 +2,7 @@
 // import {SignJWT, JWTVer} from 'jose'
 import {SignUpFormSchema, SignInFormSchema, ForgotPasswordFormSchema} from "../auth/lib/definitions";
 import {cookies} from "next/headers";
-import {HOSTNAME} from "../config/main";
+import {HOSTNAME_URI} from "../config/main";
 
 
 // const secretKey = 'somekeybiIwillmakeinenvironmentvairables'
@@ -55,48 +55,51 @@ export async function signup(state, formData) {
         name: formData.get('name'),
         email: formData.get('email'),
         phone: formData.get('phone'),
-        password: formData.get('password')
+        password: formData.get('password'),
+        date_of_birth: formData.get('dob')
     })
 
     // return early if there is an error
     if (!validatedFields.success) {
         return {
-            state: {
-                email: formData.get('email'),
-            },
-            errors: validatedFields.error.flatten().fieldErrors,
+            // state: {
+            //     email: formData.get('email'),
+            // },
+            success: undefined,
+            fieldErrors: validatedFields.error.flatten().fieldErrors,
+            serverError: undefined,
         }
     }
 
-    //  console.log(HOSTNAME)
     // call the provider
     try {
-        const response =
-            await fetch(`${HOSTNAME}/auth/register/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    full_name: formData.get('name'),
-                    email: formData.get('email'),
-                    password: formData.get('password'),
-                    phone_number: formData.get('phone'),
-                    role: 'PATIENT',
-                }),
-            })
+        console.log(formData.get('dob'), formData.get('name'), formData.get('password'), formData.get('phone'), formData.get('dob'), `${HOSTNAME_URI}/auth/register/`);
+        const response = await fetch(`${HOSTNAME_URI}/auth/register/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                full_name: formData.get('name'),
+                email: formData.get('email'),
+                password: formData.get('password'),
+                phone_number: formData.get('phone'),
+                date_of_birth: formData.get('dob'),
+                role: 'PATIENT',
+            }),
+        })
         const errors = []
+        console.log(response);
         if (!response.ok) {
-            // for (const key in result) {
-            //     errors.push(result[key][0])
-            // }
             console.log(response)
             return {
-                success: false,
-                error: errors
+                success: undefined,
+                fieldErrors: undefined,
+                serverError: true,
             }
         }
         const result = await response.json()
+        console.log(result);
         let cookieStore = await cookies()
         cookieStore.set('access_token', result.tokens.access, {httpOnly: true, path: '/'})
         cookieStore.set('refresh_token', result.tokens.refresh, {httpOnly: true, path: '/'})
@@ -110,7 +113,9 @@ export async function signup(state, formData) {
         // TODO: setup a logger here
 
         return {
-            error: [errors.error_description]
+            success: undefined,
+            fieldErrors: undefined,
+            serverError: true,
         }
     }
 }
@@ -138,7 +143,7 @@ export async function signin(state, formData) {
     }
 
     try {
-        const response = await fetch(`${HOSTNAME}/auth/login/`, {
+        const response = await fetch(`${HOSTNAME_URI}/auth/login/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -175,7 +180,8 @@ export async function signin(state, formData) {
         return {
             success: true,
             token: result.tokens.access,
-            route: result.user.is_configured ? '/dashboard' : `/questions`
+            // route: result.user.is_configured ? '/dashboard' : `/questions`
+            route: '/onboarding'
         }
     } catch (errors) {
         return {
@@ -193,7 +199,7 @@ export async function logout() {
     const items = ['access_token', 'refresh_token', 'last_login', 'ttym-user-type']
 
     try {
-        const response = await fetch(`${HOSTNAME}/auth/logout/`, {
+        const response = await fetch(`${HOSTNAME_URI}/auth/logout/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

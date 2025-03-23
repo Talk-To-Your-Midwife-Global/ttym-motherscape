@@ -52,7 +52,7 @@ const itemIds = [
 export function Navigation({accessToken}) {
     console.log(accessToken)
     const {user, isLoading, error} = useUserInfo(accessToken);
-    console.log(user)
+    console.log({user})
 
     if (isLoading) {
         return <p>Loading</p>

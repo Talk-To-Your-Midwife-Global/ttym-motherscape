@@ -6,7 +6,7 @@ import pana from "../../../../public/images/pregnant/pana.svg"
 
 export default async function Page({params}) {
     const step = await params;
-    const userType = "pregnancytracker";
+    const userType = "trackmypregnancy";
     const view = {
         '1': <StepOne
             userType={userType}

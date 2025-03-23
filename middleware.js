@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import {NextResponse} from "next/server";
 
 
 // export const config = {
@@ -10,7 +10,7 @@ const publicRoutes = ['/', '/auth/register', '/auth/signIn']
 
 export function middleware(request) {
     const token = request.cookies.get('access_token')
-    
+
     const path = request.nextUrl.pathname
     const isProtectedRoute = protectedRoute.includes(path)
     const isPublicRoute = publicRoutes.includes(path)
@@ -37,7 +37,7 @@ export function middleware(request) {
     }
 
     return NextResponse.next()
-    
+
 
 }
 

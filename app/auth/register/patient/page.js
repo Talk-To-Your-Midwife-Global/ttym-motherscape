@@ -2,24 +2,24 @@
 import Link from "next/link";
 
 import {useActionState} from 'react'
-import { useRouter } from "next/navigation";
-import { signup } from "@/app/actions/auth";
-
-import { SignUpForm } from "../../components";
+import {useRouter} from "next/navigation";
+import {signup} from "@/app/actions/auth";
+import {SignUpForm} from "@/app/auth/components/SignUpForm";
 
 export default function Page() {
-    const [state, action] = useActionState(signup, undefined)
+    const [state, action] = useActionState(signup, {serverError: undefined, fieldErrors: undefined, success: undefined})
     const router = useRouter()
     console.log(state)
     if (state?.success) {
-        router.push('/auth/signIn/patient')
+        router.push('/onboarding')
     }
     return (
         <section>
             <header className="flex">
                 <nav className="my-5">
                     <Link href="/onboarding/4" className="w-12 h-12 rounded-full flex justify-center items-center">
-                        <span className="iconify material-symbols-light--chevron-left-rounded font-medium text-3xl text-[#000]"></span>
+                        <span
+                            className="iconify material-symbols-light--chevron-left-rounded font-medium text-3xl text-[#000]"></span>
                     </Link>
                 </nav>
 

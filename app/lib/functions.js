@@ -1,7 +1,6 @@
 import {addDays, differenceInDays} from "date-fns";
 import {computeNumberOfMonthsFromDays, formatNumberWithOrdinal, poundsToGrams} from "@/app/dashboard/lib/functions";
 
-
 export function fetcher(url, token = "") {
     if (token.length > 1) {
         console.log('fetcher ');
@@ -35,6 +34,7 @@ export function fetchCycle(url, token) {
         }
     }).then(res => {
         const result = res.json()
+        console.log(result);
         return result
     }).then(result => {
         const formattedData = {
@@ -142,7 +142,7 @@ export function matchUserStatus(userType) {
     switch (userType) {
         case "gettingpregnant":
             return "GETTING PREGNANT";
-        case "menstrualcycletracker":
+        case "trackmyperiod":
             return "NORMAL";
         case "trackmypregnancy":
             return "PREGNANT";

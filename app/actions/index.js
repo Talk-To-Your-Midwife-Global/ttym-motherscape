@@ -1,6 +1,6 @@
 "use server"
 import {cookies} from "next/headers"
-import {HOSTNAME} from "@/app/config/main";
+import {HOSTNAME_URI} from "@/app/config/main";
 import {matchUserStatus} from "@/app/lib/functions";
 import {convertCommaStringToArray} from "@/app/dashboard/lib/functions";
 
@@ -27,31 +27,35 @@ export async function updatePregnantUser(info) {
     const config = await grabConfiguration();
     console.log(config)
     console.log(info)
-    console.log(HOSTNAME)
+    console.log(HOSTNAME_URI)
+    const data = {
+        // lmp: info?.lmp,
+        start_date: info?.lmp,
+        delivery_date_est: info?.dueDate,
+        complications: convertCommaStringToArray(info.existingConditions),
+        history: {
+            underlying_conditions: convertCommaStringToArray(info.existingConditions),
+            medications: convertCommaStringToArray(info?.existingMedications),
+            allergies: convertCommaStringToArray(info?.allergies),
+            previous_complications: convertCommaStringToArray(info?.pastComplications)
+        },
+        is_first: info.isFirstPregnancy
+    };
+    console.log({data});
+
     try {
-        const response = await fetch(`${HOSTNAME}/user/pregnancy/`, {
+        const response = await fetch(`${HOSTNAME_URI}/user/pregnancy/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${config.accessToken}`
             },
-            body: JSON.stringify({
-                // lmp: info?.lmp,
-                start_date: info?.lmp,
-                delivery_date_est: info?.dueDate,
-                complications: convertCommaStringToArray(info.existingConditions),
-                history: {
-                    underlying_conditions: convertCommaStringToArray(info.existingConditions),
-                    medications: convertCommaStringToArray(info?.existingMedications),
-                    allergies: convertCommaStringToArray(info?.allergies),
-                    previous_complications: convertCommaStringToArray(info?.pastComplications)
-                },
-                is_first: info?.isFirstPregnancy
-            })
+            body: JSON.stringify(data)
         })
-
+        console.log(info);
         if (!response.ok) {
             console.log('error occured')
+            console.log(response);
             return {
                 error: response.json()
             }
@@ -73,7 +77,7 @@ export async function updateUser(info) {
     const userType = matchUserStatus(cookieStore.get('ttym-user-type')?.value);
 
     try {
-        const response = await fetch(`${HOSTNAME}/user/patient/update/`, {
+        const response = await fetch(`${HOSTNAME_URI}/user/menstrual/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -82,7 +86,7 @@ export async function updateUser(info) {
             body: JSON.stringify({
                 cycle_length: info.cycleInfo,
                 period_length: info.periodLength,
-                is_regular_cycle: info.cycleRegularity,
+                is_regular: info.cycleRegularity,
                 last_period_start: info.periodStart,
                 tracking_pref: {
                     moods: info.moods,
@@ -92,8 +96,15 @@ export async function updateUser(info) {
                 status: userType
             })
         })
+        console.log({info});
+        if (!response.ok) {
+            console.log('error occured');
+            console.log(response);
+            console.log(await response.json());
+        }
         const json = await response.json()
         if (json) {
+            console.log(json);
             return {
                 success: true,
             }

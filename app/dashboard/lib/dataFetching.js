@@ -1,14 +1,13 @@
 import useSWR from 'swr'
 import {fetchCycle, fetcher, fetchPregnancy, fetchUser} from "@/app/lib/functions";
 import {PUBLICHOSTNAME} from "@/app/config/main";
-import {error} from "next/dist/build/output/log";
 
 export function useUserInfo(accessToken) {
     const {
         data,
         error,
         isLoading
-    } = useSWR([`${PUBLICHOSTNAME}/auth/token/`, accessToken], ([url, accessToken]) => fetchUser(url, accessToken));
+    } = useSWR([`${PUBLICHOSTNAME}/user/`, accessToken], ([url, accessToken]) => fetchUser(url, accessToken));
     return {
         user: data,
         isLoading,

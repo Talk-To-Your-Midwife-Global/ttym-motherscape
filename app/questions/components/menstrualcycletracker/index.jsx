@@ -57,10 +57,11 @@ export function QuestionParent({question, updateUser}) {
             setTimeout(() => router.push(`/questions/${next}`), 200)
         } else {
             const result = updateUser(JSON.parse(localStorage.getItem("answers"))).then(res => {
-                if (res.success === true) {
+                console.log(res);
+                if (res.success) {
                     setTimeout(() => router.push(`/dashboard`), 200)
                 } else {
-                    setTimeout(() => router.push(`/questions`), 200)
+                    setTimeout(() => router.push(`/questions/`), 200)
                 }
             })
         }
@@ -77,7 +78,7 @@ export function QuestionParent({question, updateUser}) {
 
     return (
         <section>
-            <QuestionNav last={question === 6 ? true : false}
+            <QuestionNav last={question === 6}
                          url={question > 1 ? `/questions/${question - 1}` : '/questions/'}/>
             <ProgressIndicator target={question}/>
             <PageSlideAnimator>
@@ -332,7 +333,7 @@ function NotificationPreferences({handleAnswers, submit, state}) {
 
         handleAnswers({...state, [name]: value})
 
-        submit()
+        // submit()
     }
     return (
         <section className={`${inter.className} h-svh overflow-hidden`}>

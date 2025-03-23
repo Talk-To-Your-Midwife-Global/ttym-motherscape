@@ -5,7 +5,7 @@ import {useRouter} from "next/navigation";
 import {useActionState, useState, useEffect} from 'react'
 
 import {signin} from "@/app/actions/auth";
-import {SignInForm} from "../components";
+import {SignInForm} from "@/app/auth/components/SignInForm";
 import pregnantLogo from "../../../public/images/ttym-rounded-logo.svg"
 
 export default function Page() {

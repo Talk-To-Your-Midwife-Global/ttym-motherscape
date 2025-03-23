@@ -8,14 +8,14 @@ export default async function Page({params}) {
     const step = await params;
     const view = {
         '1': <StepOne
-            userType="menstrualcycletracker"
+            userType="trackmyperiod"
             title={"Track Your Cycle with Confidence!"}
             description={"Stay on top of your period, symptoms, and mood with personalized insights tailored to your unique cycle."}
         >
             <Image src={rafiki} className="" alt="image of a woman at different stages of pregnancy"/>
         </StepOne>,
         '2': <StepTwo
-            userType="menstrualcycletracker"
+            userType="trackmyperiod"
             title={"A Community to Rely on"}
             description={"A community forum to share your journey or listen to success stories"}
         >
