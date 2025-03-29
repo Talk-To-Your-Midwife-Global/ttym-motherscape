@@ -34,15 +34,15 @@ export function fetchCycle(url, token) {
         }
     }).then(res => {
         const result = res.json()
-        console.log(result);
         return result
     }).then(result => {
+        console.log({result});
         const formattedData = {
             ...result,
-            dates: menstrualCycleDateGenerator(result.period_start, result.period_length, "general", result.cycle_length),
-            daysDone: computeDaysDone(result.period_start),
-            daysToPeriod: computeDaysToPeriod(result.period_start, result.cycle_length),
-            percentageComplete: computeCycleCompletion(computeDaysDone(result.period_start), result.cycle_length),
+            dates: menstrualCycleDateGenerator(result.last_period_start, result.period_length, "general", result.cycle_length),
+            daysDone: computeDaysDone(result.last_period_start),
+            daysToPeriod: computeDaysToPeriod(result.last_period_start, result.cycle_length),
+            percentageComplete: computeCycleCompletion(computeDaysDone(result.last_period_start), result.cycle_length),
         }
         return formattedData
     })

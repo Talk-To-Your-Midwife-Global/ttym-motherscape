@@ -56,12 +56,14 @@ export function QuestionParent({question, updateUser}) {
         if (next <= 5) {
             setTimeout(() => router.push(`/questions/${next}`), 200)
         } else {
-            const result = updateUser(JSON.parse(localStorage.getItem("answers"))).then(res => {
-                console.log(res);
+            const data = JSON.parse(localStorage.getItem("answers"));
+            console.log({data});
+            const result = updateUser(data).then(res => {
+                console.log({res});
                 if (res.success) {
-                    setTimeout(() => router.push(`/dashboard`), 200)
+                    setTimeout(() => router.push(`/dashboard`), 10000)
                 } else {
-                    setTimeout(() => router.push(`/questions/`), 200)
+                    setTimeout(() => router.push(`/questions/`), 100)
                 }
             })
         }
@@ -333,7 +335,7 @@ function NotificationPreferences({handleAnswers, submit, state}) {
 
         handleAnswers({...state, [name]: value})
 
-        // submit()
+        submit()
     }
     return (
         <section className={`${inter.className} h-svh overflow-hidden`}>

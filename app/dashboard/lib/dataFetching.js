@@ -21,7 +21,7 @@ export function useCycleInfo(accessToken) {
         data,
         isLoading,
         error
-    } = useSWR([`${PUBLICHOSTNAME}/user/patient/details/`, accessToken], ([url, accessToken]) => fetchCycle(url, accessToken));
+    } = useSWR([`${PUBLICHOSTNAME}/user/menstrual/`, accessToken], ([url, accessToken]) => fetchCycle(url, accessToken));
     return {
         data,
         isLoading,

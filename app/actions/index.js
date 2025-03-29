@@ -76,6 +76,8 @@ export async function updateUser(info) {
     const accessToken = cookieStore.get('access_token')?.value;
     const userType = matchUserStatus(cookieStore.get('ttym-user-type')?.value);
 
+    console.log({info});
+
     try {
         const response = await fetch(`${HOSTNAME_URI}/user/menstrual/`, {
             method: 'POST',
