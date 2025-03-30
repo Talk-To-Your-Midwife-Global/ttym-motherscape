@@ -138,17 +138,31 @@ export function relatableDay(numberOfDays) {
  * @param {string} userType
  * @returns {string}
  */
-export function matchUserStatus(userType) {
-    switch (userType) {
-        case "gettingpregnant":
-            return "GETTING PREGNANT";
-        case "trackmyperiod":
-            return "NORMAL";
-        case "trackmypregnancy":
-            return "PREGNANT";
-        default:
-            return "NORMAL";
+export function matchUserStatus(userType, reverse = false) {
+    if (!reverse) {
+        switch (userType) {
+            case "gettingpregnant":
+                return "GETTING PREGNANT";
+            case "trackmyperiod":
+                return "MENSTRUATING";
+            case "trackmypregnancy":
+                return "PREGNANT";
+            default:
+                return "NORMAL";
+        }
+    } else {
+        switch (userType) {
+            case "GETTING PREGNANT":
+                return "gettingpregnant";
+            case "MENSTRUATING":
+                return "trackmyperiod";
+            case "PREGNANT":
+                return "trackmypregnancy";
+            default:
+                return "trackmyperiod";
+        }
     }
+
 }
 
 export function necessaryDataForUser(allData) {
