@@ -40,7 +40,7 @@ export function MenstrualHome({data, accessToken}) {
                     <h2>Today&apos;s Update</h2>
                     <Image src={pinkFlower} alt={"Another flower"}/>
                 </header>
-                <MenstrualCycleCardMain data={data} accessToken={accessToken}/>
+                <MenstrualCycleCardMain accessToken={accessToken}/>
             </section>
 
             <FeelingsInsightsAndEvents accessToken={accessToken}/>

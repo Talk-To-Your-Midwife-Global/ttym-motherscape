@@ -27,7 +27,6 @@ export function Logs({accessToken}) {
             }
             const logs = await response.json();
             const hasLogs = logs.length > 0;
-
             if (hasLogs) {
                 setFeelingState({...logs[0]?.entry});
             } else {

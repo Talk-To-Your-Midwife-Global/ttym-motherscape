@@ -62,9 +62,6 @@ export async function signup(state, formData) {
     // return early if there is an error
     if (!validatedFields.success) {
         return {
-            // state: {
-            //     email: formData.get('email'),
-            // },
             success: undefined,
             fieldErrors: validatedFields.error.flatten().fieldErrors,
             serverError: undefined,

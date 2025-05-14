@@ -77,7 +77,19 @@ export async function updateUser(info) {
     const userType = matchUserStatus(cookieStore.get('ttym-user-type')?.value);
 
     console.log({info});
-
+    const data = {
+        cycle_length: info.cycleInfo,
+        period_length: info.periodLength,
+        is_consistent: info.cycleRegularity,
+        period_start: info.periodStart,
+        tracking_pref: {
+            moods: info.moods,
+            symptoms: info.symptoms,
+        },
+        notification_pref: info.notificationPreference,
+        status: userType
+    }
+    console.log({data});
     try {
         const response = await fetch(`${HOSTNAME_URI}/user/menstrual/`, {
             method: 'POST',
@@ -85,18 +97,7 @@ export async function updateUser(info) {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + accessToken
             },
-            body: JSON.stringify({
-                cycle_length: info.cycleInfo,
-                period_length: info.periodLength,
-                is_regular: info.cycleRegularity,
-                last_period_start: info.periodStart,
-                tracking_pref: {
-                    moods: info.moods,
-                    symptoms: info.symptoms,
-                },
-                notification_pref: info.notificationPreference,
-                status: userType
-            })
+            body: JSON.stringify(data)
         })
         console.log({info});
         if (!response.ok) {
