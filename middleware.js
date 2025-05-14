@@ -18,7 +18,7 @@ export function middleware(request) {
     if (isProtectedRoute && !token) {
         return NextResponse.redirect(new URL('/', request.url))
     }
-
+    // move unregistered users to their public pages
     if (
         isPublicRoute &&
         token &&
@@ -27,7 +27,7 @@ export function middleware(request) {
     ) {
         return NextResponse.redirect(new URL('/questions', request.nextUrl))
     }
-
+    // move users away from the unnecessary public routes
     if (
         isPublicRoute &&
         token &&
