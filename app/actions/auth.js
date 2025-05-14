@@ -3,6 +3,7 @@
 import {SignUpFormSchema, SignInFormSchema, ForgotPasswordFormSchema} from "../auth/lib/definitions";
 import {cookies} from "next/headers";
 import {HOSTNAME_URI} from "../config/main";
+import {matchUserStatus} from "@/app/lib/functions";
 
 
 // const secretKey = 'somekeybiIwillmakeinenvironmentvairables'
@@ -70,7 +71,7 @@ export async function signup(state, formData) {
 
     // call the provider
     try {
-        console.log(formData.get('dob'), formData.get('name'), formData.get('password'), formData.get('phone'), formData.get('dob'), `${HOSTNAME_URI}/auth/register/`);
+        console.log(formData.get('email'), formData.get('name'), formData.get('password'), formData.get('phone'), formData.get('dob'), `${HOSTNAME_URI}/auth/register/`);
         const response = await fetch(`${HOSTNAME_URI}/auth/register/`, {
             method: 'POST',
             headers: {
@@ -168,8 +169,10 @@ export async function signin(state, formData) {
         let cookieStore = await cookies()
         cookieStore.set('access_token', result.tokens.access)
         cookieStore.set('refresh_token', result.tokens.refresh)
+        cookieStore.set('ttym-user-type', matchUserStatus(result.user.status, true));
 
-        if (!result.is_configured) {
+        console.log({result});
+        if (!result.user.is_configured) {
             cookieStore.set('last_login', null)
         } else {
             cookieStore.set('last_login', result.user.last_login)
@@ -177,8 +180,8 @@ export async function signin(state, formData) {
         return {
             success: true,
             token: result.tokens.access,
-            // route: result.user.is_configured ? '/dashboard' : `/questions`
-            route: '/onboarding'
+            route: result.user.is_configured ? '/dashboard' : `/onboarding`
+            // route: '/onboarding'
         }
     } catch (errors) {
         return {
