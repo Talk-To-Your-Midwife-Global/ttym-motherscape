@@ -16,6 +16,7 @@ export function Logs({accessToken}) {
     const [userType, setUserType] = useState("");
 
     async function getUserLogs() {
+        console.log({accessToken, PUBLICHOSTNAME})
         try {
             const response = await fetch(`${PUBLICHOSTNAME}/logs?date=${formatDate(day)}`, {
                 headers: {
@@ -83,6 +84,7 @@ export function Logs({accessToken}) {
             <ShortCalendar specialDates={[{date: day, style: 'border border-primaryColor'}]}
                            action={{actionText: "View Calendar", link: "/dashboard/calendar"}}
                            dateClick={handleViewDayLogs}
+                           accessToken={accessToken}
             />
             <form className="px-[20px] text-primaryText">
                 <div className="flex flex-col gap-2 mb-8">

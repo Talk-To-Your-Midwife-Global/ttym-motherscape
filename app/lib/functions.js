@@ -39,10 +39,10 @@ export function fetchCycle(url, token) {
         console.log({result});
         const formattedData = {
             ...result,
-            dates: menstrualCycleDateGenerator(result.last_period_start, result.period_length, "general", result.cycle_length),
-            daysDone: computeDaysDone(result.last_period_start),
-            daysToPeriod: computeDaysToPeriod(result.last_period_start, result.cycle_length),
-            percentageComplete: computeCycleCompletion(computeDaysDone(result.last_period_start), result.cycle_length),
+            dates: menstrualCycleDateGenerator(result.current_cycle.start_date, result.period_length, "general", result.cycle_length),
+            daysDone: computeDaysDone(result.current_cycle.start_date),
+            daysToPeriod: computeDaysToPeriod(result.current_cycle.start_date, result.cycle_length),
+            percentageComplete: computeCycleCompletion(computeDaysDone(result.current_cycle.start_date), result.cycle_length),
         }
         return formattedData
     })
@@ -166,7 +166,6 @@ export function matchUserStatus(userType, reverse = false) {
 }
 
 export function necessaryDataForUser(allData) {
-    // console.log(allData)
     return {
         user: {
             email: allData.user.email,
@@ -236,18 +235,20 @@ function computeProgressBarValues(days, week) {
 // Convert this whole thing into a class soon
 export function necessaryDataForMenstrualUI(allData) {
     // console.log('cycle legnth', allData.cycle_length)
-    const dates = menstrualCycleDateGenerator(allData.period_start, allData.period_length, "general", allData.cycle_length)
-    const daysDone = computeDaysDone(allData.period_start)
-    const daysToPeriod = computeDaysToPeriod(allData.period_start, allData.cycle_length)
+    const {current_cycle} = allData;
+    console.log({current_cycle});
+    const dates = menstrualCycleDateGenerator(current_cycle?.start_date, allData.period_length, "general", allData.cycle_length)
+    const daysDone = computeDaysDone(current_cycle?.start_date)
+    const daysToPeriod = computeDaysToPeriod(current_cycle?.start_date, allData.cycle_length)
     const percentageComplete = computeCycleCompletion(daysDone, allData.cycle_length)
     return {
         cycleLength: allData.cycle_length,
         periodLength: allData.period_length,
-        stage: allData.stage,
-        pregnancyProb: allData.preg_probability,
-        periodStartDate: allData.period_start,
-        nextPeriodDate: allData.next_period,
-        nextPhaseStartDate: allData.next_phase,
+        stage: current_cycle?.phase,
+        pregnancyProb: current_cycle?.preg_probability,
+        periodStartDate: current_cycle?.start_date,
+        nextPeriodDate: current_cycle?.next_phase_date,
+        nextPhaseStartDate: current_cycle?.next_phase_date,
         daysDone,
         daysToPeriod,
         percentageComplete,

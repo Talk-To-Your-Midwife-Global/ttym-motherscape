@@ -230,6 +230,8 @@ export function MenstrualCycleCardMain({accessToken}) {
     const generalCycleInfo = necessaryDataForMenstrualUI(data || []);
 
     if (isLoading) return <div>loading...</div>
+    console.log("From the card")
+    console.log({data});
     if (error) {
         return (
             <div>
@@ -525,7 +527,7 @@ export function ShortCalendar({action, withFlower, accessToken, specialDates, da
     const {data, error, isLoading} = useCycleInfo(accessToken);
     // console.log('short calendar')
     // console.log(data)
-    specialDates = specialDates ? specialDates : menstrualCycleDateGenerator(data?.period_start, data?.period_length, "general", data?.cycle_length);
+    specialDates = specialDates ? specialDates : menstrualCycleDateGenerator(data?.current_cycle.start_date, data?.period_length, "general", data?.cycle_length);
     // console.log(otherData)
 
     const [currentMonth, setCurrentMonth] = useState(new Date())

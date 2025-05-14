@@ -1,5 +1,6 @@
 "use client"
 import {useEffect, useState} from "react"
+import {useTransition} from "react";
 import {useRouter} from "next/navigation";
 import {inter} from "@/app/fonts";
 import Link from "next/link"
@@ -43,6 +44,7 @@ function QuestionHead({text}) {
 export function QuestionParent({question, updateUser}) {
     const router = useRouter()
     const [answers, setAnswers] = useState({})
+    const [isPending, startTransition] = useTransition();
 
 
     const handleQuestionAnswers = (questionAnswers) => {
@@ -56,12 +58,13 @@ export function QuestionParent({question, updateUser}) {
         if (next <= 5) {
             setTimeout(() => router.push(`/questions/${next}`), 200)
         } else {
-            const data = JSON.parse(localStorage.getItem("answers"));
-            console.log({data});
-            const result = updateUser(data).then(res => {
+            startTransition(async () => {
+                const data = JSON.parse(localStorage.getItem("answers"))
+                console.log({data})
+                const res = await updateUser(data);
                 console.log({res});
                 if (res.success) {
-                    setTimeout(() => router.push(`/dashboard`), 10000)
+                    setTimeout(() => router.push(`/dashboard`), 100)
                 } else {
                     setTimeout(() => router.push(`/questions/`), 100)
                 }
@@ -326,16 +329,12 @@ function NotificationPreferences({handleAnswers, submit, state}) {
 
     const handleChange = (event) => {
         const {name, value} = event.target
-
         if (name === 'notificationPreference') {
             setDisableButton(false)
         } else {
             setDisableButton(true)
         }
-
         handleAnswers({...state, [name]: value})
-
-        submit()
     }
     return (
         <section className={`${inter.className} h-svh overflow-hidden`}>
@@ -366,8 +365,7 @@ function NotificationPreferences({handleAnswers, submit, state}) {
                 </div>
             </form>
             <div className="relative -bottom-[35%] w-full flex justify-center">
-
-                <IconButton href="/dashboard" text="Continue" icon="iconify lucide--arrow-right" disabled={disableBtn}/>
+                <IconButton onClick={submit} text="Continue" icon="iconify lucide--arrow-right" disabled={disableBtn}/>
             </div>
         </section>
     )
