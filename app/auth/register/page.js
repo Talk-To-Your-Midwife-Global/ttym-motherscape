@@ -47,6 +47,22 @@ export default function Page() {
                                                                      className={`text-red-500`}>{err}</p>) : ""}
                 </section>
             </header>
+            <section className="flex  mx-[30px]">
+                {
+                    state?.success &&
+                    <div className="border-2">
+                        Wohooo you are in
+                    </div>
+                }
+
+                {
+                    state.serverError &&
+                    <div className="text-red-400 .border-2 flex items-center gap-2 my-2">
+                        <span className="iconify lucide--info"></span>
+                        An error occurred while signing you up
+                    </div>
+                }
+            </section>
             <SignUpForm state={state} action={action}/>
         </section>
     )
