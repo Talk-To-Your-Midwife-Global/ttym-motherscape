@@ -12,8 +12,8 @@ export default function Page() {
     const [state, action] = useActionState(signin, undefined)
     const [userRoute, setUserRoute] = useState('');
     const [error, setError] = useState([]);
+    const [domain, setDomain] = useState("");
     const router = useRouter()
-
 
     const getUserRouteFromLocalStorage = () => {
         return localStorage.getItem('userType')
@@ -21,8 +21,11 @@ export default function Page() {
 
     useEffect(() => {
         setUserRoute(getUserRouteFromLocalStorage())
+        if (window) {
+            setDomain(window.location.hostname);
+        }
         if (state?.success) {
-            router.push(state?.route)
+            router.push(`${domain}` + state?.route)
         } else if (state?.success === false) {
             // console.log('Error routing stage', state?.error)
             setError([...state?.error])
