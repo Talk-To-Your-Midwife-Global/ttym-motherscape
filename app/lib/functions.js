@@ -245,7 +245,7 @@ export function necessaryDataForMenstrualUI(allData) {
         cycleLength: allData.cycle_length,
         periodLength: allData.period_length,
         stage: current_cycle?.phase,
-        pregnancyProb: current_cycle?.preg_probability,
+        pregnancyProb: current_cycle?.pregnancy_probability,
         periodStartDate: current_cycle?.start_date,
         nextPeriodDate: current_cycle?.next_phase_date,
         nextPhaseStartDate: current_cycle?.next_phase_date,
