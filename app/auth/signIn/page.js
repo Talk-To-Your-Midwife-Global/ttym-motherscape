@@ -25,9 +25,8 @@ export default function Page() {
             setDomain(window.location.hostname);
         }
         if (state?.success) {
-            router.push(`${domain}` + state?.route)
+            router.push(state.route)
         } else if (state?.success === false) {
-            // console.log('Error routing stage', state?.error)
             setError([...state?.error])
         }
     }, [state?.success])

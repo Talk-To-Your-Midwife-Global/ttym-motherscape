@@ -180,8 +180,7 @@ export async function signin(state, formData) {
         return {
             success: true,
             token: result.tokens.access,
-            route: result.user.is_configured ? '/dashboard' : `/onboarding`
-            // route: '/onboarding'
+            route: result.user.status != "UNASSINGED" ? '/dashboard' : `/onboarding`
         }
     } catch (errors) {
         return {
