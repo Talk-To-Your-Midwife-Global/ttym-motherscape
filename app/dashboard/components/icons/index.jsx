@@ -88,3 +88,16 @@ export function CommunityIcon() {
         </svg>
     )
 }
+
+export function BookmarkingIcon() {
+    return (
+        <svg width="12" height="14" viewBox="0 0 12 14" fill="currentColor"
+             xmlns="http://www.w3.org/2000/svg">
+            <path fillRule="evenodd" clipRule="evenodd"
+                  d="M10.7627 3.48C10.7627 1.70968 9.55237 1 7.80979 1H3.71753C2.0285 1 0.762695 1.66129 0.762695 3.36194V12.8374C0.762695 13.3045 1.26528 13.5987 1.67237 13.3703L5.77947 11.0665L9.85108 13.3665C10.2588 13.5961 10.7627 13.3019 10.7627 12.8342V3.48Z"
+                  stroke="#0F969C" strokeWidth="0.965323" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M3.38281 5.32942H8.09249" stroke="#0F969C" strokeWidth="0.965323"
+                  strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+    )
+}

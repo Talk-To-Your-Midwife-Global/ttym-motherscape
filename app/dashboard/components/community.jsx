@@ -1,11 +1,12 @@
-// import {InsightCard} from "@/app/dashboard/components/index";
 "use client"
-import {motion} from "framer-motion";
-import {Insights} from "@/app/dashboard/components/insights";
 import Image from "next/image";
+import {motion} from "framer-motion";
+import {tapVariants} from "@/app/_lib/motions";
+import {Insights} from "@/app/dashboard/components/insights";
+import {ArticleCard} from "@/app/dashboard/components/ui/ArticleCard";
 import bookMarkIcon from "@/public/icons/bookmark-main.svg"
 import searchIcon from "@/public/icons/search-icon.svg"
-import {tapVariants} from "@/app/lib/motions";
+import {ArticleParent} from "@/app/dashboard/components/ui/ArticleParent";
 
 export function Community({accessToken}) {
     const tags = ['all', 'pregnancy', 'menopause', 'weight loss', 'something']
@@ -37,9 +38,8 @@ export function Community({accessToken}) {
                 <header className={`px-[26px] my-5 text-[#000] font-medium`}>
                     <h1 className={`text-xl`}>My Feed</h1>
                 </header>
-                <section className={`carousel flex overflow-x-auto scroll-smooth space-x-4 p-4`}>
-                    <Insights accessToken={accessToken}/>
-                </section>
+                {/*    Article Parent goes here*/}
+                <ArticleParent/>
             </section>
 
             <section className={"overflow-x-hidden h-[260px] w-full"}>

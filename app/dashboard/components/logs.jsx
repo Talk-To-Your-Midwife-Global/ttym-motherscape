@@ -1,11 +1,11 @@
 "use client"
 import {useEffect, useState} from "react";
-import {inter} from "@/app/fonts";
-import {IconButton} from "@/app/components";
+import {inter} from "@/app/_fonts";
+import {IconButton} from "@/app/_components";
 import {ShortCalendar} from "@/app/dashboard/components/index";
 import {logLog} from "@/app/dashboard/actions/action";
-import {PUBLICHOSTNAME} from "@/app/config/main";
-import {formatDate} from "@/app/lib/functions";
+import {PUBLICHOSTNAME} from "@/app/_config/main";
+import {formatDate} from "@/app/_lib/functions";
 import {compareDesc} from "date-fns";
 
 

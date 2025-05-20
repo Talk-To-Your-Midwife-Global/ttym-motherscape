@@ -414,3 +414,7 @@ function generateDays(start, end, style = "") {
 export function convertSpacedStringToDashDelimited(text) {
     return text.toLowerCase().split(' ').join('-');
 }
+
+export function convertDashDelimitedToSpacedString(text) {
+    return text.toLowerCase().split('-').join(' ');
+}

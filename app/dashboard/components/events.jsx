@@ -1,10 +1,10 @@
 import Link from "next/link";
 import useSWR from "swr";
-import {fetcher} from "@/app/lib/functions";
-import {montserrat} from "@/app/fonts";
+import {fetcher} from "@/app/_lib/functions";
+import {montserrat} from "@/app/_fonts";
 import Image from "next/image";
-import {PUBLICHOSTNAME} from "@/app/config/main";
-import {SmallEmptyState} from "@/app/components";
+import {PUBLICHOSTNAME} from "@/app/_config/main";
+import {SmallEmptyState} from "@/app/_components";
 import React from "react";
 
 export function Events({accessToken}) {

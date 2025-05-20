@@ -11,7 +11,7 @@ import {
     isSameMonth,
     isSameDay,
 } from "date-fns";
-import {montserrat} from "@/app/fonts";
+import {montserrat} from "@/app/_fonts";
 import Link from "next/link";
 import category from "@/public/icons/category.svg"
 import dullBell from "@/public/icons/notification.svg"
@@ -25,16 +25,16 @@ import {
     necessaryDataForMenstrualUI,
     relatableDay,
     relatableNumber
-} from "@/app/lib/functions";
+} from "@/app/_lib/functions";
 import {bookmarkPost, unbookmarkPost} from "@/app/dashboard/actions/action";
 import drip from "@/public/icons/drip.svg";
 import clock from "@/public/icons/clock.svg";
 import cycle from "@/public/icons/cycle.svg";
 import pregnancyIcon from "@/public/icons/pregnancy.svg";
-import {ActionLink, MiniLoader} from "@/app/components";
+import {ActionLink, MiniLoader} from "@/app/_components";
 import {useCycleInfo, useInsightsInfo} from "@/app/dashboard/lib/dataFetching";
 import {useRouter} from "next/navigation";
-import {PUBLICHOSTNAME} from "@/app/config/main";
+import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {getRelativeTime} from "@/app/dashboard/lib/functions";
 import {Insights} from "@/app/dashboard/components/insights";
 import {Events} from "@/app/dashboard/components/events";
@@ -49,6 +49,8 @@ import cycleCalendarIcon from "@/public/icons/pregnant/cyclecalendar.svg"
 import cycleTimeCircleIcon from "@/public/icons/pregnant/cycletimecircle.svg"
 import cycleGraphIcon from "@/public/icons/pregnant/cyclegraph.svg"
 import cycleWeightIcon from "@/public/icons/pregnant/cycleweight.svg"
+import {BookmarkingIcon} from "@/app/dashboard/components/icons";
+import {ArticleParent} from "@/app/dashboard/components/ui/ArticleParent";
 
 export function DashboardHeader(user) {
     return (
@@ -332,14 +334,7 @@ export function InsightCard({insight, accessToken}) {
                     handlePostBookmarking(1) // TODO: Fix this
 
                 }} className={` ${bookmarked ? 'text-primaryColor' : 'text-transparent'}`}>
-                    <svg width="12" height="14" viewBox="0 0 12 14" fill="currentColor"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" clipRule="evenodd"
-                              d="M10.7627 3.48C10.7627 1.70968 9.55237 1 7.80979 1H3.71753C2.0285 1 0.762695 1.66129 0.762695 3.36194V12.8374C0.762695 13.3045 1.26528 13.5987 1.67237 13.3703L5.77947 11.0665L9.85108 13.3665C10.2588 13.5961 10.7627 13.3019 10.7627 12.8342V3.48Z"
-                              stroke="#0F969C" strokeWidth="0.965323" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M3.38281 5.32942H8.09249" stroke="#0F969C" strokeWidth="0.965323"
-                              strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                    <BookmarkingIcon/>
                 </div>
                 <span className={"text-sm"}>{relatableNumber(Number(insight?.reads))} reads</span>
             </section>
@@ -436,17 +431,17 @@ export function ChatCard({key, info}) {
 }
 
 export function InsightParent({head, desc, accessToken}) {
-    const {insights, isLoadingInsights, insightError} = useInsightsInfo()
-
-    if (isLoadingInsights) {
-        return <MiniLoader/>
-    }
-
-    if (insightError) {
-        return <section>
-            <p>Error loading insights {insightError.message}</p>
-        </section>
-    }
+    // const {insights, isLoadingInsights, insightError} = useInsightsInfo()
+    //
+    // if (isLoadingInsights) {
+    //     return <MiniLoader/>
+    // }
+    //
+    // if (insightError) {
+    //     return <section>
+    //         <p>Error loading insights {insightError.message}</p>
+    //     </section>
+    // }
 
     return (
         <section className={"px-5 my-10 "}>
@@ -457,14 +452,15 @@ export function InsightParent({head, desc, accessToken}) {
                 </div>
                 <p className={`${montserrat.className} text-subText`}>{desc}</p>
             </header>
-            <section className={'`carousel flex overflow-x-auto scroll-smooth space-x-4 p-4'}>
+            <section className={'`carousel flex overflow-x-auto scroll-smooth space-x-4 py-4'}>
                 {/* TODO: Empty state ui and loop instead */}
-                {
-                    insights &&
-                    insights?.data?.map(insight => (
-                        <InsightCard key={insight.id} insight={insight} accessToken={accessToken}/>
-                    ))
-                }
+                {/*{*/}
+                {/*    insights &&*/}
+                {/*    insights?.data?.map(insight => (*/}
+                {/*        <InsightCard key={insight.id} insight={insight} accessToken={accessToken}/>*/}
+                {/*    ))*/}
+                {/*}*/}
+                <ArticleParent/>
             </section>
         </section>
     )
@@ -658,13 +654,13 @@ export function FeelingsInsightsAndEvents({accessToken}) {
                 <header>
                     <div className={"flex justify-between"}>
                         <h2 className={"text-primaryText font-bold text-xl"}>Cycle Insights</h2> <Link
-                        href={"/dashboard/community"}>See
-                        More</Link> {/* TODO: use the right link*/}
+                        href={"/dashboard/community"}>See More</Link> {/* TODO: use the right link*/}
                     </div>
                     <p className={`${montserrat.className} text-subText`}>Personalized health tips based on logged
                         data</p>
                 </header>
-                <Insights accessToken={accessToken}/>
+                {/*<Insights accessToken={accessToken}/>*/}
+                <ArticleParent/>
             </section>
             <Events accessToken={accessToken}/>
         </section>

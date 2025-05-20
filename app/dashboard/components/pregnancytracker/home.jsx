@@ -4,7 +4,7 @@ import {
     ShortCalendar, PregnancyCycleCardMain, CircularProgressBar
 } from "@/app/dashboard/components/index";
 import {usePregnancyInfo, useUserInfo} from "@/app/dashboard/lib/dataFetching";
-import {MiniLoader} from "@/app/components";
+import {MiniLoader} from "@/app/_components";
 import Link from "next/link";
 
 export function PregnancyHome({accessToken}) {

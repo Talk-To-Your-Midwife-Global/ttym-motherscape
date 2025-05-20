@@ -6,13 +6,14 @@ import {
 import Image from "next/image";
 import pinkFlower from "@/public/images/flowers-1.svg"
 import {useUserInfo} from "@/app/dashboard/lib/dataFetching";
-import {MiniLoader} from "@/app/components";
+import {MiniLoader} from "@/app/_components";
 
 export function MenstrualHome({data, accessToken}) {
     const {user, isLoading, error} = useUserInfo(accessToken)
     console.log({user});
     if (isLoading) return (
         <MiniLoader/>
+        // <div>SOmthing</div>
     )
 
     if (error) {

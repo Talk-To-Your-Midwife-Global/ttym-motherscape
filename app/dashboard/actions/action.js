@@ -1,12 +1,7 @@
 'use server'
 import {cookies} from "next/headers";
-import {PUBLICHOSTNAME} from "@/app/config/main";
+import {PUBLICHOSTNAME} from "@/app/_config/main";
 
-/**
- * Send daily feeling
- * @param feeling
- * @returns {Promise<void>}
- */
 export async function sendCurrentFeeling(feeling) {
     // Call route that sends feeling
     return {
@@ -23,12 +18,31 @@ export async function setCookies(newCookies) {
     return true
 }
 
-/**
- * Bookmark a post for the user
- * @param postId
- * @param accessToken
- * @returns {Promise<{success: boolean}>}
- */
+export async function contentGqlFetcher(query, variables) {
+    // todo: remove all the console logs
+    // console.log('Fetcher itself')
+    console.log(JSON.stringify({query, variables}));
+    // console.log({contentful_token: process.env.CONTENTFUL_TOKEN, contentful_id: process.env.CONTENTFUL_SPACE_ID});
+    const response = await fetch(`https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.CONTENTFUL_TOKEN}`
+            },
+            body: JSON.stringify({query, variables})
+        })
+
+    if (!response.ok) {
+        // throw new Error(response.statusText)
+    }
+
+    const {data, errors} = await response.json();
+    console.log(data);
+    return data;
+}
+
+
 export async function bookmarkPost(postId, accessToken) {
     // TODO: Make this actually work
     const response = await fetch(`${PUBLICHOSTNAME}/user/bookmark/${postId}`, {
@@ -47,12 +61,6 @@ export async function bookmarkPost(postId, accessToken) {
     }
 }
 
-/**
- * Un bookmark a post
- * @param postId
- * @param accessToken
- * @returns {Promise<{marked: boolean}>}
- */
 export async function unbookmarkPost(postId, accessToken) {
     const response = await fetch(`${PUBLICHOSTNAME}/user/bookmark/${postId}`, {
         headers: {
@@ -97,6 +105,4 @@ export async function logLog(state, accessToken, userType) {
     return {
         data: res
     }
-
-
 }

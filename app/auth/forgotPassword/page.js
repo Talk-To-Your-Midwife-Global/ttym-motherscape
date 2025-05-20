@@ -33,29 +33,30 @@ export default function Page() {
                 </div>
 
                 <section className={"mt-12 mb-10 w-full flex justify-center text-center"}>
-                    <Button text={"Reset Password"}  />
+                    <Button text={"Reset Password"}/>
                 </section>
                 <section className={"text-primaryText text-center"}>
-                    <p>Need help? Visit our <Link href={"#"} className={"text-primaryColor"}>help center</Link> </p> {/* TODO: Add link to help center */}
+                    <p>Need help? Visit our <Link href={"#"} className={"text-primaryColor"}>help center</Link>
+                    </p> {/* TODO: Add link to help center */}
                 </section>
             </form>
 
-        {/*    Modal goes here   */}
-        <PageFadeAnimator>
-            <section className={`backdrop-blur-md w-screen h-svh fixed flex justify-center items-center top-0 rounded-md  
+            {/*    Modal goes here   */}
+            <PageFadeAnimator>
+                <section className={`backdrop-blur-md w-screen h-svh fixed flex justify-center items-center top-0 rounded-md  
             ${state?.success ? 'block' : 'hidden'}`}>
-                <section className={"text-primaryText bg-white px-4 py-8 rounded-md relative"}>
-                    <Link href={"/auth/signIn"}>
-                        <span className={"iconify lucide--x-circle absolute right-1 top-1"}></span>
-                    </Link>
-                    <Image src={modalImage} alt={"Image for modal goes here"} />
-                    <article className={"text-center"}>
-                        <h3 className={"font-bold text-2xl "}>Reset Password</h3>
-                        <p className={"text-sm"}>Reset code has been sent to your email</p>
-                    </article>
+                    <section className={"text-primaryText bg-white px-4 py-8 rounded-md relative"}>
+                        <Link href={"/auth/signIn"}>
+                            <span className={"iconify lucide--x-circle absolute right-1 top-1"}></span>
+                        </Link>
+                        <Image src={modalImage} alt={"Image for modal goes here"}/>
+                        <article className={"text-center"}>
+                            <h3 className={"font-bold text-2xl "}>Reset Password</h3>
+                            <p className={"text-sm"}>Reset code has been sent to your email</p>
+                        </article>
+                    </section>
                 </section>
-            </section>
-        </PageFadeAnimator>
+            </PageFadeAnimator>
         </section>
     )
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import {useEffect} from 'react'
-import {logout} from "@/app/actions/auth";
+import {logout} from "@/app/_actions/auth";
 import Link from "next/link";
 
 export default function Error({error, reset}) {

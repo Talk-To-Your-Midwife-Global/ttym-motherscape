@@ -2,7 +2,7 @@
 import * as React from "react";
 import {motion} from "framer-motion";
 import Image from "next/image"
-import {logout} from "@/app/actions/auth";
+import {logout} from "@/app/_actions/auth";
 import {MenuItem} from "@/app/dashboard/components/menuItem";
 import profileIcon from "@/public/icons/profile.svg"
 import notificationBellIcon from "@/public/icons/dashnotification.svg"
@@ -13,7 +13,7 @@ import infoIcon from "@/public/icons/info-port.svg"
 import sarah from "@/public/images/sarah.png"
 import logoutIcon from "@/public/icons/logout.svg"
 import {useUserInfo} from "@/app/dashboard/lib/dataFetching";
-import {montserrat} from "@/app/fonts";
+import {montserrat} from "@/app/_fonts";
 
 
 const variants = {

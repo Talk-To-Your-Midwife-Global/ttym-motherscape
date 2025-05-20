@@ -8,10 +8,10 @@ import ovulationPhase from "@/public/images/ovulation-phase.svg"
 import lutealPhase from "@/public/images/luteal-phase.svg"
 import ovulationBlue from "@/public/images/ovulation-phase-blue.svg"
 import pregnancyPink from "@/public/images/pregnancy-pink.svg"
-import {montserrat} from "@/app/fonts";
+import {montserrat} from "@/app/_fonts";
 import Link from "next/link";
-import {menstrualCycleDateGenerator, necessaryDataForMenstrualUI, relatableDay} from "@/app/lib/functions";
-import {PageFadeAnimator} from "@/app/components";
+import {menstrualCycleDateGenerator, necessaryDataForMenstrualUI, relatableDay} from "@/app/_lib/functions";
+import {PageFadeAnimator} from "@/app/_components";
 import {useCycleInfo} from "@/app/dashboard/lib/dataFetching";
 
 export function CalendarMain({accessToken}) {
@@ -148,7 +148,7 @@ export function CalendarMain({accessToken}) {
                 {
                     !hideDailyTip && <section className={`flex justify-center items-center`}>
                         <PageFadeAnimator>
-                            <article className={'bg-tertiaryColor text-white max-w-[350px] h-[140px] rounded-xl px-4 py-4'}>
+                            <article className={'bg-tertiaryColor text-white max-w-[400px] h-[140px] rounded-xl px-4 py-4'}>
                                 <header className={`flex space-between items-center w-full mb-2`}>
                                     <h2 className={'flex-1 text-xl font-semibold'}>Daily Tip</h2>
                                     <span tabIndex={0} onClick={() => handleHideDailyTip()}

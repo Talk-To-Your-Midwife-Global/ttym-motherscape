@@ -1,13 +1,15 @@
 import {DashboardNav, NavItem} from "@/app/dashboard/components";
-import {PageFadeAnimator} from "@/app/components";
+import {PageFadeAnimator} from "@/app/_components";
 import {SideNav} from "@/app/dashboard/components/sideNav";
 import {cookies} from "next/headers";
 import {CalendarIcon, ChatIcon, CommunityIcon, HomeIcon, LogsIcon} from "@/app/dashboard/components/icons";
 
 export default async function DashboardLayout({children, params}) {
     const paramName = await params;
-    const cookieStore = await cookies()
-    const accessToken = cookieStore.get('access_token')?.value
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('access_token')?.value;
+
+    console.log(paramName);
 
     const shouldName = {
         "me": "",

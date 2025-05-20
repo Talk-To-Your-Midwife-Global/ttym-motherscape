@@ -1,8 +1,8 @@
 "use client"
 import Image from "next/image"
 import {useEffect, useState} from "react";
-import {useWebSocket} from "@/app/hooks/useWebSocket";
-import {montserrat} from "@/app/fonts";
+import {useWebSocket} from "@/app/_hooks/useWebSocket";
+import {montserrat} from "@/app/_fonts";
 import {ChatCard} from "@/app/dashboard/components/index";
 import messageImage from "@/public/images/message-undraw.svg"
 

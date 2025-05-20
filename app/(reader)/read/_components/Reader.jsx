@@ -1,13 +1,57 @@
+"use client"
 import {getOnePostQuery} from "@/app/dashboard/hooks/graphContentFetchers";
 
-// import {useContentFetcher} from "@/app/dashboard/lib/dataFetching";
+import {useContentFetcher} from "@/app/_hooks/useContentFetcher";
+import {ReaderNav} from "@/app/_components/ReaderNav";
+import Image from "next/image";
+import {montserrat} from "@/app/_fonts";
+import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
 
 export function Reader({blogTitle}) {
-    // const {blogData} = useContentFetcher(getOnePostQuery(blogTitle));
+    const {blogData} = useContentFetcher(getOnePostQuery(blogTitle));
+    console.log({blogData});
+    console.log(blogData && blogData[0].blogInsight.insight)
+
+    const blogInsight = blogData ? blogData[0]?.blogInsight.insight : undefined;
+    const blogHeaderImage = blogData ? blogData[0]?.headerImage : undefined;
+
 
     return (
         <section>
-            Reading here
+            <nav>
+                <ContainerWrapper>
+                    <ReaderNav/>
+                </ContainerWrapper>
+            </nav>
+            <ContainerWrapper>
+                <section className="text-black">
+                    <p className={`${montserrat.className} capitalize text-gray-500`}>{blogTitle}</p>
+                    <h2 className="text-xl font-bold wrap ">{blogInsight}</h2>
+                    {/*    Author stuffd*/}
+                    <div className="my-10 flex gap-5 items-center">
+                        <div>
+                            {blogHeaderImage &&
+                                <Image src={blogHeaderImage?.url} alt={blogHeaderImage?.title}
+                                       width={50} height={50}
+                                       className="rounded-full"/>
+                            }
+                        </div>
+                        <div className={`${montserrat.className}`}>
+                            <p className={`${montserrat.className} font-medium`}>Trudy Akorita</p>
+                            <p className="text-sm">Today at 11:37 am </p>
+                        </div>
+                    </div>
+
+                    <div className="my-4 h-[300px] relative">
+                        {blogHeaderImage &&
+                            <Image src={blogHeaderImage?.url} alt={blogHeaderImage?.title}
+                                   fill={true}
+                                   className="w-full rounded-md"/>
+
+                        }
+                    </div>
+                </section>
+            </ContainerWrapper>
         </section>
     )
 }

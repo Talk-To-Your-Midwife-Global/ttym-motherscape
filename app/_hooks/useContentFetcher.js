@@ -8,8 +8,11 @@ export const useContentFetcher = ({query, variables}) => {
         error
     } = useSWR([query, variables], ([query, variables]) => contentGqlFetcher(query, variables))
 
+    // I need the exact blog content and not the surrounding things
+    const blogContent = data?.blogPostCollection.items;
+
     return {
-        blogData: data,
+        blogData: blogContent,
         isLoading,
         error,
     }

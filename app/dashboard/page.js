@@ -3,7 +3,7 @@ import Image from "next/image";
 import {useRouter} from "next/navigation";
 import logo from "@/public/icons/wordmark-colored.svg"
 import {useEffect, useState} from "react";
-import {montserrat} from "@/app/fonts";
+import {montserrat} from "@/app/_fonts";
 
 export default function Page() {
     const router = useRouter();
