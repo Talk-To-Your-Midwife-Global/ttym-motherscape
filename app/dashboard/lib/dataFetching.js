@@ -1,6 +1,7 @@
 import useSWR from 'swr'
-import {fetchCycle, fetcher, fetchPregnancy, fetchUser} from "@/app/lib/functions";
-import {PUBLICHOSTNAME} from "@/app/config/main";
+import {fetchCycle, fetcher, fetchPregnancy, fetchUser} from "@/app/_lib/functions";
+import {PUBLICHOSTNAME} from "@/app/_config/main";
+import {contentGqlFetcher} from "@/app/dashboard/actions/action";
 
 export function useUserInfo(accessToken) {
     const {

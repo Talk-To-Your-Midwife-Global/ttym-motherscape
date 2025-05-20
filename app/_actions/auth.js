@@ -2,8 +2,8 @@
 // import {SignJWT, JWTVer} from 'jose'
 import {SignUpFormSchema, SignInFormSchema, ForgotPasswordFormSchema} from "../auth/lib/definitions";
 import {cookies} from "next/headers";
-import {HOSTNAME_URI} from "../config/main";
-import {matchUserStatus} from "@/app/lib/functions";
+import {HOSTNAME_URI} from "@/app/_config/main";
+import {matchUserStatus} from "@/app/_lib/functions";
 
 
 // const secretKey = 'somekeybiIwillmakeinenvironmentvairables'

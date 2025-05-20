@@ -2,7 +2,7 @@
 
 import {useEffect} from "react";
 import {useRouter} from "next/navigation";
-import {Loader} from "./components";
+import {Loader} from "./_components";
 
 
 export default function Page() {

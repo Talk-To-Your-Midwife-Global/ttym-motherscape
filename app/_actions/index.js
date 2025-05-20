@@ -1,7 +1,7 @@
 "use server"
 import {cookies} from "next/headers"
-import {HOSTNAME_URI} from "@/app/config/main";
-import {matchUserStatus} from "@/app/lib/functions";
+import {HOSTNAME_URI} from "@/app/_config/main";
+import {matchUserStatus} from "@/app/_lib/functions";
 import {convertCommaStringToArray} from "@/app/dashboard/lib/functions";
 
 export async function storeUserType(userType) {

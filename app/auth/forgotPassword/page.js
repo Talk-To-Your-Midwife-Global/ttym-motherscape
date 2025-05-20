@@ -2,23 +2,23 @@
 import {useActionState, useState} from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {AuthNav} from "@/app/auth/components";
-import {forgotPassword} from "@/app/actions/auth";
-import {montserrat} from "@/app/fonts";
-import {Button, PageFadeAnimator} from "@/app/components";
+import {AuthNav} from "@/app/auth/_components";
+import {forgotPassword} from "@/app/_actions/auth";
+import {montserrat} from "@/app/_fonts";
+import {Button, PageFadeAnimator} from "@/app/_components";
 import messageIcon from "../../../public/icons/message.svg"
 import modalImage from "../../../public/images/undraw_secure_login.png"
-import {set} from "zod";
 
-export default function Page () {
+export default function Page() {
     const [state, action] = useActionState(forgotPassword, undefined)
 
     return (
         <section>
-            <AuthNav backUrl="/auth/signIn" />
+            <AuthNav backUrl="/auth/signIn"/>
             <header className="text-primaryText px-[20px] mb-5">
                 <h2 className="font-semibold text-2xl ">Forgot Password</h2>
-                <p className={`${montserrat.className} text-subText text-base`}>Enter Email to request a password reset</p>
+                <p className={`${montserrat.className} text-subText text-base`}>Enter Email to request a password
+                    reset</p>
             </header>
             <form className={"px-5"} action={action}>
                 <div>

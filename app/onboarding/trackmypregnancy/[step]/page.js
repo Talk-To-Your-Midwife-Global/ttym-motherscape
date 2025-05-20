@@ -1,5 +1,5 @@
 import Image from "next/image"
-import {StepOne, StepTwo, StepThree} from "../../components"
+import {StepOne, StepTwo, StepThree} from "../../_components"
 import rafiki from "../../../../public/images/pregnant/rafiki.svg"
 import cuate from "../../../../public/images/pregnant/cuate.svg"
 import pana from "../../../../public/images/pregnant/pana.svg"

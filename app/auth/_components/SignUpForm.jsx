@@ -1,11 +1,11 @@
 "use client"
 import {useState} from "react";
-import {Button} from "@/app/components";
+import {Button} from "@/app/_components";
 import Image from "next/image";
 import facebook from "@/public/images/facebook.svg";
 import google from "@/public/images/google.svg";
 import apple from "@/public/images/apple.svg";
-import {HelpCenterLinks} from "@/app/auth/components/index";
+import {HelpCenterLinks} from "@/app/auth/_components/index";
 
 export function SignUpForm({state, action}) {
     const [hidePassword, setHidePassword] = useState(true)

@@ -4,8 +4,8 @@ import Image from "next/image";
 import {useRouter} from "next/navigation";
 import {useActionState} from 'react'
 
-import {signin} from "@/app/actions/auth";
-import {SignInForm} from "@/app/auth/components/SignInForm";
+import {signin} from "@/app/_actions/auth";
+import {SignInForm} from "@/app/auth/_components/SignInForm";
 import pregnantLogo from "../../../../public/images/pregnant-logo.svg"
 
 export default function Page() {

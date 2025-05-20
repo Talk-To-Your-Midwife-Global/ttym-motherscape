@@ -1,10 +1,10 @@
 "use client"
 import {useEffect, useState} from "react"
 import {useRouter} from "next/navigation";
-import {inter} from "@/app/fonts";
+import {inter} from "@/app/_fonts";
 import Link from "next/link"
-import {PageSlideAnimator} from "@/app/components";
-import {IconButton} from "@/app/components";
+import {PageSlideAnimator} from "@/app/_components";
+import {IconButton} from "@/app/_components";
 
 function QuestionNav({url, icon = "lucide--chevron-left", last = false,}) {
     return (

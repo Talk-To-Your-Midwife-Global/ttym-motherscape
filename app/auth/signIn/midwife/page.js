@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import SignInForm from "../components/SignInForm";
+import SignInForm from "../_components/SignInForm";
 import pregnantLogo from "../../../../public/images/ttym-rounded-logo.svg"
 
 export default function Page() {

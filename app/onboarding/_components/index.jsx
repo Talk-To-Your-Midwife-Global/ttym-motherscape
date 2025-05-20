@@ -1,8 +1,8 @@
 "use client"
 import Link from "next/link"
-import {removeSpaces} from "@/app/lib/functions"
-import {IconButton} from "@/app/components"
-import {PageSlideAnimator} from "@/app/components"
+import {removeSpaces} from "@/app/_lib/functions"
+import {IconButton} from "@/app/_components"
+import {PageSlideAnimator} from "@/app/_components"
 
 export function OnboardNav({url, userType = "menstrualcycletracker", icon = "lucide--chevron-right", last = false}) {
     return (

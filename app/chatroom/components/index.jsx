@@ -1,11 +1,11 @@
 "use client"
 import Image from "next/image";
 import Link from "next/link";
-import {montserrat} from "@/app/fonts";
+import {montserrat} from "@/app/_fonts";
 import {useEffect, useState, useRef} from "react";
 import {motion, AnimatePresence} from "framer-motion";
-import {PUBLICHOSTNAME} from "@/app/config/main";
-import {useWebSocket} from "@/app/hooks/useWebSocket";
+import {PUBLICHOSTNAME} from "@/app/_config/main";
+import {useWebSocket} from "@/app/_hooks/useWebSocket";
 
 export function ChatPage({chatId, accessToken}) {
     const [messages, setMessages] = useState([]);

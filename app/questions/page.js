@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link";
 import character from "../../public/images/character-1.svg"
-import {IconButton} from "../components"
+import {IconButton} from "../_components"
 
 export default function Page() {
     return (
