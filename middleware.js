@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
 
 
-// export const config = {
+// export const _config = {
 //     matcher: ["/questions/:path*", '/dashboard/:path*']
 // }
 
