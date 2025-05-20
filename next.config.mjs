@@ -1,4 +1,4 @@
-// next.config.mjs
+// next._config.mjs
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
@@ -9,6 +9,12 @@ const nextConfig = {
                 // port: '8000',
                 pathname: '/media/**',
             },
+
+            {
+                protocol: 'https',
+                hostname: 'images.ctfassets.net',
+
+            }
         ],
     },
 };
