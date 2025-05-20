@@ -115,15 +115,6 @@ export function relatableNumber(int) {
  * @returns {string}
  */
 export function relatableDay(numberOfDays) {
-    // switch (numberOfDays) {
-    //     case numberOfDays >= 2:
-    //         return `${numberOfDays} days to go`
-    //     case numberOfDays >= 0:
-    //         return "Tomorrow"
-    //     default:
-    //         return `${numberOfDays} days`
-    // }
-
     if (numberOfDays >= 2) {
         return `${numberOfDays} days`
     }
@@ -418,4 +409,8 @@ function generateDays(start, end, style = "") {
             style
         }
     })
+}
+
+export function convertSpacedStringToDashDelimited(text) {
+    return text.toLowerCase().split(' ').join('-');
 }
