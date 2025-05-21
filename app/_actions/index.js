@@ -29,8 +29,8 @@ export async function updatePregnantUser(info) {
     console.log(info)
     console.log(HOSTNAME_URI)
     const data = {
-        // lmp: info?.lmp,
-        start_date: info?.lmp,
+        lmp: info?.lmp,
+        // start_date: info?.lmp,
         delivery_date_est: info?.dueDate,
         complications: convertCommaStringToArray(info.existingConditions),
         history: {
@@ -44,7 +44,7 @@ export async function updatePregnantUser(info) {
     console.log({data});
 
     try {
-        const response = await fetch(`${HOSTNAME_URI}/user/pregnancy/`, {
+        const response = await fetch(`${HOSTNAME_URI}/api/v1/user/pregnancy/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
