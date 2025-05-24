@@ -7,7 +7,7 @@ import activeBell from "@/public/icons/notification-active.svg"
 export function SettingsNav({pageLabel}) {
     return (
         <ContainerWrapper>
-            <div className="flex items-center .justify-between">
+            <div className="flex items-center .justify-between ">
                 <div>
                     <Link href="/dashboard/community"
                           className="bg-[#16898E1A] w-12 h-12 rounded-full flex justify-center items-center">
@@ -15,14 +15,9 @@ export function SettingsNav({pageLabel}) {
                     </Link>
                 </div>
 
-                <div className="text-black mx-[auto]">
+                <div className="text-gray-700 mx-[auto]">
                     <p className="font-semibold text-xl">{pageLabel}</p>
                 </div>
-
-                {/*<div className="bg-[#16898E1A] w-12 h-12 rounded-full flex justify-center items-center">*/}
-                {/*    /!*<span className="iconify lucide--bookmark"></span>*!/*/}
-                {/*    <Image src={dullBell} alt="inactive notifications icon"/>*/}
-                {/*</div>*/}
             </div>
         </ContainerWrapper>
     )
