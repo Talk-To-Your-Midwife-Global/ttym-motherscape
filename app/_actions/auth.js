@@ -83,7 +83,7 @@ export async function signup(state, formData) {
                 password: formData.get('password'),
                 phone_number: formData.get('phone'),
                 date_of_birth: formData.get('dob'),
-                role: 'PATIENT',
+                // role: 'PATIENT',
             }),
         })
         const errors = []
