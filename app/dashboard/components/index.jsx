@@ -259,7 +259,7 @@ export function MenstrualCycleCardMain({accessToken}) {
                     </> :
                     <>
                         <Card head={`Period begins: ${relatableDay(generalCycleInfo?.daysToPeriod)} `}
-                              status={`${generalCycleInfo?.daysToPeriod} days to go`}>
+                              status={`${generalCycleInfo?.daysToPeriod} day${generalCycleInfo?.daysToPeriod > 1 ? 's' : ''} to go`}>
                             <Image src={drip} alt={"drip "}/>
                         </Card>
                         <Card head={`You are currently in: ${generalCycleInfo?.stage} Phase`}
