@@ -49,7 +49,7 @@ const itemIds = [
         subText: "Contact, My Album and Block Contact",
         link: "/data-and-privacy"
     },
-    {id: 3, icon: docIcon, text: "About", subText: "version 1.0.0", link: "/dashboard"},
+    {id: 3, icon: docIcon, text: "About", subText: "version 1.0.0", link: "/about"},
     {id: 4, icon: inviteUserIcon, text: "Invite a Friend", subText: "invite a friend to this app", link: "/dashboard"},
     {id: 5, icon: infoIcon, text: "Help", subText: "Get your FAQs answers here", link: "/dashboard"},
 ];
@@ -70,7 +70,7 @@ export function Navigation({accessToken}) {
     }
 
     return (
-        <motion.ul className={'ul'} variants={variants}>
+        <motion.ul className={'ul bg-white z-20'} variants={variants}>
             <MenuItem>
                 <section className={`flex gap-3 relative bottom-10`}>
                     {/* eslint-disable-next-line react/jsx-no-undef */}
