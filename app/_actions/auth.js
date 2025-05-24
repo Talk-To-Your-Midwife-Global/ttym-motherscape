@@ -239,6 +239,30 @@ export async function logout() {
 
 }
 
+
+export async function initiatePasswordChange(state, formData) {
+    const validatedField = ForgotPasswordFormSchema.safeParse({
+        email: formData.get('email'),
+    })
+
+    if (!validatedField.success) {
+        return {
+            fieldErrors: validatedField.error.flatten().fieldErrors,
+            serverError: false,
+            success: false
+        }
+    }
+
+    // send email here
+
+    // simulate success
+    return {
+        fieldErrors: false,
+        serverError: false,
+        success: true
+    }
+}
+
 /**
  * Validates forgotPassword email form
  * @param state

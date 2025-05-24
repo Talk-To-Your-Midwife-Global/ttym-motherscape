@@ -1,4 +1,4 @@
-export function ProfileFormButton({action}) {
+export function ProfileEditButton({action}) {
     return (
         <div className="flex mt-4">
             <button

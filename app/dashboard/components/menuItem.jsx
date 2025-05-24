@@ -22,7 +22,7 @@ const variants = {
 };
 
 
-export const MenuItem = ({i, clickAction = undefined, link = "", children}) => {
+export const MenuItem = ({i, clickAction = undefined, link, children}) => {
     return (
         <motion.li
             variants={variants}

@@ -28,20 +28,26 @@ const variants = {
 };
 
 const itemIds = [
-    {id: 0, icon: profileIcon, text: "Personal Information", subText: "Your account information", link: "/dashboard"},
+    {
+        id: 0,
+        icon: profileIcon,
+        text: "Personal Information",
+        subText: "Your account information",
+        link: "/profile"
+    },
     {
         id: 1,
         icon: notificationBellIcon,
         text: "Notifications & Chat",
         subText: "Chat and notifications settings",
-        link: "/dashboard"
+        link: "/notification-settings"
     },
     {
         id: 2,
         icon: padLockIcon,
         text: "Privacy & Permissions",
         subText: "Contact, My Album and Block Contact",
-        link: "/dashboard"
+        link: "/data-and-privacy"
     },
     {id: 3, icon: docIcon, text: "About", subText: "version 1.0.0", link: "/dashboard"},
     {id: 4, icon: inviteUserIcon, text: "Invite a Friend", subText: "invite a friend to this app", link: "/dashboard"},
@@ -76,7 +82,7 @@ export function Navigation({accessToken}) {
                 </section>
             </MenuItem>
             {itemIds.map(i => (
-                <MenuItem i={i} key={i.id}/>
+                <MenuItem i={i} key={i.id} link={i.link}/>
             ))}
 
             <MenuItem link={'/logout'}>
