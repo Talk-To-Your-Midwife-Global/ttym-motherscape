@@ -6,8 +6,7 @@ import {ProfileEditButton} from "@/app/(settings)/_components/ProfileEditButton"
 import {FormSelect} from "@/app/_components/FormSelect";
 import {ProfileSaveButton} from "@/app/(settings)/_components/ProfileSavebutton";
 
-export function ProfileForm() {
-
+export function ProfileForm({profile}) {
     const options = [
         {label: "English", value: "english"},
     ];
