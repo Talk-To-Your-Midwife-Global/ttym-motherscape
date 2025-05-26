@@ -1,4 +1,4 @@
-import {convertSpacedStringToDashDelimited} from "@/app/_lib/functions";
+import {convertSpacedStringToSnakeDelimited} from "@/app/_lib/functions";
 import {cn} from "@/app/_lib/utils";
 
 export function FormInput({
@@ -9,7 +9,7 @@ export function FormInput({
                               disabled = true,
                               value = undefined
                           }) {
-    const name = convertSpacedStringToDashDelimited(label);
+    const name = convertSpacedStringToSnakeDelimited(label);
     return (
         <div className="flex flex-col gap-2 my-2">
             <label htmlFor={label} className="text-[#999999] text-sm capitalize">{label}</label>

@@ -30,7 +30,7 @@ export default function Page() {
                                     email
                                     with instructions to reset
                                     your password.</h3>
-                                <FormInput label="email" placeholderText="trudyakortia@gmail.com" disabled={false}
+                                <FormInput label="email" placeholderText="Eg. trueakortia@gmail.com" disabled={false}
                                            fieldErrors={formState?.fieldErrors}/>
                             </div>
 

@@ -415,6 +415,10 @@ export function convertSpacedStringToDashDelimited(text) {
     return text.toLowerCase().split(' ').join('-');
 }
 
+export function convertSpacedStringToSnakeDelimited(text) {
+    return text.toLowerCase().split(' ').join('_');
+}
+
 export function convertDashDelimitedToSpacedString(text) {
     return text.toLowerCase().split('-').join(' ');
 }
