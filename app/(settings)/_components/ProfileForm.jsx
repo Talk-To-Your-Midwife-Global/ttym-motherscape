@@ -32,8 +32,10 @@ export function ProfileForm({profile}) {
         <section>
             <ContainerWrapper>
                 <form className="text-black">
-                    <FormInput type="text" label="username" placeholderText="Trudy Akortia" disabled={!editable}/>
-                    <FormInput type="date" label="Date of birth" disabled={!editable}/>
+                    <FormInput type="text" label="username" placeholderText={profile?.full_name} disabled={!editable}/>
+                    <FormInput type={!editable ? "text" : "date"} label="Date of birth"
+                               placeholderText={profile?.date_of_birth}
+                               disabled={!editable}/>
                     <FormInput type="email" label="email" placeholderText="eg. johndoe@gmail.com" disabled={!editable}/>
                     <FormInput type="text" label="phone number" placeholderText={profile?.phone_number}
                                disabled={!editable}/>
