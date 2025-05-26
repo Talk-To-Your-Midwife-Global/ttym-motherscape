@@ -35,6 +35,8 @@ export function ProfileForm({profile}) {
                     <FormInput type="text" label="username" placeholderText="Trudy Akortia" disabled={!editable}/>
                     <FormInput type="date" label="Date of birth" disabled={!editable}/>
                     <FormInput type="email" label="email" placeholderText="eg. johndoe@gmail.com" disabled={!editable}/>
+                    <FormInput type="text" label="phone number" placeholderText={profile?.phone_number}
+                               disabled={!editable}/>
                     <FormSelect label="language" options={options} disbaled={!editable}/>
                     {
                         editable ? <ProfileSaveButton/> : <ProfileEditButton action={toggleEditable}/>
