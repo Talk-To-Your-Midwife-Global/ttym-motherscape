@@ -4,6 +4,7 @@ import {SignUpFormSchema, SignInFormSchema, ForgotPasswordFormSchema} from "../a
 import {cookies} from "next/headers";
 import {HOSTNAME_URI} from "@/app/_config/main";
 import {matchUserStatus} from "@/app/_lib/functions";
+import {getLocalCookies} from "@/app/_lib/getCookies";
 
 
 // const secretKey = 'somekeybiIwillmakeinenvironmentvairables'
@@ -83,7 +84,6 @@ export async function signup(state, formData) {
                 password: formData.get('password'),
                 phone_number: formData.get('phone'),
                 date_of_birth: formData.get('dob'),
-                // role: 'PATIENT',
             }),
         })
         const errors = []
@@ -241,6 +241,8 @@ export async function logout() {
 
 
 export async function initiatePasswordChange(state, formData) {
+    const {access_token} = await getLocalCookies('access_token');
+    console.log({access_token});
     const validatedField = ForgotPasswordFormSchema.safeParse({
         email: formData.get('email'),
     })
@@ -252,9 +254,26 @@ export async function initiatePasswordChange(state, formData) {
             success: false
         }
     }
+    const res = await fetch(`${HOSTNAME_URI}/auth/reset-password/request/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${access_token}`
+        },
+        body: JSON.stringify({email: formData.get('email')})
+    })
 
-    // send email here
+    const response = await res.json()
 
+    if (!res.ok) {
+        console.log(res.statusText);
+        console.log(response);
+        return {
+            fieldErrors: false,
+            serverError: true,
+            success: false
+        }
+    }
     // simulate success
     return {
         fieldErrors: false,
@@ -263,28 +282,47 @@ export async function initiatePasswordChange(state, formData) {
     }
 }
 
+
 /**
  * Validates forgotPassword email form
  * @param state
  * @param formData
  * @returns {Promise<{success: boolean}|{errors: {email?: string[]}}>}
  */
-export async function forgotPassword(state, formData) {
-    const validateField = ForgotPasswordFormSchema.safeParse({
-        email: formData.get('email'),
+export async function changePassword(state, formData) {
+    const validateField = SignUpFormSchema.safeParse({
+        password: formData.get('password'),
     })
 
     if (!validateField.success) {
         return {
-            errors: validateField.error.flatten().fieldErrors,
+            fieldErrors: validateField.error.flatten().fieldErrors,
         }
     }
+
+    const res = await fetch(`${HOSTNAME_URI}/auth/reset-password/confirm/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            password: formData.get('password'),
+            token: formData.get('key')
+        })
+    })
+
+    if (!res.ok) {
+        console.log(res);
+        console.log(res.statusText);
+        throw new Error('Error bro');
+    }
+    const response = await res.json();
+    console.log(response);
 
     // TODO: You can remove this but make sure it is part of the return statement when the real thing is done
     return {
         success: true
     }
-    // TODO: Make an api call to forgot password route
 
     // Return a message indicating success
 }
