@@ -41,7 +41,6 @@ export function CalendarMain({accessToken}) {
 
     const {data, error, isLoading} = useCycleInfo(accessToken);
     const generalCycleInfo = necessaryDataForMenstrualUI(data || []);
-    const specialDates = menstrualCycleDateGenerator(data?.period_start, data?.period_length, "general", data?.cycle_length);
     const atEndOfCycle = generalCycleInfo?.stage === "Missed";
     console.log(data)
     console.log('current', generalCycleInfo?.stage == "Missed");
@@ -110,7 +109,7 @@ export function CalendarMain({accessToken}) {
                             action: handleCalendarViewToggle
                         }}
                                   accessToken={accessToken}
-                                  specialDates={specialDates}
+                                  specialDates={data?.dates}
                                   withFlower={true}/>
                         <div className={'text-[#72777A] text-[10px] px-5 flex gap-3'}>
                             <span className={`flex gap-2 w-fit `}>
@@ -126,12 +125,12 @@ export function CalendarMain({accessToken}) {
                         </div>
                     </section>
                     : <ShortCalendar action={{actionText: "View Calendar", action: handleCalendarViewToggle}}
-                                     specialDates={specialDates} accessToken={accessToken} withFlower={true}/>
+                                     specialDates={data?.dates} accessToken={accessToken} withFlower={true}/>
             }
             <section className={`my-10`}>
                 <CircularProgressBar percentage={generalCycleInfo?.percentageComplete} bg={`#F5F5F5`}
                                      foreBg={'#015364'}>
-                    <h2 className={`text-3xl font-bold text-primaryText text-center relative top-5`}>Day {generalCycleInfo?.daysDone}</h2>
+                    <h2 className={`text-3xl font-bold text-primaryText text-center relative top-5`}>Day {generalCycleInfo?.daysDone + 1}</h2>
                     <Image src={phaseImages[generalCycleInfo?.stage]?.img} alt={"phase image"}
                            className={`relative top-5`}/>
                     <p className={`w-[200px] text-center text-subText text-sm relative top-5`}> {phaseImages[generalCycleInfo?.stage]?.msg} </p>

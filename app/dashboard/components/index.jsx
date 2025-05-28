@@ -519,12 +519,8 @@ function CalendarTemplate({
 }
 
 export function ShortCalendar({action, withFlower, accessToken, specialDates, dateClick = undefined}) {
-    // const [dates, setDates] = useState([])
     const {data, error, isLoading} = useCycleInfo(accessToken);
-    // console.log('short calendar')
-    // console.log(data)
     specialDates = specialDates ? specialDates : menstrualCycleDateGenerator(data?.current_cycle.start_date, data?.period_length, "general", data?.cycle_length);
-    // console.log(otherData)
 
     const [currentMonth, setCurrentMonth] = useState(new Date())
     const startWeek = startOfWeek(new Date())
@@ -557,7 +553,7 @@ export function ShortCalendar({action, withFlower, accessToken, specialDates, da
 
 export function Calendar({action, withFlower, specialDates, accessToken}) {
     const {data, error, isLoading} = useCycleInfo(accessToken);
-    specialDates = specialDates ? specialDates : menstrualCycleDateGenerator(data?.period_start, data?.period_length, "general", data?.cycle_length);
+    specialDates = specialDates ? specialDates : menstrualCycleDateGenerator(data?.start_date, data?.period_length, "general", data?.cycle_length);
     const [currentMonth, setCurrentMonth] = useState(new Date())
     const startMonth = startOfMonth(currentMonth)
     const endMonth = endOfMonth(currentMonth)
