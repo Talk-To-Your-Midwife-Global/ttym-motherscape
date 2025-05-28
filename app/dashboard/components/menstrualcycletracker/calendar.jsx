@@ -211,7 +211,7 @@ export function CalendarMain({accessToken}) {
             <section>
 
                 {
-                    !hideDailyTip && <section className={`flex justify-center items-center`}>
+                    !hideDailyTip && <section className={`flex justify-center items-center px-4`}>
                         <PageFadeAnimator>
                             <article className={'bg-tertiaryColor text-white max-w-[400px] h-[140px] rounded-xl px-4 py-4'}>
                                 <header className={`flex space-between items-center w-full mb-2`}>
