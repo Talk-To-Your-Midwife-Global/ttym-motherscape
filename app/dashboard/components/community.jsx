@@ -50,7 +50,7 @@ export function Community({accessToken}) {
                     </section>
                 </header>
                 <section className={`carousel flex overflow-x-auto scroll-smooth space-x-4 p-4`}>
-                    <Insights accessToken={accessToken}/>
+                    {/*<Insights accessToken={accessToken}/>*/}
                 </section>
             </section>
         </section>

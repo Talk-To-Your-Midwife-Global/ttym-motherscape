@@ -17,3 +17,20 @@ export const useContentFetcher = ({query, variables}) => {
         error,
     }
 }
+
+export const useEventFetcher = ({query, variables}) => {
+    const {
+        data,
+        isLoading,
+        error
+    } = useSWR([query, variables], ([query, variables]) => contentGqlFetcher(query, variables))
+
+    const eventContent = data?.eventCollection.items;
+
+    console.log('events graphql', {data});
+    return {
+        data: eventContent,
+        isLoading,
+        error
+    }
+}

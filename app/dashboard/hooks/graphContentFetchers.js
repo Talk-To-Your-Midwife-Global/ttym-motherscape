@@ -7,3 +7,4 @@ export const getOnePostQuery = (blogPostTitle) => {
     }
 }
 
+export const eventsQuery = `query EventCollection {\r\n  eventCollection {\r\n    items {\r\n      eventDate\r\n     \r\n onlineLink     description\r\n      eventFlyer {\r\n        url\r\n        title\r\n      }\r\n      eventName\r\n      venue {\r\n        lat\r\n        lon\r\n      }\r\n    }\r\n  }   \r\n}`;

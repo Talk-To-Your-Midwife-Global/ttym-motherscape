@@ -32,7 +32,7 @@ import clock from "@/public/icons/clock.svg";
 import cycle from "@/public/icons/cycle.svg";
 import pregnancyIcon from "@/public/icons/pregnancy.svg";
 import {ActionLink, MiniLoader} from "@/app/_components";
-import {useCycleInfo, useInsightsInfo} from "@/app/dashboard/lib/dataFetching";
+import {useCycleInfo} from "@/app/dashboard/lib/dataFetching";
 import {useRouter} from "next/navigation";
 import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {getRelativeTime} from "@/app/dashboard/lib/functions";

@@ -17,12 +17,13 @@ export function ArticleCard({content, imagery}) {
                 </div>
 
                 <div
-                    className="h-[100px] flex flex-col py-4 z-10  px-4 backdrop-blur-md rounded-lg">
+                    className="h-[100px] flex flex-col py-4 z-5  px-4 backdrop-blur-md rounded-lg">
                     <p className="text-[#0E0E0EB0] text-sm capitalised ">Fatigue</p>
-                    <p className="font-bold text-black">
-                        <a href="#">{content?.title}</a></p>
+                    <p className="font-bold text-black w-[160px] truncate">
+                        <a href="#" className="truncate h-[50px] capitalize">{content?.title}</a>
+                    </p>
                     <p></p>
-                    <div className="text-transparent flex items-center gap-3 ">
+                    <div className="text-transparent flex items-center gap-3">
                         <BookmarkingIcon/> <span className="text-primaryText text-sm">read</span>
                     </div>
                 </div>

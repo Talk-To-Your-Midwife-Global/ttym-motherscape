@@ -6,11 +6,12 @@ import Image from "next/image";
 import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {SmallEmptyState} from "@/app/_components";
 import React from "react";
+import {useEventFetcher} from "@/app/_hooks/useContentFetcher";
+import {eventsQuery} from "@/app/dashboard/hooks/graphContentFetchers";
+import healthImage from "@/public/images/adobe-stock-health-image.webp";
 
 export function Events({accessToken}) {
-    const {
-        data, error, isLoading
-    } = useSWR([`${PUBLICHOSTNAME}/events/`, accessToken], ([url, accessToken]) => fetcher(url, accessToken));
+    const {data, isLoading, error} = useEventFetcher({query: eventsQuery, variables: null});
 
     if (error) {
         console.log(error)
@@ -28,14 +29,22 @@ export function Events({accessToken}) {
                 </div>
                 <p className={`${montserrat.className} text-subText`}>Live Health Talk events by your Global midwife</p>
             </header>
-            <section className={"mt-4 flex items-center px-4 carousel  overflow-x-auto scroll-smooth space-x-4 p-4"}>
-                {/* Make it a carousel TODO:Make it a carousel*/}
+            <section className={"mt-4 flex items-center px-4 carousel overflow-x-auto scroll-smooth space-x-4 p-4"}>
                 {data && data?.map(event => {
                         return (
-                            <div key={event.id}
+                            <div key={event?.eventName}
                                  className="flex justify-between overflow-hidden gap-3 bg-white carousel-item rounded-2xl px-5 py-4 h-[250px]
                              flex-shrink-0 w-52">
-                                <Image src={`${PUBLICHOSTNAME}${event.thumbnail}`} width={200} height={200} alt={`event`}/>
+                                <a target="_blank" noopener href={event?.onlineLink}
+                                   className=".w-[inherit] .h-[inherit] border-2 w-[300px]">
+                                    {/*<Image src={event?.eventFlyer?.url} width={300} height={200} alt={`event`}/>*/}
+                                    {/*<div className="absolute h-[inherit]">*/}
+                                    {/*<img src="" alt="some image"/>*/}
+                                    <Image src={event?.eventFlyer.url} width={300} height={250}
+                                           alt="Some blue background image"
+                                           className="rounded-lg w-full. aspect-square "/>
+                                    {/*</div>*/}
+                                </a>
                             </div>
                         )
                     }
