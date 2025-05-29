@@ -64,7 +64,7 @@ export async function signup(state, formData) {
     // return early if there is an error
     if (!validatedFields.success) {
         return {
-            success: undefined,
+            success: false,
             fieldErrors: validatedFields.error.flatten().fieldErrors,
             serverError: undefined,
         }
@@ -88,17 +88,20 @@ export async function signup(state, formData) {
         })
         const errors = []
         console.log(response);
+        const result = await response.json();
+
         if (!response.ok) {
-            console.log(response)
+            for (const err in result) {
+                errors.push(result[err]);
+            }
+
             return {
-                success: undefined,
+                success: false,
                 fieldErrors: undefined,
-                serverError: true,
+                serverError: errors,
             }
         }
-        const result = await response.json()
-        console.log(result);
-        let cookieStore = await cookies()
+        let cookieStore = await cookies();
         cookieStore.set('access_token', result.tokens.access, {httpOnly: true, path: '/'})
         cookieStore.set('refresh_token', result.tokens.refresh, {httpOnly: true, path: '/'})
         return {

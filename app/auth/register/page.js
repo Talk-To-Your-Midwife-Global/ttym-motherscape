@@ -8,10 +8,14 @@ import {signup} from "@/app/_actions/auth";
 import {SignUpForm} from "@/app/auth/_components/SignUpForm";
 
 export default function Page() {
-    const [state, action] = useActionState(signup, {success: undefined, fieldErrors: undefined, serverError: false});
+    const [state, action, isPending] = useActionState(signup, {
+        success: undefined,
+        fieldErrors: undefined,
+        serverError: false
+    });
     const [userRoute, setUserRoute] = useState('');
-    const [error, setError] = useState([]);
-    const router = useRouter()
+    const [error, setError] = useState(undefined);
+    const router = useRouter();
 
     const getUserRouteFromLocalStorage = () => {
         return localStorage.getItem('userType')
@@ -24,10 +28,12 @@ export default function Page() {
                 console.log('Success routing stage', state?.route)
                 router.push(state?.route)
             } else if (state?.success === false) {
-                console.log('Error routing stage', state?.error)
-                setError(state?.error)
+                console.log('Error routing stage', state?.serverError)
+                setError(state?.serverError)
             }
-        }, [state?.success]
+
+            console.log(error);
+        }, []
     )
     return (
         <section>
@@ -43,15 +49,15 @@ export default function Page() {
                 <section className="flex flex-col gap-4 items-center mt-8 mb-10">
                     <h2 className="text-mainText text-xl font-semibold">Create an Account</h2>
                     <p className="text-subText font-medium">Sign up to be able to access your page</p>
-                    {error.length > 0 ? error.map((err, index) => <p key={index}
-                                                                     className={`text-red-500`}>{err}</p>) : ""}
+                    {error?.length > 0 ? error.map((err, index) => <p key={index}
+                                                                      className={`text-red-500`}>{err}</p>) : ""}
                 </section>
             </header>
             <section className="flex  mx-[30px]">
                 {
                     state?.success &&
-                    <div className="border-2">
-                        Wohooo you are in
+                    <div className="">
+                        Wohooo you are in!
                     </div>
                 }
 
@@ -59,11 +65,11 @@ export default function Page() {
                     state.serverError &&
                     <div className="text-red-400 .border-2 flex items-center gap-2 my-2">
                         <span className="iconify lucide--info"></span>
-                        An error occurred while signing you up
+                        <p className="capitalize text-sm">{state?.serverError}</p>
                     </div>
                 }
             </section>
-            <SignUpForm state={state} action={action}/>
+            <SignUpForm state={state} action={action} pending={isPending}/>
         </section>
     )
 }

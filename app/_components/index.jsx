@@ -67,11 +67,19 @@ export function Loader() {
     );
 }
 
-export function Button({text = "Button", variant = "primary", type = "link", href = "/", disabled = false}) {
+export function Button({
+                           text = "Button",
+                           variant = "primary",
+                           type = "link",
+                           href = "/",
+                           disabled = false,
+                           isPending = false,
+                           isPendingText = "processing..."
+                       }) {
     return (
         <button disabled={disabled}
                 className={`${variant === "primary" && disabled ? "bg-[#A8CCD0] text-white" : "bg-primaryColor text-white border border-secondary"} w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2`}>
-            {text}
+            {!isPending ? text : isPendingText}
         </button>
     )
 }

@@ -7,7 +7,7 @@ import google from "@/public/images/google.svg";
 import apple from "@/public/images/apple.svg";
 import {HelpCenterLinks} from "@/app/auth/_components/index";
 
-export function SignUpForm({state, action}) {
+export function SignUpForm({state, action, isPending}) {
     const [hidePassword, setHidePassword] = useState(true)
     const [pass, setPass] = useState('')
     const [passCorrect, setPassCorrect] = useState(false)
@@ -167,7 +167,7 @@ export function SignUpForm({state, action}) {
             </section>
 
             <div className="flex flex-col justify-center items-center">
-                <Button disabled={!enableButton} text="Create Account"/>
+                <Button disabled={!enableButton} text="Create Account" isPending={isPending}/>
             </div>
             <div className="relative flex flex-col items-center justify-center">
                 <div className="h-[1px] w-full bg-[#9C979759] top-[10px] absolute "></div>
