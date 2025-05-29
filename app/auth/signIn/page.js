@@ -6,7 +6,7 @@ import {useActionState, useState, useEffect} from 'react'
 
 import {signin} from "@/app/_actions/auth";
 import {SignInForm} from "@/app/auth/_components/SignInForm";
-import pregnantLogo from "../../../public/images/ttym-rounded-logo.svg"
+import appLogo from "../../../public/icons/Obaa-logo-Horizontal.svg"
 
 export default function Page() {
     const [state, action] = useActionState(signin, undefined)
@@ -44,7 +44,10 @@ export default function Page() {
                 </nav>
 
                 <section className="flex flex-col gap-4 items-center mb-10">
-                    <Image src={pregnantLogo} alt="pregnant woman"/>
+                    <div
+                        className="bg-primaryColor rounded-full w-[100px] h-[100px] flex items-center justify-center p-2">
+                        <Image src={appLogo} alt="obaa+logo"/>
+                    </div>
                     <h2 className="text-mainText text-xl font-semibold">Welcome back</h2>
                     <p className="text-subText font-medium">Sign in to be able to access your page</p>
                 </section>
