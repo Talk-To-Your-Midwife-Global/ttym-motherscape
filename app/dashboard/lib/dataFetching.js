@@ -36,7 +36,7 @@ export function usePregnancyInfo(accessToken) {
         isLoading,
         error
     } = useSWR([`${PUBLICHOSTNAME}/user/pregnancy/`, accessToken], ([url, accessToken]) => fetchPregnancy(url, accessToken))
-
+    console.log('usePregnancyInfo', {data})
     return {
         pregnancyData: data,
         pregnancyError: error,

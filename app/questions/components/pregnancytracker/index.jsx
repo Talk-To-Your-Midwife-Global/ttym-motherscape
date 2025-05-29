@@ -45,6 +45,7 @@ export function PregnancyQuestionParent({question, updateUser}) {
     const [answers, setAnswers] = useState({})
 
     const handleQuestionAnswers = (questionAnswers) => {
+        console.log(questionAnswers);
         setAnswers((prevState) => ({...prevState, ...questionAnswers}))
     }
     const handleSubmit = () => {
@@ -90,11 +91,15 @@ function GeneralInformation({handleAnswers, submit, state}) {
     const [count, setCount] = useState(0);
 
     const handleChange = (event) => {
-        const {name, value} = event.target
+        const {name, value} = event.target;
+
+        console.log(name, value);
         const shouldContinue = (name === "dueDate" && (answersState?.isFirstPregnancy)) || (name === "isFirstPregnancy" && (answersState?.dueDate || answersState?.lmp))
         if (shouldContinue) {
             setDisableButton(false);
         }
+
+        console.log({answersState}, {state});
         setAnswersState((prevState) => ({...prevState, [name]: true}));
         handleAnswers({...state, [name]: value});
     }
@@ -103,8 +108,9 @@ function GeneralInformation({handleAnswers, submit, state}) {
     }
 
     useEffect(() => {
+        console.log({answersState})
         handleAnswers({
-            dueDate: null
+            dueDate: state?.dueDate || null,
         })
     }, [disableBtn])
     return (

@@ -5,11 +5,13 @@ import {
 } from "@/app/dashboard/components/index";
 import Image from "next/image";
 import pinkFlower from "@/public/images/flowers-1.svg"
-import {useUserInfo} from "@/app/dashboard/lib/dataFetching";
+import {useCycleInfo, useUserInfo} from "@/app/dashboard/lib/dataFetching";
 import {MiniLoader} from "@/app/_components";
 
-export function MenstrualHome({data, accessToken}) {
-    const {user, isLoading, error} = useUserInfo(accessToken)
+export function MenstrualHome({accessToken}) {
+    const {user, isLoading, error} = useUserInfo(accessToken);
+    const {data, error: cycleError, isLoading: cycleLoading} = useCycleInfo(accessToken);
+
     console.log({user});
     if (isLoading) return (
         <MiniLoader/>
@@ -28,7 +30,7 @@ export function MenstrualHome({data, accessToken}) {
             <section className={"mt-1"}>
                 <ShortCalendar
                     withFlower={false}
-                    specialDates={data?.calendar}
+                    specialDates={data?.dates}
                     accessToken={accessToken}
                     action={
                         {actionText: "See Details", link: "/dashboard/calendar"}

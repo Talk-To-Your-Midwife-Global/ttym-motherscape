@@ -56,9 +56,10 @@ export function fetchPregnancy(url, token) {
     }).then(res => {
         return res.json()
     }).then(result => {
-        result = necessaryDataForPregnancyUI(result)
+        console.log('fetch pregnancy', {result})
+        let newResult = necessaryDataForPregnancyUI(result)
         return {
-            ...result
+            ...newResult
         }
     })
 }
@@ -179,21 +180,22 @@ export function necessaryDataForUser(allData) {
 }
 
 export function necessaryDataForPregnancyUI(data) {
-    console.log(data);
+    console.log({data});
+    const details = data?.details
     return {
-        days: data.day,
+        days: details?.day,
+        week: details?.week,
+        trimester: formatNumberWithOrdinal(details?.trimester),
+        expectedDate: data.delivery_date_est,
+        size: details?.size,
         today: formatDate(new Date()),
-        week: data.week,
-        trimester: formatNumberWithOrdinal(data.trimester),
-        expectedDate: data.expected_date,
-        size: data.size,
-        countdown: data.countdown,
-        weight: poundsToGrams(data.weight),
-        length: data.length,
-        event: data.event,
-        month: computeNumberOfMonthsFromDays(data.day),
-        percentage: computeCycleCompletion(data.week, 40),
-        progressBarValues: computeProgressBarValues(data.day, data.week),
+        countdown: details?.countdown,
+        weight: poundsToGrams(details?.weight),
+        length: details?.length,
+        event: details?.events,
+        month: computeNumberOfMonthsFromDays(details?.day),
+        percentage: computeCycleCompletion(details?.week, 40),
+        progressBarValues: computeProgressBarValues(details?.day, details?.week),
     }
 }
 

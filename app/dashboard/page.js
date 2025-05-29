@@ -1,9 +1,12 @@
 "use client"
 import Image from "next/image";
 import {useRouter} from "next/navigation";
-import logo from "@/public/icons/wordmark-colored.svg"
+// import logo from "@/public/icons/wordmark-colored.svg"
+import logo from "@/public/icons/Obaa-logo-Horizontal.svg"
 import {useEffect, useState} from "react";
+
 import {montserrat} from "@/app/_fonts";
+import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
 
 export default function Page() {
     const router = useRouter();
@@ -33,7 +36,9 @@ export default function Page() {
 
     return (
         <section className={".my-3 bg-primaryColor w-screen h-svh flex flex-col items-center justify-center"}>
-            <Image src={logo} alt="Logo"/>
+            <ContainerWrapper>
+                <Image src={logo} alt="Logo"/>
+            </ContainerWrapper>
             <p className={`text-white my-3 ${montserrat.className} text-sm`}>{messages[message]}...</p>
         </section>
     )

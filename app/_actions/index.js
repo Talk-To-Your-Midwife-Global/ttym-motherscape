@@ -28,9 +28,8 @@ export async function updatePregnantUser(info) {
     console.log(config)
     console.log(info)
     console.log(HOSTNAME_URI)
-    const data = {
-        lmp: info?.lmp,
-        // start_date: info?.lmp,
+    const dataInput = {
+        // lmp: info?.lmp, todo: add this back
         delivery_date_est: info?.dueDate,
         complications: convertCommaStringToArray(info.existingConditions),
         history: {
@@ -41,25 +40,27 @@ export async function updatePregnantUser(info) {
         },
         is_first: info.isFirstPregnancy
     };
-    console.log({data});
+    console.log({dataInput});
 
     try {
-        const response = await fetch(`${HOSTNAME_URI}/api/v1/user/pregnancy/`, {
+        const response = await fetch(`${HOSTNAME_URI}/user/pregnancy/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${config.accessToken}`
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(dataInput)
         })
         console.log(info);
+
         if (!response.ok) {
             console.log('error occured')
             console.log(response);
-            return {
-                error: response.json()
-            }
+            console.log(response.statusText)
         }
+        const data = await response.json();
+
+        console.log(data);
 
         return {
             success: true,

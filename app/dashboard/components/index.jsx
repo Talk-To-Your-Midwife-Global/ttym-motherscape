@@ -518,34 +518,48 @@ function CalendarTemplate({
     )
 }
 
-export function ShortCalendar({action, withFlower, accessToken, specialDates, dateClick = undefined}) {
-    const {data, error, isLoading} = useCycleInfo(accessToken);
-    specialDates = specialDates ? specialDates : menstrualCycleDateGenerator(data?.current_cycle.start_date, data?.period_length, "general", data?.cycle_length);
+export function ShortCalendar({
+                                  action,
+                                  withFlower,
+                                  accessToken,
+                                  specialDates,
+                                  type = "menstrual",
+                                  dateClick = undefined
+                              }) {
+    // const {data, error, isLoading} = useCycleInfo(accessToken)
+    let specialDays = specialDates;
+    // if (type !== "menstrual") {
+    //     specialDays = specialDates;
+    // } else {
+    //     specialDays = specialDates ? specialDates : menstrualCycleDateGenerator(data?.current_cycle?.start_date, data?.period_length, "general", data?.cycle_length);
+    // }
+
+    console.log({specialDays});
 
     const [currentMonth, setCurrentMonth] = useState(new Date())
     const startWeek = startOfWeek(new Date())
     const endWeek = endOfWeek(new Date())
 
-    if (isLoading) {
-        return (
-            <div>
-                loading...
-            </div>
-        )
-    }
-
-    if (error) {
-        return (
-            <div>
-                error
-                {error.message}
-            </div>
-        )
-    }
+    // if (isLoading) {
+    //     return (
+    //         <div>
+    //             loading...
+    //         </div>
+    //     )
+    // }
+    //
+    // if (error) {
+    //     return (
+    //         <div>
+    //             error
+    //             {error.message}
+    //         </div>
+    //     )
+    // }
     return (
         <div>
             <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth}
-                              specialDates={specialDates} action={action} dateClick={dateClick}
+                              specialDates={specialDays} action={action} dateClick={dateClick}
                               withFlower={withFlower}/>
         </div>
     )

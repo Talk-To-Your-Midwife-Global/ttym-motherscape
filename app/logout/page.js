@@ -3,7 +3,8 @@ import {useEffect} from "react";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
 import {logout} from "@/app/_actions/auth";
-import Logo from "@/public/icons/logo-svg.svg"
+// import Logo from "@/public/icons/logo-svg.svg"
+import Logo from "@/public/icons/ObaaLogo-HorizontalC.png"
 import {montserrat} from "@/app/_fonts";
 
 export default function Page() {

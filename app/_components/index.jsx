@@ -56,10 +56,13 @@ export function Loader() {
         <section
             className="bg-foreground text-background flex flex-col h-svh w-screen items-center .justify-center p-[20px] relative">
             <div className="flex-1 flex justify-center">
-                <Image src="/icons/logo-colored.svg" alt="logo" width={120} height={100}/>
+                {/*TODO: clear the comments*/}
+                {/*<Image src="/icons/logo-colored.svg" alt="logo" width={120} height={100}/>*/}
+                {/*<Image src="/icons/Obaa-logo-Horizontal.svg" alt="logo" width={120} height={100}/>*/}
+                <Image src="/icons/Obaa-logo-Horizontal.svg" alt="logo" width={200} height={200}/>
             </div>
-            <Image className=".absolute .bottom-10" src="/icons/wordmark-colored.svg" alt="logo" width={100}
-                   height={100}/>
+            {/*<Image className=".absolute .bottom-10" src="/icons/wordmark-colored.svg" alt="logo" width={100}*/}
+            {/*       height={100}/>*/}
         </section>
     );
 }

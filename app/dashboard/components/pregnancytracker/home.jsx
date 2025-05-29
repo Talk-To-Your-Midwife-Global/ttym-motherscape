@@ -10,7 +10,7 @@ import Link from "next/link";
 export function PregnancyHome({accessToken}) {
     const {user, isLoading, error} = useUserInfo(accessToken)
     const {pregnancyData, pregnancyLoading, pregnancyError} = usePregnancyInfo(accessToken)
-    console.log(pregnancyData);
+    console.log({pregnancyData});
     // const today = new Date();
 
     if (isLoading || pregnancyLoading) return (
