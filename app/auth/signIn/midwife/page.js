@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import SignInForm from "../_components/SignInForm";
 import pregnantLogo from "../../../../public/images/ttym-rounded-logo.svg"
+import {SignInForm} from "@/app/auth/_components/SignInForm";
 
 export default function Page() {
     return (
@@ -22,6 +22,7 @@ export default function Page() {
                 </section>
             </header>
             <SignInForm/>
+
         </section>
     )
 }
