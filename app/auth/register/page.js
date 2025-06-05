@@ -22,19 +22,20 @@ export default function Page() {
     }
 
     useEffect(() => {
-            console.log(state);
             setUserRoute(getUserRouteFromLocalStorage())
-            if (state?.success) {
-                console.log('Success routing stage', state?.route)
-                router.push(state?.route)
-            } else if (state?.success === false) {
-                console.log('Error routing stage', state?.serverError)
-                setError(state?.serverError)
-            }
-
-            console.log(error);
         }, []
     )
+
+    useEffect(() => {
+        if (state?.success) {
+            console.log('Success routing stage', state?.route)
+            router.replace('/onboarding');
+        } else {
+            console.log('Error routing stage', state?.serverError)
+            setError(state?.serverError)
+        }
+        console.log(error);
+    }, [state])
     return (
         <section>
             <header className="flex">

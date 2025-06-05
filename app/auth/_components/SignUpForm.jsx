@@ -167,7 +167,8 @@ export function SignUpForm({state, action, isPending}) {
             </section>
 
             <div className="flex flex-col justify-center items-center">
-                <Button disabled={!enableButton} text="Create Account" isPending={isPending}/>
+                <Button disabled={!enableButton} text="Create Account" isPending={isPending}
+                        isPendingText={"Processing"}/>
             </div>
             <div className="relative flex flex-col items-center justify-center">
                 <div className="h-[1px] w-full bg-[#9C979759] top-[10px] absolute "></div>
