@@ -210,16 +210,20 @@ function computeProgressBarValues(days, week) {
     }
     if (month <= 3) {
         result.segment1 = week * 3.34;
+        result.circlePosition = week * 2.5;
 
     } else if (month > 3 && month <= 6) {
         result.segment1 = 40
         result.segment2 = week * 8.4;
+        result.circlePosition = week * 2.5;
     } else {
         result.segment1 = 40
         result.segment2 = 100;
-        result.segment3 = week * 2.3;
+        // result.segment3 = week * 2.3;
+        result.segment3 = (week - 24) / 12 * 32;
+        result.circlePosition = (week / 40) * 100 + (result.segment3);
     }
-    result.circlePosition = week * 2.5;
+
     console.log(result);
     return result;
 

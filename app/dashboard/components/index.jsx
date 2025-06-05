@@ -212,7 +212,7 @@ export function PregnancyProgressBar({trimester, weeks, daysRemaining, progress}
 
                 {/* Segment 3 */}
                 <div
-                    className="absolute top-0 left-[calc(70%)] h-4 bg-cyan-200 rounded-r-full"
+                    className="absolute top-0 left-[calc(70%)] .-z-10 h-4 bg-cyan-200 rounded-r-full"
                     style={{width: `${progress.segment3}%`}}
                 ></div>
 
