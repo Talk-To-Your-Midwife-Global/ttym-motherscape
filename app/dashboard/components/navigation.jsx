@@ -10,10 +10,11 @@ import padLockIcon from "@/public/icons/dashlock.svg"
 import docIcon from "@/public/icons/green-log.svg"
 import inviteUserIcon from "@/public/icons/add-user.svg"
 import infoIcon from "@/public/icons/info-port.svg"
-import sarah from "@/public/images/sarah.png"
+
 import logoutIcon from "@/public/icons/logout.svg"
 import {useUserInfo} from "@/app/dashboard/lib/dataFetching";
 import {montserrat} from "@/app/_fonts";
+import {ProfileImage} from "@/app/_components/ProfileImage";
 
 
 const variants = {
@@ -74,7 +75,10 @@ export function Navigation({accessToken}) {
             <MenuItem>
                 <section className={`flex gap-3 relative bottom-10`}>
                     {/* eslint-disable-next-line react/jsx-no-undef */}
-                    <Image src={sarah} alt={"your profile image"} width={80} height={30}/>
+                    {/*<Image src={sarah} alt={"your profile image"} width={80} height={30}/>*/}
+                    {/*<div className="grid justify-items-start">*/}
+                    <ProfileImage userProfileInfo={user}/>
+                    {/*</div>*/}
                     <div>
                         <h2 className={`text-primaryColor text-xl font-medium w-[160px]`}>{user?.user.full_name}</h2>
                         <p className={`text-subText text-sm ${montserrat.className}`}>{user?.user.email}</p>
