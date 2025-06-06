@@ -6,6 +6,7 @@ import {CalendarIcon, ChatIcon, CommunityIcon, HomeIcon, LogsIcon} from "@/app/d
 
 export default async function DashboardLayout({children, params}) {
     const paramName = await params;
+    // TODO: since this is a server component use the function you created to get cookies instead
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('access_token')?.value;
 

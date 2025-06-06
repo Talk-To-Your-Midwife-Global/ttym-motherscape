@@ -9,7 +9,7 @@ export function SettingsNav({pageLabel}) {
         <ContainerWrapper>
             <div className="flex items-center .justify-between ">
                 <div>
-                    <Link href="/dashboard/community"
+                    <Link href="/dashboard/me"
                           className="bg-[#16898E1A] w-12 h-12 rounded-full flex justify-center items-center">
                         <span className={`iconify lucide--chevron-left text-2xl`}></span>
                     </Link>

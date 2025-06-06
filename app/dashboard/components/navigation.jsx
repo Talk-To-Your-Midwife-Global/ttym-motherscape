@@ -74,10 +74,7 @@ export function Navigation({accessToken}) {
             <MenuItem>
                 <section className={`flex gap-3 relative bottom-10`}>
                     {/* eslint-disable-next-line react/jsx-no-undef */}
-                    {/*<Image src={sarah} alt={"your profile image"} width={80} height={30}/>*/}
-                    {/*<div className="grid justify-items-start">*/}
                     <ProfileImage userProfileInfo={user}/>
-                    {/*</div>*/}
                     <div>
                         <h2 className={`text-primaryColor text-xl font-medium w-[160px]`}>{user?.user.full_name}</h2>
                         <p className={`text-subText text-sm ${montserrat.className}`}>{user?.user.email}</p>
