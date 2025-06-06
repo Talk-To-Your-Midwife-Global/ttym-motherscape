@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
 import {useActionState, useState, useEffect} from 'react'
-
 import {signin} from "@/app/_actions/auth";
 import {SignInForm} from "@/app/auth/_components/SignInForm";
 import appLogo from "../../../public/icons/Obaa-logo-Horizontal.svg"
@@ -12,7 +11,6 @@ export default function Page() {
     const [state, action] = useActionState(signin, undefined)
     const [userRoute, setUserRoute] = useState('');
     const [error, setError] = useState([]);
-    const [domain, setDomain] = useState("");
     const router = useRouter()
 
     const getUserRouteFromLocalStorage = () => {
@@ -21,9 +19,6 @@ export default function Page() {
 
     useEffect(() => {
         setUserRoute(getUserRouteFromLocalStorage())
-        if (window) {
-            setDomain(window.location.hostname);
-        }
         if (state?.success) {
             router.push(state.route)
         } else if (state?.success === false) {
