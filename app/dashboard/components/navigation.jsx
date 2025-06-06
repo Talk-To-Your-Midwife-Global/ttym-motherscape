@@ -10,7 +10,6 @@ import padLockIcon from "@/public/icons/dashlock.svg"
 import docIcon from "@/public/icons/green-log.svg"
 import inviteUserIcon from "@/public/icons/add-user.svg"
 import infoIcon from "@/public/icons/info-port.svg"
-
 import logoutIcon from "@/public/icons/logout.svg"
 import {useUserInfo} from "@/app/dashboard/lib/dataFetching";
 import {montserrat} from "@/app/_fonts";

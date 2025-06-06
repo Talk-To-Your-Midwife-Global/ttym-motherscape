@@ -11,7 +11,6 @@ export function ProfileImage(props) {
                     src={`https://api.dicebear.com/9.x/initials/svg?seed=${props.userProfileInfo?.user?.full_name}`}
                     alt={"avatar"}
                     className="rounded-full w-[80px] h-[50px]"/>
-            // <Image src={sarah} alt={"your profile image"} width={80} height={30}/>
         }
     </div>;
 }

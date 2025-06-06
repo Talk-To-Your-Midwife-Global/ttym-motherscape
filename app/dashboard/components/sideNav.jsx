@@ -1,7 +1,7 @@
 "use client"
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
-import {motion, sync, useCycle} from "framer-motion";
+import {motion} from "framer-motion";
 import {MenuToggle} from "@/app/dashboard/components/menuToggle";
 import {Navigation} from "@/app/dashboard/components/navigation";
 import {useDimensions} from "@/app/dashboard/components/use-dimensions";
