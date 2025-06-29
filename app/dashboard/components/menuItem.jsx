@@ -2,7 +2,7 @@ import * as React from "react";
 import {motion} from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import {montserrat} from "@/app/fonts";
+import {montserrat} from "@/app/_fonts";
 
 const variants = {
     open: {
@@ -22,7 +22,7 @@ const variants = {
 };
 
 
-export const MenuItem = ({i, clickAction = undefined, link = "", children}) => {
+export const MenuItem = ({i, clickAction = undefined, link, children}) => {
     return (
         <motion.li
             variants={variants}
@@ -36,7 +36,7 @@ export const MenuItem = ({i, clickAction = undefined, link = "", children}) => {
         >
             <Link href={link || '#'}>
                 {!children ? <section className={`flex .gap-3 relative`}>
-                        <div className={`overflow-hidden w-[35px] h-[40px] relative text-primaryColor`}>
+                        <div className={`overflow-hidden w-[45px] h-[40px] relative text-primaryColor`}>
                             <Image src={i.icon} alt={"some icon"} width={20} height={30}/>
                         </div>
                         <section className={`text-primaryText flex w-[200px]`}>

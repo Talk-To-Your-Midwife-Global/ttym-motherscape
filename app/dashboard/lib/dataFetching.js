@@ -1,14 +1,14 @@
 import useSWR from 'swr'
-import {fetchCycle, fetcher, fetchPregnancy, fetchUser} from "@/app/lib/functions";
-import {PUBLICHOSTNAME} from "@/app/config/main";
-import {error} from "next/dist/build/output/log";
+import {fetchCycle, fetcher, fetchPregnancy, fetchUser} from "@/app/_lib/functions";
+import {PUBLICHOSTNAME} from "@/app/_config/main";
+import {contentGqlFetcher} from "@/app/dashboard/actions/action";
 
 export function useUserInfo(accessToken) {
     const {
         data,
         error,
         isLoading
-    } = useSWR([`${PUBLICHOSTNAME}/auth/token/`, accessToken], ([url, accessToken]) => fetchUser(url, accessToken));
+    } = useSWR([`${PUBLICHOSTNAME}/user/`, accessToken], ([url, accessToken]) => fetchUser(url, accessToken));
     return {
         user: data,
         isLoading,
@@ -22,7 +22,7 @@ export function useCycleInfo(accessToken) {
         data,
         isLoading,
         error
-    } = useSWR([`${PUBLICHOSTNAME}/user/patient/details/`, accessToken], ([url, accessToken]) => fetchCycle(url, accessToken));
+    } = useSWR([`${PUBLICHOSTNAME}/user/menstrual/`, accessToken], ([url, accessToken]) => fetchCycle(url, accessToken));
     return {
         data,
         isLoading,
@@ -35,8 +35,8 @@ export function usePregnancyInfo(accessToken) {
         data,
         isLoading,
         error
-    } = useSWR([`${PUBLICHOSTNAME}/user/pregnancy`, accessToken], ([url, accessToken]) => fetchPregnancy(url, accessToken))
-
+    } = useSWR([`${PUBLICHOSTNAME}/user/pregnancy/`, accessToken], ([url, accessToken]) => fetchPregnancy(url, accessToken))
+    console.log('usePregnancyInfo', {data})
     return {
         pregnancyData: data,
         pregnancyError: error,

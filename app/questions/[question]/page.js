@@ -1,19 +1,20 @@
 import {QuestionParent} from "../components/menstrualcycletracker";
 import {PregnancyQuestionParent} from "@/app/questions/components/pregnancytracker";
-import {updateUser, updatePregnantUser} from "@/app/actions";
-import {returnTypeOfPatient} from "@/app/actions/auth";
+import {updateUser, updatePregnantUser} from "@/app/_actions";
+import {returnTypeOfPatient} from "@/app/_actions/auth";
 
 export default async function Page({params}) {
     const {question} = await params;
     const patientType = await returnTypeOfPatient();
+    console.log({patientType});
 
-    if (patientType === "menstrualcycletracker") {
+    if (patientType === "trackmyperiod") {
         return (
             <QuestionParent updateUser={updateUser} question={question}/>
         )
     }
 
-    if (patientType === "pregnancytracker") {
+    if (patientType === "trackmypregnancy") {
         return (
             <PregnancyQuestionParent updateUser={updatePregnantUser} question={question}/>
         )

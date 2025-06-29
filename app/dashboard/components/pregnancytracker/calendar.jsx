@@ -15,9 +15,9 @@ import lutealPhase from "@/public/images/luteal-phase.svg"
 import ovulationBlue from "@/public/images/ovulation-phase-blue.svg"
 import pregnancyPink from "@/public/images/pregnancy-pink.svg"
 import bro from "@/public/images/pregnant/bro.svg"
-import {montserrat} from "@/app/fonts";
+import {montserrat} from "@/app/_fonts";
 import Link from "next/link";
-import {PageFadeAnimator} from "@/app/components";
+import {PageFadeAnimator} from "@/app/_components";
 import {generateNumbers} from "@/app/dashboard/lib/functions";
 import pregnantExercise from "@/public/images/pregnant/exercise.svg";
 import pregnantWoman from "@/public/images/pregnant/pregnantwoman.svg";

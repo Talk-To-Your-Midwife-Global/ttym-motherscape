@@ -29,7 +29,7 @@ export default async function Page({params}) {
         'chat': <Chat accessToken={accessToken}/>,
         'community': <Community accessToken={accessToken}/>
     }
-    if (userType === "menstrualcycletracker") {
+    if (userType === "trackmyperiod") {
         return (
             <section>
                 {menstrualViews[routeName.route]}
@@ -37,7 +37,7 @@ export default async function Page({params}) {
         )
     }
 
-    if (userType === "pregnancytracker") {
+    if (userType === "trackmypregnancy") {
         return (
             <section>
                 {pregnancyViews[routeName.route]}
