@@ -64,24 +64,30 @@ export async function contentGqlFetcher(query, variables) {
 }
 
 
-export async function bookmarkPost(postId, accessToken) {
-    // TODO: Make this actually work
+export async function bookmarkPost(postId) {
+    const {access_token} = await getLocalCookies(['access_token']);
+
     const response = await fetch(`${PUBLICHOSTNAME}/user/bookmark/${postId}`, {
         headers: {
-            "Authorization": `Bearer ${accessToken}`
+            "Authorization": `Bearer ${access_token}`
         }
     })
     console.log(response)
     if (!response.ok) {
+        console.log({data});
         return {
             marked: false,
         }
     }
+    const data = await response.json();
+    console.log({data});
     return {
-        marked: true
+        marked: data.isBookmarked
     }
 }
 
+
+// todo: remove this
 export async function unbookmarkPost(postId, accessToken) {
     const response = await fetch(`${PUBLICHOSTNAME}/user/bookmark/${postId}`, {
         headers: {

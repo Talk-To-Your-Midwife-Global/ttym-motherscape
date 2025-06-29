@@ -3,9 +3,7 @@ import {convertDashDelimitedToSpacedString, convertSpacedStringToDashDelimited} 
 
 export default async function Page({params}) {
     const routeName = await params;
-    console.log(routeName.article);
-
-    const blogTitle = convertDashDelimitedToSpacedString(routeName.article);
+    const blogTitle = routeName.article;
 
     return (
         <section>
