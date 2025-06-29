@@ -1,12 +1,9 @@
 'use server'
 import {cookies} from "next/headers";
-import {PUBLICHOSTNAME} from "@/app/config/main";
+import {PUBLICHOSTNAME} from "@/app/_config/main";
+import {formatDate} from "@/app/_lib/functions";
+import {getLocalCookies} from "@/app/_lib/getCookies";
 
-/**
- * Send daily feeling
- * @param feeling
- * @returns {Promise<void>}
- */
 export async function sendCurrentFeeling(feeling) {
     // Call route that sends feeling
     return {
@@ -23,36 +20,74 @@ export async function setCookies(newCookies) {
     return true
 }
 
-/**
- * Bookmark a post for the user
- * @param postId
- * @param accessToken
- * @returns {Promise<{success: boolean}>}
- */
-export async function bookmarkPost(postId, accessToken) {
-    // TODO: Make this actually work
+export async function restartCycle() {
+    const today = formatDate(new Date());
+    const {access_token} = await getLocalCookies(['access_token']);
+    console.log(access_token);
+
+    const response = await fetch(`${PUBLICHOSTNAME}/user/menstrual/start/?period_start=${today}`, {
+        headers: {
+            'Authorization': `Bearer ${access_token}`
+        }
+    });
+
+    if (!response.ok) {
+        console.log(response);
+        console.log(response.statusText)
+    }
+
+    const data = await response.json();
+    console.log(data);
+
+}
+
+export async function contentGqlFetcher(query, variables) {
+    // todo: remove all the console logs
+    console.log(JSON.stringify({query, variables}));
+    const response = await fetch(`https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.CONTENTFUL_TOKEN}`
+            },
+            body: JSON.stringify({query, variables})
+        })
+
+    if (!response.ok) {
+        throw new Error(response.statusText)
+    }
+
+    const {data, errors} = await response.json();
+    console.log(data);
+    return data;
+}
+
+
+export async function bookmarkPost(postId) {
+    const {access_token} = await getLocalCookies(['access_token']);
+
     const response = await fetch(`${PUBLICHOSTNAME}/user/bookmark/${postId}`, {
         headers: {
-            "Authorization": `Bearer ${accessToken}`
+            "Authorization": `Bearer ${access_token}`
         }
     })
     console.log(response)
     if (!response.ok) {
+        console.log({data});
         return {
             marked: false,
         }
     }
+    const data = await response.json();
+    console.log({data});
     return {
-        marked: true
+        marked: data.isBookmarked
     }
 }
 
-/**
- * Un bookmark a post
- * @param postId
- * @param accessToken
- * @returns {Promise<{marked: boolean}>}
- */
+
+// todo: remove this
 export async function unbookmarkPost(postId, accessToken) {
     const response = await fetch(`${PUBLICHOSTNAME}/user/bookmark/${postId}`, {
         headers: {
@@ -97,6 +132,4 @@ export async function logLog(state, accessToken, userType) {
     return {
         data: res
     }
-
-
 }

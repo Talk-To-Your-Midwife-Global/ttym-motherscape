@@ -1,21 +1,21 @@
-import { inter } from "./fonts";
+import {inter} from "./_fonts";
 import "./globals.css";
 
 export const metadata = {
-  title: "TTYM Global | Talk To Your Midwife",
-  description: "Talk To Your Midwife",
+    title: "TTYM Global | Talk To Your Midwife",
+    description: "Talk To Your Midwife",
 };
 
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      {/* <UserProvider> */}
-          <body
+export default function RootLayout({children}) {
+    return (
+        <html lang="en">
+        {/* <UserProvider> */}
+        <body
             className={`${inter.className}`}
-            >
-            {children}
-          </body>
+        >
+        {children}
+        </body>
         {/* </UserProvider> */}
-    </html>
-  );
+        </html>
+    );
 }

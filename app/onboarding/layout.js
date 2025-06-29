@@ -1,6 +1,6 @@
-import { PageSlideAnimator } from "../components";
+import {PageSlideAnimator} from "../_components";
 
-export default function OnboardingLayout({children}){
+export default function OnboardingLayout({children}) {
     return (
         <PageSlideAnimator>
             {children}

@@ -1,10 +1,11 @@
 "use client"
 import {useEffect, useState} from "react"
+import {useTransition} from "react";
 import {useRouter} from "next/navigation";
-import {inter} from "@/app/fonts";
+import {inter} from "@/app/_fonts";
 import Link from "next/link"
-import {PageSlideAnimator} from "@/app/components";
-import {IconButton} from "@/app/components";
+import {PageSlideAnimator} from "@/app/_components";
+import {IconButton} from "@/app/_components";
 
 function QuestionNav({url, icon = "lucide--chevron-left", last = false,}) {
     return (
@@ -43,6 +44,7 @@ function QuestionHead({text}) {
 export function QuestionParent({question, updateUser}) {
     const router = useRouter()
     const [answers, setAnswers] = useState({})
+    const [isPending, startTransition] = useTransition();
 
 
     const handleQuestionAnswers = (questionAnswers) => {
@@ -56,11 +58,15 @@ export function QuestionParent({question, updateUser}) {
         if (next <= 5) {
             setTimeout(() => router.push(`/questions/${next}`), 200)
         } else {
-            const result = updateUser(JSON.parse(localStorage.getItem("answers"))).then(res => {
-                if (res.success === true) {
-                    setTimeout(() => router.push(`/dashboard`), 200)
+            startTransition(async () => {
+                const data = JSON.parse(localStorage.getItem("answers"))
+                console.log({data})
+                const res = await updateUser(data);
+                console.log({res});
+                if (res.success) {
+                    setTimeout(() => router.push(`/dashboard`), 100)
                 } else {
-                    setTimeout(() => router.push(`/questions`), 200)
+                    setTimeout(() => router.push(`/questions/`), 100)
                 }
             })
         }
@@ -77,7 +83,7 @@ export function QuestionParent({question, updateUser}) {
 
     return (
         <section>
-            <QuestionNav last={question === 6 ? true : false}
+            <QuestionNav last={question === 6}
                          url={question > 1 ? `/questions/${question - 1}` : '/questions/'}/>
             <ProgressIndicator target={question}/>
             <PageSlideAnimator>
@@ -323,16 +329,12 @@ function NotificationPreferences({handleAnswers, submit, state}) {
 
     const handleChange = (event) => {
         const {name, value} = event.target
-
         if (name === 'notificationPreference') {
             setDisableButton(false)
         } else {
             setDisableButton(true)
         }
-
         handleAnswers({...state, [name]: value})
-
-        submit()
     }
     return (
         <section className={`${inter.className} h-svh overflow-hidden`}>
@@ -363,8 +365,7 @@ function NotificationPreferences({handleAnswers, submit, state}) {
                 </div>
             </form>
             <div className="relative -bottom-[35%] w-full flex justify-center">
-
-                <IconButton href="/dashboard" text="Continue" icon="iconify lucide--arrow-right" disabled={disableBtn}/>
+                <IconButton onClick={submit} text="Continue" icon="iconify lucide--arrow-right" disabled={disableBtn}/>
             </div>
         </section>
     )
