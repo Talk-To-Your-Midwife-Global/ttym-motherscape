@@ -39,7 +39,7 @@ export function Community({accessToken}) {
                     <h1 className={`text-xl`}>My Feed</h1>
                 </header>
                 {/*    Article Parent goes here*/}
-                <Articl.eParent/>
+                <ArticleParent/>
             </section>
 
             <section className={"overflow-x-hidden h-[260px] w-full"}>
