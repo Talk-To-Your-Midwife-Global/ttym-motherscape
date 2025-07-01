@@ -21,7 +21,7 @@ export function Chat({accessToken, socketUrl}) {
 
     const handleIsAssigned = (data) => {
         console.log('handleAssigned', data);
-        if (data.length > 0) {
+        if (data?.length > 0) {
             localStorage.setItem("chatDisplay", JSON.stringify(true));
             setIsPaired(prevState => ({...prevState, pending: true, status: true}));
             setChatList(prevList => data.filter(person => person.person.id !== prevList.includes(person.person.id)));
@@ -32,7 +32,7 @@ export function Chat({accessToken, socketUrl}) {
 
     const handlePendingAssignment = (data) => {
         console.log('pending assignment', data[0]?.status);
-        if (data[0].length > 0 && data[0]?.status === "pending-them") {
+        if (data[0]?.length > 0 && data[0]?.status === "pending-them") {
             localStorage.setItem("chatDisplay", JSON.stringify(false));
             setIsPaired(({...isPaired, pending: true}));
         } else {
