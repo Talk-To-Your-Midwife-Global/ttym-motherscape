@@ -13,20 +13,21 @@ export default async function Page({params}) {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('access_token')?.value;
     const userType = cookieStore.get('ttym-user-type')?.value;
+    const socketUrl = process.env.WS_URL;
 
     const menstrualViews = {
         'me': <MenstrualHome accessToken={accessToken}/>,
         'calendar': <CalendarMain accessToken={accessToken}/>,
         'logs': <Logs accessToken={accessToken}/>,
         'community': <Community accessToken={accessToken}/>,
-        'chat': <Chat accessToken={accessToken}/>
+        'chat': <Chat accessToken={accessToken} socketURL={socketUrl}/>
     }
 
     const pregnancyViews = {
         'me': <PregnancyHome accessToken={accessToken}/>,
         'calendar': <PregnantCalendarMain accessToken={accessToken}/>,
         'logs': <Logs accessToken={accessToken}/>,
-        'chat': <Chat accessToken={accessToken}/>,
+        'chat': <Chat accessToken={accessToken} socketUrl={socketUrl}/>,
         'community': <Community accessToken={accessToken}/>
     }
     if (userType === "trackmyperiod") {

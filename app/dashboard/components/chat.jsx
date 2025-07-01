@@ -8,7 +8,7 @@ import messageImage from "@/public/images/message-undraw.svg"
 
 // import voice from "@/public/icons/voice.svg"
 
-export function Chat({accessToken}) {
+export function Chat({accessToken, socketUrl}) {
     const [isPaired, setIsPaired] = useState({status: false, pending: false});
     const [chatList, setChatList] = useState([]);
     const chatDisplay = JSON.parse(localStorage.getItem("chatDisplay"));
@@ -17,7 +17,7 @@ export function Chat({accessToken}) {
         isConnected,
         onEvent,
         sendMessage,
-    } = useWebSocket(`wss://${process.env.WS_URL}/ws/`, accessToken)
+    } = useWebSocket(`wss://${socketUrl}/ws/`, accessToken)
 
     const handleIsAssigned = (data) => {
         console.log('handleAssigned', data);
