@@ -1,11 +1,11 @@
-import {cookies} from "next/headers";
-import {CalendarMain} from "@/app/dashboard/components/menstrualcycletracker/calendar";
-import {Logs} from "@/app/dashboard/components/logs";
-import {Community} from "@/app/dashboard/components/community";
-import {Chat} from "@/app/dashboard/components/chat";
-import {MenstrualHome} from "@/app/dashboard/components/menstrualcycletracker/home.jsx";
-import {PregnancyHome} from "@/app/dashboard/components/pregnancytracker/home";
-import {PregnantCalendarMain} from "@/app/dashboard/components/pregnancytracker/calendar";
+import { Chat } from "@/app/dashboard/components/chat";
+import { Community } from "@/app/dashboard/components/community";
+import { Logs } from "@/app/dashboard/components/logs";
+import { CalendarMain } from "@/app/dashboard/components/menstrualcycletracker/calendar";
+import { MenstrualHome } from "@/app/dashboard/components/menstrualcycletracker/home.jsx";
+import { PregnantCalendarMain } from "@/app/dashboard/components/pregnancytracker/calendar";
+import { PregnancyHome } from "@/app/dashboard/components/pregnancytracker/home";
+import { cookies } from "next/headers";
 
 
 export default async function Page({params}) {
@@ -13,7 +13,7 @@ export default async function Page({params}) {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('access_token')?.value;
     const userType = cookieStore.get('ttym-user-type')?.value;
-    const socketUrl = process.env.WS_URL;
+    const socketUrl = process.env.NEXT_PUBLIC_WS_URL;
 
     const menstrualViews = {
         'me': <MenstrualHome accessToken={accessToken}/>,

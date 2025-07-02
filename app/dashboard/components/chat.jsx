@@ -8,16 +8,17 @@ import messageImage from "@/public/images/message-undraw.svg"
 
 // import voice from "@/public/icons/voice.svg"
 
-export function Chat({accessToken, socketUrl}) {
+export function Chat({accessToken}) {
     const [isPaired, setIsPaired] = useState({status: false, pending: false});
     const [chatList, setChatList] = useState([]);
     const chatDisplay = JSON.parse(localStorage.getItem("chatDisplay"));
+    
 
     const {
         isConnected,
         onEvent,
         sendMessage,
-    } = useWebSocket(`wss://${socketUrl}/ws/`, accessToken)
+    } = useWebSocket(`wss://${process.env.NEXT_PUBLIC_WS_URL}/ws/`, accessToken)
 
     const handleIsAssigned = (data) => {
         console.log('handleAssigned', data);
@@ -27,6 +28,7 @@ export function Chat({accessToken, socketUrl}) {
             setChatList(prevList => data.filter(person => person.person.id !== prevList.includes(person.person.id)));
         } else {
             setIsPaired({...isPaired, status: false, pending: true})
+            requestMidwife();
         }
     }
 
