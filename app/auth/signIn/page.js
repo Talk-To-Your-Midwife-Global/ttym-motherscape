@@ -29,16 +29,7 @@ export default function Page() {
     return (
         <section>
             <header>
-                <nav className="my-5">
-                    {/*TODO:change this route*/}
-                    <Link href={`/onboarding/${userRoute}/3`} className="w-12 h-12 rounded-full flex justify-center
-                    items-center">
-                        <span className="iconify material-symbols-light--chevron-left-rounded font-medium text-3xl
-                        text-[#000]"></span>
-                    </Link>
-                </nav>
-
-                <section className="flex flex-col gap-4 items-center mb-10">
+                <section className="flex flex-col gap-4 items-center my-10">
                     <div
                         className="bg-primaryColor rounded-full w-[100px] h-[100px] flex items-center justify-center p-2">
                         <Image src={appLogo} alt="obaa+logo"/>
