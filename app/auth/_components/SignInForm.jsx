@@ -2,10 +2,10 @@
 import {useState} from "react";
 import Link from "next/link";
 import {Button} from "@/app/_components";
-import Image from "next/image";
-import facebook from "@/public/images/facebook.svg";
-import google from "@/public/images/google.svg";
-import apple from "@/public/images/apple.svg";
+// import Image from "next/image";
+// import facebook from "@/public/images/facebook.svg";
+// import google from "@/public/images/google.svg";
+// import apple from "@/public/images/apple.svg";
 import {HelpCenterLinks} from "@/app/auth/_components/index";
 
 export function SignInForm({state, action}) {
@@ -45,9 +45,6 @@ export function SignInForm({state, action}) {
                 </div>
                 {state?.errors?.email && <p className="text-red-500 text-sm">{state.errors.email}</p>}
                 <div className="flex justify-end gap-4 space-between">
-                    <p className="text-sm font-medium text-gray-500">
-                        <Link href="/auth/register/">Don&apos;t have an account?</Link>
-                    </p>
                     <p className="text-red-600 text-sm text-right">
                         <Link href="/auth/forgotPassword" className="font-medium">
                             Forgot Password?
@@ -56,7 +53,7 @@ export function SignInForm({state, action}) {
                 </div>
             </div>
 
-            <div className="flex flex-col justify-center items-center my-10">
+            <div className="flex flex-col justify-center items-center mt-10">
                 <Button text="Sign In"/>
             </div>
             {/*<div className="relative flex flex-col items-center justify-center">*/}
