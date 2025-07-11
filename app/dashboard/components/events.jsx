@@ -35,7 +35,7 @@ export function Events({accessToken}) {
                             <div key={event?.eventName}
                                  className="flex justify-between overflow-hidden gap-3 bg-white carousel-item rounded-2xl px-5 py-4 h-[250px]
                              flex-shrink-0 w-52">
-                                <a target="_blank" noopener href={event?.onlineLink}
+                                <a target="_blank" rel={'noopener'} href={event?.onlineLink}
                                    className=".w-[inherit] .h-[inherit] border-2 w-[300px]">
                                     {/*<Image src={event?.eventFlyer?.url} width={300} height={200} alt={`event`}/>*/}
                                     {/*<div className="absolute h-[inherit]">*/}
