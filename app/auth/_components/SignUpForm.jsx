@@ -101,7 +101,7 @@ export function SignUpForm({state, action, isPending}) {
                 <div
                     className="bg-white border-2 w-full h-[42px] flex gap-2 items-center rounded-xl pl-[15px] pr-[5px]">
                     {/*<span className="iconify lucide--mail font-medium text-[#999999]"></span>*/}
-                    <input type="date" name="dob" id="dob" placeholder="linda@framcreative.com"
+                    <input type="date" name="dob" id="dob" placeholder="yyyy-mm-dd"
                            className="flex-1 outline-none bg-transparent text-mainText"
                            value={state?.dob && state.dob}/>
                 </div>
