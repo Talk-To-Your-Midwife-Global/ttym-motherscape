@@ -169,15 +169,15 @@ export function SignUpForm({state, action, isPending}) {
             <div className="flex flex-col justify-center items-center">
                 <Button disabled={!enableButton} text="Create Account"/>
             </div>
-            <div className="relative flex flex-col items-center justify-center">
-                <div className="h-[1px] w-full bg-[#9C979759] top-[10px] absolute "></div>
-                <p className="text-center bg-background z-10 px-5 font-medium">Or Sign up with</p>
-            </div>
-            <section className="w-3/4 flex justify-between items-center place-self-center">
-                <Image src={facebook} alt="facebook logo"/>
-                <Image src={google} alt="google logo"/>
-                <Image src={apple} alt="apple logo"/>
-            </section>
+            {/*<div className="relative flex flex-col items-center justify-center">*/}
+            {/*    <div className="h-[1px] w-full bg-[#9C979759] top-[10px] absolute "></div>*/}
+            {/*    <p className="text-center bg-background z-10 px-5 font-medium">Or Sign up with</p>*/}
+            {/*</div>*/}
+            {/*<section className="w-3/4 flex justify-between items-center place-self-center">*/}
+            {/*    <Image src={facebook} alt="facebook logo"/>*/}
+            {/*    <Image src={google} alt="google logo"/>*/}
+            {/*    <Image src={apple} alt="apple logo"/>*/}
+            {/*</section>*/}
             <HelpCenterLinks/>
         </form>
     )
