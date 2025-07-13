@@ -1,9 +1,14 @@
 'use server'
 // import {SignJWT, JWTVer} from 'jose'
-import {SignUpFormSchema, SignInFormSchema, ForgotPasswordFormSchema} from "../auth/lib/definitions";
+import {
+    SignUpFormSchema,
+    SignInFormSchema,
+    ForgotPasswordFormSchema,
+    PasswordResetSchema
+} from "../auth/lib/definitions";
 import {cookies} from "next/headers";
 import {HOSTNAME_URI} from "@/app/_config/main";
-import {matchUserStatus} from "@/app/_lib/functions";
+import {matchUserStatus, putColonBack} from "@/app/_lib/functions";
 import {getLocalCookies} from "@/app/_lib/getCookies";
 
 
@@ -293,36 +298,42 @@ export async function initiatePasswordChange(state, formData) {
  * @returns {Promise<{success: boolean}|{errors: {email?: string[]}}>}
  */
 export async function changePassword(state, formData) {
-    const validateField = SignUpFormSchema.safeParse({
+    const validateField = PasswordResetSchema.safeParse({
         password: formData.get('password'),
     })
 
     if (!validateField.success) {
         return {
             fieldErrors: validateField.error.flatten().fieldErrors,
+            success: undefined
         }
     }
 
+    console.log({HOSTNAME_URI, validateField, key: formData.get('key')})
+    const requestBody = JSON.stringify({
+        password: formData.get('password'),
+        token: putColonBack(formData.get('key'))
+    })
+
+    console.log(requestBody);
     const res = await fetch(`${HOSTNAME_URI}/auth/reset-password/confirm/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            password: formData.get('password'),
-            token: formData.get('key')
-        })
+        body: requestBody
     })
 
     if (!res.ok) {
-        console.log(res);
+        console.log({res});
         console.log(res.statusText);
-        throw new Error('Error bro');
+        return {
+            success: false
+        }
     }
     const response = await res.json();
     console.log(response);
 
-    // TODO: You can remove this but make sure it is part of the return statement when the real thing is done
     return {
         success: true
     }
