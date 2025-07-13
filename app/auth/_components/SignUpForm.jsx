@@ -6,14 +6,18 @@ import {Button} from "@/app/_components";
 // import google from "@/public/images/google.svg";
 // import apple from "@/public/images/apple.svg";
 import {HelpCenterLinks} from "@/app/auth/_components/index";
+import {DayPicker} from "react-day-picker";
+import "react-day-picker/style.css";
 
 export function SignUpForm({state, action, isPending}) {
-    const [hidePassword, setHidePassword] = useState(true)
+    const [hidePassword, setHidePassword] = useState(true);
+    const [showCalendar, setShowCalendar] = useState(false);
     const [pass, setPass] = useState('')
     const [passCorrect, setPassCorrect] = useState(false)
     const [passErr, setPassErr] = useState('');
     const [agreement, setAgreement] = useState(false)
     const [enableButton, setEnableButton] = useState(false)
+    const [birthdate, setBirthdate] = useState(new Date(new Date().getFullYear() - 13, 0, 1))
 
     const handlePasswordView = (event) => {
         event.preventDefault();
@@ -38,6 +42,19 @@ export function SignUpForm({state, action, isPending}) {
             setPassCorrect(false)
             setPassErr("Passwords do not match")
             setEnableButton(false)
+        }
+    }
+
+    const handleToggleCalendar = () => {
+        setShowCalendar(!showCalendar);
+    }
+
+    const handleBirthdateChange = (date) => {
+        // Because passing it directly is causing issues
+        const formattedDate = date.toISOString().split('T')[0];
+        if (date) {
+            setShowCalendar(false)
+            setBirthdate(date); // the raw date was passed because the formatted date causes an error
         }
     }
 
@@ -101,10 +118,28 @@ export function SignUpForm({state, action, isPending}) {
                 <div
                     className="bg-white border-2 w-full h-[42px] flex gap-2 items-center rounded-xl pl-[15px] pr-[5px]">
                     {/*<span className="iconify lucide--mail font-medium text-[#999999]"></span>*/}
-                    <input type="date" name="dob" id="dob" placeholder="yyyy-mm-dd"
+                    <input type="text" name="dob" id="dob" placeholder="yyyy-mm-dd"
                            className="flex-1 outline-none bg-transparent text-mainText"
-                           value={state?.dob && state.dob}/>
+                           onClick={handleToggleCalendar}
+                           onFocus={handleToggleCalendar}
+                           readOnly={true}
+                           value={state?.dob && state.dob || birthdate.toISOString().split('T')[0]}/>
                 </div>
+                {showCalendar &&
+                    <div>
+                        <DayPicker
+                            animate
+                            captionLayout="dropdown"
+                            mode="single"
+                            startMonth={new Date(new Date().getFullYear() - 30, new Date().getMonth())}
+                            endMonth={new Date(new Date().getFullYear() - 13, new Date().getMonth())}
+                            selected={birthdate}
+                            onSelect={handleBirthdateChange}
+                            timeZone="UTC"
+
+                        />
+                    </div>
+                }
                 {state?.fieldErrors?.dob && <p className="text-red-500 text-sm">{state.fieldErrors.dob}</p>}
             </div>
 
