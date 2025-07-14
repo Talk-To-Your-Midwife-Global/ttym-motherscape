@@ -8,6 +8,8 @@ import {Button} from "@/app/_components";
 import {HelpCenterLinks} from "@/app/auth/_components/index";
 import {DayPicker} from "react-day-picker";
 import "react-day-picker/style.css";
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
 
 export function SignUpForm({state, action, isPending}) {
     const [hidePassword, setHidePassword] = useState(true);
@@ -17,7 +19,10 @@ export function SignUpForm({state, action, isPending}) {
     const [passErr, setPassErr] = useState('');
     const [agreement, setAgreement] = useState(false)
     const [enableButton, setEnableButton] = useState(false)
+
+    // state for components using special libraries
     const [birthdate, setBirthdate] = useState(new Date(new Date().getFullYear() - 13, 0, 1))
+    const [phoneNumber, setPhoneNumber] = useState('');
 
     const handlePasswordView = (event) => {
         event.preventDefault();
@@ -99,17 +104,21 @@ export function SignUpForm({state, action, isPending}) {
 
             <div>
                 <label htmlFor="phone" defaultValue="" className="font-medium text-mainText">Phone number</label>
-                <div
-                    className="bg-white border-2 w-full h-[42px] flex gap-2 items-center rounded-xl pl-[15px] pr-[5px]">
-                    {/* <span className="iconify lucide--mail font-medium text-[#999999]"></span> */}
-                    {/*<select className="text-sm outline-none">*/}
-                    {/*    <option value="GHA">GHA</option>*/}
-                    {/*    <option value="NGN">NGN</option>*/}
-                    {/*</select>*/}
-                    <input type="text" name="phone" id="phone" placeholder="eg. +233 28 498 238"
-                           className="flex-1 outline-none bg-transparent text-mainText"
-                           value={state?.phone && state.phone}/>
-                </div>
+                {/*This input is hidden but its value is what is sent to the backend*/}
+                <input type="text" name="phone" id="phone"
+                       placeholder="eg. +233 28 498 23844"
+                       className="flex-1 hidden outline-none bg-transparent text-mainText"
+                       value={phoneNumber} readOnly={true}/>
+
+                {/*For the looks and formatting features*/}
+                <PhoneInput
+                    defaultCountry='GH'
+                    value={phoneNumber}
+                    onChange={setPhoneNumber}
+                    placeholder={"eg. +233 28 498 23844 "}
+                    name="phones" // all unknown props will be passed to the input elem itself
+                    className='custom-outline placeholder:text-[#999999] text-black bg-white border-2 w-full h-[42px] flex gap-2 items-center rounded-xl pl-[15px] pr-[5px]'
+                />
                 {state?.fieldErrors?.phone && <p className="text-red-500 text-sm">{state.fieldErrors.phone}</p>}
             </div>
 
@@ -117,7 +126,6 @@ export function SignUpForm({state, action, isPending}) {
                 <label htmlFor="dob" className="font-medium text-mainText">Date of Birth</label>
                 <div
                     className="bg-white border-2 w-full h-[42px] flex gap-2 items-center rounded-xl pl-[15px] pr-[5px]">
-                    {/*<span className="iconify lucide--mail font-medium text-[#999999]"></span>*/}
                     <input type="text" name="dob" id="dob" placeholder="yyyy-mm-dd"
                            className="flex-1 outline-none bg-transparent text-mainText"
                            onClick={handleToggleCalendar}

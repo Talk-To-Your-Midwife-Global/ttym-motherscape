@@ -24,6 +24,16 @@
     }
 }
 
+@layer utilities {
+    .custom-outline *:focus:not(:focus-visible) {
+        @apply outline-none;
+    }
+
+    .custom-outline *:focus-visible {
+        @apply outline outline-none outline-2 outline-offset-2 text-black;
+    }
+}
+
 
 /* @media (prefers-color-scheme: dark) {
   :root {

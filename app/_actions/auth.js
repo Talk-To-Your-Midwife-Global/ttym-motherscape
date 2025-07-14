@@ -58,13 +58,15 @@ export async function returnTypeOfPatient() {
  * @returns
  */
 export async function signup(state, formData) {
-    const validatedFields = SignUpFormSchema.safeParse({
+    const fields = {
         name: formData.get('name'),
         email: formData.get('email'),
         phone: formData.get('phone'),
         password: formData.get('password'),
         date_of_birth: formData.get('dob')
-    })
+    }
+    console.log({fields});
+    const validatedFields = SignUpFormSchema.safeParse(fields)
 
     // return early if there is an error
     if (!validatedFields.success) {

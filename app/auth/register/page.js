@@ -42,8 +42,8 @@ export default function Page() {
                 <section className="flex flex-col gap-4 items-center mt-8 mb-10">
                     <h2 className="text-mainText text-xl font-semibold">Create an Account</h2>
                     <p className="text-subText font-medium">Sign up to be able to access your page</p>
-                    {error?.length > 0 ? error.map((err, index) => <p key={index}
-                                                                      className={`text-red-500`}>{err}</p>) : ""}
+                    {/*{error?.length > 0 ? error.map((err, index) => <p key={index}*/}
+                    {/*                                                  className={`text-red-500`}>{err}</p>) : ""}*/}
                 </section>
             </header>
             <section className="flex  mx-[30px]">
