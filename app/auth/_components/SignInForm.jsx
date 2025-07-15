@@ -2,10 +2,10 @@
 import {useState} from "react";
 import Link from "next/link";
 import {Button} from "@/app/_components";
-import Image from "next/image";
-import facebook from "@/public/images/facebook.svg";
-import google from "@/public/images/google.svg";
-import apple from "@/public/images/apple.svg";
+// import Image from "next/image";
+// import facebook from "@/public/images/facebook.svg";
+// import google from "@/public/images/google.svg";
+// import apple from "@/public/images/apple.svg";
 import {HelpCenterLinks} from "@/app/auth/_components/index";
 
 export function SignInForm({state, action}) {
@@ -45,9 +45,6 @@ export function SignInForm({state, action}) {
                 </div>
                 {state?.errors?.email && <p className="text-red-500 text-sm">{state.errors.email}</p>}
                 <div className="flex justify-end gap-4 space-between">
-                    <p className="text-sm font-medium text-gray-500">
-                        <Link href="/auth/register/">Don&apos;t have an account?</Link>
-                    </p>
                     <p className="text-red-600 text-sm text-right">
                         <Link href="/auth/forgotPassword" className="font-medium">
                             Forgot Password?
@@ -56,18 +53,18 @@ export function SignInForm({state, action}) {
                 </div>
             </div>
 
-            <div className="flex flex-col justify-center items-center my-10">
+            <div className="flex flex-col justify-center items-center mt-10">
                 <Button text="Sign In"/>
             </div>
-            <div className="relative flex flex-col items-center justify-center">
-                <div className="h-[1px] w-full bg-[#9C979759] top-[10px] absolute "></div>
-                <p className="text-center bg-background z-10 px-5 font-medium">Or Sign in with</p>
-            </div>
-            <section className="w-3/4 flex justify-between items-center place-self-center">
-                <Image src={facebook} alt="facebook logo"/>
-                <Image src={google} alt="google logo"/>
-                <Image src={apple} alt="apple logo"/>
-            </section>
+            {/*<div className="relative flex flex-col items-center justify-center">*/}
+            {/*    <div className="h-[1px] w-full bg-[#9C979759] top-[10px] absolute "></div>*/}
+            {/*    <p className="text-center bg-background z-10 px-5 font-medium">Or Sign in with</p>*/}
+            {/*</div>*/}
+            {/*<section className="w-3/4 flex justify-between items-center place-self-center">*/}
+            {/*    <Image src={facebook} alt="facebook logo"/>*/}
+            {/*    <Image src={google} alt="google logo"/>*/}
+            {/*    <Image src={apple} alt="apple logo"/>*/}
+            {/*</section>*/}
             <HelpCenterLinks signIn={false}/>
         </form>
     )

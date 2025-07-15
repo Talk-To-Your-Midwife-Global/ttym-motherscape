@@ -6,6 +6,8 @@ import {inter} from "@/app/_fonts";
 import Link from "next/link"
 import {PageSlideAnimator} from "@/app/_components";
 import {IconButton} from "@/app/_components";
+import {DayPicker} from "react-day-picker";
+import "react-day-picker/style.css";
 
 function QuestionNav({url, icon = "lucide--chevron-left", last = false,}) {
     return (
@@ -158,7 +160,7 @@ function BasicCycleInformation({handleAnswers, submit, state}) {
             </form>
             <div className="relative -bottom-[25%] w-full flex justify-center">
                 <IconButton text="Continue" onClick={handleSubmit} icon="iconify lucide--arrow-right"
-                            disabled={disableBtn}/>
+                            disabled={disableBtn} loadingText={'Getting to know you a little better 🔍🩷'}/>
             </div>
         </section>
     )
@@ -211,7 +213,9 @@ function CycleRegularity({handleAnswers, submit, state}) {
                 </div>
             </form>
             <div className="relative -bottom-[25%] w-full flex justify-center">
-                <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn}/>
+                <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn}
+                            loadingText={'Growing insights,one question at a time🌸'}
+                />
             </div>
         </section>
     )
@@ -219,17 +223,17 @@ function CycleRegularity({handleAnswers, submit, state}) {
 
 function LastPeriod({handleAnswers, submit, state}) {
     const [disableBtn, setDisableButton] = useState(true)
+    const [selected, setSelected] = useState(new Date());
 
-    const handleChange = (event) => {
-        const {name, value} = event.target
-
-        if (name === 'periodStart') {
-            setDisableButton(false)
-        } else {
-            setDisableButton(true)
+    const handleChange = (date) => {
+        // Because passing it directly is causing issues
+        const formattedDate = date.toISOString().split('T')[0];
+        if (date) {
+            setSelected(date); // the raw date was passed because the formatted date causes an error
+            setDisableButton(false);
         }
 
-        handleAnswers({...state, [name]: value})
+        handleAnswers({...state, periodStart: formattedDate})
     }
 
     return (
@@ -238,11 +242,27 @@ function LastPeriod({handleAnswers, submit, state}) {
             <form className="px-[20px] text-primaryText">
                 <div className="flex flex-col gap-2 mb-5">
                     <label htmlFor="last-period" className="font-medium">When did your last period start?</label>
-                    <input type="date" name="periodStart" id="last-period" onChange={handleChange}/>
+                    <input type="text" value={selected?.toLocaleDateString('en-US')} name="periodStart" id="last-period"
+                           disabled={true}/>
+                </div>
+                <div className="flex items-center .justify-center ">
+                    <DayPicker
+                        animate
+                        captionLayout="dropdown"
+                        mode="single"
+                        startMonth={new Date(new Date().getFullYear(), new Date().getMonth() - 1)}
+                        endMonth={new Date(new Date().getFullYear(), new Date().getMonth())}
+                        selected={selected}
+                        onSelect={handleChange}
+                        timeZone="UTC"
+
+                    />
                 </div>
             </form>
-            <div className="relative -bottom-[45%] w-full flex justify-center">
-                <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn}/>
+            <div className="relative .-bottom-[45%] w-full flex justify-center z-[50]">
+                <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn}
+                            loadingText={'Your body is unique,we’re listening👂💖'}
+                />
             </div>
         </section>
     )
@@ -318,7 +338,9 @@ function SymptomsTracking({handleAnswers, submit, state}) {
             </form>
             <div className="my-[25%] w-full flex justify-center">
                 <IconButton text="Continue" onClick={handleSubmit} icon="iconify lucide--arrow-right"
-                            disabled={disableBtn}/>
+                            disabled={disableBtn}
+                            loadingText={'One step closer to syncing with your cycle 👏🚀'}
+                />
             </div>
         </section>
     )
@@ -365,7 +387,8 @@ function NotificationPreferences({handleAnswers, submit, state}) {
                 </div>
             </form>
             <div className="relative -bottom-[35%] w-full flex justify-center">
-                <IconButton onClick={submit} text="Continue" icon="iconify lucide--arrow-right" disabled={disableBtn}/>
+                <IconButton onClick={submit} text="Continue" icon="iconify lucide--arrow-right" disabled={disableBtn}
+                            loadingText={'Your rhythm, your rules. Let’s keep you in sync ✨'}/>
             </div>
         </section>
     )

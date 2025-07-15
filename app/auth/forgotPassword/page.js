@@ -3,14 +3,14 @@ import {useActionState, useState} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {AuthNav} from "@/app/auth/_components";
-import {changePassword} from "@/app/_actions/auth";
+import {changePassword, initiatePasswordChange} from "@/app/_actions/auth";
 import {montserrat} from "@/app/_fonts";
 import {Button, PageFadeAnimator} from "@/app/_components";
 import messageIcon from "../../../public/icons/message.svg"
 import modalImage from "../../../public/images/undraw_secure_login.png"
 
 export default function Page() {
-    const [state, action] = useActionState(changePassword, undefined)
+    const [state, action] = useActionState(initiatePasswordChange, undefined)
 
     return (
         <section>

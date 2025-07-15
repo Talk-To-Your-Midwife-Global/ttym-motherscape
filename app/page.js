@@ -11,7 +11,7 @@ export default function Page() {
     useEffect(() => {
         const timer = setTimeout(() => {
             router.push('/auth/signIn');
-        }, 3000);
+        }, 400);
 
         return () => clearTimeout(timer);
     }, [])

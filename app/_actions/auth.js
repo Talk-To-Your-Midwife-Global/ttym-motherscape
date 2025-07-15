@@ -1,9 +1,14 @@
 'use server'
 // import {SignJWT, JWTVer} from 'jose'
-import {SignUpFormSchema, SignInFormSchema, ForgotPasswordFormSchema} from "../auth/lib/definitions";
+import {
+    SignUpFormSchema,
+    SignInFormSchema,
+    ForgotPasswordFormSchema,
+    PasswordResetSchema
+} from "../auth/lib/definitions";
 import {cookies} from "next/headers";
 import {HOSTNAME_URI} from "@/app/_config/main";
-import {matchUserStatus} from "@/app/_lib/functions";
+import {matchUserStatus, putColonBack} from "@/app/_lib/functions";
 import {getLocalCookies} from "@/app/_lib/getCookies";
 
 
@@ -53,13 +58,15 @@ export async function returnTypeOfPatient() {
  * @returns
  */
 export async function signup(state, formData) {
-    const validatedFields = SignUpFormSchema.safeParse({
+    const fields = {
         name: formData.get('name'),
         email: formData.get('email'),
         phone: formData.get('phone'),
         password: formData.get('password'),
         date_of_birth: formData.get('dob')
-    })
+    }
+    console.log({fields});
+    const validatedFields = SignUpFormSchema.safeParse(fields)
 
     // return early if there is an error
     if (!validatedFields.success) {
@@ -199,7 +206,8 @@ export async function logout() {
     const refreshToken = cookieStore.get('refresh_token')?.value;
 
     const items = ['access_token', 'refresh_token', 'last_login', 'ttym-user-type']
-
+    console.log(accessToken);
+    console.log(refreshToken);
     try {
         const response = await fetch(`${HOSTNAME_URI}/auth/logout/`, {
             method: 'POST',
@@ -208,7 +216,7 @@ export async function logout() {
                 'Authorization': `Bearer ${accessToken}`
             },
             body: JSON.stringify({
-                refresh_token: refreshToken,
+                refresh: refreshToken,
             })
         })
 
@@ -219,11 +227,11 @@ export async function logout() {
             for (const key in result) {
                 errors.push(result[key][0])
             }
-            console.log({
-                    success: false,
-                    error: errors
-                }
-            )
+            return {
+                success: false,
+                error: errors
+            }
+
         }
         console.log('log out success')
         for (const item of items) {
@@ -244,8 +252,8 @@ export async function logout() {
 
 
 export async function initiatePasswordChange(state, formData) {
-    const {access_token} = await getLocalCookies('access_token');
-    console.log({access_token});
+    // const {access_token} = await getLocalCookies('access_token');
+    // console.log({access_token});
     const validatedField = ForgotPasswordFormSchema.safeParse({
         email: formData.get('email'),
     })
@@ -261,7 +269,6 @@ export async function initiatePasswordChange(state, formData) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${access_token}`
         },
         body: JSON.stringify({email: formData.get('email')})
     })
@@ -293,39 +300,43 @@ export async function initiatePasswordChange(state, formData) {
  * @returns {Promise<{success: boolean}|{errors: {email?: string[]}}>}
  */
 export async function changePassword(state, formData) {
-    const validateField = SignUpFormSchema.safeParse({
+    const validateField = PasswordResetSchema.safeParse({
         password: formData.get('password'),
     })
 
     if (!validateField.success) {
         return {
             fieldErrors: validateField.error.flatten().fieldErrors,
+            success: undefined
         }
     }
 
+    console.log({HOSTNAME_URI, validateField, key: formData.get('key')})
+    const requestBody = JSON.stringify({
+        password: formData.get('password'),
+        token: putColonBack(formData.get('key'))
+    })
+
+    console.log(requestBody);
     const res = await fetch(`${HOSTNAME_URI}/auth/reset-password/confirm/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            password: formData.get('password'),
-            token: formData.get('key')
-        })
+        body: requestBody
     })
 
     if (!res.ok) {
-        console.log(res);
+        console.log({res});
         console.log(res.statusText);
-        throw new Error('Error bro');
+        return {
+            success: false
+        }
     }
     const response = await res.json();
     console.log(response);
 
-    // TODO: You can remove this but make sure it is part of the return statement when the real thing is done
     return {
         success: true
     }
-
-    // Return a message indicating success
 }

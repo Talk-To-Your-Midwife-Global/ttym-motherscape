@@ -78,7 +78,7 @@ export function DashboardNav({text = ""}) {
                     <section className={`flex-1 w-2/4 flex justify-end invisible`}>
                         <div className={`flex-1 w-1/4`}>
                             <input
-                                disbaled={true}
+                                disabled={true}
                                 className={`h-10 rounded-md outline-none border px-2 ${toggleSearch ? 'block' : 'hidden'} `}
                                 type={"search"}/>
                         </div>

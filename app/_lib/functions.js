@@ -428,3 +428,16 @@ export function convertSpacedStringToSnakeDelimited(text) {
 export function convertDashDelimitedToSpacedString(text) {
     return text.toLowerCase().split('-').join(' ');
 }
+
+export function putColonBack(string) {
+    const arrayedString = string.split('');
+    for (let i = 0; i < arrayedString.length; i++) {
+        // Because the parsing replaces : with %3A
+        if (arrayedString[i] === '%') {
+            arrayedString[i] = ':'
+            arrayedString[i + 1] = '';
+            arrayedString[i + 2] = '';
+        }
+    }
+    return arrayedString.join('');
+}

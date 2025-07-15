@@ -12,13 +12,13 @@ export function Chat({accessToken}) {
     const [isPaired, setIsPaired] = useState({status: false, pending: false});
     const [chatList, setChatList] = useState([]);
     const chatDisplay = JSON.parse(localStorage.getItem("chatDisplay"));
-    
+
 
     const {
         isConnected,
         onEvent,
         sendMessage,
-    } = useWebSocket(`wss://${process.env.NEXT_PUBLIC_WS_URL}/ws/`, accessToken)
+    } = useWebSocket(`${process.env.NEXT_PUBLIC_ENVIRONMENT === 'development' ? 'ws' : 'wss'}://${process.env.NEXT_PUBLIC_WS_URL}/ws/`, accessToken)
 
     const handleIsAssigned = (data) => {
         console.log('handleAssigned', data);
