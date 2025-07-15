@@ -1,9 +1,12 @@
 "use client"
+import {useState} from 'react'
 import Image from "next/image";
 import Link from "next/link";
 import EmptyPageClip from "@/public/images/empty-articles.svg";
 import {motion, AnimatePresence} from "framer-motion"
 import {useFormStatus} from "react-dom";
+import {cn} from "@/app/_lib/utils";
+import {Spinner} from "@/app/_components/Spinner";
 
 const pageTransitionVariants = {
     hidden: {opacity: 0, x: 100},
@@ -101,17 +104,27 @@ export function IconButton({
                                type = "link",
                                href = " ",
                                disabled = false,
-                               onClick = undefined
+                               onClick = undefined,
+                               loadingText = 'loading'
                            }) {
+    const [pending, setPending] = useState(false);
+    const handleClick = () => {
+        setPending(true)
+        if (onClick) {
+            onClick();
+        }
+
+    }
     return (
         <Link href={href ? href : undefined}>
-            <button onClick={onClick ? () => onClick() : undefined} disabled={disabled}
-                    className={`${variant === "primary" && disabled ? "bg-[#A8CCD0] text-white" : "bg-primaryColor text-white border border-primaryColor "} w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2`}>
-                {text} <span className={icon}></span>
+            <button onClick={() => handleClick()} disabled={disabled}
+                    className={cn(`${variant === "primary" && disabled ? "bg-[#A8CCD0] text-white" : "bg-primaryColor text-white border border-primaryColor "} transition-all duration-500 ease-in-out  w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2 ${pending && 'w-[fit] h-fit py-4 px-4'}`)}>
+                {pending ? <> <Spinner/> <p>{loadingText}</p></> : <>{text} <span className={icon}></span></>}
             </button>
         </Link>
     )
 }
+
 
 export function ActionLink({
                                text = "Button",

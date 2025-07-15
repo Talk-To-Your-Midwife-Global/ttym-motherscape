@@ -160,7 +160,7 @@ function BasicCycleInformation({handleAnswers, submit, state}) {
             </form>
             <div className="relative -bottom-[25%] w-full flex justify-center">
                 <IconButton text="Continue" onClick={handleSubmit} icon="iconify lucide--arrow-right"
-                            disabled={disableBtn}/>
+                            disabled={disableBtn} loadingText={'Getting to know you a little better 🔍🩷'}/>
             </div>
         </section>
     )
@@ -213,7 +213,9 @@ function CycleRegularity({handleAnswers, submit, state}) {
                 </div>
             </form>
             <div className="relative -bottom-[25%] w-full flex justify-center">
-                <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn}/>
+                <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn}
+                            loadingText={'Growing insights,one question at a time🌸'}
+                />
             </div>
         </section>
     )
@@ -258,7 +260,9 @@ function LastPeriod({handleAnswers, submit, state}) {
                 </div>
             </form>
             <div className="relative .-bottom-[45%] w-full flex justify-center z-[50]">
-                <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn}/>
+                <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn}
+                            loadingText={'Your body is unique,we’re listening👂💖'}
+                />
             </div>
         </section>
     )
@@ -334,7 +338,9 @@ function SymptomsTracking({handleAnswers, submit, state}) {
             </form>
             <div className="my-[25%] w-full flex justify-center">
                 <IconButton text="Continue" onClick={handleSubmit} icon="iconify lucide--arrow-right"
-                            disabled={disableBtn}/>
+                            disabled={disableBtn}
+                            loadingText={'One step closer to syncing with your cycle 👏🚀'}
+                />
             </div>
         </section>
     )
@@ -381,7 +387,8 @@ function NotificationPreferences({handleAnswers, submit, state}) {
                 </div>
             </form>
             <div className="relative -bottom-[35%] w-full flex justify-center">
-                <IconButton onClick={submit} text="Continue" icon="iconify lucide--arrow-right" disabled={disableBtn}/>
+                <IconButton onClick={submit} text="Continue" icon="iconify lucide--arrow-right" disabled={disableBtn}
+                            loadingText={'Your rhythm, your rules. Let’s keep you in sync ✨'}/>
             </div>
         </section>
     )
