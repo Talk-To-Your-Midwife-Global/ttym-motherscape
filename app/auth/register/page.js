@@ -1,5 +1,4 @@
 "use client"
-import Link from "next/link";
 
 import {useActionState, useState, useEffect} from 'react'
 import {useRouter} from "next/navigation";
@@ -29,12 +28,12 @@ export default function Page() {
     useEffect(() => {
         if (state?.success) {
             console.log('Success routing stage', state?.route)
-            router.replace('/onboarding');
+            router.replace(state.route);
         } else {
             console.log('Error routing stage', state?.serverError)
             setError(state?.serverError)
         }
-        console.log(error);
+        console.log({error});
     }, [state])
     return (
         <section>
