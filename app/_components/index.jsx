@@ -82,7 +82,7 @@ export function Button({
     const {pending} = useFormStatus();
     return (
         <button disabled={disabled || pending}
-                className={`${variant === "primary" && disabled ? "bg-[#A8CCD0] text-white" : "bg-primaryColor text-white border border-secondary"} w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2`}>
+                className={cn(`${variant === "primary" && disabled ? "bg-[#A8CCD0] text-white" : "bg-primaryColor text-white .border .border-secondary"} w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2`, variant === 'secondary' && 'bg-white border border-primaryColor text-primaryColor font-semibold')}>
             {!pending ? text : isPendingText}
         </button>
     )
@@ -118,7 +118,7 @@ export function IconButton({
     return (
         <Link href={href ? href : undefined}>
             <button onClick={() => handleClick()} disabled={disabled}
-                    className={cn(`${variant === "primary" && disabled ? "bg-[#A8CCD0] text-white" : "bg-primaryColor text-white border border-primaryColor "} transition-all duration-500 ease-in-out  w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2 ${pending && 'w-[fit] h-fit py-4 px-4'}`)}>
+                    className={cn(`${variant === "primary" && disabled ? "bg-[#A8CCD0] text-white" : "bg-primaryColor text-white border border-primaryColor "} transition-all duration-500 ease-in-out  w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2 ${pending && 'w-[fit] h-fit py-4 px-4'}`, variant === 'secondary' && 'bg-white border border-primaryColor text-primaryColor font-semibold')}>
                 {pending ? <> <Spinner/> <p>{loadingText}</p></> : <>{text} <span className={icon}></span></>}
             </button>
         </Link>

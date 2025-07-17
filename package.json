@@ -31,6 +31,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@iconify-json/ic": "^1.2.2",
     "eslint": "^9.30.1",
     "eslint-config-next": "15.3.5",
     "postcss": "^8.5.6",

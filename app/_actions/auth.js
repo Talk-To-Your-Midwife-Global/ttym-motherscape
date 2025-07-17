@@ -94,8 +94,9 @@ export async function signup(state, formData) {
             }),
         })
         const errors = []
-        console.log(response);
+        console.log({response});
         const result = await response.json();
+        console.log({result});
 
         if (!response.ok) {
             for (const err in result) {
@@ -108,16 +109,27 @@ export async function signup(state, formData) {
                 serverError: errors,
             }
         }
-        let cookieStore = await cookies();
-        cookieStore.set('access_token', result.tokens.access, {httpOnly: true, path: '/'})
-        cookieStore.set('refresh_token', result.tokens.refresh, {httpOnly: true, path: '/'})
+        // let cookieStore = await cookies();
+        // cookieStore.set('access_token', result.tokens.access, {httpOnly: true, path: '/'}) // TODO: remove the http only
+        // cookieStore.set('refresh_token', result.tokens.refresh, {httpOnly: true, path: '/'})
+
+        const emailRequest = await requestEmailVerification(formData.get('email'));
+
+        if (emailRequest?.success) {
+            return {
+                success: true,
+                token: result.tokens.access,
+                route: `/auth/verify-email/`
+            }
+        }
+
         return {
             success: true,
             token: result.tokens.access,
-            route: `/onboarding`
+            route: `/auth/verify-email`
         }
     } catch (errors) {
-        console.log(errors)
+        console.log({errors})
         // TODO: setup a logger here
 
         return {
@@ -163,13 +175,31 @@ export async function signin(state, formData) {
         })
 
         const result = await response.json()
-        console.log(result);
+        // console.log({result});
+        // console.log({response})
         const errors = []
         if (!response.ok) {
             // for (const key in result) {
             //     errors.push(result[key][0])
             // }
+            // console.log('Response is not okay')
             console.log(result)
+
+            if (response.status === 401 && result.code === "auth/email-not-verified") {
+                console.log('about to request email verification')
+                console.log(formData.get('email'));
+                const emailRequest = await requestEmailVerification(formData.get('email'));
+                console.log({emailRequest});
+                // route the user
+                console.log(emailRequest);
+                if (emailRequest?.success) {
+                    return {
+                        success: true,
+                        token: false,
+                        route: '/auth/verify-email/'
+                    }
+                }
+            }
             return {
                 success: false,
                 error: [result.message]
@@ -190,7 +220,7 @@ export async function signin(state, formData) {
         return {
             success: true,
             token: result.tokens.access,
-            route: result.user.status != "UNASSINGED" ? '/dashboard' : `/onboarding`
+            route: result.user.status != "UNASSIGNED" ? '/dashboard' : `/onboarding`
         }
     } catch (errors) {
         return {
@@ -246,8 +276,43 @@ export async function logout() {
             error: errors
         }
     }
+}
 
+export async function requestEmailVerification(email) {
+    console.log('requesting email verification')
+    console.log({HOSTNAME_URI})
 
+    // save email to cookies
+    const cookieStore = await cookies();
+    cookieStore.set('user_email', email);
+
+    const res = await fetch(`${HOSTNAME_URI}/auth/verify-email/request`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email})
+    })
+    console.log({res});
+    const response = await res.json();
+    console.log(response)
+    if (!res.ok) {
+        console.log(res);
+        console.log(response)
+        console.log('An error occured')
+        return {
+            success: false,
+            fieldErrors: undefined,
+            serverErrors: undefined
+        }
+    }
+    console.log('success in requesting')
+
+    return {
+        success: true,
+        fieldErrors: undefined,
+        serverErrors: undefined
+    }
 }
 
 
