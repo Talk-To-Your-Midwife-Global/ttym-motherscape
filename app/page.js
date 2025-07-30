@@ -10,7 +10,8 @@ export default function Page() {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            router.push('/auth/signIn');
+            // router.push('/auth/signIn');
+            router.push('/wait-list');
         }, 400);
 
         return () => clearTimeout(timer);
