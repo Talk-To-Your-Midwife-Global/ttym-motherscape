@@ -1,5 +1,18 @@
 // next._config.mjs
 /** @type {import('next').NextConfig} */
+
+import withPWAInit from "@ducanh2912/next-pwa"
+
+const withPWA = withPWAInit({
+    dest: 'public',
+    register: true,
+
+    // app router specific optimizations
+    skipWaiting: true, // update service worker automatically
+    cacheOnFrontEndNav: true, // to cache while navigating with next/link
+    reloadOnOnline: true, // update when network is restored
+})
+
 const nextConfig = {
     images: {
         remotePatterns: [
@@ -23,4 +36,4 @@ const nextConfig = {
     },
 };
 
-export default nextConfig;
+export default withPWA(nextConfig);
