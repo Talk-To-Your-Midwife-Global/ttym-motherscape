@@ -55,11 +55,12 @@ export async function contentGqlFetcher(query, variables) {
         })
 
     if (!response.ok) {
+        console.log(response)
         throw new Error(response.statusText)
     }
 
     const {data, errors} = await response.json();
-    console.log(data);
+    console.log(data, {errors});
     return data;
 }
 

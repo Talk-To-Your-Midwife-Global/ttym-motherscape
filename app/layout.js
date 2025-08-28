@@ -6,7 +6,6 @@ export const metadata = {
     description: "Talk To Your Midwife",
     manifest: "/manifest.json",
 
-    // For apple
     appleWebApp: {
         capable: true,
         statusBarStyle: "default",
@@ -19,16 +18,15 @@ export const metadata = {
     }
 };
 
+
 export default function RootLayout({children}) {
     return (
         <html lang="en">
-        {/* <UserProvider> */}
         <body
             className={`${inter.className}`}
         >
         {children}
         </body>
-        {/* </UserProvider> */}
         </html>
     );
 }

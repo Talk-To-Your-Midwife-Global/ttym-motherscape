@@ -1,11 +1,12 @@
-import { Chat } from "@/app/dashboard/components/chat";
-import { Community } from "@/app/dashboard/components/community";
-import { Logs } from "@/app/dashboard/components/logs";
-import { CalendarMain } from "@/app/dashboard/components/menstrualcycletracker/calendar";
-import { MenstrualHome } from "@/app/dashboard/components/menstrualcycletracker/home.jsx";
-import { PregnantCalendarMain } from "@/app/dashboard/components/pregnancytracker/calendar";
-import { PregnancyHome } from "@/app/dashboard/components/pregnancytracker/home";
-import { cookies } from "next/headers";
+import {Chat} from "@/app/dashboard/components/chat";
+import {Community} from "@/app/dashboard/components/community";
+import {Logs} from "@/app/dashboard/components/logs";
+import {CalendarMain} from "@/app/dashboard/components/menstrualcycletracker/calendar";
+import {MenstrualHome} from "@/app/dashboard/components/menstrualcycletracker/home.jsx";
+import {PregnantCalendarMain} from "@/app/dashboard/components/pregnancytracker/calendar";
+import {PregnancyHome} from "@/app/dashboard/components/pregnancytracker/home";
+import {cookies} from "next/headers";
+import {InstallPrompt} from "@/app/_components/InstallPrompt";
 
 
 export default async function Page({params}) {
@@ -33,6 +34,7 @@ export default async function Page({params}) {
     if (userType === "trackmyperiod") {
         return (
             <section>
+                <InstallPrompt/>
                 {menstrualViews[routeName.route]}
             </section>
         )
