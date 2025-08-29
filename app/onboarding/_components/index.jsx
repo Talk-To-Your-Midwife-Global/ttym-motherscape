@@ -3,6 +3,8 @@ import Link from "next/link"
 import {removeSpaces} from "@/app/_lib/functions"
 import {IconButton} from "@/app/_components"
 import {PageSlideAnimator} from "@/app/_components"
+import {cn} from "@/app/_lib/utils";
+import {SideSliderButtons} from "@/app/onboarding/_components/SideSliderButtons";
 
 export function OnboardNav({url, userType = "menstrualcycletracker", icon = "lucide--chevron-right", last = false}) {
     return (
@@ -47,21 +49,39 @@ export function PersonaCard({children, heading, description, onClick, shouldEnab
     )
 }
 
+export function LongPersonaCard({header, desc, actions, bgColor = undefined, illustration = undefined, children}) {
+    return (
+        <section tabIndex={0} onClick={() => {
+            actions.enableButton(removeSpaces(header.toLowerCase()))
+        }}
+                 className={cn(`w-full max-w-[380px] h-[140px] rounded-xl p-4 flex gap-2 space-between transition .delay-150 duration-300 ease-in-out focus:border-2 focus:border-primaryColor bg-gradient-to-br focus:from-[#0F9C84] focus:to-[#0F9C84]`)}>
+            <div className="text-black w-[214px]">
+                <h2 className={'text-[16px] font-medium'}>{header}</h2>
+                <p className={'text-[14px] '}>{desc}</p>
+            </div>
+            <div>
+                {children}
+            </div>
+        </section>
+    )
+}
+
 
 export function StepOne({userType, children, title, description}) {
     return (
-
-        <section className="overflow-hidden w-screen h-svh">
-            <OnboardNav userType={userType} url={`/onboarding/${userType}/2`}/>
-            <PageSlideAnimator>
-                <section className="flex flex-col justify-between">
-                    <OnboardHeader heading={title} description={description}/>
-                    <section className="flex-1 relative -bottom-10">
-                        {children}
+        <SideSliderButtons userType={userType}>
+            <section className="overflow-hidden w-screen h-svh">
+                <OnboardNav userType={userType} url={`/onboarding/${userType}/2`}/>
+                <PageSlideAnimator>
+                    <section className="flex flex-col justify-between">
+                        <OnboardHeader heading={title} description={description}/>
+                        <section className="flex-1 relative -bottom-10">
+                            {children}
+                        </section>
                     </section>
-                </section>
-            </PageSlideAnimator>
-        </section>
+                </PageSlideAnimator>
+            </section>
+        </SideSliderButtons>
     )
 }
 
@@ -84,9 +104,9 @@ export function StepTwo({userType, children, title, description}) {
 export function StepThree({userType, children, title, description}) {
     return (
         <section className="h-svh">
-            <OnboardNav userType={userType} url="/onboarding/" icon="lucide--chevron-left" last={true}/>
+            {/*<OnboardNav userType={userType} url="/onboarding/" icon="lucide--chevron-left" last={true}/>*/}
             <PageSlideAnimator>
-                <section className="flex flex-col justify-between">
+                <section className="flex flex-col justify-between mt-10">
                     <OnboardHeader heading={title} description={description}/>
                     <section className="flex-1">
                         {children}
