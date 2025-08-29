@@ -3,9 +3,11 @@ import {StepOne, StepTwo, StepThree} from "../../_components"
 import rafiki from "../../../../public/images/rafiki.svg"
 import cuate from "../../../../public/images/cuate.svg"
 import pana from "../../../../public/images/pana.svg"
+import {SideSliderButtons} from "@/app/onboarding/_components/SideSliderButtons";
 
 export default async function Page({params}) {
     const step = await params;
+    console.log(step);
     const view = {
         '1': <StepOne
             userType="trackmyperiod"
@@ -30,6 +32,8 @@ export default async function Page({params}) {
     };
 
     return (
-        view[step.step]
+        <SideSliderButtons userType={'trackmyperiod'} step={step.step}>
+            {view[step.step]}
+        </SideSliderButtons>
     )
 }

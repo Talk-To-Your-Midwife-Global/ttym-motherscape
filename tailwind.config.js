@@ -8,6 +8,9 @@ module.exports = {
     ],
     theme: {
         extend: {
+            backgroundImage: {
+                'onboarding-bg': "url('/images/onboarding-background.jpg')"
+            },
             dropShadow: {
                 "custom-green": "0px 14px 6px #0F969C21",
                 "custom-black": "40px 44px 16px #0F969C21",
