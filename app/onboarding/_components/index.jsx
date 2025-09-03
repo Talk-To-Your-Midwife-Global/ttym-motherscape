@@ -6,28 +6,27 @@ import {PageSlideAnimator} from "@/app/_components"
 import {cn} from "@/app/_lib/utils";
 import {SideSliderButtons} from "@/app/onboarding/_components/SideSliderButtons";
 import {OnboardHeading} from "@/app/onboarding/_components/OnboardHeading";
+import {QuestionNav} from "@/app/questions/components/menstrualcycletracker";
 
-export function OnboardNav({url, userType = "menstrualcycletracker", icon = "lucide--chevron-right", last = false}) {
+export function OnboardNav({url, userType = "menstrualcycletracker", icon = "lucide--chevron-left", last = false}) {
     return (
         <nav className="px-[20px] flex justify-between items-center my-5">
-            <Link href={url} className="bg-[#16898E1A] w-12 h-12 rounded-full flex justify-center items-center">
-                <span className={`iconify ${icon} text-2xl`}></span>
+            <Link href={url} className=".bg-[#16898E1A] w-12 h-12 rounded-full flex justify-center items-center">
+                <span className={`iconify ${icon} text-primaryText text-2xl`}></span>
             </Link>
-            {!last ? <Link href={`/onboarding/${userType}/3`}
-                           className="text-primaryColor font-medium">Skip</Link> : ''}
-
         </nav>
     )
 }
 
-export function OnboardHeader({heading, description}) {
-    return (
-        <header className="flex flex-col justify-center items-center my-5 px-[20px]">
-            <h2 className="text-3xl w-full font-semibold text-tertiaryColor lg:text-4xl .leading-normal">{heading}</h2>
-            <p className="text-tertiaryColor text-sm font-medium">{description}</p>
-        </header>
-    )
-}
+// TODO: Delete this
+// export function OnboardHeader({heading, description}) {
+//     return (
+//         <header className="flex flex-col justify-center items-center my-5 px-[20px]">
+//             <h2 className="text-3xl w-full font-semibold text-tertiaryColor lg:text-4xl .leading-normal">{heading}</h2>
+//             <p className="text-tertiaryColor text-sm font-medium">{description}</p>
+//         </header>
+//     )
+// }
 
 export function PersonaCard({children, heading, description, onClick, shouldEnable, color}) {
     const base = "flex flex-col gap-4 justify-center items-center border-2 shadow-lg h-[200px] py-3 rounded-3xl mb-8 focus:border-primaryColor";
@@ -103,10 +102,58 @@ export function StepTwo({userType, children, title, description}) {
     )
 }
 
+export function FlashThree({userType, children, title, description, question = 7}) {
+    return (
+        <section className="overflow-hidden w-screen h-svh">
+            {/*TODO: Delete this*/}
+            {/*<OnboardNav userType={userType} url={`/onboarding/${userType}/3`}/>*/}
+            <QuestionNav
+                url={question > 1 ? `/onboarding/trackmyperiod/${question - 1}` : '/onboarding/'}
+                question={question}/>
+            <PageSlideAnimator>
+                <section className="flex flex-col justify-between">
+                    {/*TODO: Remove this*/}
+                    {/*<OnboardHeader heading={title} description={description}/>*/}
+                    <OnboardHeading title={title} subTitle={description}/>
+                    <section className="flex-1 relative -bottom-10">
+                        {children}
+                    </section>
+                </section>
+            </PageSlideAnimator>
+        </section>
+    )
+}
+
+export function FlashTwo({userType, children, title, description, question}) {
+    return (
+        <section className="overflow-hidden w-screen h-screen bg-onboarding-bg">
+            {/*Confirm and remove this*/}
+            {/*<OnboardNav userType={userType}  url={`/onboarding/${userType}/8`}/>*/}
+
+            <QuestionNav last={question === 8}
+                         url={question > 1 ? `/onboarding/trackmyperiod/${question - 1}` : '/onboarding/'}
+                         question={question}/>
+            <PageSlideAnimator>
+                <section className="flex flex-col items-center justify-between">
+                    <section className="flex-1 flex justify-center relative -bottom-40">
+                        {children}
+                    </section>
+                    <section
+                        className="flex-1 relative -bottom-40 text-black flex flex-col items-center justify-center">
+                        <h2 className="font-medium text-[22px]">{title}</h2>
+                        <p className={'text-[#8A8A8A] w-[80%] text-center'}>{description}</p>
+                    </section>
+                </section>
+            </PageSlideAnimator>
+        </section>
+
+    );
+}
+
+
 export function StepThree({userType, children, title, description}) {
     return (
         <section className="h-svh">
-            {/*<OnboardNav userType={userType} url="/onboarding/" icon="lucide--chevron-left" last={true}/>*/}
             <PageSlideAnimator>
                 <section className="flex flex-col justify-between mt-10">
                     <OnboardHeader heading={title} description={description}/>

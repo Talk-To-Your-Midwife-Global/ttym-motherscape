@@ -1,11 +1,10 @@
 "use client"
 import {useRouter} from "next/navigation";
 
-export function SideSliderButtons({children, userType, step = 0}) {
+export function SideSliderButtons({children, userType, step = 0, max = 0}) {
     const router = useRouter();
     const route = `/onboarding/${userType}`;
     const current = Number(step);
-    const max = 3;
 
     const handleForwardClick = (e) => {
         e.preventDefault();
