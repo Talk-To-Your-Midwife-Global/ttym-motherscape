@@ -7,35 +7,34 @@ import {OnboardHeading} from "@/app/onboarding/_components/OnboardHeading";
 import {SlidePickerWheel} from "@/app/onboarding/_components/SlidePickerWheel";
 import {DayPicker} from "react-day-picker";
 import {QuestionNav} from "@/app/questions/components/menstrualcycletracker";
+import {Log} from "@/app/_lib/utils";
 
 export function QuestionParent({question, updateUser, onboardLength}) {
     const router = useRouter()
     const [answers, setAnswers] = useState({})
     const [isPending, startTransition] = useTransition();
-
+    const currentQuestion = Number(question);
 
     const handleQuestionAnswers = (questionAnswers) => {
         setAnswers((prevState) => ({...prevState, ...questionAnswers}))
     }
     const handleSubmit = () => {
         localStorage.setItem("answers", JSON.stringify({...JSON.parse(localStorage.getItem('answers')) || {}, ...answers}))
-        const next = String(Number(question) + 1)
-        console.log({next})
+        const next = String(currentQuestion + 1)
+        Log({next});
         // After the final question
-        if (next <= onboardLength) {
-            setTimeout(() => router.push(`/onboarding/trackmyperiod/${next}`), 200)
-        } else {
+        const isLastQuestion = currentQuestion === onboardLength - 1;
+        if (isLastQuestion) {
+            Log("Submitting form", {currentQuestion, isLastQuestion, next})
             startTransition(async () => {
                 const data = JSON.parse(localStorage.getItem("answers"))
-                console.log({data})
+                Log({data})
                 const res = await updateUser(data);
-                console.log({res});
-                if (res.success) {
-                    setTimeout(() => router.push(`/dashboard`), 100)
-                } else {
-                    setTimeout(() => router.push(`/onboarding/`), 100)
-                }
+                Log({res});
             })
+        }
+        if (!isPending && next <= onboardLength) {
+            setTimeout(() => router.push(`/onboarding/trackmyperiod/${next}`), 200)
         }
     }
 
@@ -45,15 +44,13 @@ export function QuestionParent({question, updateUser, onboardLength}) {
         5: <CycleRegularity handleAnswers={handleQuestionAnswers} submit={handleSubmit} state={answers}/>,
         6: <LastPeriod handleAnswers={handleQuestionAnswers} submit={handleSubmit}/>,
         8: <SymptomsTracking handleAnswers={handleQuestionAnswers} state={answers} submit={handleSubmit}/>,
-        12: <NotificationPreferences handleAnswers={handleQuestionAnswers} submit={handleSubmit} state={answers}/>
-
     }
 
     return (
         <section>
-            <QuestionNav last={question === 8}
-                         url={question > 1 ? `/onboarding/trackmyperiod/${question - 1}` : '/onboarding/'}
-                         question={question}/>
+            <QuestionNav
+                url={question > 1 ? `/onboarding/trackmyperiod/${question - 1}` : '/onboarding/'}
+                question={question}/>
             <PageSlideAnimator>
                 {questions[question]}
             </PageSlideAnimator>
@@ -80,10 +77,6 @@ function CycleLength({handleAnswers, submit, state}) {
         <section className={`${inter.className} h-svh overflow-hidden`}>
             <form className="px-[20px] text-primaryText">
                 <div className="flex flex-col gap-2 mb-5">
-                    {/*TODO: remove and possibly delete the component*/}
-                    {/*<QuestionHead text="What is the average*/}
-                    {/*    length of your*/}
-                    {/*    menstrual cycle?"/>*/}
                     <OnboardHeading title={"How long does your cycle usually last?"}
                                     subTitle={"Most women’s cycles last between 26–32 days, with 28 being the average"}/>
                     <SlidePickerWheel name={'cycleInfo'} onChange={handleChange}/>
@@ -117,8 +110,6 @@ function PeriodDays({handleAnswers, submit, state}) {
         <section className={`${inter.className} h-svh overflow-hidden`}>
             <form className="px-[20px] h-[300px] max-h-[300px] text-primaryText">
                 <div className="flex flex-col gap-2 mb-5">
-                    {/*TODO: Delete this component*/}
-                    {/*<QuestionHead text="How many days does your period usually last?"/>*/}
                     <OnboardHeading title={"How many days does your period usually last"}
                                     subTitle={"Most periods last 3–7 days. If yours is sometimes shorter or longer, just choose the number that feels most typical for you."}/>
                 </div>
@@ -158,9 +149,6 @@ function CycleRegularity({handleAnswers, submit, state}) {
 
     return (
         <section className={`${inter.className} h-svh overflow-hidden`}>
-            {/*TODO: remove this*/}
-            {/*<QuestionHead text="Tell us about your cycle pattern"*/}
-            {/*              desc={"Cycles can be regular or irregular, and both are completely normal."}/>*/}
             <OnboardHeading title={"Tell us about your cycle pattern"}
                             subTitle={"Cycles can be regular or irregular, and both are completely normal."}/>
 
@@ -221,8 +209,6 @@ function LastPeriod({handleAnswers, submit, state}) {
 
     return (
         <section className={`${inter.className} h-svh overflow-hidden`}>
-            {/*TODO: Remove this*/}
-            {/*<QuestionHead text="When did your last period start?"/>*/}
             <OnboardHeading title={"When did your last period start?"}
                             subTitle={"Think back to the first day of bleeding. If you don’t remember exactly, it’s okay. Just give your best estimate."}/>
             <form className="px-[20px] mt-3 text-primaryText">
