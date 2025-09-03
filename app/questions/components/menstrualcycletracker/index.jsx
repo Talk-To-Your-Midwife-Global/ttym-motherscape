@@ -1,6 +1,7 @@
 "use client"
 import {useEffect, useState} from "react"
 import {useTransition} from "react";
+import {motion} from "framer-motion";
 import {useRouter} from "next/navigation";
 import {inter} from "@/app/_fonts";
 import Link from "next/link"

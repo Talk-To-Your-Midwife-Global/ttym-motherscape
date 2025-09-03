@@ -5,6 +5,7 @@ import {IconButton} from "@/app/_components"
 import {PageSlideAnimator} from "@/app/_components"
 import {cn} from "@/app/_lib/utils";
 import {SideSliderButtons} from "@/app/onboarding/_components/SideSliderButtons";
+import {OnboardHeading} from "@/app/onboarding/_components/OnboardHeading";
 
 export function OnboardNav({url, userType = "menstrualcycletracker", icon = "lucide--chevron-right", last = false}) {
     return (
@@ -70,11 +71,11 @@ export function LongPersonaCard({header, desc, actions, bgColor = undefined, ill
 export function StepOne({userType, children, title, description}) {
     return (
         <SideSliderButtons userType={userType}>
-            <section className="overflow-hidden w-screen h-svh">
+            <section className="overflow-hidden w-screen h-svh bg-onboarding-bg">
                 <OnboardNav userType={userType} url={`/onboarding/${userType}/2`}/>
                 <PageSlideAnimator>
                     <section className="flex flex-col justify-between">
-                        <OnboardHeader heading={title} description={description}/>
+                        <OnboardHeading title={title} subTitle={description}/>
                         <section className="flex-1 relative -bottom-10">
                             {children}
                         </section>
@@ -91,7 +92,8 @@ export function StepTwo({userType, children, title, description}) {
             <OnboardNav userType={userType} url={`/onboarding/${userType}/3`}/>
             <PageSlideAnimator>
                 <section className="flex flex-col justify-between">
-                    <OnboardHeader heading={title} description={description}/>
+                    {/*<OnboardHeader heading={title} description={description}/>*/}
+                    <OnboardHeading heading={title} subTitle={description}/>
                     <section className="flex-1 relative -bottom-10">
                         {children}
                     </section>
