@@ -10,11 +10,10 @@ import ovulationBlue from "@/public/images/ovulation-phase-blue.svg"
 import pregnancyPink from "@/public/images/pregnancy-pink.svg"
 import {montserrat} from "@/app/_fonts";
 import Link from "next/link";
-import {formatDate, menstrualCycleDateGenerator, necessaryDataForMenstrualUI, relatableDay} from "@/app/_lib/functions";
+import {necessaryDataForMenstrualUI, relatableDay} from "@/app/_lib/functions";
 import {PageFadeAnimator} from "@/app/_components";
 import {useCycleInfo} from "@/app/dashboard/lib/dataFetching";
 import {DropletIcon} from "@/app/dashboard/components/icons/dropletIcon";
-import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
 import {restartCycle} from "@/app/dashboard/actions/action";
 import {useSWRConfig} from "swr/_internal";
 
