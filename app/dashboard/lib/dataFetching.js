@@ -23,7 +23,7 @@ export function useCycleInfo(accessToken) {
         data,
         isLoading,
         error
-    } = useSWR([`${PUBLICHOSTNAME}/user/menstrual/`, accessToken], ([url, accessToken]) => fetchCycle(url, accessToken));
+    } = useSWR([`${PUBLICHOSTNAME}/menstrual/profile/`, accessToken], ([url, accessToken]) => fetchCycle(url, accessToken));
     return {
         data,
         isLoading,
@@ -36,7 +36,7 @@ export function usePregnancyInfo(accessToken) {
         data,
         isLoading,
         error
-    } = useSWR([`${PUBLICHOSTNAME}/user/pregnancy/`, accessToken], ([url, accessToken]) => fetchPregnancy(url, accessToken))
+    } = useSWR([`${PUBLICHOSTNAME}/pregnancy/`, accessToken], ([url, accessToken]) => fetchPregnancy(url, accessToken))
     Log('usePregnancyInfo', {data})
     return {
         pregnancyData: data,

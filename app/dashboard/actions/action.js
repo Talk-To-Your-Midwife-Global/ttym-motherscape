@@ -26,7 +26,7 @@ export async function restartCycle() {
     const {access_token} = await getLocalCookies(['access_token']);
     Log(access_token);
 
-    const response = await fetch(`${PUBLICHOSTNAME}/user/menstrual/start/?period_start=${today}`, {
+    const response = await fetch(`${PUBLICHOSTNAME}/menstrual/start/?period_start=${today}`, {
         headers: {
             'Authorization': `Bearer ${access_token}`
         }
@@ -68,7 +68,7 @@ export async function contentGqlFetcher(query, variables) {
 export async function bookmarkPost(postId) {
     const {access_token} = await getLocalCookies(['access_token']);
 
-    const response = await fetch(`${PUBLICHOSTNAME}/user/bookmark/${postId}`, {
+    const response = await fetch(`${PUBLICHOSTNAME}/bookmark/${postId}`, {
         headers: {
             "Authorization": `Bearer ${access_token}`
         }
@@ -90,7 +90,7 @@ export async function bookmarkPost(postId) {
 
 // todo: remove this
 export async function unbookmarkPost(postId, accessToken) {
-    const response = await fetch(`${PUBLICHOSTNAME}/user/bookmark/${postId}`, {
+    const response = await fetch(`${PUBLICHOSTNAME}/bookmark/${postId}`, {
         headers: {
             "Authorization": `Bearer ${accessToken}`
         }

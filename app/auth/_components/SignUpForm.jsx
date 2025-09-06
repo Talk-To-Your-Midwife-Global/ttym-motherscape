@@ -80,14 +80,26 @@ export function SignUpForm({state, action, isPending}) {
     return (
         <form action={passCorrect ? action : "#"} className="px-[30px] flex flex-col gap-5">
             <div>
-                <label htmlFor="name" className="font-medium text-mainText">Name</label>
+                <label htmlFor="firstName" className="font-medium text-mainText">First Name</label>
                 <div
                     className="bg-white border-2 w-full h-[42px] flex gap-2 items-center rounded-xl pl-[15px] pr-[5px]">
                     <span className="iconify mdi--person-outline font-medium text-[#999999]"></span>
-                    <input type="text" name="name" id="name" placeholder="Full Name"
+                    <input type="text" name="firstName" id="firstName" placeholder="First Name eg. Keisha"
                            className="flex-1 outline-none bg-transparent text-mainText"/>
                 </div>
-                {state?.fieldErrors?.name && <p className="text-red-500 text-sm">{state?.fieldErrors?.name}</p>}
+                {state?.fieldErrors?.firstName &&
+                    <p className="text-red-500 text-sm">{state?.fieldErrors?.firstName}</p>}
+            </div>
+
+            <div>
+                <label htmlFor="lastName" className="font-medium text-mainText">Last Name</label>
+                <div
+                    className="bg-white border-2 w-full h-[42px] flex gap-2 items-center rounded-xl pl-[15px] pr-[5px]">
+                    <span className="iconify mdi--person-outline font-medium text-[#999999]"></span>
+                    <input type="text" name="lastName" id="lastName" placeholder="Last Name"
+                           className="flex-1 outline-none bg-transparent text-mainText"/>
+                </div>
+                {state?.fieldErrors?.lastName && <p className="text-red-500 text-sm">{state?.fieldErrors?.lastName}</p>}
             </div>
 
             <div>

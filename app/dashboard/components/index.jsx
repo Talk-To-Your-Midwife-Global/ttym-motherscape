@@ -54,12 +54,13 @@ import {ArticleParent} from "@/app/dashboard/components/ui/ArticleParent";
 import {Log} from "@/app/_lib/utils";
 
 export function DashboardHeader(user) {
+    Log('dashboardheader_info_display', {user});
     return (
         <header className={"px-5"}>
             <section className={"text-primaryText"}>
                 <p className={`text-subText text-sm font-medium ${montserrat.className}`}>Welcome 👋</p>
-                <p className={"flex items-center text-3xl"}> {user?.user.full_name} <Image src={flower}
-                                                                                           alt={"flower"}/></p>
+                <p className={"flex items-center text-3xl"}> {user?.user.username} <Image src={flower}
+                                                                                          alt={"flower"}/></p>
             </section>
         </header>
     )

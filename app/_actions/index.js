@@ -80,18 +80,15 @@ export async function updateUser(info) {
     const data = {
         cycle_length: info.cycleInfo,
         period_length: info.periodLength,
-        is_consistent: info.cycleRegularity,
-        period_start: info.periodStart,
-        tracking_pref: {
-            moods: info.moods,
-            symptoms: info.symptoms,
-        },
-        notification_pref: 3,
-        status: userType
+        // is_consistent: info.cycleRegularity,
+        last_period_start: info.periodStart,
+
     }
+
+    Log("Something is sending; data")
     Log({data})
     try {
-        const response = await fetch(`${HOSTNAME_URI}/user/menstrual/`, {
+        const response = await fetch(`${HOSTNAME_URI}/menstrual/profile/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -106,7 +103,7 @@ export async function updateUser(info) {
         }
         const json = await response.json()
         if (json) {
-            Log({json})
+            Log('user_profile_submit', {json})
             return {
                 success: true,
             }
