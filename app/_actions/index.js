@@ -4,6 +4,8 @@ import {HOSTNAME_URI} from "@/app/_config/main";
 import {matchUserStatus} from "@/app/_lib/functions";
 import {convertCommaStringToArray} from "@/app/dashboard/lib/functions";
 
+import {Log} from "@/app/_lib/utils";
+
 export async function storeUserType(userType) {
     const cookieStore = await cookies();
     cookieStore.set('ttym-user-type', userType)
@@ -25,9 +27,9 @@ export async function grabConfiguration() {
 
 export async function updatePregnantUser(info) {
     const config = await grabConfiguration();
-    console.log(config)
-    console.log(info)
-    console.log(HOSTNAME_URI)
+    Log(config)
+    Log(info)
+    Log(HOSTNAME_URI)
     const dataInput = {
         // lmp: info?.lmp, todo: add this back
         delivery_date_est: info?.dueDate,
@@ -40,7 +42,7 @@ export async function updatePregnantUser(info) {
         },
         is_first: info.isFirstPregnancy
     };
-    console.log({dataInput});
+    Log({dataInput});
 
     try {
         const response = await fetch(`${HOSTNAME_URI}/user/pregnancy/`, {
@@ -51,16 +53,13 @@ export async function updatePregnantUser(info) {
             },
             body: JSON.stringify(dataInput)
         })
-        console.log(info);
+        Log({info})
 
         if (!response.ok) {
-            console.log('error occured')
-            console.log(response);
-            console.log(response.statusText)
+            Log("error occured", {response}, 'Status Text\T', response.statusText);
         }
         const data = await response.json();
-
-        console.log(data);
+        // Log({data})
 
         return {
             success: true,
@@ -68,7 +67,7 @@ export async function updatePregnantUser(info) {
         };
     } catch (error) {
         // setup logger here]
-        console.log(error)
+        Log({error})
     }
 }
 
@@ -77,7 +76,7 @@ export async function updateUser(info) {
     const accessToken = cookieStore.get('access_token')?.value;
     const userType = matchUserStatus(cookieStore.get('ttym-user-type')?.value);
 
-    console.log({info});
+    Log({info})
     const data = {
         cycle_length: info.cycleInfo,
         period_length: info.periodLength,
@@ -87,10 +86,10 @@ export async function updateUser(info) {
             moods: info.moods,
             symptoms: info.symptoms,
         },
-        notification_pref: info.notificationPreference,
+        notification_pref: 3,
         status: userType
     }
-    console.log({data});
+    Log({data})
     try {
         const response = await fetch(`${HOSTNAME_URI}/user/menstrual/`, {
             method: 'POST',
@@ -100,15 +99,14 @@ export async function updateUser(info) {
             },
             body: JSON.stringify(data)
         })
-        console.log({info});
+        Log({info});
         if (!response.ok) {
-            console.log('error occured');
-            console.log(response);
-            console.log(await response.json());
+            const errRes = await response.json();
+            Log("An error occured", {errRes})
         }
         const json = await response.json()
         if (json) {
-            console.log(json);
+            Log({json})
             return {
                 success: true,
             }

@@ -11,6 +11,7 @@ import {HOSTNAME_URI} from "@/app/_config/main";
 import {matchUserStatus, putColonBack} from "@/app/_lib/functions";
 import {getLocalCookies} from "@/app/_lib/getCookies";
 import posthog from "posthog-js";
+import {Log} from "@/app/_lib/utils";
 
 
 // const secretKey = 'somekeybiIwillmakeinenvironmentvairables'
@@ -81,7 +82,6 @@ export async function signup(state, formData) {
     // call the provider
     try {
         console.log(formData.get('email'), formData.get('name'), formData.get('password'), formData.get('phone'), formData.get('dob'), `${HOSTNAME_URI}/auth/register/`);
-        posthog.capture('user_signup_attempt', {method: 'email'});
         const response = await fetch(`${HOSTNAME_URI}/auth/register/`, {
             method: 'POST',
             headers: {
