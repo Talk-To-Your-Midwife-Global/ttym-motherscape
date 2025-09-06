@@ -16,6 +16,7 @@ import {useCycleInfo} from "@/app/dashboard/lib/dataFetching";
 import {DropletIcon} from "@/app/dashboard/components/icons/dropletIcon";
 import {restartCycle} from "@/app/dashboard/actions/action";
 import {useSWRConfig} from "swr/_internal";
+import {Log} from "@/app/_lib/utils";
 
 export function CalendarMain({accessToken}) {
     const phaseImages = {
@@ -41,9 +42,9 @@ export function CalendarMain({accessToken}) {
     const {data, error, isLoading} = useCycleInfo(accessToken);
     const generalCycleInfo = necessaryDataForMenstrualUI(data || []);
     const atEndOfCycle = generalCycleInfo?.stage === "Missed";
-    console.log(data)
-    console.log('current', generalCycleInfo?.stage == "Missed");
-    console.log(generalCycleInfo)
+    Log(data)
+    Log('current', generalCycleInfo?.stage == "Missed");
+    Log(generalCycleInfo)
 
     const [viewLargeCalendar, setViewLargeCalendar] = useState(false);
     const [hideDailyTip, setHideDailyTip] = useState(false);

@@ -2,6 +2,7 @@
 import {motion} from "framer-motion";
 import Link from "next/link"
 import "react-day-picker/style.css";
+
 import {Log} from "@/app/_lib/utils";
 
 function ProgressIndicator({target = 0, total = 7}) {

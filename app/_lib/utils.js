@@ -5,8 +5,15 @@ export function cn(...inputs) {
     return twMerge(clsx(...inputs));
 }
 
+
+//
 export function Log(...inputs) {
-    if (process.env.environment === "development") {
+    if (typeof window === "undefined") {
+        if (process.env.environment !== "production") {
+            console.log(...inputs);
+        }
+    }
+    if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "production") {
         console.log(...inputs);
     }
 }

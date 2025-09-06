@@ -3,6 +3,7 @@ import {cookies} from "next/headers"
 import {HOSTNAME_URI} from "@/app/_config/main";
 import {matchUserStatus} from "@/app/_lib/functions";
 import {convertCommaStringToArray} from "@/app/dashboard/lib/functions";
+
 import {Log} from "@/app/_lib/utils";
 
 export async function storeUserType(userType) {
@@ -26,9 +27,9 @@ export async function grabConfiguration() {
 
 export async function updatePregnantUser(info) {
     const config = await grabConfiguration();
-    console.log(config)
-    console.log(info)
-    console.log(HOSTNAME_URI)
+    Log(config)
+    Log(info)
+    Log(HOSTNAME_URI)
     const dataInput = {
         // lmp: info?.lmp, todo: add this back
         delivery_date_est: info?.dueDate,
@@ -58,7 +59,7 @@ export async function updatePregnantUser(info) {
             Log("error occured", {response}, 'Status Text\T', response.statusText);
         }
         const data = await response.json();
-        Log({data})
+        // Log({data})
 
         return {
             success: true,
@@ -98,7 +99,7 @@ export async function updateUser(info) {
             },
             body: JSON.stringify(data)
         })
-        console.log({info});
+        Log({info});
         if (!response.ok) {
             const errRes = await response.json();
             Log("An error occured", {errRes})
