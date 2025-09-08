@@ -42,9 +42,9 @@ export function CalendarMain({accessToken}) {
     const {data, error, isLoading} = useCycleInfo(accessToken);
     const generalCycleInfo = necessaryDataForMenstrualUI(data || []);
     const atEndOfCycle = generalCycleInfo?.stage === "Missed";
-    Log(data)
-    Log('current', generalCycleInfo?.stage == "Missed");
-    Log(generalCycleInfo)
+    Log({data})
+    Log('current', {atEndOfCycle});
+    Log({generalCycleInfo})
 
     const [viewLargeCalendar, setViewLargeCalendar] = useState(false);
     const [hideDailyTip, setHideDailyTip] = useState(false);
