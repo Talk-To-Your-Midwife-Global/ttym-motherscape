@@ -14,6 +14,7 @@ import logoutIcon from "@/public/icons/logout.svg"
 import {useUserInfo} from "@/app/dashboard/lib/dataFetching";
 import {montserrat} from "@/app/_fonts";
 import {ProfileImage} from "@/app/_components/ProfileImage";
+import {Log} from "@/app/_lib/utils";
 
 
 const variants = {
@@ -56,16 +57,16 @@ const itemIds = [
 
 
 export function Navigation({accessToken}) {
-    console.log(accessToken)
+    Log(accessToken)
     const {user, isLoading, error} = useUserInfo(accessToken);
-    console.log({user})
+    Log({user})
 
     if (isLoading) {
         return <p>Loading</p>
     }
 
     if (error) {
-        console.log(error)
+        Log(error)
         return <p> Error {error.message} </p>
     }
 

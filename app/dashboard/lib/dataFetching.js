@@ -2,6 +2,7 @@ import useSWR from 'swr'
 import {fetchCycle, fetcher, fetchPregnancy, fetchUser} from "@/app/_lib/functions";
 import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {contentGqlFetcher} from "@/app/dashboard/actions/action";
+import {Log} from "@/app/_lib/utils";
 
 export function useUserInfo(accessToken) {
     const {
@@ -36,7 +37,7 @@ export function usePregnancyInfo(accessToken) {
         isLoading,
         error
     } = useSWR([`${PUBLICHOSTNAME}/user/pregnancy/`, accessToken], ([url, accessToken]) => fetchPregnancy(url, accessToken))
-    console.log('usePregnancyInfo', {data})
+    Log('usePregnancyInfo', {data})
     return {
         pregnancyData: data,
         pregnancyError: error,
@@ -46,7 +47,7 @@ export function usePregnancyInfo(accessToken) {
 
 export function useInsightsInfo() {
     const {data, isLoading, error} = useSWR([`${PUBLICHOSTNAME}/insights/`], ([url]) => fetcher(url));
-    // console.log(data)
+    // Log(data)
     return {
         insights: data,
         isLoadingInsights: isLoading,

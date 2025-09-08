@@ -12,7 +12,7 @@ export default function Page() {
         const timer = setTimeout(() => {
             router.push('/auth/signIn');
             // router.push('/wait-list');
-        }, 400);
+        }, 0);
 
         return () => clearTimeout(timer);
     }, [])

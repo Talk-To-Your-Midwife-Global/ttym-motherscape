@@ -10,6 +10,7 @@ import {DayPicker} from "react-day-picker";
 import "react-day-picker/style.css";
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
+import {Log} from "@/app/_lib/utils";
 
 export function SignUpForm({state, action, isPending}) {
     const [hidePassword, setHidePassword] = useState(true);
@@ -66,7 +67,7 @@ export function SignUpForm({state, action, isPending}) {
     const handleAgreementChange = (event) => {
         const {name, value} = event.target;
 
-        console.log(name, value)
+        Log(name, value)
         if (value) {
             setAgreement(true)
             setEnableButton(true)

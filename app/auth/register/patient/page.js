@@ -5,11 +5,12 @@ import {useActionState} from 'react'
 import {useRouter} from "next/navigation";
 import {signup} from "@/app/_actions/auth";
 import {SignUpForm} from "@/app/auth/_components/SignUpForm";
+import {Log} from "@/app/_lib/utils";
 
 export default function Page() {
     const [state, action] = useActionState(signup, {serverError: undefined, fieldErrors: undefined, success: undefined})
     const router = useRouter()
-    console.log(state)
+    Log(state)
     if (state?.success) {
         router.push('/onboarding')
     }
