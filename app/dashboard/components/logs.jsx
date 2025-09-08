@@ -17,7 +17,7 @@ export function Logs({accessToken}) {
     const [userType, setUserType] = useState("");
 
     async function getUserLogs() {
-        Log({accessToken, PUBLICHOSTNAME})
+        Log("Logs Page accesstoken and url", {accessToken, PUBLICHOSTNAME})
         try {
             const response = await fetch(`${PUBLICHOSTNAME}/logs?date=${formatDate(day)}`, {
                 headers: {

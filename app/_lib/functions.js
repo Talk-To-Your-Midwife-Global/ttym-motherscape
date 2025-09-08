@@ -23,7 +23,7 @@ export function fetchUser(url, token) {
             "Authorization": `Bearer ${token}`
         }
     }).then(res => {
-        // Log(res)
+        Log('from the fetch user function', {res})
         return res.json()
     })
 }
@@ -158,27 +158,6 @@ export function matchUserStatus(userType, reverse = false) {
 
 }
 
-export function necessaryDataForUser(allData) {
-    return {
-        user: {
-            email: allData.user.email,
-            fullName: allData.user.full_name,
-            isConfigured: allData.user.is_configured,
-            isOnline: allData.user.is_online,
-            isVerified: allData.user.is_verified,
-            lastLogin: allData.user.last_login,
-            phoneNumber: allData.user.phone_number,
-            profilePic: allData.user.profile_pic,
-            role: allData.user.role,
-            username: allData.user.username,
-            isAssigned: true,
-        },
-        tokens: {
-            access: allData.tokens.access,
-            refresh: allData.tokens.refresh,
-        }
-    }
-}
 
 export function necessaryDataForPregnancyUI(data) {
     Log({data});
@@ -232,7 +211,6 @@ function computeProgressBarValues(days, week) {
 
 // Convert this whole thing into a class soon
 export function necessaryDataForMenstrualUI(allData) {
-    // Log('cycle legnth', allData.cycle_length)
     const {current_cycle} = allData;
     Log({current_cycle});
     const dates = menstrualCycleDateGenerator(current_cycle?.start_date, allData.period_length, "general", allData.cycle_length)
@@ -242,7 +220,7 @@ export function necessaryDataForMenstrualUI(allData) {
     return {
         cycleLength: allData.cycle_length,
         periodLength: allData.period_length,
-        stage: current_cycle?.phase,
+        stage: current_cycle?.current_phase,
         pregnancyProb: current_cycle?.pregnancy_probability,
         periodStartDate: current_cycle?.start_date,
         nextPeriodDate: current_cycle?.next_phase_date,

@@ -1,15 +1,16 @@
-'use server'
+"use server";
 // import {SignJWT, JWTVer} from 'jose'
 import {
     SignUpFormSchema,
     SignInFormSchema,
     ForgotPasswordFormSchema,
-    PasswordResetSchema
+    PasswordResetSchema,
 } from "../auth/lib/definitions";
 import {cookies} from "next/headers";
 import {HOSTNAME_URI} from "@/app/_config/main";
 import {matchUserStatus, putColonBack} from "@/app/_lib/functions";
 import {getLocalCookies} from "@/app/_lib/getCookies";
+import posthog from "posthog-js";
 import {Log} from "@/app/_lib/utils";
 
 
@@ -60,12 +61,14 @@ export async function returnTypeOfPatient() {
  */
 export async function signup(state, formData) {
     const fields = {
-        name: formData.get('name'),
+        first_name: formData.get('firstName'),
+        last_name: formData.get('lastName'),
         email: formData.get('email'),
-        phone: formData.get('phone'),
+        phone_number: formData.get('phone'),
         password: formData.get('password'),
         date_of_birth: formData.get('dob')
     }
+
     Log({fields});
     const validatedFields = SignUpFormSchema.safeParse(fields)
 
@@ -80,24 +83,18 @@ export async function signup(state, formData) {
 
     // call the provider
     try {
-        Log(formData.get('email'), formData.get('name'), formData.get('password'), formData.get('phone'), formData.get('dob'), `${HOSTNAME_URI}/auth/register/`);
+        posthog.capture('user_signup_attempt', {method: 'email'});
         const response = await fetch(`${HOSTNAME_URI}/auth/register/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                full_name: formData.get('name'),
-                email: formData.get('email'),
-                password: formData.get('password'),
-                phone_number: formData.get('phone'),
-                date_of_birth: formData.get('dob'),
-            }),
+            body: JSON.stringify(fields),
         })
         const errors = []
-        Log({response});
+        console.log({response});
         const result = await response.json();
-        Log({result});
+        console.log({result});
 
         if (!response.ok) {
             for (const err in result) {
@@ -131,7 +128,6 @@ export async function signup(state, formData) {
         }
     } catch (errors) {
         Log({errors})
-        // TODO: setup a logger here
 
         return {
             success: undefined,
@@ -176,14 +172,15 @@ export async function signin(state, formData) {
         })
 
         const result = await response.json()
-        // Log({result});
-        // Log({response})
+        Log({result});
+        Log({response})
+
         const errors = []
         if (!response.ok) {
             // for (const key in result) {
             //     errors.push(result[key][0])
             // }
-            // Log('Response is not okay')
+            Log('Response is not okay')
             Log(result)
 
             if (response.status === 401 && result.code === "auth/email-not-verified") {
@@ -221,7 +218,7 @@ export async function signin(state, formData) {
         return {
             success: true,
             token: result.tokens.access,
-            route: result.user.status != "UNASSIGNED" ? '/dashboard' : `/onboarding`
+            route: result.user.status !== "UNASSIGNED" ? '/dashboard' : `/onboarding`
         }
     } catch (errors) {
         return {

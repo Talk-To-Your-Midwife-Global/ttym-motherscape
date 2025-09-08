@@ -52,14 +52,16 @@ import cycleWeightIcon from "@/public/icons/pregnant/cycleweight.svg"
 import {BookmarkingIcon} from "@/app/dashboard/components/icons";
 import {ArticleParent} from "@/app/dashboard/components/ui/ArticleParent";
 import {Log} from "@/app/_lib/utils";
+import posthog from "posthog-js";
 
 export function DashboardHeader(user) {
+    Log('dashboardheader_info_display', {user});
     return (
         <header className={"px-5"}>
             <section className={"text-primaryText"}>
                 <p className={`text-subText text-sm font-medium ${montserrat.className}`}>Welcome 👋</p>
-                <p className={"flex items-center text-3xl"}> {user?.user.full_name} <Image src={flower}
-                                                                                           alt={"flower"}/></p>
+                <p className={"flex items-center text-3xl"}> {user?.user.username} <Image src={flower}
+                                                                                          alt={"flower"}/></p>
             </section>
         </header>
     )
@@ -614,6 +616,7 @@ export function FeelingsInsightsAndEvents({accessToken}) {
     const [feeling, setFeeling] = useState({feeling: '', number: 0});
 
     const handleFeeling = (selectedFeeling) => {
+        posthog.capture('home_feelings_click');
         const randomNumber = Math.floor(Math.random() * 100, 1);
         setFeeling({...feeling, feeling: selectedFeeling, number: randomNumber})
         setFeelingRecorded(true);
