@@ -32,6 +32,10 @@ export function CalendarMain({accessToken}) {
             img: ovulationPhase,
             msg: "You are currently in your Ovulation Phase"
         },
+        "fertile": {
+            img: ovulationPhase,
+            msg: "You are currently in your fertile Phase"
+        },
         "luteal": {
             img: lutealPhase,
             msg: "You are currently in your Luteal Phase"
@@ -131,7 +135,7 @@ export function CalendarMain({accessToken}) {
                 <CircularProgressBar percentage={generalCycleInfo?.percentageComplete} bg={`#F5F5F5`}
                                      foreBg={'#015364'}>
                     <h2 className={`text-3xl font-bold text-primaryText text-center relative top-5`}>Day {generalCycleInfo?.daysDone + 1}</h2>
-                    <Image src={phaseImages[generalCycleInfo?.stage]?.img} alt={"phase image"}
+                    <Image src={phaseImages[generalCycleInfo.stage]?.img} alt={"phase image"}
                            className={`relative top-5`}/>
                     <p className={`w-[200px] text-center text-subText text-sm relative top-5`}> {phaseImages[generalCycleInfo?.stage]?.msg} </p>
                 </CircularProgressBar>
