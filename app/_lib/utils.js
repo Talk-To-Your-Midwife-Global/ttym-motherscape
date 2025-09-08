@@ -1,6 +1,16 @@
 import {twMerge} from "tailwind-merge";
 import {clsx} from "clsx";
 
+
+// PREGNANT, MENSTRUATING, MENOPAUSED, POSTPARTUM, UNASSIGNED
+export const USERTYPE = {
+    menstrual: "MENSTRUATING",
+    pregnant: "PREGNANT",
+    menopaused: "MENOPAUSED",
+    postpartum: "POSTPARTUM",
+    unassigned: "UNASSIGNED",
+}
+
 export function cn(...inputs) {
     return twMerge(clsx(...inputs));
 }

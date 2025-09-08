@@ -59,39 +59,60 @@ export async function updatePregnantUser(info) {
     }
 }
 
-export async function updateUser(info) {
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get('access_token')?.value;
-    const userType = matchUserStatus(cookieStore.get('ttym-user-type')?.value);
+export async function updateUserStatus(status = USERTYPE.unassigned) {
+    const {access_token} = await getLocalCookies(["access_token"]);
+    const bodyValue = JSON.stringify({status});
 
+    const response = await fetch(`${HOSTNAME_URI}/user/`, {
+        method: 'PUT',
+        headers: {
+            "Content-Type": 'application/json',
+            "Authorization": `Bearer ${access_token}`
+        },
+        body: bodyValue
+    })
+
+    const responseJson = await response.json()
+
+    if (!response.ok) {
+        Log("update_user_status", "raw_respone", {response})
+        Log("update_user_status", "json", {responseJson})
+        throw new Error(`An error occurred while updating user status ${responseJson}`)
+        // return false
+    }
+
+    Log({responseJson})
+    return true
+}
+
+export async function updateUser(info) {
     Log({info})
+    const {access_token} = await getLocalCookies(["access_token"]);
+
     const data = {
         cycle_length: info.cycleInfo,
         period_length: info.periodLength,
-        // is_consistent: info.cycleRegularity,
         last_period_start: info.periodStart,
-
+        notification_pref: "3",
     }
+    Log("data to be sent in updateUser()", {data})
 
-    Log("Something is sending; data")
-    Log({data})
     try {
         const response = await fetch(`${HOSTNAME_URI}/menstrual/profile/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + accessToken
+                'Authorization': 'Bearer ' + access_token
             },
             body: JSON.stringify(data)
         })
-        Log({info});
         if (!response.ok) {
             const errRes = await response.json();
             Log("An error occured", {errRes})
         }
         const json = await response.json()
         if (json) {
-            Log('user_profile_submit', {json})
+            Log('user_menstrual_profile_submit', {json})
             return {
                 success: true,
             }
