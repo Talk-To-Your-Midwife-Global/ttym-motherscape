@@ -23,7 +23,7 @@ export function fetchUser(url, token) {
             "Authorization": `Bearer ${token}`
         }
     }).then(res => {
-        // Log(res)
+        Log('from the fetch user function', {res})
         return res.json()
     })
 }

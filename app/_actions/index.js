@@ -4,7 +4,8 @@ import {HOSTNAME_URI} from "@/app/_config/main";
 import {matchUserStatus} from "@/app/_lib/functions";
 import {convertCommaStringToArray} from "@/app/dashboard/lib/functions";
 
-import {Log} from "@/app/_lib/utils";
+import {Log, USERTYPE} from "@/app/_lib/utils";
+import {getLocalCookies} from "@/app/_lib/getCookies";
 
 export async function storeUserType(userType) {
     const cookieStore = await cookies();
@@ -14,24 +15,11 @@ export async function storeUserType(userType) {
     }
 }
 
-export async function grabConfiguration() {
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get('access_token')?.value;
-    const userType = matchUserStatus(cookieStore.get('ttym-user-type')?.value);
-
-    return {
-        accessToken,
-        userType,
-    }
-}
-
 export async function updatePregnantUser(info) {
-    const config = await grabConfiguration();
-    Log(config)
+    const {access_token} = await getLocalCookies(["access_token"]);
     Log(info)
     Log(HOSTNAME_URI)
     const dataInput = {
-        // lmp: info?.lmp, todo: add this back
         delivery_date_est: info?.dueDate,
         complications: convertCommaStringToArray(info.existingConditions),
         history: {
@@ -49,7 +37,7 @@ export async function updatePregnantUser(info) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${config.accessToken}`
+                'Authorization': `Bearer ${access_token}`
             },
             body: JSON.stringify(dataInput)
         })
