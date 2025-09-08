@@ -56,6 +56,7 @@ export async function contentGqlFetcher(query, variables) {
         })
 
     if (!response.ok) {
+        console.log(response)
         throw new Error(response.statusText)
     }
 
