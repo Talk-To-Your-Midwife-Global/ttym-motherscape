@@ -6,6 +6,7 @@ import {MenstrualHome} from "@/app/dashboard/components/menstrualcycletracker/ho
 import {PregnantCalendarMain} from "@/app/dashboard/components/pregnancytracker/calendar";
 import {PregnancyHome} from "@/app/dashboard/components/pregnancytracker/home";
 import {cookies} from "next/headers";
+import {InstallPrompt} from "@/app/_components/InstallPrompt";
 import {Log} from "@/app/_lib/utils";
 
 
@@ -34,6 +35,7 @@ export default async function Page({params}) {
     if (userType === "trackmyperiod") {
         return (
             <section>
+                <InstallPrompt/>
                 {menstrualViews[routeName.route]}
             </section>
         )
