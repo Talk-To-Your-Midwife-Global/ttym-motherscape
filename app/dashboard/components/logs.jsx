@@ -7,6 +7,7 @@ import {logLog} from "@/app/dashboard/actions/action";
 import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {formatDate} from "@/app/_lib/functions";
 import {compareDesc} from "date-fns";
+import {Log} from "@/app/_lib/utils";
 
 
 export function Logs({accessToken}) {
@@ -16,7 +17,7 @@ export function Logs({accessToken}) {
     const [userType, setUserType] = useState("");
 
     async function getUserLogs() {
-        console.log({accessToken, PUBLICHOSTNAME})
+        Log({accessToken, PUBLICHOSTNAME})
         try {
             const response = await fetch(`${PUBLICHOSTNAME}/logs?date=${formatDate(day)}`, {
                 headers: {
@@ -34,7 +35,7 @@ export function Logs({accessToken}) {
                 setFeelingState({moods: [], symptoms: []});
             }
         } catch (err) {
-            console.log(err);
+            Log(err);
         }
     }
 
@@ -43,7 +44,7 @@ export function Logs({accessToken}) {
     }
 
     const handleMoodToggle = (item) => {
-        console.log(feelingState);
+        Log(feelingState);
         setFeelingState({
             symptoms: feelingState?.symptoms,
             moods: feelingState?.moods?.includes(item)

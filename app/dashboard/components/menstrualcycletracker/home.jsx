@@ -7,19 +7,22 @@ import Image from "next/image";
 import pinkFlower from "@/public/images/flowers-1.svg"
 import {useCycleInfo, useUserInfo} from "@/app/dashboard/lib/dataFetching";
 import {MiniLoader} from "@/app/_components";
+import {Log} from "@/app/_lib/utils";
+
 
 export function MenstrualHome({accessToken}) {
     const {user, isLoading, error} = useUserInfo(accessToken);
     const {data, error: cycleError, isLoading: cycleLoading} = useCycleInfo(accessToken);
 
-    console.log({user});
+    Log({user});
+    Log({user})
+
     if (isLoading) return (
         <MiniLoader/>
-        // <div>SOmthing</div>
     )
 
     if (error) {
-        console.log(error)
+        Log(error)
         return (
             <div> errorL {error}</div>
         )

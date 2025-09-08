@@ -3,6 +3,7 @@ import {StepOne, StepTwo, StepThree} from "../../_components"
 import rafiki from "../../../../public/images/pregnant/rafiki.svg"
 import cuate from "../../../../public/images/pregnant/cuate.svg"
 import pana from "../../../../public/images/pregnant/pana.svg"
+import {SideSliderButtons} from "@/app/onboarding/_components/SideSliderButtons";
 
 export default async function Page({params}) {
     const step = await params;
@@ -34,6 +35,8 @@ export default async function Page({params}) {
         </StepThree>,
     };
     return (
-        view[step.step]
+        <SideSliderButtons userType={'trackmypregnancy'} step={step.step}>
+            {view[step.step]}
+        </SideSliderButtons>
     )
 }

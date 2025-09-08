@@ -3,6 +3,7 @@ import {cookies} from "next/headers";
 import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {formatDate} from "@/app/_lib/functions";
 import {getLocalCookies} from "@/app/_lib/getCookies";
+import {Log} from "@/app/_lib/utils";
 
 export async function sendCurrentFeeling(feeling) {
     // Call route that sends feeling
@@ -14,7 +15,7 @@ export async function sendCurrentFeeling(feeling) {
 export async function setCookies(newCookies) {
     const cookieStore = await cookies()
     for (let cookie in newCookies) {
-        console.log(cookie, newCookies[cookie])
+        Log(cookie, newCookies[cookie])
         cookieStore.set(cookie, newCookies[cookie])
     }
     return true
@@ -23,7 +24,7 @@ export async function setCookies(newCookies) {
 export async function restartCycle() {
     const today = formatDate(new Date());
     const {access_token} = await getLocalCookies(['access_token']);
-    console.log(access_token);
+    Log(access_token);
 
     const response = await fetch(`${PUBLICHOSTNAME}/user/menstrual/start/?period_start=${today}`, {
         headers: {
@@ -32,18 +33,18 @@ export async function restartCycle() {
     });
 
     if (!response.ok) {
-        console.log(response);
-        console.log(response.statusText)
+        Log(response);
+        Log(response.statusText)
     }
 
     const data = await response.json();
-    console.log(data);
+    Log(data);
 
 }
 
 export async function contentGqlFetcher(query, variables) {
     // todo: remove all the console logs
-    console.log(JSON.stringify({query, variables}));
+    Log(JSON.stringify({query, variables}));
     const response = await fetch(`https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
         {
             method: 'POST',
@@ -60,7 +61,7 @@ export async function contentGqlFetcher(query, variables) {
     }
 
     const {data, errors} = await response.json();
-    console.log(data, {errors});
+    Log(data);
     return data;
 }
 
@@ -73,15 +74,15 @@ export async function bookmarkPost(postId) {
             "Authorization": `Bearer ${access_token}`
         }
     })
-    console.log(response)
+    Log(response)
     if (!response.ok) {
-        console.log({data});
+        Log({data});
         return {
             marked: false,
         }
     }
     const data = await response.json();
-    console.log({data});
+    Log({data});
     return {
         marked: data.isBookmarked
     }
@@ -110,7 +111,7 @@ export async function moodsAndFeelingsForTheDay(state, accessToken) {
 }
 
 export async function logLog(state, accessToken, userType) {
-    // console.log(state)
+    // Log(state)
     const response = await fetch(`${PUBLICHOSTNAME}/logs/`, {
         method: 'POST',
         headers: {

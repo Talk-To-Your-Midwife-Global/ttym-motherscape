@@ -7,6 +7,7 @@ import {PregnantCalendarMain} from "@/app/dashboard/components/pregnancytracker/
 import {PregnancyHome} from "@/app/dashboard/components/pregnancytracker/home";
 import {cookies} from "next/headers";
 import {InstallPrompt} from "@/app/_components/InstallPrompt";
+import {Log} from "@/app/_lib/utils";
 
 
 export default async function Page({params}) {
@@ -15,7 +16,7 @@ export default async function Page({params}) {
     const accessToken = cookieStore.get('access_token')?.value;
     const userType = cookieStore.get('ttym-user-type')?.value;
     const socketUrl = process.env.NEXT_PUBLIC_WS_URL;
-
+    Log('Something is happening ')
     const menstrualViews = {
         'me': <MenstrualHome accessToken={accessToken}/>,
         'calendar': <CalendarMain accessToken={accessToken}/>,

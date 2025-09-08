@@ -10,13 +10,13 @@ import ovulationBlue from "@/public/images/ovulation-phase-blue.svg"
 import pregnancyPink from "@/public/images/pregnancy-pink.svg"
 import {montserrat} from "@/app/_fonts";
 import Link from "next/link";
-import {formatDate, menstrualCycleDateGenerator, necessaryDataForMenstrualUI, relatableDay} from "@/app/_lib/functions";
+import {necessaryDataForMenstrualUI, relatableDay} from "@/app/_lib/functions";
 import {PageFadeAnimator} from "@/app/_components";
 import {useCycleInfo} from "@/app/dashboard/lib/dataFetching";
 import {DropletIcon} from "@/app/dashboard/components/icons/dropletIcon";
-import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
 import {restartCycle} from "@/app/dashboard/actions/action";
 import {useSWRConfig} from "swr/_internal";
+import {Log} from "@/app/_lib/utils";
 
 export function CalendarMain({accessToken}) {
     const phaseImages = {
@@ -42,9 +42,9 @@ export function CalendarMain({accessToken}) {
     const {data, error, isLoading} = useCycleInfo(accessToken);
     const generalCycleInfo = necessaryDataForMenstrualUI(data || []);
     const atEndOfCycle = generalCycleInfo?.stage === "Missed";
-    console.log(data)
-    console.log('current', generalCycleInfo?.stage == "Missed");
-    console.log(generalCycleInfo)
+    Log(data)
+    Log('current', generalCycleInfo?.stage == "Missed");
+    Log(generalCycleInfo)
 
     const [viewLargeCalendar, setViewLargeCalendar] = useState(false);
     const [hideDailyTip, setHideDailyTip] = useState(false);

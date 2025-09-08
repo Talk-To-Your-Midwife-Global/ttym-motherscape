@@ -1,15 +1,16 @@
 import {addDays, differenceInDays} from "date-fns";
 import {computeNumberOfMonthsFromDays, formatNumberWithOrdinal, poundsToGrams} from "@/app/dashboard/lib/functions";
+import {Log} from "@/app/_lib/utils";
 
 export function fetcher(url, token = "") {
     if (token.length > 1) {
-        console.log('fetcher ');
+        Log('fetcher ');
         return fetch(url, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
         }).then(res => {
-            console.log(res);
+            Log(res);
             return res.json()
         })
     }
@@ -22,7 +23,7 @@ export function fetchUser(url, token) {
             "Authorization": `Bearer ${token}`
         }
     }).then(res => {
-        // console.log(res)
+        // Log(res)
         return res.json()
     })
 }
@@ -36,7 +37,7 @@ export function fetchCycle(url, token) {
         const result = res.json()
         return result
     }).then(result => {
-        console.log({result});
+        Log({result});
         const formattedData = {
             ...result,
             dates: menstrualCycleDateGenerator(result.current_cycle.start_date, result.period_length, "general", result.cycle_length),
@@ -56,7 +57,7 @@ export function fetchPregnancy(url, token) {
     }).then(res => {
         return res.json()
     }).then(result => {
-        console.log('fetch pregnancy', {result})
+        Log('fetch pregnancy', {result})
         let newResult = necessaryDataForPregnancyUI(result)
         return {
             ...newResult
@@ -180,7 +181,7 @@ export function necessaryDataForUser(allData) {
 }
 
 export function necessaryDataForPregnancyUI(data) {
-    console.log({data});
+    Log({data});
     const details = data?.details
     return {
         days: details?.day,
@@ -201,7 +202,7 @@ export function necessaryDataForPregnancyUI(data) {
 
 function computeProgressBarValues(days, week) {
     const month = computeNumberOfMonthsFromDays(days);
-    console.log(month);
+    Log(month);
     let result = {
         segment1: 0,
         segment2: 0,
@@ -224,16 +225,16 @@ function computeProgressBarValues(days, week) {
         result.circlePosition = (week / 40) * 100 + (result.segment3);
     }
 
-    console.log(result);
+    Log(result);
     return result;
 
 }
 
 // Convert this whole thing into a class soon
 export function necessaryDataForMenstrualUI(allData) {
-    // console.log('cycle legnth', allData.cycle_length)
+    // Log('cycle legnth', allData.cycle_length)
     const {current_cycle} = allData;
-    console.log({current_cycle});
+    Log({current_cycle});
     const dates = menstrualCycleDateGenerator(current_cycle?.start_date, allData.period_length, "general", allData.cycle_length)
     const daysDone = computeDaysDone(current_cycle?.start_date)
     const daysToPeriod = computeDaysToPeriod(current_cycle?.start_date, allData.cycle_length)
