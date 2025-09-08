@@ -1,395 +1,47 @@
 "use client"
-import {useEffect, useState} from "react"
-import {useTransition} from "react";
-import {useRouter} from "next/navigation";
-import {inter} from "@/app/_fonts";
+import {motion} from "framer-motion";
 import Link from "next/link"
-import {PageSlideAnimator} from "@/app/_components";
-import {IconButton} from "@/app/_components";
-import {DayPicker} from "react-day-picker";
 import "react-day-picker/style.css";
 
-function QuestionNav({url, icon = "lucide--chevron-left", last = false,}) {
+import {Log} from "@/app/_lib/utils";
+
+function ProgressIndicator({target = 0, total = 7}) {
+    Log(target, total)
+    const progress = (target / total) * 100;
+    return (
+        <div className="flex space-x-2 px-[20px]">
+            <div className="h-2 rounded-md w-[300px] bg-[#D9D9D9] .dark:bg-neutral-600">
+                <div className="h-2 rounded-md bg-[#E82A73] max-w-[300px]" style={{width: `${progress}%`}}></div>
+            </div>
+        </div>
+    );
+}
+
+export function QuestionNav({url, question, icon = "lucide--chevron-left",}) {
     return (
         <nav className="px-[10px] flex justify-between items-center my-5 text-mainText">
-            <Link href={url} className=".bg-[#16898E1A] w-12 h-12 rounded-full flex justify-center items-center">
-                <span className={`iconify ${icon} text-2xl`}></span>
-            </Link>
-            {!last ? <Link href='/questions/' className="text-mainText font-medium"><span
-                className="iconify lucide--x text-2xl relative top-1"></span></Link> : ''}
+            <motion.div
+                whileHover={{scale: 1.1}}
+                whileTap={{scale: 0.95}}
+                className={`div`}
+            >
+                <Link href={url} className=".bg-[#16898E1A] w-12 h-12 rounded-full flex justify-center items-center">
+                    <span className={`iconify ${icon} text-2xl`}></span>
+                </Link>
+            </motion.div>
+            <ProgressIndicator target={question} total={7}/>
 
         </nav>
     )
 }
 
-function ProgressIndicator({target = 0, total = 5}) {
+function QuestionHead({text, desc = ""}) {
     return (
-        <div className="flex space-x-2 px-[20px]">
-            {Array.from({length: total}).map((_, index) => (
-                <div
-                    key={index}
-                    className={`flex-1 rounded-full h-2 ${target > 0 && index < target ? 'bg-primaryColor' : 'bg-[#E4E4E4]'}`}
-                />
-            ))}
-        </div>
-    );
-}
-
-function QuestionHead({text}) {
-    return (
-        <header className="text-primaryText my-5 px-[20px] font-medium">
-            <h2 className="text-2xl"> {text} </h2>
+        <header
+            className="text-black text-center flex flex-col items-center justify-center  my-0 px-[20px] ">
+            <h2 className="text-2xl font-medium"> {text} </h2>
+            <p className={'text-[16px]'}>{desc}</p>
         </header>
     )
 }
 
-export function QuestionParent({question, updateUser}) {
-    const router = useRouter()
-    const [answers, setAnswers] = useState({})
-    const [isPending, startTransition] = useTransition();
-
-
-    const handleQuestionAnswers = (questionAnswers) => {
-        setAnswers((prevState) => ({...prevState, ...questionAnswers}))
-    }
-    const handleSubmit = () => {
-        localStorage.setItem("answers", JSON.stringify({...JSON.parse(localStorage.getItem('answers')) || {}, ...answers}))
-        const next = String(Number(question) + 1)
-
-        // After the final question
-        if (next <= 5) {
-            setTimeout(() => router.push(`/questions/${next}`), 200)
-        } else {
-            startTransition(async () => {
-                const data = JSON.parse(localStorage.getItem("answers"))
-                console.log({data})
-                const res = await updateUser(data);
-                console.log({res});
-                if (res.success) {
-                    setTimeout(() => router.push(`/dashboard`), 100)
-                } else {
-                    setTimeout(() => router.push(`/questions/`), 100)
-                }
-            })
-        }
-    }
-
-    const questions = {
-        1: <BasicCycleInformation handleAnswers={handleQuestionAnswers} state={answers} submit={handleSubmit}/>,
-        2: <CycleRegularity handleAnswers={handleQuestionAnswers} submit={handleSubmit} state={answers}/>,
-        3: <LastPeriod handleAnswers={handleQuestionAnswers} submit={handleSubmit}/>,
-        4: <SymptomsTracking handleAnswers={handleQuestionAnswers} state={answers} submit={handleSubmit}/>,
-        5: <NotificationPreferences handleAnswers={handleQuestionAnswers} submit={handleSubmit} state={answers}/>
-
-    }
-
-    return (
-        <section>
-            <QuestionNav last={question === 6}
-                         url={question > 1 ? `/questions/${question - 1}` : '/questions/'}/>
-            <ProgressIndicator target={question}/>
-            <PageSlideAnimator>
-                {questions[question]}
-            </PageSlideAnimator>
-        </section>
-    )
-}
-
-function BasicCycleInformation({handleAnswers, submit, state}) {
-    const [disableBtn, setDisableButton] = useState(true)
-
-    const handleChange = (event) => {
-        const {name, value} = event.target
-
-        if (name === 'periodLength' && value > 0) {
-            setDisableButton(false)
-        } else {
-            setDisableButton(true)
-        }
-        handleAnswers({...state, [name]: value})
-    }
-    const handleSubmit = () => {
-        submit()
-    }
-    return (
-        <section className={`${inter.className} h-svh overflow-hidden`}>
-            <QuestionHead text="Basic Cycle Information"/>
-            <form className="px-[20px] text-primaryText">
-                <div className="flex flex-col gap-2 mb-5">
-                    <label htmlFor="cycle-info" className="font-medium">What is the average length of your menstrual
-                        cycle?</label>
-                    <div className="grid">
-                        <svg
-                            className="pointer-events-none z-10 right-1 relative col-start-1 row-start-1 h-4 w-4 self-center justify-self-end forced-colors:hidden"
-                            viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-                            <path fillRule="evenodd"
-                                  d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
-                                  clipRule="evenodd"></path>
-                        </svg>
-                        <select defaultValue=""
-                                className="w-full h-11 appearance-none forced-colors:appearance-auto row-start-1 col-start-1 rounded-lg bg-slate-50 hover:border-primaryColor hover:bg-white border-2 text-[#808080] px-2 outline-none"
-                                name="cycleInfo" onChange={handleChange}>
-                            <option value="" disabled hidden>Average Length</option>
-                            <option value="25">25 days</option>
-                            <option value="26">26 days</option>
-                            <option value="27">27 days</option>
-                            <option value="28">28 days</option>
-                            <option value="29">29 days</option>
-                            <option value="30">30 days</option>
-                            <option value="31">31 days</option>
-                            <option value="32">32 days</option>
-                            <option value="33">33 days</option>
-                            <option value="34">34 days</option>
-                            <option value="35">35 days</option>
-                            <option value="36">Above 35</option>
-
-                        </select>
-                    </div>
-                </div>
-
-                <div>
-                    <div className="flex flex-col gap-2">
-                        <label htmlFor="period-length" className="font-medium">How many days does your period usually
-                            last?</label>
-                        <input
-                            className="border-2 border-slate-300 text-[#808080] h-11 rounded-md bg-transparent px-[10px] outline-none"
-                            placeholder="Days of Period" type="number" min={1} max={60} name="periodLength"
-                            id="period-length" onChange={handleChange}/>
-                    </div>
-                </div>
-            </form>
-            <div className="relative -bottom-[25%] w-full flex justify-center">
-                <IconButton text="Continue" onClick={handleSubmit} icon="iconify lucide--arrow-right"
-                            disabled={disableBtn} loadingText={'Getting to know you a little better 🔍🩷'}/>
-            </div>
-        </section>
-    )
-}
-
-function CycleRegularity({handleAnswers, submit, state}) {
-    const [answers, setAnswers] = useState({})
-    const [disableBtn, setDisableButton] = useState(true)
-
-    const handleChange = (event) => {
-        const {name, value} = event.target
-
-        if (name === 'cycleRegularity') {
-            setDisableButton(false)
-        } else {
-            setDisableButton(true)
-        }
-
-        handleAnswers({...state, [name]: value})
-    }
-
-    return (
-        <section className={`${inter.className} h-svh overflow-hidden`}>
-            <QuestionHead text="Cycle Regularity"/>
-            <form className="px-[20px] text-primaryText">
-                <div className="flex flex-col gap-2 mb-5">
-                    <label htmlFor="cycle-regularity" className="font-medium">Is your cycle regular or
-                        irregular?</label>
-                    <div className="grid">
-                        <svg
-                            className="pointer-events-none z-10 right-1 relative col-start-1 row-start-1 h-4 w-4 self-center justify-self-end forced-colors:hidden"
-                            viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-                            <path fillRule="evenodd"
-                                  d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
-                                  clipRule="evenodd"></path>
-                        </svg>
-                        <select defaultValue=""
-                                className="w-full h-11 appearance-none forced-colors:appearance-auto row-start-1 col-start-1 rounded-lg bg-slate-50 hover:border-primaryColor hover:bg-white border-2 text-[#808080] px-2 outline-none"
-                                id="cycle-regularity" name="cycleRegularity" onChange={handleChange}>
-                            <option value="" disabled hidden>eg. regular</option>
-                            <option value={true}>Regular</option>
-                            <option value={false}>Irregular</option>
-                        </select>
-                    </div>
-                </div>
-                <div className="text-sm text-[#667085] font-medium flex flex-col gap-5">
-                    <p>Regular: Roughly the same number of days each cycle.</p>
-                    <p>Irregular: Varies significantly from month to month. This helps the app adapt predictions based
-                        on consistency.</p>
-                </div>
-            </form>
-            <div className="relative -bottom-[25%] w-full flex justify-center">
-                <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn}
-                            loadingText={'Growing insights,one question at a time🌸'}
-                />
-            </div>
-        </section>
-    )
-}
-
-function LastPeriod({handleAnswers, submit, state}) {
-    const [disableBtn, setDisableButton] = useState(true)
-    const [selected, setSelected] = useState(new Date());
-
-    const handleChange = (date) => {
-        // Because passing it directly is causing issues
-        const formattedDate = date.toISOString().split('T')[0];
-        if (date) {
-            setSelected(date); // the raw date was passed because the formatted date causes an error
-            setDisableButton(false);
-        }
-
-        handleAnswers({...state, periodStart: formattedDate})
-    }
-
-    return (
-        <section className={`${inter.className} h-svh overflow-hidden`}>
-            <QuestionHead text="Last Period Details"/>
-            <form className="px-[20px] text-primaryText">
-                <div className="flex flex-col gap-2 mb-5">
-                    <label htmlFor="last-period" className="font-medium">When did your last period start?</label>
-                    <input type="text" value={selected?.toLocaleDateString('en-US')} name="periodStart" id="last-period"
-                           disabled={true}/>
-                </div>
-                <div className="flex items-center .justify-center ">
-                    <DayPicker
-                        animate
-                        captionLayout="dropdown"
-                        mode="single"
-                        startMonth={new Date(new Date().getFullYear(), new Date().getMonth() - 1)}
-                        endMonth={new Date(new Date().getFullYear(), new Date().getMonth())}
-                        selected={selected}
-                        onSelect={handleChange}
-                        timeZone="UTC"
-
-                    />
-                </div>
-            </form>
-            <div className="relative .-bottom-[45%] w-full flex justify-center z-[50]">
-                <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn}
-                            loadingText={'Your body is unique,we’re listening👂💖'}
-                />
-            </div>
-        </section>
-    )
-}
-
-function SymptomsTracking({handleAnswers, submit, state}) {
-    const [disableBtn, setDisableButton] = useState(true)
-
-    const handleSubmit = (event) => {
-        submit()
-    }
-
-    const handleMoodToggle = (item) => {
-        if (state?.moods) {
-            handleAnswers({
-                moods: state?.moods?.includes(item)
-                    ? state?.moods.filter((i) => i !== item)
-                    : [...state.moods, item]
-            })
-        }
-        setDisableButton(false)
-    };
-
-    const handleSymptomsToggle = (item) => {
-        handleAnswers({
-            symptoms: state?.symptoms?.includes(item)
-                ? state?.symptoms.filter((i) => i !== item)
-                : [...state.symptoms, item]
-        })
-        setDisableButton(false)
-    };
-    // Initialize the moods and symptoms to avoid array method errors; important! 
-    useEffect(() => {
-        handleAnswers({
-            moods: [],
-            symptoms: []
-        })
-    }, [])
-
-    const moodData = ['happy', 'sad', 'calm', 'energetic', 'mood swings', 'irritate', 'depressed', 'anxious', 'uneasy', 'horny', 'frustrated']
-    const symptomsData = ['fine', 'cramps', 'acne', 'cravings', 'tender breast', 'fatigue', 'backache']
-    return (
-        <section className={`${inter.className} h-[100%] .overflow-hidden`}>
-            <QuestionHead text="Symptoms Tracking Preferences"/>
-            <form className="px-[20px] text-primaryText">
-                <div className="flex flex-col gap-2 mb-8">
-                    <label htmlFor="last-period" className="font-medium">Which symptoms would you like to track?</label>
-                    <h3 className="text-xl text-primaryColor font-medium">Mood</h3>
-                    <section className="flex flex-wrap gap-2">
-                        {moodData.map((mood, index) => {
-                            return <input type="button" value={mood} name="mood" key={index}
-                                          onClick={() => handleMoodToggle(mood)}
-                                          className={`cursor-pointer text-sm p-2 px-4 py-2 capitalize2  rounded-full border-2 border-primaryColor ${
-                                              state.moods?.includes(mood) ? 'bg-primaryColor rounded-full text-white' : 'text-primaryColor  border-primaryColor '
-                                          }`}>
-                            </input>
-                        })}
-                    </section>
-                </div>
-                <div>
-                    <h3 className="text-xl text-primaryColor font-medium">Symptoms</h3>
-                    <section className="flex flex-wrap gap-2 mt-2">
-                        {symptomsData.map((symptom, index) => {
-                            return <input type="button" value={symptom} name="mood" key={index}
-                                          onClick={() => handleSymptomsToggle(symptom)}
-                                          className={`cursor-pointer text-sm p-2 px-4 py-2 capitalize rounded-full border-2 border-primaryColor ${
-                                              state.symptoms?.includes(symptom) ? 'bg-primaryColor rounded-full text-white' : 'text-primaryColor  border-primaryColor '
-                                          }`}>
-                            </input>
-                        })}
-                    </section>
-                </div>
-            </form>
-            <div className="my-[25%] w-full flex justify-center">
-                <IconButton text="Continue" onClick={handleSubmit} icon="iconify lucide--arrow-right"
-                            disabled={disableBtn}
-                            loadingText={'One step closer to syncing with your cycle 👏🚀'}
-                />
-            </div>
-        </section>
-    )
-}
-
-function NotificationPreferences({handleAnswers, submit, state}) {
-    const [disableBtn, setDisableButton] = useState(true)
-
-    const handleChange = (event) => {
-        const {name, value} = event.target
-        if (name === 'notificationPreference') {
-            setDisableButton(false)
-        } else {
-            setDisableButton(true)
-        }
-        handleAnswers({...state, [name]: value})
-    }
-    return (
-        <section className={`${inter.className} h-svh overflow-hidden`}>
-            <QuestionHead text="Notification Preferences"/>
-            <form className="px-[20px] text-primaryText">
-                <div className="flex flex-col gap-2 mb-5">
-                    <label htmlFor="cycle-info" className="font-medium">Would you like reminders before your period
-                        starts? If yes, how many days before?</label>
-
-                    <div className="grid">
-                        <svg
-                            className="pointer-events-none z-10 right-1 relative col-start-1 row-start-1 h-4 w-4 self-center justify-self-end forced-colors:hidden"
-                            viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-                            <path fillRule="evenodd"
-                                  d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
-                                  clipRule="evenodd"></path>
-                        </svg>
-                        <select defaultValue=""
-                                className="w-full h-11 appearance-none forced-colors:appearance-auto row-start-1 col-start-1 rounded-lg bg-slate-50 hover:border-primaryColor hover:bg-white border-2 text-[#808080] px-2 outline-none"
-                                name="notificationPreference" onChange={handleChange}>
-                            <option value="" hidden disabled>eg. 1 day</option>
-                            <option value="1">1 day</option>
-                            <option value="2">2 days</option>
-                            <option value="3">3 days</option>
-                            <option value="5">5 days</option>
-                        </select>
-                    </div>
-                </div>
-            </form>
-            <div className="relative -bottom-[35%] w-full flex justify-center">
-                <IconButton onClick={submit} text="Continue" icon="iconify lucide--arrow-right" disabled={disableBtn}
-                            loadingText={'Your rhythm, your rules. Let’s keep you in sync ✨'}/>
-            </div>
-        </section>
-    )
-}

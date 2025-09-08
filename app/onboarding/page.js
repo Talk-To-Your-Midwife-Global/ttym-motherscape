@@ -4,12 +4,11 @@ import {storeUserType} from "../_actions"
 import {LongPersonaCard} from "./_components"
 import pregnantImageNoBg from "../../public/images/pregnancy-profile-img-no-bg.png"
 import trackerImageNoBg from "../../public/images/tracker-profile-image.png"
-
 import {IconButton} from "../_components"
 import {useState} from "react"
+import {OnboardHeading} from "@/app/onboarding/_components/OnboardHeading";
 
 export default function Page() {
-
     const [enable, setEnable] = useState(true)
     const [routeName, setRouteName] = useState('');
 
@@ -31,11 +30,9 @@ export default function Page() {
     }
 
     return (
-        <section className="flex flex-col .bg-onboarding-bg .bg-cover .bg-center">
-            <header className="px-[20px] pt-5 pb-7 font-medium">
-                <h1 className="text-2xl text-mainText font-medium">How can we help you today?</h1>
-                <p className="text-base text-subText ">Let&apos;s begin by telling us about you</p>
-            </header>
+        <section className="flex flex-col .h-screen .bg-onboarding-bg .bg-cover .bg-center">
+            <OnboardHeading title={"Which journey are you on right now?"}
+                            subTitle={"Select one of the options below to tailor your experience"}/>
             <section className="px-5 grid grid-cols-1 gap-5">
                 <LongPersonaCard header={'Track my pregnancy'}
                                  desc={'Monitor your pregnancy week by week with personalized tips and insights.'}
@@ -51,7 +48,7 @@ export default function Page() {
                     <Image src={trackerImageNoBg} width={157} height={100} alt="pregnant woman"/>
                 </LongPersonaCard>
             </section>
-            <section className=".fixed relative -bottom-10 w-full flex justify-center">
+            <section className="fixed  bottom-10 w-full flex justify-center">
                 <IconButton text="Continue" icon="iconify lucide--arrow-right" href={`/onboarding/${routeName}/1`}
                             disabled={enable}/>
             </section>

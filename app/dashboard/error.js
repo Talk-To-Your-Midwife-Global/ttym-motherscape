@@ -3,11 +3,12 @@
 import {useEffect} from 'react'
 import {logout} from "@/app/_actions/auth";
 import Link from "next/link";
+import {Log} from "@/app/_lib/utils";
 
 export default function Error({error, reset}) {
     useEffect(() => {
         // Log the error to an error reporting service
-        console.error(error)
+        Log(error)
     }, [error])
     // TODO: Edit this page
     return (

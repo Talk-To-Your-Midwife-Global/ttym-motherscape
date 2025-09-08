@@ -5,19 +5,20 @@ import {postsPreviewQuery} from "@/app/dashboard/hooks/graphContentFetchers";
 import {useContentFetcher} from "@/app/_hooks/useContentFetcher";
 import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
 import {bookmarkPost} from "@/app/dashboard/actions/action";
+import {Log} from "@/app/_lib/utils";
 
 
 export function ArticleParent() {
     const [isPending, startTransition] = useTransition();
     const {blogData, isLoading, error} = useContentFetcher({query: postsPreviewQuery, variables: null})
-    console.log(blogData)
+    Log(blogData)
 
     const theresContent = blogData ? blogData.length > 0 : false;
 
     const handleBookmarking = (id) => {
         startTransition(async () => {
             const res = await bookmarkPost(id);
-            console.log(res);
+            Log(res);
         })
     }
 

@@ -51,6 +51,7 @@ import cycleGraphIcon from "@/public/icons/pregnant/cyclegraph.svg"
 import cycleWeightIcon from "@/public/icons/pregnant/cycleweight.svg"
 import {BookmarkingIcon} from "@/app/dashboard/components/icons";
 import {ArticleParent} from "@/app/dashboard/components/ui/ArticleParent";
+import {Log} from "@/app/_lib/utils";
 
 export function DashboardHeader(user) {
     return (
@@ -233,8 +234,8 @@ export function MenstrualCycleCardMain({accessToken}) {
     const generalCycleInfo = necessaryDataForMenstrualUI(data || []);
 
     if (isLoading) return <div>loading...</div>
-    console.log("From the card")
-    console.log({data});
+    Log("From the card")
+    Log({data});
     if (error) {
         return (
             <div>
@@ -344,7 +345,7 @@ export function InsightCard({insight, accessToken}) {
 }
 
 export function ChatCard({key, info}) {
-    console.log(info)
+    Log(info)
     const router = useRouter()
     const [showOptions, setShowOptions] = useState(false)
     const optionsRef = useRef(null);
@@ -358,12 +359,12 @@ export function ChatCard({key, info}) {
 
     const handleAddUserToFavList = (userInfo) => {
         // TODO: add user to fav list
-        console.log('added user to fav list')
+        Log('added user to fav list')
     }
 
     const handleMarkMessageAsRead = (userInfo) => {
         // TODO: mark message as read
-        console.log('marked message as read')
+        Log('marked message as read')
     }
 
     const handleMoveToChat = () => {
@@ -535,7 +536,7 @@ export function ShortCalendar({
     //     specialDays = specialDates ? specialDates : menstrualCycleDateGenerator(data?.current_cycle?.start_date, data?.period_length, "general", data?.cycle_length);
     // }
 
-    console.log({specialDays});
+    Log({specialDays});
 
     const [currentMonth, setCurrentMonth] = useState(new Date())
     const startWeek = startOfWeek(new Date())
