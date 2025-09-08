@@ -20,19 +20,19 @@ import {Log} from "@/app/_lib/utils";
 
 export function CalendarMain({accessToken}) {
     const phaseImages = {
-        "Menstrual": {
+        "menstrual": {
             img: menstrualPhase,
             msg: "You are currently in your Menstrual Phase"
         },
-        "Follicular": {
+        "follicular": {
             img: follicularPhase,
             msg: "You are currently in your Follicular Phase"
         },
-        "Ovulation": {
+        "ovulation": {
             img: ovulationPhase,
             msg: "You are currently in your Ovulation Phase"
         },
-        "Luteal": {
+        "luteal": {
             img: lutealPhase,
             msg: "You are currently in your Luteal Phase"
         },
