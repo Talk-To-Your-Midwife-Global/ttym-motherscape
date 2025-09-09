@@ -52,6 +52,7 @@ import posthog from "posthog-js";
 import {ProfileImage} from "@/app/_components/ProfileImage";
 import {SideNav} from "@/app/dashboard/components/sideNav";
 import {TapWrapper} from "@/app/_components/TapWrapper";
+import {useCalendarView} from "@/app/contexts/showCalendarContext";
 
 export function DashboardHeader(user) {
     Log('dashboardheader_info_display', {user});
@@ -70,9 +71,14 @@ export function DashboardNav({text = "", accessToken}) {
     const [hasNotifications, setHasNotifications] = useState(false);
     const [open, setOpen] = useState(false);
     const {user} = useUserInfo(accessToken);
+    const {viewLarge, setViewLarge} = useCalendarView();
 
     const handleOpen = (value) => {
         setOpen(value);
+    }
+    const handleCalendarView = () => {
+        Log("Hanndleacalendarview clicked")
+        setViewLarge((prevState) => !prevState);
     }
 
     return (
@@ -83,7 +89,7 @@ export function DashboardNav({text = "", accessToken}) {
                 </div>
 
                 <div className={`rounded-full h-[50px] p-4 flex gap-4 items-center justify-end`}>
-                    <TapWrapper>
+                    <TapWrapper clickAction={handleCalendarView}>
                         <div className={"w-[55px] h-[55px] rounded-full border-2 flex items-center justify-center "}>
                             <Image src={calendarIcon} alt={"Calendary icon"} width={17.4} height={17.4}/>
                         </div>
@@ -610,17 +616,19 @@ export function Calendar({action, withFlower, specialDates, accessToken}) {
 
 export function FeelingsInsightsAndEvents({accessToken}) {
     const faces = [
-        {desc: "good", img: goodFace, color: "#251FD1"},
-        {desc: "bad", img: badFace},
-        {desc: "angry", img: angryFace},
-        {desc: "tired", img: tiredFace},
-        {desc: "happy", img: happyFace},
-        {desc: "neutral", img: neutralFace}
+        {desc: "happy", img: happyFace, emoji: "😊"},
+        {desc: "sad", img: badFace, emoji: "😔"},
+        {desc: "calm", img: neutralFace, emoji: "😌"},
+        {desc: "irritated", img: angryFace, emoji: "😡"},
+        {desc: "anxious", img: goodFace, emoji: "😰"},
+        // {desc: "neutral", img: neutralFace, emoji: "😌"},
+        // {desc: "tired", img: tiredFace, emoji: "😌"},
     ]
     const [feelingRecorded, setFeelingRecorded] = useState(false)
     const [feeling, setFeeling] = useState({feeling: '', number: 0});
 
-    const handleFeeling = (selectedFeeling) => {
+    const handleFeeling = (e, selectedFeeling) => {
+        e.preventDefault();
         posthog.capture('home_feelings_click');
         const randomNumber = Math.floor(Math.random() * 100, 1);
         setFeeling({...feeling, feeling: selectedFeeling, number: randomNumber})
@@ -641,10 +649,14 @@ export function FeelingsInsightsAndEvents({accessToken}) {
                     <section className={"flex justify-evenly my-5"}>
                         {faces.map(face => {
                             return (
-                                <div key={face.desc} className={"flex flex-col items-center justify-evenly"}>
-                                    <Image onClick={() => handleFeeling(face.desc)} src={face.img} alt={"face"}/>
-                                    <p> {face.desc} </p>
-                                </div>
+                                <TapWrapper>
+                                    <div tabIndex={0} onClick={(e) => handleFeeling(e, face.desc)} key={face.desc}
+                                         className={"w-[70px] h-[80px] flex flex-col items-center justify-evenly border-2 .p-2 border-[#D2D2D2] rounded-md"}>
+                                        {/*<Image onClick={() => handleFeeling(face.desc)} src={face.img} alt={"face"}/>*/}
+                                        <p>{face.emoji}</p>
+                                        <p>{face.desc}</p>
+                                    </div>
+                                </TapWrapper>
                             )
                         })
                         }
@@ -679,7 +691,6 @@ export function FeelingsInsightsAndEvents({accessToken}) {
                     <p className={`${montserrat.className} text-subText`}>Personalized health tips based on logged
                         data</p>
                 </header>
-                {/*<Insights accessToken={accessToken}/>*/}
                 <ArticleParent/>
             </section>
             <Events accessToken={accessToken}/>

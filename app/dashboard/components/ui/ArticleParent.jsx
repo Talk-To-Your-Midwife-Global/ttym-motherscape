@@ -61,7 +61,7 @@ export function ArticleParent() {
         // TODO: add empty state here
         return (
             <div>
-                Empty states goes here
+                No articles Found
             </div>
         )
     }
