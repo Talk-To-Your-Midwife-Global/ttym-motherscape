@@ -29,7 +29,7 @@ export function MenstrualHome({accessToken}) {
     }
     return (
         <section className={"my-2"}>
-            <DashboardHeader user={user?.user}/>
+            {/*<DashboardHeader user={user?.user}/> TODO: remove this*/}
             <section className={"mt-1"}>
                 <ShortCalendar
                     withFlower={false}

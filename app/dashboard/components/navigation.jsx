@@ -77,7 +77,7 @@ export function Navigation({accessToken}) {
                     {/* eslint-disable-next-line react/jsx-no-undef */}
                     <ProfileImage userProfileInfo={user}/>
                     <div>
-                        <h2 className={`text-primaryColor text-xl font-medium w-[160px]`}>{user?.user.full_name}</h2>
+                        <h2 className={`text-primaryColor text-xl font-medium w-[160px]`}>{user?.user.first_name}</h2>
                         <p className={`text-subText text-sm ${montserrat.className}`}>{user?.user.email}</p>
                     </div>
                 </section>

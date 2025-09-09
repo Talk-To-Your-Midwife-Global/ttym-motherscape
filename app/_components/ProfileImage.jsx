@@ -8,9 +8,10 @@ export function ProfileImage(props) {
                 <Image src={sarah} alt={"your profile image"} width={80} height={30}/>
                 :
                 <img
-                    src={`https://api.dicebear.com/9.x/initials/svg?seed=${props.userProfileInfo?.user?.full_name}`}
+                    // src={`https://api.dicebear.com/9.x/initials/svg?seed=${props.userProfileInfo?.user?.full_name}`}
+                    src={`https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${props.userProfileInfo?.user?.first_name}`}
                     alt={"avatar"}
-                    className="rounded-full w-[80px] h-[50px]"/>
+                    className="rounded-full w-[100px] h-[100px]"/>
         }
     </div>;
 }
