@@ -69,12 +69,13 @@ export function DashboardHeader(user) {
 
 export function DashboardNav({text = ""}) {
     const [hasNotifications, setHasNotifications] = useState(false)
-    const [toggleSearch, setToggleSearch] = useState(false)
+    const [toggleSearch, setToggleSearch] = useState(false);
 
     return (
         <nav className={"flex items-center gap-3 mt-5"}>
             <div className={"bg-[#0F969C26] rounded-full w-fit h-fit p-4"}>
                 <Image src={category} alt={"some grid icon thingy"}/>
+                {/*<ProfileImage/>*/}
             </div>
             {
                 text.length === 0 ?
