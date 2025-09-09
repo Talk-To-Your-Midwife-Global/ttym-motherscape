@@ -53,6 +53,7 @@ import {Log} from "@/app/_lib/utils";
 import posthog from "posthog-js";
 import {ProfileImage} from "@/app/_components/ProfileImage";
 import {SideNav} from "@/app/dashboard/components/sideNav";
+import {TapWrapper} from "@/app/_components/TapWrapper";
 
 export function DashboardHeader(user) {
     Log('dashboardheader_info_display', {user});
@@ -84,12 +85,22 @@ export function DashboardNav({text = "", accessToken}) {
                 </div>
 
                 <div className={`rounded-full h-[50px] p-4 flex gap-4 items-center justify-end`}>
-                    <div className={"w-[55px] h-[55px] rounded-full border-2 flex items-center justify-center "}>
-                        <Image src={calendarIcon} alt={"Calendary icon"} width={17.4} height={17.4}/>
-                    </div>
-                    <div className={"w-[55px] h-[55px] rounded-full border-2 flex items-center justify-center "}>
-                        <Image src={notificationIcon} width={17.4} height={17.4} alt={"active bell icon"}/>
-                    </div>
+                    <TapWrapper>
+                        <div className={"w-[55px] h-[55px] rounded-full border-2 flex items-center justify-center "}>
+                            <Image src={calendarIcon} alt={"Calendary icon"} width={17.4} height={17.4}/>
+                        </div>
+                    </TapWrapper>
+                    <TapWrapper>
+                        <div
+                            className={"w-[55px] h-[55px] relative rounded-full border-2 flex items-center justify-center "}>
+                            {hasNotifications && <div
+                                className={"absolute bg-primaryColor w-[20px] h-[20px] text-[12px] text-white " +
+                                    "rounded-full p-1 top-0 right-0 flex items-center justify-center"}>
+                                <span>5</span>
+                            </div>}
+                            <Image src={notificationIcon} width={17.4} height={17.4} alt={"active bell icon"}/>
+                        </div>
+                    </TapWrapper>
 
                 </div>
             </nav>

@@ -1,8 +1,8 @@
 "use client"
 import {
-    MenstrualCycleCardMain, DashboardHeader, FeelingsInsightsAndEvents,
+    MenstrualCycleCardMain, FeelingsInsightsAndEvents,
     ShortCalendar
-} from "@/app/dashboard/components/index";
+} from "@/app/dashboard/components";
 import Image from "next/image";
 import pinkFlower from "@/public/images/flowers-1.svg"
 import {useCycleInfo, useUserInfo} from "@/app/dashboard/lib/dataFetching";
@@ -29,7 +29,6 @@ export function MenstrualHome({accessToken}) {
     }
     return (
         <section className={"my-2"}>
-            {/*<DashboardHeader user={user?.user}/> TODO: remove this*/}
             <section className={"mt-1"}>
                 <ShortCalendar
                     withFlower={false}
