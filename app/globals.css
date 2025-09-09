@@ -85,13 +85,6 @@
 
 }
 
-
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
 * {
     box-sizing: border-box;
 }
@@ -99,7 +92,6 @@
 body {
     color: var(--foreground);
     background: var(--background);
-    /* font-family: "Montserrat", serif; */
 }
 
 .fade-container {
@@ -107,16 +99,6 @@ body {
     width: 100%;
     height: 100%;
 
-}
-
-.background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 300px;
-    background: #fff;
-    z-index: 1;
 }
 
 .icon-placeholder {
