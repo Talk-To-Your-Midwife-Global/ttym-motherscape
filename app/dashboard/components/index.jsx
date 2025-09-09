@@ -13,9 +13,7 @@ import {
 } from "date-fns";
 import {montserrat} from "@/app/_fonts";
 import Link from "next/link";
-import category from "@/public/icons/category.svg"
 import dullBell from "@/public/icons/notification.svg"
-import searchIcon from "@/public/icons/search-icon.svg"
 import activeBell from "@/public/icons/notification-active.svg"
 import calendarIcon from "@/public/icons/calendar-three.svg"
 import nameFlower from "@/public/images/name-flower.svg"
@@ -32,11 +30,10 @@ import clock from "@/public/icons/clock.svg";
 import cycle from "@/public/icons/cycle.svg";
 import pregnancyIcon from "@/public/icons/pregnancy.svg";
 import {ActionLink, MiniLoader} from "@/app/_components";
-import {useCycleInfo} from "@/app/dashboard/lib/dataFetching";
+import {useCycleInfo, useUserInfo} from "@/app/dashboard/lib/dataFetching";
 import {useRouter} from "next/navigation";
 import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {getRelativeTime} from "@/app/dashboard/lib/functions";
-import {Insights} from "@/app/dashboard/components/insights";
 import {Events} from "@/app/dashboard/components/events";
 import goodFace from "@/public/icons/faces/good.svg";
 import badFace from "@/public/icons/faces/bad.svg";
@@ -49,10 +46,13 @@ import cycleCalendarIcon from "@/public/icons/pregnant/cyclecalendar.svg"
 import cycleTimeCircleIcon from "@/public/icons/pregnant/cycletimecircle.svg"
 import cycleGraphIcon from "@/public/icons/pregnant/cyclegraph.svg"
 import cycleWeightIcon from "@/public/icons/pregnant/cycleweight.svg"
+import notificationIcon from "@/public/icons/bell.svg"
 import {BookmarkingIcon} from "@/app/dashboard/components/icons";
 import {ArticleParent} from "@/app/dashboard/components/ui/ArticleParent";
 import {Log} from "@/app/_lib/utils";
 import posthog from "posthog-js";
+import {ProfileImage} from "@/app/_components/ProfileImage";
+import {SideNav} from "@/app/dashboard/components/sideNav";
 
 export function DashboardHeader(user) {
     Log('dashboardheader_info_display', {user});
@@ -67,38 +67,33 @@ export function DashboardHeader(user) {
     )
 }
 
-export function DashboardNav({text = ""}) {
-    const [hasNotifications, setHasNotifications] = useState(false)
-    const [toggleSearch, setToggleSearch] = useState(false);
+export function DashboardNav({text = "", accessToken}) {
+    const [hasNotifications, setHasNotifications] = useState(false);
+    const [open, setOpen] = useState(false);
+    const {user} = useUserInfo(accessToken);
+
+    const handleOpen = (value) => {
+        setOpen(value);
+    }
 
     return (
-        <nav className={"flex items-center gap-3 mt-5"}>
-            <div className={"bg-[#0F969C26] rounded-full w-fit h-fit p-4"}>
-                <Image src={category} alt={"some grid icon thingy"}/>
-                {/*<ProfileImage/>*/}
-            </div>
-            {
-                text.length === 0 ?
-                    <section className={`flex-1 w-2/4 flex justify-end invisible`}>
-                        <div className={`flex-1 w-1/4`}>
-                            <input
-                                disabled={true}
-                                className={`h-10 rounded-md outline-none border px-2 ${toggleSearch ? 'block' : 'hidden'} `}
-                                type={"search"}/>
-                        </div>
-                        <div className={"bg-[#0F969C26] rounded-full w-fit h-fit p-4"}
-                             onClick={() => setToggleSearch(!toggleSearch)}>
-                            <Image src={searchIcon} alt={"Search bar icon"}/>
-                        </div>
-                    </section> : <div className={`flex-1 text-center font-semibold text-xl text-[#000]`}> {text} </div>
-            }
-            <div className={`bg-[#0F969C26] rounded-full w-[50px] h-[50px] p-4 flex items-center justify-center`}>
-                {hasNotifications ?
-                    <Image src={activeBell} alt={"active bell icon"}/> :
-                    <Image src={dullBell} alt={"bell icon with no notification"}/>
-                }
-            </div>
-        </nav>
+        <section>
+            <nav className={"w-full flex justify-between items-center my-5"}>
+                <div className={"bg-[#0F969C] w-[55px] h-[55px] rounded-full w-fit h-fit"}>
+                    <SideNav userProfileInfo={user} accessToken={accessToken} open={open} handleOpen={handleOpen}/>
+                </div>
+
+                <div className={`rounded-full h-[50px] p-4 flex gap-4 items-center justify-end`}>
+                    <div className={"w-[55px] h-[55px] rounded-full border-2 flex items-center justify-center "}>
+                        <Image src={calendarIcon} alt={"Calendary icon"} width={17.4} height={17.4}/>
+                    </div>
+                    <div className={"w-[55px] h-[55px] rounded-full border-2 flex items-center justify-center "}>
+                        <Image src={notificationIcon} width={17.4} height={17.4} alt={"active bell icon"}/>
+                    </div>
+
+                </div>
+            </nav>
+        </section>
     )
 }
 

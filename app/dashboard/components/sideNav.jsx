@@ -2,9 +2,10 @@
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
 import {motion} from "framer-motion";
-import {MenuToggle} from "@/app/dashboard/components/menuToggle";
 import {Navigation} from "@/app/dashboard/components/navigation";
 import {useDimensions} from "@/app/dashboard/components/use-dimensions";
+import {Drawer} from "vaul";
+import {ProfileImage} from "@/app/_components/ProfileImage";
 
 const sidebar = {
     open: (height = 1000) => ({
@@ -26,38 +27,27 @@ const sidebar = {
     }
 };
 
-export const SideNav = ({accessToken}) => {
-    const [isOpen, toggleOpen] = useState(false);
-    const containerRef = useRef(null);
-    const {height} = useDimensions(containerRef);
-
-    // Hide side nav when use click anywhere else on the screen
-    useEffect(() => {
-        const handleClickAnywhere = (event) => {
-            if (containerRef.current && !containerRef.current.contains(event.target)) {
-                toggleOpen(false)
-            }
-        }
-
-        document.addEventListener("click", handleClickAnywhere)
-
-        return () => {
-            document.removeEventListener("click", handleClickAnywhere)
-        }
-
-    }, [isOpen])
-
+export const SideNav = ({accessToken, open, handleOpen, userProfileInfo}) => {
     return (
-        <motion.nav
-            initial={false}
-            animate={isOpen ? "open" : "closed"}
-            custom={height}
-            ref={containerRef}
-            className="z-10"
-        >
-            <motion.div className="background" variants={sidebar}/>
-            <Navigation accessToken={accessToken}/>
-            <MenuToggle toggle={toggleOpen} isOpen={isOpen}/>
-        </motion.nav>
+        <Drawer.Root direction="left" open={open} onOpenChange={handleOpen} className={"w-[500px]"}>
+            <Drawer.Trigger
+                className="relative flex flex-shrink-0 items-center justify-center overflow-hidden bg-white text-sm font-medium transition-all hover:bg-[#FAFAFA] ">
+                <ProfileImage userProfileInfo={userProfileInfo}/>
+            </Drawer.Trigger>
+            <Drawer.Portal>
+                <Drawer.Overlay className="fixed inset-0 bg-black/40"/>
+                <Drawer.Content
+                    className="right-2 top-2 bottom-2 fixed z-10 outline-none w-[360px] flex border-3"
+                    // The gap between the edge of the screen and the drawer is 8px in this case.
+                    style={{'--initial-transform': 'calc(100% + 8px)'}}
+                >
+                    <Drawer.Title>
+                        Something
+                    </Drawer.Title>
+                    <Navigation accessToken={accessToken}/>
+                </Drawer.Content>
+            </Drawer.Portal>
+        </Drawer.Root>
+
     );
 };
