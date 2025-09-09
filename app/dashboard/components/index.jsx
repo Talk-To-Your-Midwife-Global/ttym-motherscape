@@ -13,8 +13,6 @@ import {
 } from "date-fns";
 import {montserrat} from "@/app/_fonts";
 import Link from "next/link";
-import dullBell from "@/public/icons/notification.svg"
-import activeBell from "@/public/icons/notification-active.svg"
 import calendarIcon from "@/public/icons/calendar-three.svg"
 import nameFlower from "@/public/images/name-flower.svg"
 import optionsIcon from "@/public/icons/options.svg"
