@@ -3,7 +3,7 @@ import sarah from "@/public/images/sarah.png"
 import {Log} from "@/app/_lib/utils";
 
 export function ProfileImage({userProfileInfo, onClick}) {
-    const firstName = userProfileInfo?.user?.username || 'Panther';
+    const firstName = userProfileInfo?.user?.display_name || 'Panther';
     let src = `https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=${firstName}&size=24&backgroundColor=d1d4f9`;
 
     Log("Profile Image", {userProfileInfo, firstName, src});

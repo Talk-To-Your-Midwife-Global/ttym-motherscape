@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react";
 import {motion} from "framer-motion";
 import Link from "next/link";
@@ -21,19 +22,21 @@ const variants = {
 };
 
 
-export const TapWrapper = ({i, clickAction = undefined, link, children}) => {
+export const TapWrapper = ({i, link, children, keys = 'randomness', customStyles = "", clickAction = undefined,}) => {
     return (
         <motion.li
             variants={variants}
             whileHover={{scale: 1.1}}
             whileTap={{scale: 0.95}}
-            className={`li`}
-            onClick={() => {
-                Log(clickAction)
+            className={`li `}
+            key={keys}
+            onClick={(e) => {
+                e.preventDefault();
+                Log("click action tap wrapper", clickAction)
                 clickAction && clickAction()
             }}
         >
-            <Link href={link || '#'} className={"list-none"}>
+            <Link key={keys} href={link || '#'} className={`list-none ${customStyles}`}>
                 {children}
             </Link>
         </motion.li>

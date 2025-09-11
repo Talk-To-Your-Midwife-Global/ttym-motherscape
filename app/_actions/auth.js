@@ -107,9 +107,6 @@ export async function signup(state, formData) {
                 serverError: errors,
             }
         }
-        // let cookieStore = await cookies();
-        // cookieStore.set('access_token', result.tokens.access, {httpOnly: true, path: '/'}) // TODO: remove the http only
-        // cookieStore.set('refresh_token', result.tokens.refresh, {httpOnly: true, path: '/'})
 
         const emailRequest = await requestEmailVerification(formData.get('email'));
 
@@ -180,16 +177,16 @@ export async function signin(state, formData) {
             // for (const key in result) {
             //     errors.push(result[key][0])
             // }
-            Log('Response is not okay')
-            Log(result)
+            Log("auth.js; Signin failed", {result})
 
             if (response.status === 401 && result.code === "auth/email-not-verified") {
-                Log('about to request email verification')
-                Log(formData.get('email'));
-                const emailRequest = await requestEmailVerification(formData.get('email'));
-                Log({emailRequest});
+                const email = formData.get('email')
+                Log("auth.js; Email verification request object", {email});
+
+                const emailRequest = await requestEmailVerification(email);
+                Log("auth.js: emailRequest (var) response", {emailRequest});
+
                 // route the user
-                Log(emailRequest);
                 if (emailRequest?.success) {
                     return {
                         success: true,
@@ -215,6 +212,17 @@ export async function signin(state, formData) {
         } else {
             cookieStore.set('last_login', result.user.last_login)
         }
+        const user = result.user
+        const userUUID = user.uuid;
+
+        const userDetails = {
+            username: user.username,
+            email: user.email,
+            status: user.status
+        }
+
+        posthog.identify(userUUID, userDetails);
+
         return {
             success: true,
             token: result.tokens.access,
@@ -228,14 +236,11 @@ export async function signin(state, formData) {
 }
 
 export async function logout() {
-    Log('logging out')
     const cookieStore = await cookies()
     const accessToken = cookieStore.get('access_token')?.value;
     const refreshToken = cookieStore.get('refresh_token')?.value;
 
-    const items = ['access_token', 'refresh_token', 'last_login', 'ttym-user-type']
-    Log(accessToken);
-    Log(refreshToken);
+    const items = ['access_token', 'refresh_token', 'last_login', 'ttym-user-type', 'user_email']
     try {
         const response = await fetch(`${HOSTNAME_URI}/auth/logout/`, {
             method: 'POST',
@@ -261,7 +266,7 @@ export async function logout() {
             }
 
         }
-        Log('log out success')
+        Log('auth.js; log out success');
         for (const item of items) {
             cookieStore.delete(item)
         }
@@ -270,6 +275,7 @@ export async function logout() {
             success: true,
         }
     } catch (errors) {
+        Log("auth.js; Logout unsuccessful");
         return {
             error: errors
         }
@@ -277,8 +283,8 @@ export async function logout() {
 }
 
 export async function requestEmailVerification(email) {
-    Log('requesting email verification')
-    Log({HOSTNAME_URI})
+    const logMsg = 'auth.js; requestEmailVerification; requesting email verification'
+    Log(logMsg, {HOSTNAME_URI})
 
     // save email to cookies
     const cookieStore = await cookies();
@@ -291,20 +297,18 @@ export async function requestEmailVerification(email) {
         },
         body: JSON.stringify({email})
     })
-    Log({res});
     const response = await res.json();
-    Log(response)
+
     if (!res.ok) {
-        Log(res);
-        Log(response)
-        Log('An error occured')
+        Log(logMsg, {res});
+        Log(logMsg, {response})
         return {
             success: false,
             fieldErrors: undefined,
             serverErrors: undefined
         }
     }
-    Log('success in requesting')
+    Log(`${logMsg}: success in requesting`)
 
     return {
         success: true,
@@ -315,8 +319,6 @@ export async function requestEmailVerification(email) {
 
 
 export async function initiatePasswordChange(state, formData) {
-    // const {access_token} = await getLocalCookies('access_token');
-    // Log({access_token});
     const validatedField = ForgotPasswordFormSchema.safeParse({
         email: formData.get('email'),
     })
@@ -335,7 +337,6 @@ export async function initiatePasswordChange(state, formData) {
         },
         body: JSON.stringify({email: formData.get('email')})
     })
-
     const response = await res.json()
 
     if (!res.ok) {
@@ -347,7 +348,6 @@ export async function initiatePasswordChange(state, formData) {
             success: false
         }
     }
-    // simulate success
     return {
         fieldErrors: false,
         serverError: false,

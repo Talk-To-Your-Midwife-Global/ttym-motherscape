@@ -55,7 +55,7 @@ import {TapWrapper} from "@/app/_components/TapWrapper";
 import {useCalendarView} from "@/app/contexts/showCalendarContext";
 
 export function DashboardHeader(user) {
-    Log('dashboardheader_info_display', {user});
+    Log('dashboard/components/index.jsx; DashboardHeader', {user});
     return (
         <header className={"px-5"}>
             <section className={"text-primaryText"}>
@@ -77,7 +77,8 @@ export function DashboardNav({text = "", accessToken}) {
         setOpen(value);
     }
     const handleCalendarView = () => {
-        Log("Hanndleacalendarview clicked")
+        posthog.capture('CalendarViewClick')
+        Log("dashboard/components/index.jsx HandleCalendarView click")
         setViewLarge((prevState) => !prevState);
     }
 
@@ -116,7 +117,7 @@ export function NavItem({children, text = "default", style = "", withText = true
     return (
         <section
             className={`${montserrat.className} ${active ? 'text-primaryColor' : 'text-[#0000004D]'} ${style} w-[35px]`}>
-            <Link className={"flex flex-col justify-end gap-2 items-center"} href={"/dashboard/" + text}>
+            <div className={"flex flex-col justify-end gap-2 items-center"}>
                 <div className={"pt-3"}>
                     {children}
                 </div>
@@ -124,7 +125,7 @@ export function NavItem({children, text = "default", style = "", withText = true
                 {withText && <p className={"capitalize text-sm font-medium"}>
                     {text}
                 </p>}
-            </Link>
+            </div>
         </section>
     )
 }
@@ -247,8 +248,8 @@ export function MenstrualCycleCardMain({accessToken}) {
     const generalCycleInfo = necessaryDataForMenstrualUI(data || []);
 
     if (isLoading) return <div>loading...</div>
-    Log("From the card")
-    Log({data});
+    Log("dashboard/components/index.jsx; MenstrualCycleCardMain", {data, generalCycleInfo});
+
     if (error) {
         return (
             <div>
@@ -358,7 +359,7 @@ export function InsightCard({insight, accessToken}) {
 }
 
 export function ChatCard({key, info}) {
-    Log(info)
+    Log("dashboard/components/index.jsx; ChatCard", {info})
     const router = useRouter()
     const [showOptions, setShowOptions] = useState(false)
     const optionsRef = useRef(null);
@@ -516,7 +517,7 @@ function CalendarTemplate({
                 {
                     days.map((day, index) => {
                         const isCurrentMonth = isSameMonth(day, currentMonth)
-                        const customStyle = specialDates.find((styleDate) => isSameDay(styleDate.date, day))?.style
+                        const customStyle = specialDates.find((styleDate) => isSameDay(styleDate?.date, day))?.style
 
                         return (
                             <div key={index} onClick={() => dateClick(day)} className={`p-2 text-center rounded-full
@@ -541,36 +542,13 @@ export function ShortCalendar({
                                   type = "menstrual",
                                   dateClick = undefined
                               }) {
-    // const {data, error, isLoading} = useCycleInfo(accessToken)
     let specialDays = specialDates;
-    // if (type !== "menstrual") {
-    //     specialDays = specialDates;
-    // } else {
-    //     specialDays = specialDates ? specialDates : menstrualCycleDateGenerator(data?.current_cycle?.start_date, data?.period_length, "general", data?.cycle_length);
-    // }
-
     Log({specialDays});
 
     const [currentMonth, setCurrentMonth] = useState(new Date())
     const startWeek = startOfWeek(new Date())
     const endWeek = endOfWeek(new Date())
 
-    // if (isLoading) {
-    //     return (
-    //         <div>
-    //             loading...
-    //         </div>
-    //     )
-    // }
-    //
-    // if (error) {
-    //     return (
-    //         <div>
-    //             error
-    //             {error.message}
-    //         </div>
-    //     )
-    // }
     return (
         <div>
             <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth}
@@ -580,9 +558,10 @@ export function ShortCalendar({
     )
 }
 
-export function Calendar({action, withFlower, specialDates, accessToken}) {
+export function Calendar({action, withFlower, specialDates = undefined, accessToken, dateClick}) {
     const {data, error, isLoading} = useCycleInfo(accessToken);
-    specialDates = specialDates ? specialDates : menstrualCycleDateGenerator(data?.start_date, data?.period_length, "general", data?.cycle_length);
+    Log("calendar data output", {data})
+    specialDates = specialDates ? specialDates : menstrualCycleDateGenerator(data?.start_date, data?.period_length, data?.ovulation_day, "general", data?.cycle_length);
     const [currentMonth, setCurrentMonth] = useState(new Date())
     const startMonth = startOfMonth(currentMonth)
     const endMonth = endOfMonth(currentMonth)
@@ -608,7 +587,7 @@ export function Calendar({action, withFlower, specialDates, accessToken}) {
 
     return (
         <div>
-            <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth}
+            <CalendarTemplate dateClick={dateClick} startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth}
                               specialDates={specialDates} action={action} withFlower={withFlower}/>
         </div>
     )
@@ -621,8 +600,6 @@ export function FeelingsInsightsAndEvents({accessToken}) {
         {desc: "calm", img: neutralFace, emoji: "😌"},
         {desc: "irritated", img: angryFace, emoji: "😡"},
         {desc: "anxious", img: goodFace, emoji: "😰"},
-        // {desc: "neutral", img: neutralFace, emoji: "😌"},
-        // {desc: "tired", img: tiredFace, emoji: "😌"},
     ]
     const [feelingRecorded, setFeelingRecorded] = useState(false)
     const [feeling, setFeeling] = useState({feeling: '', number: 0});
@@ -647,12 +624,13 @@ export function FeelingsInsightsAndEvents({accessToken}) {
                         <h2>How do you feel today?</h2>
                     </header>
                     <section className={"flex justify-evenly my-5"}>
-                        {faces.map(face => {
+                        {faces.map((face, index) => {
                             return (
-                                <TapWrapper>
-                                    <div tabIndex={0} onClick={(e) => handleFeeling(e, face.desc)} key={face.desc}
+                                <TapWrapper keys={`${index}${face.desc}`}>
+                                    <div tabIndex={0}
+                                         onClick={(e) => handleFeeling(e, face.desc)}
+                                         key={face.desc}
                                          className={"w-[70px] h-[80px] flex flex-col items-center justify-evenly border-2 .p-2 border-[#D2D2D2] rounded-md"}>
-                                        {/*<Image onClick={() => handleFeeling(face.desc)} src={face.img} alt={"face"}/>*/}
                                         <p>{face.emoji}</p>
                                         <p>{face.desc}</p>
                                     </div>
@@ -686,7 +664,7 @@ export function FeelingsInsightsAndEvents({accessToken}) {
                 <header>
                     <div className={"flex justify-between"}>
                         <h2 className={"text-primaryText font-bold text-xl"}>Cycle Insights</h2> <Link
-                        href={"/dashboard/community"}>See More</Link> {/* TODO: use the right link*/}
+                        href={"/dashboard/community"}>See More</Link>
                     </div>
                     <p className={`${montserrat.className} text-subText`}>Personalized health tips based on logged
                         data</p>

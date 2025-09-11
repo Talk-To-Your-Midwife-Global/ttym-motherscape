@@ -1,9 +1,6 @@
 "use client"
 import * as React from "react";
-import {useEffect, useRef, useState} from "react";
-import {motion} from "framer-motion";
 import {Navigation} from "@/app/dashboard/components/navigation";
-import {useDimensions} from "@/app/dashboard/components/use-dimensions";
 import {Drawer} from "vaul";
 import {ProfileImage} from "@/app/_components/ProfileImage";
 

@@ -82,7 +82,8 @@ export function ArticleCard({content, imagery, bookmarkAction}) {
                 <div>
                     <p className="font-bold text-black h-[50px] .w-[150px] text-pretty truncate">
                         <Link href={`/read/${link}`}>
-                            <p className="text-wrap truncate .h-[100px] .w-[150px] capitalize">{content?.title}</p>
+                            <span
+                                className="text-wrap truncate .h-[100px] .w-[150px] capitalize">{content?.title}</span>
                         </Link>
                     </p>
                 </div>

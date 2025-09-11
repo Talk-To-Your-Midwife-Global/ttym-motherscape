@@ -13,7 +13,7 @@ export function InstallPrompt() {
             e.preventDefault();
             setInstallPrompt(e)
             console.log('Before Install prompt fired!')
-            setIsInstallable(false); // TODO: change this back to true
+            setIsInstallable(true); // change this to false; to prevent showing and make it a todos
         }
         // check if the user is opening from the PWA
         const openedFromPWA = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
@@ -53,9 +53,12 @@ export function InstallPrompt() {
                     className="bg-white flex flex-col rounded-t-[10px] mt-24 h-[350px] fixed bottom-0 left-0 right-0 outline-none">
                     <div aria-hidden className="mx-auto w-12 h-1.5 mt-5 flex-shrink-0 rounded-full bg-gray-300 mb-8"/>
                     <section className="flex flex-col items-center justify-center">
-                        <div className={"bg-[#0F969C] rounded-xl w-[75px] h-[75px] flex items-center justify-center"}>
-                            <Image src={ObaaLogo} alt="Obaa plus app logo" width={60} height={60}/>
-                        </div>
+                        <Drawer.Title>
+                            <div
+                                className={"bg-[#0F969C] rounded-xl w-[75px] h-[75px] flex items-center justify-center"}>
+                                <Image src={ObaaLogo} alt="Obaa plus app logo" width={60} height={60}/>
+                            </div>
+                        </Drawer.Title>
                         <p className="my-2 text-[#444444] text-center w-5/6">Stay connected to your cycle and pregnancy
                             updates
                             anytime, right

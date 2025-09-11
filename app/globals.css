@@ -239,3 +239,32 @@ body {
     display: flex;
     background: white;
 }
+
+/*Tooltip for feelings viewer */
+details.inline-def summary {
+    cursor: help;
+    width: 150px;
+    max-width: 157px;
+    max-height: 76px;
+    display: inline-block;
+    /*color: #2563eb; !* blue *!*/
+}
+
+details.inline-def[open] {
+    position: relative;
+    display: inline-block;
+}
+
+details.inline-def[open] p {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .15);
+    width: 220px;
+    bottom: 130%;
+    left: 30%;
+    z-index: 10;
+    margin: 6px 0 0 0;
+}

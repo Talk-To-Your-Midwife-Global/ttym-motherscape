@@ -20,7 +20,9 @@ export function QuestionParent({question, updateUser, onboardLength}) {
         setAnswers((prevState) => ({...prevState, ...questionAnswers}))
     }
     const handleSubmit = () => {
-        localStorage.setItem("answers", JSON.stringify({...JSON.parse(localStorage.getItem('answers')) || {}, ...answers}))
+        startTransition(() => {
+            localStorage.setItem("answers", JSON.stringify({...JSON.parse(localStorage.getItem('answers')) || {}, ...answers}))
+        })
         const next = String(currentQuestion + 1)
         Log({next});
         // After the final question
@@ -40,11 +42,15 @@ export function QuestionParent({question, updateUser, onboardLength}) {
     }
 
     const questions = {
-        2: <CycleLength handleAnswers={handleQuestionAnswers} state={answers} submit={handleSubmit}/>,
-        3: <PeriodDays handleAnswers={handleQuestionAnswers} state={answers} submit={handleSubmit}/>,
-        5: <CycleRegularity handleAnswers={handleQuestionAnswers} submit={handleSubmit} state={answers}/>,
-        6: <LastPeriod handleAnswers={handleQuestionAnswers} submit={handleSubmit}/>,
-        8: <SymptomsTracking handleAnswers={handleQuestionAnswers} state={answers} submit={handleSubmit}/>,
+        2: <CycleLength isPending={isPending} handleAnswers={handleQuestionAnswers} state={answers}
+                        submit={handleSubmit}/>,
+        3: <PeriodDays isPending={isPending} handleAnswers={handleQuestionAnswers} state={answers}
+                       submit={handleSubmit}/>,
+        5: <CycleRegularity isPending={isPending} handleAnswers={handleQuestionAnswers} submit={handleSubmit}
+                            state={answers}/>,
+        6: <LastPeriod isPending={isPending} handleAnswers={handleQuestionAnswers} submit={handleSubmit}/>,
+        8: <SymptomsTracking isPending={isPending} handleAnswers={handleQuestionAnswers} state={answers}
+                             submit={handleSubmit}/>,
     }
 
     return (
@@ -59,7 +65,7 @@ export function QuestionParent({question, updateUser, onboardLength}) {
     )
 }
 
-function CycleLength({handleAnswers, submit, state}) {
+function CycleLength({handleAnswers, submit, state, isPending}) {
     const [disableBtn, setDisableButton] = useState(true)
 
     const handleChange = (num) => {
@@ -84,14 +90,15 @@ function CycleLength({handleAnswers, submit, state}) {
                 </div>
             </form>
             <div className="fixed bottom-10 w-full flex justify-center">
-                <IconButton text="Continue" onClick={handleSubmit} icon="iconify lucide--arrow-right"
+                <IconButton isPending={isPending} text="Continue" onClick={handleSubmit}
+                            icon="iconify lucide--arrow-right"
                             disabled={disableBtn}/>
             </div>
         </section>
     )
 }
 
-function PeriodDays({handleAnswers, submit, state}) {
+function PeriodDays({handleAnswers, submit, state, isPending}) {
     const [disableBtn, setDisableButton] = useState(true)
 
     const handleChange = (event) => {
@@ -126,14 +133,15 @@ function PeriodDays({handleAnswers, submit, state}) {
                 </div>
             </form>
             <div className="fixed bottom-10 w-full flex justify-center">
-                <IconButton text="Continue" onClick={handleSubmit} icon="iconify lucide--arrow-right"
+                <IconButton isPending={isPending} text="Continue" onClick={handleSubmit}
+                            icon="iconify lucide--arrow-right"
                             disabled={disableBtn}/>
             </div>
         </section>
     )
 }
 
-function CycleRegularity({handleAnswers, submit, state}) {
+function CycleRegularity({handleAnswers, submit, state, isPending}) {
     const [answers, setAnswers] = useState({})
     const [disableBtn, setDisableButton] = useState(true)
 
@@ -187,13 +195,14 @@ function CycleRegularity({handleAnswers, submit, state}) {
                 </div>
             </form>
             <div className="fixed bottom-10 w-full flex justify-center">
-                <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn}/>
+                <IconButton isPending={isPending} text="Continue" onClick={submit} icon="iconify lucide--arrow-right"
+                            disabled={disableBtn}/>
             </div>
         </section>
     )
 }
 
-function LastPeriod({handleAnswers, submit, state}) {
+function LastPeriod({handleAnswers, submit, state, isPending}) {
     const [disableBtn, setDisableButton] = useState(true)
     const [selected, setSelected] = useState(new Date());
 
@@ -234,7 +243,8 @@ function LastPeriod({handleAnswers, submit, state}) {
                 </div>
             </form>
             <div className="fixed bottom-10 w-full flex justify-center z-[50]">
-                <IconButton text="Continue" onClick={submit} icon="iconify lucide--arrow-right" disabled={disableBtn}
+                <IconButton isPending={isPending} text="Continue" onClick={submit} icon="iconify lucide--arrow-right"
+                            disabled={disableBtn}
                 />
             </div>
         </section>
