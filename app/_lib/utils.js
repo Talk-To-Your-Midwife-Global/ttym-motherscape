@@ -20,9 +20,9 @@ export function cn(...inputs) {
 export function Log(...inputs) {
     // if (typeof window === "undefined") {
     //     if (process.env.environment !== "production") {
-            console.log(...inputs);
-        // }
-    }
+    console.log(...inputs);
+    // }
+    // }
     // if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "production") {
     //     console.log(...inputs);
     // }
