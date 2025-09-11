@@ -1,15 +1,16 @@
 import {addDays, differenceInDays} from "date-fns";
 import {computeNumberOfMonthsFromDays, formatNumberWithOrdinal, poundsToGrams} from "@/app/dashboard/lib/functions";
+import {Log} from "@/app/_lib/utils";
 
 export function fetcher(url, token = "") {
     if (token.length > 1) {
-        console.log('fetcher ');
+        Log('fetcher ');
         return fetch(url, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
         }).then(res => {
-            console.log(res);
+            Log(res);
             return res.json()
         })
     }
@@ -22,12 +23,13 @@ export function fetchUser(url, token) {
             "Authorization": `Bearer ${token}`
         }
     }).then(res => {
-        // console.log(res)
+        Log('from the fetch user function', {res})
         return res.json()
     })
 }
 
 export function fetchCycle(url, token) {
+    Log("useCycleInfo Fetch", {token});
     return fetch(url, {
         headers: {
             "Authorization": `Bearer ${token}`
@@ -36,13 +38,13 @@ export function fetchCycle(url, token) {
         const result = res.json()
         return result
     }).then(result => {
-        console.log({result});
+        Log({result});
         const formattedData = {
             ...result,
-            dates: menstrualCycleDateGenerator(result.current_cycle.start_date, result.period_length, "general", result.cycle_length),
+            dates: menstrualCycleDateGenerator(result.current_cycle?.start_date, result.period_length, "general", result.current_cycle.cycle_length),
             daysDone: computeDaysDone(result.current_cycle.start_date),
             daysToPeriod: computeDaysToPeriod(result.current_cycle.start_date, result.cycle_length),
-            percentageComplete: computeCycleCompletion(computeDaysDone(result.current_cycle.start_date), result.cycle_length),
+            percentageComplete: computeCycleCompletion(computeDaysDone(result.current_cycle?.start_date), result.cycle_length),
         }
         return formattedData
     })
@@ -56,7 +58,7 @@ export function fetchPregnancy(url, token) {
     }).then(res => {
         return res.json()
     }).then(result => {
-        console.log('fetch pregnancy', {result})
+        Log('fetch pregnancy', {result})
         let newResult = necessaryDataForPregnancyUI(result)
         return {
             ...newResult
@@ -76,6 +78,20 @@ export function postFetcher(url, token, formBody) {
     })
 }
 
+export function parseLogs(logs) {
+    const result = {};
+
+    for (const log of logs) {
+        result[log.date] = {
+            mood: log.mood,
+            symptoms: log.symptoms
+        }
+    }
+
+    Log("parseLogs function", {result})
+    return result;
+}
+
 /**
  * Remove spaces in a string
  * @param {string} sentence
@@ -85,6 +101,11 @@ export function removeSpaces(sentence) {
     return sentence.replace(/\s+/g, '');
 }
 
+/**
+ * Format date into YYYY-MM-DD
+ * @param {date} date object
+ * @returns {string} date in the YYYY-MM-DD Format
+ */
 export function formatDate(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -157,30 +178,9 @@ export function matchUserStatus(userType, reverse = false) {
 
 }
 
-export function necessaryDataForUser(allData) {
-    return {
-        user: {
-            email: allData.user.email,
-            fullName: allData.user.full_name,
-            isConfigured: allData.user.is_configured,
-            isOnline: allData.user.is_online,
-            isVerified: allData.user.is_verified,
-            lastLogin: allData.user.last_login,
-            phoneNumber: allData.user.phone_number,
-            profilePic: allData.user.profile_pic,
-            role: allData.user.role,
-            username: allData.user.username,
-            isAssigned: true,
-        },
-        tokens: {
-            access: allData.tokens.access,
-            refresh: allData.tokens.refresh,
-        }
-    }
-}
 
 export function necessaryDataForPregnancyUI(data) {
-    console.log({data});
+    Log({data});
     const details = data?.details
     return {
         days: details?.day,
@@ -201,7 +201,7 @@ export function necessaryDataForPregnancyUI(data) {
 
 function computeProgressBarValues(days, week) {
     const month = computeNumberOfMonthsFromDays(days);
-    console.log(month);
+    Log(month);
     let result = {
         segment1: 0,
         segment2: 0,
@@ -224,24 +224,23 @@ function computeProgressBarValues(days, week) {
         result.circlePosition = (week / 40) * 100 + (result.segment3);
     }
 
-    console.log(result);
+    Log(result);
     return result;
 
 }
 
 // Convert this whole thing into a class soon
 export function necessaryDataForMenstrualUI(allData) {
-    // console.log('cycle legnth', allData.cycle_length)
     const {current_cycle} = allData;
-    console.log({current_cycle});
-    const dates = menstrualCycleDateGenerator(current_cycle?.start_date, allData.period_length, "general", allData.cycle_length)
+    Log({current_cycle});
+    const dates = menstrualCycleDateGenerator(current_cycle?.start_date, allData.period_length, current_cycle?.ovulation_day, "general", allData.cycle_length)
     const daysDone = computeDaysDone(current_cycle?.start_date)
     const daysToPeriod = computeDaysToPeriod(current_cycle?.start_date, allData.cycle_length)
     const percentageComplete = computeCycleCompletion(daysDone, allData.cycle_length)
     return {
         cycleLength: allData.cycle_length,
         periodLength: allData.period_length,
-        stage: current_cycle?.phase,
+        stage: current_cycle?.current_phase,
         pregnancyProb: current_cycle?.pregnancy_probability,
         periodStartDate: current_cycle?.start_date,
         nextPeriodDate: current_cycle?.next_phase_date,
@@ -251,7 +250,7 @@ export function necessaryDataForMenstrualUI(allData) {
         percentageComplete,
         daysToOvulation: computeDaysToOvulation(daysDone, daysToPeriod, allData.cycle_length),
         calendar: dates,
-
+        isPredictedCycle: current_cycle?.predicted,
     }
 }
 
@@ -261,7 +260,7 @@ export function necessaryDataForMenstrualUI(allData) {
  * @returns {number}
  */
 function computeDaysDone(periodStart) {
-    return differenceInDays(new Date(), periodStart)
+    return differenceInDays(new Date(), periodStart) + 1;
 }
 
 /**
@@ -310,30 +309,30 @@ function computeDaysToOvulation(done, toPeriod, cycleLength) {
  * @param cycleLength
  * @returns {({date: *, style: string}|{date: Date, style: string})[]}
  */
-export function menstrualCycleDateGenerator(lmp, periodLength, stage = "general", cycleLength = 28) {
+export function menstrualCycleDateGenerator(lmp, periodLength, ovulationDay, stage = "general", cycleLength = 28) {
     const lastCycleDay = addDays(lmp, cycleLength)
     const menstrualDates = generateMenstrualDates(lmp, periodLength);
     const follicularDates = generateFollicularDates(lmp, lastCycleDay)
-    const ovulationDates = generateOvulationDates(lastCycleDay)
+    const ovulationDates = generateOvulationDates(lastCycleDay, ovulationDay)
     const lutealDates = generateLutealDates(lastCycleDay)
 
-    switch (stage.toLowerCase()) {
-        case "menstrual":
-            return menstrualDates;
-        case "follicular":
-            return follicularDates;
-        case "ovulation":
-            return ovulationDates;
-        case "luteal":
-            return lutealDates;
-        default:
-            return [
-                ...menstrualDates,
-                ...follicularDates,
-                ...ovulationDates,
-                ...lutealDates,
-            ]
-    }
+    // switch (stage.toLowerCase()) {
+    //     case "menstrual":
+    //         return menstrualDates;
+    //     case "follicular":
+    //         return follicularDates;
+    //     case "ovulation":
+    //         return ovulationDates;
+    //     case "luteal":
+    //         return lutealDates;
+    //     default:
+    return [
+        ...menstrualDates,
+        ...follicularDates,
+        ...ovulationDates,
+        ...lutealDates,
+    ]
+    // }
 
 }
 
@@ -345,7 +344,8 @@ export function menstrualCycleDateGenerator(lmp, periodLength, stage = "general"
  */
 function generateMenstrualDates(lmp, periodLength) {
     let day = new Date(lmp)
-    let endDay = addDays(lmp, periodLength)
+    let endDay = addDays(lmp, periodLength - 1)
+    Log("Menstrual Date Debugging", {day, endDay})
     return generateDays(day, endDay, 'bg-[#E82A73] text-white rounded-2xl')
 }
 
@@ -362,18 +362,22 @@ function generateFollicularDates(lmp, lastCycleDay) {
 
 /**
  * Get the ovulation phase dates; not to be confused with the ovulation date
- * Ovulation day is 14 days before the end of the cycle
- * @param lastCycleDay
+ * Ovulation day is calculated on the server
  * @deps date-fns
  * @returns {[...{date: *, style: string}[],{date: Date, style: string}]}
+ * @param lastCycleDay
+ * @param ovulationDay
  */
-function generateOvulationDates(lastCycleDay) {
-    const ovulationDay = getOvulationDay(lastCycleDay)
+function generateOvulationDates(lastCycleDay, ovulationDay) {
+    // const ovulationDay = getOvulationDay(lastCycleDay)
+    ovulationDay = new Date(ovulationDay);
     const daysBeforeOvulation = addDays(ovulationDay, -2)
-    const dayAfterOvulation = addDays(daysBeforeOvulation, 1)
+    const dayAfterOvulation = addDays(ovulationDay, 1)
 
     let days = generateDays(daysBeforeOvulation, dayAfterOvulation, 'bg-[#DEE4F5]')
-    days = [...days, {date: ovulationDay, style: 'bg-[#07226B] text-white'}]
+    days = [...days]
+    days[2] = {date: ovulationDay, style: 'bg-[#07226B] text-white'}
+    Log("functions.js; Ovulation dates", {days});
     return days
 }
 

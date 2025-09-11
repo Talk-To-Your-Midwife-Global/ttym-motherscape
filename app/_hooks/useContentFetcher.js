@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import {contentGqlFetcher} from "@/app/dashboard/actions/action";
+import {Log} from "@/app/_lib/utils";
 
 export const useContentFetcher = ({query, variables}) => {
     const {
@@ -27,7 +28,7 @@ export const useEventFetcher = ({query, variables}) => {
 
     const eventContent = data?.eventCollection.items;
 
-    console.log('events graphql', {data});
+    Log('events graphql', {data});
     return {
         data: eventContent,
         isLoading,

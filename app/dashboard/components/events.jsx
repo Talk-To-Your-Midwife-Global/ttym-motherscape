@@ -14,7 +14,7 @@ export function Events({accessToken}) {
     const {data, isLoading, error} = useEventFetcher({query: eventsQuery, variables: null});
 
     if (error) {
-        console.log(error)
+        Log(error)
         return <div> Error; Could not get events </div>
     }
 

@@ -3,32 +3,38 @@
 import {useEffect} from 'react'
 import {logout} from "@/app/_actions/auth";
 import Link from "next/link";
+import {Log} from "@/app/_lib/utils";
+import {IconButton} from "@/app/_components";
 
 export default function Error({error, reset}) {
     useEffect(() => {
         // Log the error to an error reporting service
-        console.error(error)
+        Log("error.js", {error})
     }, [error])
-    // TODO: Edit this page
     return (
         <div className={`flex justify-center items-center w-full h-screen`}>
-            <section>
-                <h2 className={`text-primaryText text-2xl font-medium`}>Session has expired!</h2>
-                <Link href={"/auth/signIn"}>
-                    Login here...
-                </Link>
-                <button
-                    onClick={
-                        // Attempt to recover by trying to re-render the segment
-                        () => reset()
-                    }
-                >
-                    Try again
-                </button>
+            <section className={"flex flex-col gap-3 items-center justify-center"}>
+                <h2 className={`text-primaryText text-2xl font-medium`}>An error occurred!</h2>
+
+                <p className={'text-center text-primaryText w-3/4'}>Refreshing logs you out so you can sign in and
+                    reports the
+                    issue to us.
+                    This gives us chance to make
+                    sure it never happens again </p>
+                <IconButton text={"Refresh App"} href={"/logout"}/>
+
+                {/*<button*/}
+                {/*    onClick={*/}
+                {/*        // Attempt to recover by trying to re-render the segment*/}
+                {/*        () => reset()*/}
+                {/*    }*/}
+                {/*>*/}
+                {/*    Try again*/}
+                {/*</button>*/}
                 <br/>
-                <button onClick={() => logout()}>
-                    Login
-                </button>
+                {/*<button onClick={() => logout()}>*/}
+                {/*    Login*/}
+                {/*</button>*/}
             </section>
         </div>
     )

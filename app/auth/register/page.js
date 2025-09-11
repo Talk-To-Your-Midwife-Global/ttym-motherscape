@@ -5,6 +5,7 @@ import {useRouter} from "next/navigation";
 import {signup} from "@/app/_actions/auth";
 
 import {SignUpForm} from "@/app/auth/_components/SignUpForm";
+import {Log} from "@/app/_lib/utils";
 
 export default function Page() {
     const [state, action, isPending] = useActionState(signup, {
@@ -27,13 +28,13 @@ export default function Page() {
 
     useEffect(() => {
         if (state?.success) {
-            console.log('Success routing stage', state?.route)
+            Log('Success routing stage', state?.route)
             router.replace(state.route);
         } else {
-            console.log('Error routing stage', state?.serverError)
+            Log('Error routing stage', state?.serverError)
             setError(state?.serverError)
         }
-        console.log({error});
+        Log({error});
     }, [state])
     return (
         <section>
