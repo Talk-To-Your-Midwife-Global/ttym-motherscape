@@ -71,33 +71,36 @@ export function Navigation({accessToken}) {
     }
 
     return (
-        <motion.ul className={'ul bg-white z-20'} variants={variants}>
-            <MenuItem>
-                <section className={`flex gap-3 relative bottom-10`}>
-                    {/* eslint-disable-next-line react/jsx-no-undef */}
-                    <ProfileImage userProfileInfo={user}/>
-                    <div>
-                        <h2 className={`text-primaryColor text-xl font-medium w-[160px]`}>{user?.user.full_name}</h2>
-                        <p className={`text-subText text-sm ${montserrat.className}`}>{user?.user.email}</p>
-                    </div>
-                </section>
-            </MenuItem>
-            {itemIds.map(i => (
-                <MenuItem i={i} key={i.id} link={i.link}/>
-            ))}
+        <>
+            <ul className={'bg-white w-[300px] max-w-[400px] h-screen fixed top-0 p-5'}>
+                <MenuItem>
+                    <section className={`flex flex-col gap-3 relative mb-10`}>
+                        {/* eslint-disable-next-line react/jsx-no-undef */}
+                        <ProfileImage userProfileInfo={user}/>
+                        <div className={'flex flex-col'}>
+                            <h2 className={`text-primaryColor text-xl font-medium .w-[160px]`}>{user?.user.first_name}</h2>
+                            <p className={`text-subText text-sm ${montserrat.className}`}>{user?.user.email}</p>
+                        </div>
+                    </section>
+                </MenuItem>
+                {itemIds.map(i => (
+                    <MenuItem i={i} key={i.id} link={i.link}/>
+                ))}
 
-            <MenuItem link={'/logout'}>
-                <section
-                    className={`flex items-center gap-2 relative -bottom-10 text-primaryText bg-white shadow-md w-full p-2 rounded-md`}>
-                    <Image src={logoutIcon} alt={"logout icon"}/>
-                    <div className={`w-[200px]`}>
-                        <p className={`font-medium text-sm`}>Logout</p>
-                    </div>
-                    <div>
-                        <span className={`iconify lucide--chevron-right 2xl text-primaryColor`}></span>
-                    </div>
-                </section>
-            </MenuItem>
-        </motion.ul>)
+                <MenuItem link={'/logout'}>
+                    <section
+                        className={`flex items-center gap-2 relative fixed -bottom-10 text-primaryText bg-white shadow-md w-full p-2 rounded-md`}>
+                        <Image src={logoutIcon} alt={"logout icon"}/>
+                        <div className={`w-[200px]`}>
+                            <p className={`font-medium text-sm`}>Logout</p>
+                        </div>
+                        <div>
+                            <span className={`iconify lucide--chevron-right 2xl text-primaryColor`}></span>
+                        </div>
+                    </section>
+                </MenuItem>
+            </ul>
+        </>
+    )
 }
 

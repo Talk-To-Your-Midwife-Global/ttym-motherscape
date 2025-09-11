@@ -71,6 +71,7 @@ export default function Page() {
             <section className="fixed  bottom-10 w-full flex justify-center">
                 <IconButton text="Continue" icon="iconify lucide--arrow-right"
                     // href={`/onboarding/${routeName}/1`}
+                            isPending={isPending}
                             onClick={handleSubmit}
                             disabled={enable}/>
             </section>

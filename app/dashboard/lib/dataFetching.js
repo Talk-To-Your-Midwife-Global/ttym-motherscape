@@ -19,6 +19,7 @@ export function useUserInfo(accessToken) {
 
 
 export function useCycleInfo(accessToken) {
+    Log("useCycleINfo", {accessToken});
     const {
         data,
         isLoading,
@@ -55,15 +56,15 @@ export function useInsightsInfo() {
     }
 }
 
-export function useLogsInfo(accessToken) {
+export function useLogsInfo(accessToken, dateRange = '') {
     const {
         data,
         isLoading,
         error
-    } = useSWR([`${PUBLICHOSTNAME}/logs/`, accessToken], ([url, accessToken]) => fetcher(url, accessToken));
+    } = useSWR([`${PUBLICHOSTNAME}/logs/?${dateRange}`, accessToken], ([url, accessToken]) => fetcher(url, accessToken));
 
     return {
-        logs: data,
+        logData: data,
         isLoadingLogs: isLoading,
         logsError: error,
     }

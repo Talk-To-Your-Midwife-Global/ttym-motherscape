@@ -5,26 +5,11 @@ import {formatDate} from "@/app/_lib/functions";
 import {getLocalCookies} from "@/app/_lib/getCookies";
 import {Log} from "@/app/_lib/utils";
 
-export async function sendCurrentFeeling(feeling) {
-    // Call route that sends feeling
-    return {
-        success: true
-    }
-}
 
-export async function setCookies(newCookies) {
-    const cookieStore = await cookies()
-    for (let cookie in newCookies) {
-        Log(cookie, newCookies[cookie])
-        cookieStore.set(cookie, newCookies[cookie])
-    }
-    return true
-}
-
-export async function restartCycle() {
+export async function startCycle() {
     const today = formatDate(new Date());
     const {access_token} = await getLocalCookies(['access_token']);
-    Log(access_token);
+    Log("Dashboard/actions/action.js; startCycle", {access_token});
 
     const response = await fetch(`${PUBLICHOSTNAME}/menstrual/start/?period_start=${today}`, {
         headers: {
@@ -33,17 +18,15 @@ export async function restartCycle() {
     });
 
     if (!response.ok) {
-        Log(response);
-        Log(response.statusText)
+        Log("Dashboard/actions/action.js; startCycle", {response});
     }
 
     const data = await response.json();
-    Log(data);
+    Log("Dashboard/actions/action.js; startCycle", {data});
 
 }
 
 export async function contentGqlFetcher(query, variables) {
-    // todo: remove all the console logs
     Log(JSON.stringify({query, variables}));
     const response = await fetch(`https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
         {
@@ -56,7 +39,7 @@ export async function contentGqlFetcher(query, variables) {
         })
 
     if (!response.ok) {
-        console.log(response)
+        Log("failed_contentgqlfetcher", {response})
         throw new Error(response.statusText)
     }
 
@@ -106,32 +89,35 @@ export async function unbookmarkPost(postId, accessToken) {
     }
 }
 
-export async function moodsAndFeelingsForTheDay(state, accessToken) {
-    // do something
-}
+export async function logLog(state, accessToken, userType, date, method = "POST") {
+    const {moods, symptoms} = state;
+    const jsonBody = JSON.stringify({
+        mood: moods,
+        symptoms,
+        date: formatDate(date)
+    })
+    Log("Dashboard/actions/action.js logLog: request objects", {date, state, jsonBody})
 
-export async function logLog(state, accessToken, userType) {
-    // Log(state)
     const response = await fetch(`${PUBLICHOSTNAME}/logs/`, {
-        method: 'POST',
+        method,
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${accessToken}`
         },
-        body: JSON.stringify({
-            type: userType,
-            entry: state
-        })
+        body: jsonBody
     })
     const res = await response.json()
     if (!response.ok) {
+        Log("Dashboard/actions/action.js logLog: User symptoms and moods Log failure response", {res})
         return {
             success: false,
             data: res
         }
     }
 
+    Log("Dashboard/actions/action.js logLog: User symptoms and moods Log successfully response", {res})
     return {
+        success: true,
         data: res
     }
 }

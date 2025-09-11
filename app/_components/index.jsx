@@ -100,21 +100,32 @@ export function IconButton({
                                href = " ",
                                disabled = false,
                                onClick = undefined,
-                               loadingText = 'loading'
+                               loadingText = 'loading',
+                               customStyles = "",
+                               isPending = false
                            }) {
     const [pending, setPending] = useState(false);
     const handleClick = () => {
         setPending(true)
         if (onClick) {
             onClick();
+            setPending(false);
         }
-
+        // reset pending control to the isPending attribute
+        if (pending && isPending) {
+            setPending(false);
+        }
     }
     return (
         <Link href={href ? href : undefined}>
-            <button type={type === 'submit' && 'submit'} onClick={() => handleClick()} disabled={disabled}
-                    className={cn(`${variant === "primary" && disabled ? "bg-[#A8CCD0] text-white" : "bg-primaryColor text-white border border-primaryColor "} transition-all duration-500 ease-in-out  w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2 ${pending && 'w-[fit] h-fit py-4 px-4'}`, variant === 'secondary' && 'bg-white border border-primaryColor text-primaryColor font-semibold')}>
-                {pending ? <> <Spinner/> <p>{loadingText}</p></> : <>{text} <span className={icon}></span></>}
+            <button type={type === 'submit' ? 'submit' : "button"} onClick={() => handleClick()} disabled={disabled}
+                    className={cn('mb-2', `${variant === "primary" && disabled ? "bg-[#A8CCD0] text-white" : "bg-primaryColor text-white border border-primaryColor "} transition-all duration-500 ease-in-out  w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2 ${pending || isPending && 'w-[fit] h-fit py-4 px-4'}`, variant === 'secondary' && 'bg-white border border-primaryColor text-primaryColor font-semibold', customStyles)}>
+                {pending || isPending ? <> <Spinner/> <p>{loadingText}</p></> :
+                    <>
+                        {text}
+                        <span className={icon}></span>
+                    </>
+                }
             </button>
         </Link>
     )
@@ -132,10 +143,10 @@ export function ActionLink({
                            }) {
     return (
         <Link href={href ? href : undefined}>
-            <button onClick={onClick ? () => onClick() : undefined} disabled={disabled}
-                    className={`${variant === "primary" && disabled ? "bg-[#A8CCD0] text-white" : " text-primaryColor "} .w-[273px] h-[48px] flex items-center justify-center gap-2`}>
+            {onClick && <button onClick={onClick ? () => onClick() : undefined} disabled={disabled}
+                                className={`${variant === "primary" && disabled ? "bg-[#A8CCD0] text-white" : " text-primaryColor "} .w-[273px] h-[48px] flex items-center justify-center gap-2`}>
                 {text} <span className={icon}></span>
-            </button>
+            </button>}
         </Link>
     )
 }

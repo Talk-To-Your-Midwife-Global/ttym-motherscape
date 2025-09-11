@@ -13,10 +13,6 @@ import {
 } from "date-fns";
 import {montserrat} from "@/app/_fonts";
 import Link from "next/link";
-import category from "@/public/icons/category.svg"
-import dullBell from "@/public/icons/notification.svg"
-import searchIcon from "@/public/icons/search-icon.svg"
-import activeBell from "@/public/icons/notification-active.svg"
 import calendarIcon from "@/public/icons/calendar-three.svg"
 import nameFlower from "@/public/images/name-flower.svg"
 import optionsIcon from "@/public/icons/options.svg"
@@ -32,11 +28,10 @@ import clock from "@/public/icons/clock.svg";
 import cycle from "@/public/icons/cycle.svg";
 import pregnancyIcon from "@/public/icons/pregnancy.svg";
 import {ActionLink, MiniLoader} from "@/app/_components";
-import {useCycleInfo} from "@/app/dashboard/lib/dataFetching";
+import {useCycleInfo, useUserInfo} from "@/app/dashboard/lib/dataFetching";
 import {useRouter} from "next/navigation";
 import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {getRelativeTime} from "@/app/dashboard/lib/functions";
-import {Insights} from "@/app/dashboard/components/insights";
 import {Events} from "@/app/dashboard/components/events";
 import goodFace from "@/public/icons/faces/good.svg";
 import badFace from "@/public/icons/faces/bad.svg";
@@ -49,13 +44,18 @@ import cycleCalendarIcon from "@/public/icons/pregnant/cyclecalendar.svg"
 import cycleTimeCircleIcon from "@/public/icons/pregnant/cycletimecircle.svg"
 import cycleGraphIcon from "@/public/icons/pregnant/cyclegraph.svg"
 import cycleWeightIcon from "@/public/icons/pregnant/cycleweight.svg"
+import notificationIcon from "@/public/icons/bell.svg"
 import {BookmarkingIcon} from "@/app/dashboard/components/icons";
 import {ArticleParent} from "@/app/dashboard/components/ui/ArticleParent";
 import {Log} from "@/app/_lib/utils";
 import posthog from "posthog-js";
+import {ProfileImage} from "@/app/_components/ProfileImage";
+import {SideNav} from "@/app/dashboard/components/sideNav";
+import {TapWrapper} from "@/app/_components/TapWrapper";
+import {useCalendarView} from "@/app/contexts/showCalendarContext";
 
 export function DashboardHeader(user) {
-    Log('dashboardheader_info_display', {user});
+    Log('dashboard/components/index.jsx; DashboardHeader', {user});
     return (
         <header className={"px-5"}>
             <section className={"text-primaryText"}>
@@ -67,37 +67,49 @@ export function DashboardHeader(user) {
     )
 }
 
-export function DashboardNav({text = ""}) {
-    const [hasNotifications, setHasNotifications] = useState(false)
-    const [toggleSearch, setToggleSearch] = useState(false)
+export function DashboardNav({text = "", accessToken}) {
+    const [hasNotifications, setHasNotifications] = useState(false);
+    const [open, setOpen] = useState(false);
+    const {user} = useUserInfo(accessToken);
+    const {viewLarge, setViewLarge} = useCalendarView();
+
+    const handleOpen = (value) => {
+        setOpen(value);
+    }
+    const handleCalendarView = () => {
+        posthog.capture('CalendarViewClick')
+        Log("dashboard/components/index.jsx HandleCalendarView click")
+        setViewLarge((prevState) => !prevState);
+    }
 
     return (
-        <nav className={"flex items-center gap-3 mt-5"}>
-            <div className={"bg-[#0F969C26] rounded-full w-fit h-fit p-4"}>
-                <Image src={category} alt={"some grid icon thingy"}/>
-            </div>
-            {
-                text.length === 0 ?
-                    <section className={`flex-1 w-2/4 flex justify-end invisible`}>
-                        <div className={`flex-1 w-1/4`}>
-                            <input
-                                disabled={true}
-                                className={`h-10 rounded-md outline-none border px-2 ${toggleSearch ? 'block' : 'hidden'} `}
-                                type={"search"}/>
+        <section>
+            <nav className={"w-full flex justify-between items-center my-5"}>
+                <div className={"bg-[#0F969C] w-[55px] h-[55px] rounded-full w-fit h-fit"}>
+                    <SideNav userProfileInfo={user} accessToken={accessToken} open={open} handleOpen={handleOpen}/>
+                </div>
+
+                <div className={`rounded-full h-[50px] p-4 flex gap-4 items-center justify-end`}>
+                    <TapWrapper clickAction={handleCalendarView}>
+                        <div className={"w-[55px] h-[55px] rounded-full border-2 flex items-center justify-center "}>
+                            <Image src={calendarIcon} alt={"Calendary icon"} width={17.4} height={17.4}/>
                         </div>
-                        <div className={"bg-[#0F969C26] rounded-full w-fit h-fit p-4"}
-                             onClick={() => setToggleSearch(!toggleSearch)}>
-                            <Image src={searchIcon} alt={"Search bar icon"}/>
+                    </TapWrapper>
+                    <TapWrapper>
+                        <div
+                            className={"w-[55px] h-[55px] relative rounded-full border-2 flex items-center justify-center "}>
+                            {hasNotifications && <div
+                                className={"absolute bg-primaryColor w-[20px] h-[20px] text-[12px] text-white " +
+                                    "rounded-full p-1 top-0 right-0 flex items-center justify-center"}>
+                                <span>5</span>
+                            </div>}
+                            <Image src={notificationIcon} width={17.4} height={17.4} alt={"active bell icon"}/>
                         </div>
-                    </section> : <div className={`flex-1 text-center font-semibold text-xl text-[#000]`}> {text} </div>
-            }
-            <div className={`bg-[#0F969C26] rounded-full w-[50px] h-[50px] p-4 flex items-center justify-center`}>
-                {hasNotifications ?
-                    <Image src={activeBell} alt={"active bell icon"}/> :
-                    <Image src={dullBell} alt={"bell icon with no notification"}/>
-                }
-            </div>
-        </nav>
+                    </TapWrapper>
+
+                </div>
+            </nav>
+        </section>
     )
 }
 
@@ -105,7 +117,7 @@ export function NavItem({children, text = "default", style = "", withText = true
     return (
         <section
             className={`${montserrat.className} ${active ? 'text-primaryColor' : 'text-[#0000004D]'} ${style} w-[35px]`}>
-            <Link className={"flex flex-col justify-end gap-2 items-center"} href={"/dashboard/" + text}>
+            <div className={"flex flex-col justify-end gap-2 items-center"}>
                 <div className={"pt-3"}>
                     {children}
                 </div>
@@ -113,7 +125,7 @@ export function NavItem({children, text = "default", style = "", withText = true
                 {withText && <p className={"capitalize text-sm font-medium"}>
                     {text}
                 </p>}
-            </Link>
+            </div>
         </section>
     )
 }
@@ -236,8 +248,8 @@ export function MenstrualCycleCardMain({accessToken}) {
     const generalCycleInfo = necessaryDataForMenstrualUI(data || []);
 
     if (isLoading) return <div>loading...</div>
-    Log("From the card")
-    Log({data});
+    Log("dashboard/components/index.jsx; MenstrualCycleCardMain", {data, generalCycleInfo});
+
     if (error) {
         return (
             <div>
@@ -347,7 +359,7 @@ export function InsightCard({insight, accessToken}) {
 }
 
 export function ChatCard({key, info}) {
-    Log(info)
+    Log("dashboard/components/index.jsx; ChatCard", {info})
     const router = useRouter()
     const [showOptions, setShowOptions] = useState(false)
     const optionsRef = useRef(null);
@@ -505,7 +517,7 @@ function CalendarTemplate({
                 {
                     days.map((day, index) => {
                         const isCurrentMonth = isSameMonth(day, currentMonth)
-                        const customStyle = specialDates.find((styleDate) => isSameDay(styleDate.date, day))?.style
+                        const customStyle = specialDates.find((styleDate) => isSameDay(styleDate?.date, day))?.style
 
                         return (
                             <div key={index} onClick={() => dateClick(day)} className={`p-2 text-center rounded-full
@@ -530,36 +542,13 @@ export function ShortCalendar({
                                   type = "menstrual",
                                   dateClick = undefined
                               }) {
-    // const {data, error, isLoading} = useCycleInfo(accessToken)
     let specialDays = specialDates;
-    // if (type !== "menstrual") {
-    //     specialDays = specialDates;
-    // } else {
-    //     specialDays = specialDates ? specialDates : menstrualCycleDateGenerator(data?.current_cycle?.start_date, data?.period_length, "general", data?.cycle_length);
-    // }
-
     Log({specialDays});
 
     const [currentMonth, setCurrentMonth] = useState(new Date())
     const startWeek = startOfWeek(new Date())
     const endWeek = endOfWeek(new Date())
 
-    // if (isLoading) {
-    //     return (
-    //         <div>
-    //             loading...
-    //         </div>
-    //     )
-    // }
-    //
-    // if (error) {
-    //     return (
-    //         <div>
-    //             error
-    //             {error.message}
-    //         </div>
-    //     )
-    // }
     return (
         <div>
             <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth}
@@ -569,9 +558,10 @@ export function ShortCalendar({
     )
 }
 
-export function Calendar({action, withFlower, specialDates, accessToken}) {
+export function Calendar({action, withFlower, specialDates = undefined, accessToken, dateClick}) {
     const {data, error, isLoading} = useCycleInfo(accessToken);
-    specialDates = specialDates ? specialDates : menstrualCycleDateGenerator(data?.start_date, data?.period_length, "general", data?.cycle_length);
+    Log("calendar data output", {data})
+    specialDates = specialDates ? specialDates : menstrualCycleDateGenerator(data?.start_date, data?.period_length, data?.ovulation_day, "general", data?.cycle_length);
     const [currentMonth, setCurrentMonth] = useState(new Date())
     const startMonth = startOfMonth(currentMonth)
     const endMonth = endOfMonth(currentMonth)
@@ -597,7 +587,7 @@ export function Calendar({action, withFlower, specialDates, accessToken}) {
 
     return (
         <div>
-            <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth}
+            <CalendarTemplate dateClick={dateClick} startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth}
                               specialDates={specialDates} action={action} withFlower={withFlower}/>
         </div>
     )
@@ -605,17 +595,17 @@ export function Calendar({action, withFlower, specialDates, accessToken}) {
 
 export function FeelingsInsightsAndEvents({accessToken}) {
     const faces = [
-        {desc: "good", img: goodFace, color: "#251FD1"},
-        {desc: "bad", img: badFace},
-        {desc: "angry", img: angryFace},
-        {desc: "tired", img: tiredFace},
-        {desc: "happy", img: happyFace},
-        {desc: "neutral", img: neutralFace}
+        {desc: "happy", img: happyFace, emoji: "😊"},
+        {desc: "sad", img: badFace, emoji: "😔"},
+        {desc: "calm", img: neutralFace, emoji: "😌"},
+        {desc: "irritated", img: angryFace, emoji: "😡"},
+        {desc: "anxious", img: goodFace, emoji: "😰"},
     ]
     const [feelingRecorded, setFeelingRecorded] = useState(false)
     const [feeling, setFeeling] = useState({feeling: '', number: 0});
 
-    const handleFeeling = (selectedFeeling) => {
+    const handleFeeling = (e, selectedFeeling) => {
+        e.preventDefault();
         posthog.capture('home_feelings_click');
         const randomNumber = Math.floor(Math.random() * 100, 1);
         setFeeling({...feeling, feeling: selectedFeeling, number: randomNumber})
@@ -634,12 +624,17 @@ export function FeelingsInsightsAndEvents({accessToken}) {
                         <h2>How do you feel today?</h2>
                     </header>
                     <section className={"flex justify-evenly my-5"}>
-                        {faces.map(face => {
+                        {faces.map((face, index) => {
                             return (
-                                <div key={face.desc} className={"flex flex-col items-center justify-evenly"}>
-                                    <Image onClick={() => handleFeeling(face.desc)} src={face.img} alt={"face"}/>
-                                    <p> {face.desc} </p>
-                                </div>
+                                <TapWrapper keys={`${index}${face.desc}`}>
+                                    <div tabIndex={0}
+                                         onClick={(e) => handleFeeling(e, face.desc)}
+                                         key={face.desc}
+                                         className={"w-[70px] h-[80px] flex flex-col items-center justify-evenly border-2 .p-2 border-[#D2D2D2] rounded-md"}>
+                                        <p>{face.emoji}</p>
+                                        <p>{face.desc}</p>
+                                    </div>
+                                </TapWrapper>
                             )
                         })
                         }
@@ -669,12 +664,11 @@ export function FeelingsInsightsAndEvents({accessToken}) {
                 <header>
                     <div className={"flex justify-between"}>
                         <h2 className={"text-primaryText font-bold text-xl"}>Cycle Insights</h2> <Link
-                        href={"/dashboard/community"}>See More</Link> {/* TODO: use the right link*/}
+                        href={"/dashboard/community"}>See More</Link>
                     </div>
                     <p className={`${montserrat.className} text-subText`}>Personalized health tips based on logged
                         data</p>
                 </header>
-                {/*<Insights accessToken={accessToken}/>*/}
                 <ArticleParent/>
             </section>
             <Events accessToken={accessToken}/>

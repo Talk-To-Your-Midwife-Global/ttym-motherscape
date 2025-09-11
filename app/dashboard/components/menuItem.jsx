@@ -48,10 +48,6 @@ export const MenuItem = ({i, clickAction = undefined, link, children}) => {
                                 <h3 className={`text-[10px] font-light ${montserrat.className}`}>{i.subText}</h3>
                             </div>
                         </section>
-
-                        <section className={`flex-1 .justify-self-end .justify-items-end flex`}>
-                            <span className={`iconify lucide--chevron-right text-primaryText`}></span>
-                        </section>
                     </section> :
                     children}
             </Link>

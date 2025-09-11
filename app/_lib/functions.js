@@ -29,6 +29,7 @@ export function fetchUser(url, token) {
 }
 
 export function fetchCycle(url, token) {
+    Log("useCycleInfo Fetch", {token});
     return fetch(url, {
         headers: {
             "Authorization": `Bearer ${token}`
@@ -40,10 +41,10 @@ export function fetchCycle(url, token) {
         Log({result});
         const formattedData = {
             ...result,
-            dates: menstrualCycleDateGenerator(result.current_cycle.start_date, result.period_length, "general", result.cycle_length),
+            dates: menstrualCycleDateGenerator(result.current_cycle?.start_date, result.period_length, "general", result.current_cycle.cycle_length),
             daysDone: computeDaysDone(result.current_cycle.start_date),
             daysToPeriod: computeDaysToPeriod(result.current_cycle.start_date, result.cycle_length),
-            percentageComplete: computeCycleCompletion(computeDaysDone(result.current_cycle.start_date), result.cycle_length),
+            percentageComplete: computeCycleCompletion(computeDaysDone(result.current_cycle?.start_date), result.cycle_length),
         }
         return formattedData
     })
@@ -77,6 +78,20 @@ export function postFetcher(url, token, formBody) {
     })
 }
 
+export function parseLogs(logs) {
+    const result = {};
+
+    for (const log of logs) {
+        result[log.date] = {
+            mood: log.mood,
+            symptoms: log.symptoms
+        }
+    }
+
+    Log("parseLogs function", {result})
+    return result;
+}
+
 /**
  * Remove spaces in a string
  * @param {string} sentence
@@ -86,6 +101,11 @@ export function removeSpaces(sentence) {
     return sentence.replace(/\s+/g, '');
 }
 
+/**
+ * Format date into YYYY-MM-DD
+ * @param {date} date object
+ * @returns {string} date in the YYYY-MM-DD Format
+ */
 export function formatDate(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -213,7 +233,7 @@ function computeProgressBarValues(days, week) {
 export function necessaryDataForMenstrualUI(allData) {
     const {current_cycle} = allData;
     Log({current_cycle});
-    const dates = menstrualCycleDateGenerator(current_cycle?.start_date, allData.period_length, "general", allData.cycle_length)
+    const dates = menstrualCycleDateGenerator(current_cycle?.start_date, allData.period_length, current_cycle?.ovulation_day, "general", allData.cycle_length)
     const daysDone = computeDaysDone(current_cycle?.start_date)
     const daysToPeriod = computeDaysToPeriod(current_cycle?.start_date, allData.cycle_length)
     const percentageComplete = computeCycleCompletion(daysDone, allData.cycle_length)
@@ -230,7 +250,7 @@ export function necessaryDataForMenstrualUI(allData) {
         percentageComplete,
         daysToOvulation: computeDaysToOvulation(daysDone, daysToPeriod, allData.cycle_length),
         calendar: dates,
-
+        isPredictedCycle: current_cycle?.predicted,
     }
 }
 
@@ -240,7 +260,7 @@ export function necessaryDataForMenstrualUI(allData) {
  * @returns {number}
  */
 function computeDaysDone(periodStart) {
-    return differenceInDays(new Date(), periodStart)
+    return differenceInDays(new Date(), periodStart) + 1;
 }
 
 /**
@@ -289,30 +309,30 @@ function computeDaysToOvulation(done, toPeriod, cycleLength) {
  * @param cycleLength
  * @returns {({date: *, style: string}|{date: Date, style: string})[]}
  */
-export function menstrualCycleDateGenerator(lmp, periodLength, stage = "general", cycleLength = 28) {
+export function menstrualCycleDateGenerator(lmp, periodLength, ovulationDay, stage = "general", cycleLength = 28) {
     const lastCycleDay = addDays(lmp, cycleLength)
     const menstrualDates = generateMenstrualDates(lmp, periodLength);
     const follicularDates = generateFollicularDates(lmp, lastCycleDay)
-    const ovulationDates = generateOvulationDates(lastCycleDay)
+    const ovulationDates = generateOvulationDates(lastCycleDay, ovulationDay)
     const lutealDates = generateLutealDates(lastCycleDay)
 
-    switch (stage.toLowerCase()) {
-        case "menstrual":
-            return menstrualDates;
-        case "follicular":
-            return follicularDates;
-        case "ovulation":
-            return ovulationDates;
-        case "luteal":
-            return lutealDates;
-        default:
-            return [
-                ...menstrualDates,
-                ...follicularDates,
-                ...ovulationDates,
-                ...lutealDates,
-            ]
-    }
+    // switch (stage.toLowerCase()) {
+    //     case "menstrual":
+    //         return menstrualDates;
+    //     case "follicular":
+    //         return follicularDates;
+    //     case "ovulation":
+    //         return ovulationDates;
+    //     case "luteal":
+    //         return lutealDates;
+    //     default:
+    return [
+        ...menstrualDates,
+        ...follicularDates,
+        ...ovulationDates,
+        ...lutealDates,
+    ]
+    // }
 
 }
 
@@ -324,7 +344,8 @@ export function menstrualCycleDateGenerator(lmp, periodLength, stage = "general"
  */
 function generateMenstrualDates(lmp, periodLength) {
     let day = new Date(lmp)
-    let endDay = addDays(lmp, periodLength)
+    let endDay = addDays(lmp, periodLength - 1)
+    Log("Menstrual Date Debugging", {day, endDay})
     return generateDays(day, endDay, 'bg-[#E82A73] text-white rounded-2xl')
 }
 
@@ -341,18 +362,22 @@ function generateFollicularDates(lmp, lastCycleDay) {
 
 /**
  * Get the ovulation phase dates; not to be confused with the ovulation date
- * Ovulation day is 14 days before the end of the cycle
- * @param lastCycleDay
+ * Ovulation day is calculated on the server
  * @deps date-fns
  * @returns {[...{date: *, style: string}[],{date: Date, style: string}]}
+ * @param lastCycleDay
+ * @param ovulationDay
  */
-function generateOvulationDates(lastCycleDay) {
-    const ovulationDay = getOvulationDay(lastCycleDay)
+function generateOvulationDates(lastCycleDay, ovulationDay) {
+    // const ovulationDay = getOvulationDay(lastCycleDay)
+    ovulationDay = new Date(ovulationDay);
     const daysBeforeOvulation = addDays(ovulationDay, -2)
-    const dayAfterOvulation = addDays(daysBeforeOvulation, 1)
+    const dayAfterOvulation = addDays(ovulationDay, 1)
 
     let days = generateDays(daysBeforeOvulation, dayAfterOvulation, 'bg-[#DEE4F5]')
-    days = [...days, {date: ovulationDay, style: 'bg-[#07226B] text-white'}]
+    days = [...days]
+    days[2] = {date: ovulationDay, style: 'bg-[#07226B] text-white'}
+    Log("functions.js; Ovulation dates", {days});
     return days
 }
 
