@@ -212,16 +212,16 @@ export async function signin(state, formData) {
         } else {
             cookieStore.set('last_login', result.user.last_login)
         }
-        const user = result.user
-        const userUUID = user.uuid;
+        // const user = result.user
+        // const userUUID = user.uuid;
+        //
+        // const userDetails = {
+        //     username: user.username,
+        //     email: user.email,
+        //     status: user.status
+        // }
 
-        const userDetails = {
-            username: user.username,
-            email: user.email,
-            status: user.status
-        }
-
-        posthog.identify(userUUID, userDetails);
+        // posthog.identify(userUUID, userDetails);
 
         return {
             success: true,
