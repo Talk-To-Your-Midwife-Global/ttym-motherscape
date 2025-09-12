@@ -183,7 +183,7 @@ export async function signin(state, formData) {
                 const email = formData.get('email')
                 Log("auth.js; Email verification request object", {email});
 
-                const emailRequest = await requestEmailVerification(email);
+                const emailRequest = await requestEmailVerification(formData.get('email'));
                 Log("auth.js: emailRequest (var) response", {emailRequest});
 
                 // route the user
