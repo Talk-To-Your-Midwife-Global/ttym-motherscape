@@ -5,6 +5,7 @@ import {useActionState, useState, useEffect} from 'react'
 import {signin} from "@/app/_actions/auth";
 import {SignInForm} from "@/app/auth/_components/SignInForm";
 import appLogo from "../../../public/icons/Obaa-logo-Horizontal.svg"
+import posthog from "posthog-js";
 
 export default function Page() {
     const [state, action] = useActionState(signin, undefined)
@@ -19,7 +20,8 @@ export default function Page() {
     useEffect(() => {
         setUserRoute(getUserRouteFromLocalStorage())
         if (state?.success) {
-            router.push(state.route)
+            posthog.identify(state?.userDetails.uuid, state?.userDetails);
+            router.push(state.route);
         } else if (state?.success === false) {
             setError([...state?.error])
         }

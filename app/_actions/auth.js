@@ -222,20 +222,19 @@ export async function signin(state, formData) {
             cookieStore.set('last_login', result.user.last_login)
         }
         const user = result.user
-        const userUUID = user.uuid;
 
         const userDetails = {
+            uuid: user.uuid,
             username: user.username,
             email: user.email,
             status: user.status
         }
 
-        posthog.identify(userUUID, userDetails);
-
         return {
             success: true,
             token: result.tokens.access,
-            route: result.user.status !== "UNASSIGNED" ? '/dashboard' : `/onboarding`
+            route: result.user.status !== "UNASSIGNED" ? '/dashboard' : `/onboarding`,
+            userDetails
         }
     } catch (errors) {
         return {
