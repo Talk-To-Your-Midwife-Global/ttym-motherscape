@@ -169,15 +169,15 @@ export async function signin(state, formData) {
         })
 
         const result = await response.json()
-        Log({result});
-        Log({response})
+        // Log({result});
+        // Log({response})
 
         const errors = []
         if (!response.ok) {
             // for (const key in result) {
             //     errors.push(result[key][0])
             // }
-            Log("auth.js; Signin failed", {result})
+            // Log("auth.js; Signin failed", {result})
 
             if (response.status === 401 && result.code === "auth/email-not-verified") {
                 const email = formData.get('email')
