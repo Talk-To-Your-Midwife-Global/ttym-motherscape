@@ -5,11 +5,13 @@ import {logout} from "@/app/_actions/auth";
 import Link from "next/link";
 import {Log} from "@/app/_lib/utils";
 import {IconButton} from "@/app/_components";
+import posthog from "posthog-js";
 
 export default function Error({error, reset}) {
     useEffect(() => {
         // Log the error to an error reporting service
         Log("error.js", {error})
+        posthog.captureException({error});
     }, [error])
     return (
         <div className={`flex justify-center items-center w-full h-screen`}>
