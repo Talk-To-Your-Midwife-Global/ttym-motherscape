@@ -148,6 +148,7 @@ export async function signin(state, formData) {
 
     // return early if there is an error
     if (!validatedFields.success) {
+        Log("auth.js; field validation failed", {validatedFields});
         return {
             state: {
                 email: formData.get('email'),
