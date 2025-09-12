@@ -157,6 +157,13 @@ export async function signin(state, formData) {
         }
     }
 
+    const jsonBody = JSON.stringify({
+        email: formData.get('email'),
+        password: formData.get('password')
+    })
+
+    Log("auth.js body for signin", {jsonBody})
+
     try {
         const response = await fetch(`${HOSTNAME_URI}/auth/login/`, {
             method: 'POST',
