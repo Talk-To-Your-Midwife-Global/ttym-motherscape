@@ -169,8 +169,8 @@ export async function signin(state, formData) {
         })
 
         const result = await response.json()
-        // Log({result});
-        // Log({response})
+        Log({result});
+        Log({response})
 
         const errors = []
         if (!response.ok) {
