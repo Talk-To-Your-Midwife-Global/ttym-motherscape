@@ -10,6 +10,7 @@ import {compareDesc} from "date-fns";
 import {Log} from "@/app/_lib/utils";
 import {useCalendarView} from "@/app/contexts/showCalendarContext";
 import posthog from "posthog-js";
+import {CombinedCalendar} from "@/app/dashboard/components/ui/CombinedCalendar";
 
 
 export const moodEmoticons = {
@@ -154,11 +155,7 @@ export function Logs({accessToken}) {
 
     return (
         <section className={`${inter.className} h-[100%] mt-5`}>
-            <ShortCalendar specialDates={[{date: viewingDate, style: 'border border-primaryColor'}]}
-                           action={{actionText: "View Calendar", link: "/dashboard/calendar"}}
-                           dateClick={handleViewDayLogs}
-                           accessToken={accessToken}
-            />
+            <CombinedCalendar accessToken={accessToken}/>
             <form className="px-[20px] text-primaryText">
                 <div className="flex flex-col gap-2 mb-8">
                     <h3 className="text-xl font-semibold">Mood</h3>

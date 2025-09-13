@@ -74,7 +74,8 @@ export function InstallPrompt() {
                                 Install App
                             </button>
                         </div>
-                        <span className="font-medium text-[18px] text-[#828282]">Your journey deserves it.</span>
+                        <span
+                            className="font-medium text-[14px] text-[#E82A73] .text-white p-2 rounded-md flex items-center gap-1"> Your journey deserves it!</span>
                     </section>
                 </Drawer.Content>
             </Drawer.Portal>
