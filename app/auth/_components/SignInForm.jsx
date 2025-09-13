@@ -1,7 +1,7 @@
 "use client"
 import {useState} from "react";
 import Link from "next/link";
-import {3IconButton} from "@/app/_components";
+import {IconButton} from "@/app/_components";
 // import Image from "next/image";
 // import facebook from "@/public/images/facebook.svg";
 // import google from "@/public/images/google.svg";
