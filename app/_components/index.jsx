@@ -5,7 +5,7 @@ import Link from "next/link";
 import EmptyPageClip from "@/public/images/empty-articles.svg";
 import {motion, AnimatePresence} from "framer-motion"
 import {useFormStatus} from "react-dom";
-import {cn} from "@/app/_lib/utils";
+import {cn, Log} from "@/app/_lib/utils";
 import {Spinner} from "@/app/_components/Spinner";
 
 const pageTransitionVariants = {
@@ -112,9 +112,11 @@ export function IconButton({
             setPending(false);
         }
         // reset pending control to the isPending attribute
-        if (pending && isPending) {
+        if (pending || isPending) {
             setPending(false);
         }
+
+        Log("index.jsx IconButton", {pending})
     }
     if (type === "link") {
         return (
@@ -136,7 +138,7 @@ export function IconButton({
             <button tabIndex={0} type={type === 'submit' ? 'submit' : "button"} onClick={() => handleClick()}
                     disabled={disabled}
                     className={cn('mb-2', `${variant === "primary" && disabled ? "bg-[#A8CCD0] text-white" : "bg-primaryColor text-white border border-primaryColor "} transition-all duration-500 ease-in-out  w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2 ${pending || isPending && 'w-[fit] h-fit py-4 px-4'}`, variant === 'secondary' && 'bg-white border border-primaryColor text-primaryColor font-semibold', customStyles)}>
-                {pending || isPending ? <> <Spinner/> <p>{loadingText}</p></> :
+                {isPending ? <> <Spinner/> <p>{loadingText}</p></> :
                     <>
                         {text}
                         <span className={icon}></span>
