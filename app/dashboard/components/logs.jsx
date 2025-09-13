@@ -95,6 +95,7 @@ export function Logs({accessToken}) {
             const res = await logLog(feelingState, accessToken, userType, viewingDate, method);
             if (res.success) {
                 setDisableButton(true)
+                getUserLogs(); // to update the context
             }
         })
     }

@@ -71,6 +71,7 @@ export function CombinedCalendar({accessToken}) {
                         </div>
                     </section> : <ShortCalendar
                         specialDates={generalCycleInfo?.calendar}
+                        dateClick={handleDateClick}
                         accessToken={accessToken} withFlower={true}/>
             }
             {/*TODO: make it such that a tap on the short calendar reveals the large*/}
