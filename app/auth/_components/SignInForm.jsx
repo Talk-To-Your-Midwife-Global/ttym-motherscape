@@ -1,7 +1,7 @@
 "use client"
 import {useState} from "react";
 import Link from "next/link";
-import {Button} from "@/app/_components";
+import {3IconButton} from "@/app/_components";
 // import Image from "next/image";
 // import facebook from "@/public/images/facebook.svg";
 // import google from "@/public/images/google.svg";
@@ -23,7 +23,7 @@ export function SignInForm({state, action}) {
                 <div
                     className="bg-white border-2 w-full h-[42px] flex gap-2 items-center rounded-full pl-[15px] pr-[5px]">
                     <span className="iconify lucide--mail font-medium"></span>
-                    <input type="email" name="email" id="email" placeholder="linda@framcreative.com"
+                    <input autoFocus type="email" name="email" id="email" placeholder="linda@framcreative.com"
                            className="flex-1 outline-none bg-transparent text-mainText"/>
                 </div>
                 {state?.errors?.email && <p className="text-red-500 text-sm">{state.errors.email}</p>}
@@ -54,7 +54,7 @@ export function SignInForm({state, action}) {
             </div>
 
             <div className="flex flex-col justify-center items-center mt-10">
-                <Button text="Sign In"/>
+                <IconButton loadingText={"Signing in"} text="Sign In" type="submit"/>
             </div>
             {/*<div className="relative flex flex-col items-center justify-center">*/}
             {/*    <div className="h-[1px] w-full bg-[#9C979759] top-[10px] absolute "></div>*/}

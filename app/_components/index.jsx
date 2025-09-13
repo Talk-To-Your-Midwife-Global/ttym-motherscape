@@ -116,9 +116,25 @@ export function IconButton({
             setPending(false);
         }
     }
-    return (
-        <Link href={href ? href : undefined}>
-            <button type={type === 'submit' ? 'submit' : "button"} onClick={() => handleClick()} disabled={disabled}
+    if (type === "link") {
+        return (
+            <Link href={href ? href : undefined}>
+                <button tabIndex={0} type={type === 'submit' ? 'submit' : "button"} onClick={() => handleClick()}
+                        disabled={disabled}
+                        className={cn('mb-2', `${variant === "primary" && disabled ? "bg-[#A8CCD0] text-white" : "bg-primaryColor text-white border border-primaryColor "} transition-all duration-500 ease-in-out  w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2 ${pending || isPending && 'w-[fit] h-fit py-4 px-4'}`, variant === 'secondary' && 'bg-white border border-primaryColor text-primaryColor font-semibold', customStyles)}>
+                    {pending || isPending ? <> <Spinner/> <p>{loadingText}</p></> :
+                        <>
+                            {text}
+                            <span className={icon}></span>
+                        </>
+                    }
+                </button>
+            </Link>
+        )
+    } else {
+        return (
+            <button tabIndex={0} type={type === 'submit' ? 'submit' : "button"} onClick={() => handleClick()}
+                    disabled={disabled}
                     className={cn('mb-2', `${variant === "primary" && disabled ? "bg-[#A8CCD0] text-white" : "bg-primaryColor text-white border border-primaryColor "} transition-all duration-500 ease-in-out  w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2 ${pending || isPending && 'w-[fit] h-fit py-4 px-4'}`, variant === 'secondary' && 'bg-white border border-primaryColor text-primaryColor font-semibold', customStyles)}>
                 {pending || isPending ? <> <Spinner/> <p>{loadingText}</p></> :
                     <>
@@ -127,8 +143,8 @@ export function IconButton({
                     </>
                 }
             </button>
-        </Link>
-    )
+        )
+    }
 }
 
 
