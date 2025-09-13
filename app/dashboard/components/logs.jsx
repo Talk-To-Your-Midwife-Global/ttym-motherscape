@@ -55,24 +55,31 @@ export function Logs({accessToken}) {
     const [feelingState, setFeelingState] = useState({moods: [], symptoms: []})
     const [userType, setUserType] = useState("");
     const [shouldUpdate, setShouldUpdate] = useState(false);
-    const {viewingDate, setViewingDate} = useCalendarView();
+    const {viewingDate, setViewingDate, setLogs} = useCalendarView();
 
 
     async function getUserLogs() {
+        const date = formatDate(viewingDate)
         Log("Logs Page accesstoken and url", {accessToken, PUBLICHOSTNAME, viewingDate})
         try {
-            const response = await fetch(`${PUBLICHOSTNAME}/logs?date=${formatDate(viewingDate)}`, {
+            const response = await fetch(`${PUBLICHOSTNAME}/logs?date=${date}`, {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`
                 }
             })
             if (!response.ok) {
-                throw new Error("Could not fetch logs");
+                throw new Error("Logs.jsx getUserLogs();  Could not fetch logs");
             }
             const logs = await response.json();
             const hasLogs = logs.length > 0;
             Log("logs.jsx; fetching logs", {logs, hasLogs})
             if (hasLogs) {
+                setLogs((prevLogs) => {
+                    return {
+                        ...prevLogs, [date]: {mood: logs[0].mood, symptoms: logs[0].symptoms}
+                    }
+                })
+
                 setDisableButton(true)
                 setFeelingState({moods: logs[0].mood, symptoms: logs[0].symptoms});
                 setShouldUpdate(true);
@@ -84,6 +91,7 @@ export function Logs({accessToken}) {
             }
         } catch (err) {
             Log("Error in Log component while fetching logs", {err});
+            throw new Error({err})
         }
     }
 
