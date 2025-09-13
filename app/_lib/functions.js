@@ -315,25 +315,15 @@ export function menstrualCycleDateGenerator(lmp, periodLength, ovulationDay, sta
     const follicularDates = generateFollicularDates(lmp, lastCycleDay)
     const ovulationDates = generateOvulationDates(lastCycleDay, ovulationDay)
     const lutealDates = generateLutealDates(lastCycleDay)
+    const today = generateDays(new Date(), new Date(), 'border-2 border-primaryColor');
 
-    // switch (stage.toLowerCase()) {
-    //     case "menstrual":
-    //         return menstrualDates;
-    //     case "follicular":
-    //         return follicularDates;
-    //     case "ovulation":
-    //         return ovulationDates;
-    //     case "luteal":
-    //         return lutealDates;
-    //     default:
     return [
         ...menstrualDates,
         ...follicularDates,
         ...ovulationDates,
         ...lutealDates,
+        ...today
     ]
-    // }
-
 }
 
 /**
@@ -343,8 +333,8 @@ export function menstrualCycleDateGenerator(lmp, periodLength, ovulationDay, sta
  * @returns {{date: *, style: string}[]}
  */
 function generateMenstrualDates(lmp, periodLength) {
-    let day = new Date(lmp)
-    let endDay = addDays(lmp, periodLength - 1)
+    const day = new Date(lmp)
+    const endDay = addDays(lmp, periodLength - 1)
     Log("Menstrual Date Debugging", {day, endDay})
     return generateDays(day, endDay, 'bg-[#E82A73] text-white rounded-2xl')
 }
@@ -407,8 +397,8 @@ function generateLutealDates(lastCycleDay) {
  * @returns {{date: *, style: string}[]}
  */
 function generateDays(start, end, style = "") {
-    const days = []
-    let day = start
+    const days = [];
+    let day = start;
     while (day <= end) {
         days.push(day)
         day = addDays(day, 1)
