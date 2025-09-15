@@ -21,11 +21,11 @@ function FaceCard({details}) {
     )
 }
 
-function ExcessCard({num = 1}) {
+function ExcessCard({num = 0}) {
     return (
         <div
             className={cn("bg-white shadow-md h-[44px] w-[44px]  rounded-full text-lg flex items-center justify-center border border-primaryColor rounded-full text-primaryColor bg-[#0F969C12]")}>
-            <Link href={"/dashboard/logs"}>+{num}</Link>
+            <Link href={"/dashboard/logs"}>+{num && num}</Link>
         </div>
     )
 }
@@ -68,7 +68,7 @@ export function UserSymptomsAndLogViewer({open, setOpen, cycleInfo}) {
         feelings: withoutIcons[0].feelings.join(',')
     }] : undefined;
     const feelingsToDisplay = feelings && feelings.slice(0, 4);
-    const count = (feelings && feelings.length > 4) && feelings.slice(4).length;
+    const count = (feelings && feelings.length > 4 && feelings.slice(4).length > 1) && feelings.slice(4).length || 0;
 
 
     Log("UserSymptomsAndLogViewer details", {details, feelings})

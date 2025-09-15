@@ -46,7 +46,7 @@ import cycleGraphIcon from "@/public/icons/pregnant/cyclegraph.svg"
 import cycleWeightIcon from "@/public/icons/pregnant/cycleweight.svg"
 import notificationIcon from "@/public/icons/bell.svg"
 import {BookmarkingIcon} from "@/app/dashboard/components/icons";
-import {ArticleParent} from "@/app/dashboard/components/ui/ArticleParent";
+import {TrendingArticleParent} from "@/app/dashboard/components/ui/TrendingArticleParent";
 import {Log} from "@/app/_lib/utils";
 import posthog from "posthog-js";
 import {ProfileImage} from "@/app/_components/ProfileImage";
@@ -251,12 +251,7 @@ export function MenstrualCycleCardMain({accessToken}) {
     Log("dashboard/components/index.jsx; MenstrualCycleCardMain", {data, generalCycleInfo});
 
     if (error) {
-        return (
-            <div>
-                error
-                {error.message}
-            </div>
-        )
+        throw new Error(`dashboard/components/index.jsx: MenstrualCycleCardMain; useCycleInfo() ${error}`)
     }
 
     return (
@@ -476,7 +471,7 @@ export function InsightParent({head, desc, accessToken}) {
                 {/*        <InsightCard key={insight.id} insight={insight} accessToken={accessToken}/>*/}
                 {/*    ))*/}
                 {/*}*/}
-                <ArticleParent/>
+                <TrendingArticleParent/>
             </section>
         </section>
     )
@@ -669,7 +664,7 @@ export function FeelingsInsightsAndEvents({accessToken}) {
                     <p className={`${montserrat.className} text-subText`}>Personalized health tips based on logged
                         data</p>
                 </header>
-                <ArticleParent/>
+                <TrendingArticleParent/>
             </section>
             <Events accessToken={accessToken}/>
         </section>

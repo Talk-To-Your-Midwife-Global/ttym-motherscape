@@ -1,40 +1,35 @@
 'use client'
-
 import {useEffect} from 'react'
-import {logout} from "@/app/_actions/auth";
-import Link from "next/link";
+import posthog from "posthog-js";
 import {Log} from "@/app/_lib/utils";
 import {IconButton} from "@/app/_components";
+import {OnboardHeading} from "@/app/onboarding/_components/OnboardHeading";
+import Image from "next/image";
+import ErrorImage from "@/public/images/computererr.svg";
+import {useRouter} from "next/navigation";
 
 export default function Error({error, reset}) {
+    const router = useRouter();
     useEffect(() => {
-        // Log the error to an error reporting service
         Log("error.js", {error})
+        posthog.captureException(error);
     }, [error])
     return (
-        <div className={`flex justify-center items-center w-full h-screen`}>
-            <section className={"flex flex-col gap-3 items-center justify-center"}>
-                <h2 className={`text-primaryText text-2xl font-medium`}>An error occurred!</h2>
-
-                <p className={'text-center text-primaryText w-3/4'}>Refreshing logs you out so you can sign in and
-                    reports the
-                    issue to us.
-                    This gives us chance to make
-                    sure it never happens again </p>
-                <IconButton text={"Refresh App"} href={"/logout"}/>
-
-                {/*<button*/}
-                {/*    onClick={*/}
-                {/*        // Attempt to recover by trying to re-render the segment*/}
-                {/*        () => reset()*/}
-                {/*    }*/}
-                {/*>*/}
-                {/*    Try again*/}
-                {/*</button>*/}
+        <div className={`flex justify-between .items-center w-full h-screen`}>
+            <section className={"flex flex-col gap-3 items-center justify-between mt-10"}>
+                <div className={"flex flex-col gap-20 items-center"}>
+                    <OnboardHeading title={"Oops! Something went wrong"}
+                                    subTitle={"However we are committed to improving your experience."}/>
+                    <Image src={ErrorImage}
+                           alt={"Computer with an exclamation at the side"}/>
+                </div>
+                <div className={"flex flex-col items-center justify-center fixed bottom-10"}>
+                    <IconButton onClick={() => router.push('/logout')} text={"Report Issue"} href={"/logout"}
+                                type={"link"}/>
+                    <p className={"text-center text-[#3A3A3A99]"}>Report it once, we’ll handle the rest and make your
+                        experience better.</p>
+                </div>
                 <br/>
-                {/*<button onClick={() => logout()}>*/}
-                {/*    Login*/}
-                {/*</button>*/}
             </section>
         </div>
     )

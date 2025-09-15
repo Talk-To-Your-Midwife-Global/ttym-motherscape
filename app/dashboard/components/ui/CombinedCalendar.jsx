@@ -13,6 +13,7 @@ export function CombinedCalendar({accessToken}) {
     const {data, error: cycleError, isLoading: cycleLoading} = useCycleInfo(accessToken);
     const {
         viewLarge,
+        setViewLarge,
         setViewingDate,
         logs,
         setLogs,
@@ -33,12 +34,14 @@ export function CombinedCalendar({accessToken}) {
         Log("CombinedCalendar.jsx; useCycleInfo", {data});
         Log("CombinedCalendar.jsx; logData: with range", {logData});
 
-        // grab logs
+        // save logs in context if it is not having it already
         if (!logs) {
             const parsedLogs = parseLogs(logData);
             setLogs(parsedLogs);
             Log("CombinedCalendar.jsx, useCalendarView: logs", {logs})
         }
+
+        setViewLarge(false)
     }
 
     useEffect(() => {
@@ -71,6 +74,7 @@ export function CombinedCalendar({accessToken}) {
                         </div>
                     </section> : <ShortCalendar
                         specialDates={generalCycleInfo?.calendar}
+                        dateClick={handleDateClick}
                         accessToken={accessToken} withFlower={true}/>
             }
             {/*TODO: make it such that a tap on the short calendar reveals the large*/}
