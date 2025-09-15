@@ -1,5 +1,5 @@
-import {QuestionParent} from "../components/menstrualcycletracker";
 import {PregnancyQuestionParent} from "@/app/questions/components/pregnancytracker";
+import {QuestionParent} from "@/app/onboarding/_components/QuestionParent";
 import {updateUser, updatePregnantUser} from "@/app/_actions";
 import {returnTypeOfPatient} from "@/app/_actions/auth";
 

@@ -3,6 +3,7 @@ import {motion} from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import {montserrat} from "@/app/_fonts";
+import {Log} from "@/app/_lib/utils";
 
 const variants = {
     open: {
@@ -30,7 +31,7 @@ export const MenuItem = ({i, clickAction = undefined, link, children}) => {
             whileTap={{scale: 0.95}}
             className={`li`}
             onClick={() => {
-                console.log(clickAction)
+                Log(clickAction)
                 clickAction && clickAction()
             }}
         >
@@ -46,10 +47,6 @@ export const MenuItem = ({i, clickAction = undefined, link, children}) => {
                                 </div>
                                 <h3 className={`text-[10px] font-light ${montserrat.className}`}>{i.subText}</h3>
                             </div>
-                        </section>
-
-                        <section className={`flex-1 .justify-self-end .justify-items-end flex`}>
-                            <span className={`iconify lucide--chevron-right text-primaryText`}></span>
                         </section>
                     </section> :
                     children}

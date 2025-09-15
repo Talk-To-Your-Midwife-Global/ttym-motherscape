@@ -3,47 +3,31 @@ import {cookies} from "next/headers";
 import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {formatDate} from "@/app/_lib/functions";
 import {getLocalCookies} from "@/app/_lib/getCookies";
+import {Log} from "@/app/_lib/utils";
 
-export async function sendCurrentFeeling(feeling) {
-    // Call route that sends feeling
-    return {
-        success: true
-    }
-}
 
-export async function setCookies(newCookies) {
-    const cookieStore = await cookies()
-    for (let cookie in newCookies) {
-        console.log(cookie, newCookies[cookie])
-        cookieStore.set(cookie, newCookies[cookie])
-    }
-    return true
-}
-
-export async function restartCycle() {
+export async function startCycle() {
     const today = formatDate(new Date());
     const {access_token} = await getLocalCookies(['access_token']);
-    console.log(access_token);
+    Log("Dashboard/actions/action.js; startCycle", {access_token});
 
-    const response = await fetch(`${PUBLICHOSTNAME}/user/menstrual/start/?period_start=${today}`, {
+    const response = await fetch(`${PUBLICHOSTNAME}/menstrual/start/?period_start=${today}`, {
         headers: {
             'Authorization': `Bearer ${access_token}`
         }
     });
 
     if (!response.ok) {
-        console.log(response);
-        console.log(response.statusText)
+        Log("Dashboard/actions/action.js; startCycle", {response});
     }
 
     const data = await response.json();
-    console.log(data);
+    Log("Dashboard/actions/action.js; startCycle", {data});
 
 }
 
 export async function contentGqlFetcher(query, variables) {
-    // todo: remove all the console logs
-    console.log(JSON.stringify({query, variables}));
+    Log(JSON.stringify({query, variables}));
     const response = await fetch(`https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
         {
             method: 'POST',
@@ -55,11 +39,12 @@ export async function contentGqlFetcher(query, variables) {
         })
 
     if (!response.ok) {
+        Log("failed_contentgqlfetcher", {response})
         throw new Error(response.statusText)
     }
 
     const {data, errors} = await response.json();
-    console.log(data);
+    Log(data);
     return data;
 }
 
@@ -67,20 +52,20 @@ export async function contentGqlFetcher(query, variables) {
 export async function bookmarkPost(postId) {
     const {access_token} = await getLocalCookies(['access_token']);
 
-    const response = await fetch(`${PUBLICHOSTNAME}/user/bookmark/${postId}`, {
+    const response = await fetch(`${PUBLICHOSTNAME}/bookmark/${postId}`, {
         headers: {
             "Authorization": `Bearer ${access_token}`
         }
     })
-    console.log(response)
+    Log(response)
     if (!response.ok) {
-        console.log({data});
+        Log({data});
         return {
             marked: false,
         }
     }
     const data = await response.json();
-    console.log({data});
+    Log({data});
     return {
         marked: data.isBookmarked
     }
@@ -89,7 +74,7 @@ export async function bookmarkPost(postId) {
 
 // todo: remove this
 export async function unbookmarkPost(postId, accessToken) {
-    const response = await fetch(`${PUBLICHOSTNAME}/user/bookmark/${postId}`, {
+    const response = await fetch(`${PUBLICHOSTNAME}/bookmark/${postId}`, {
         headers: {
             "Authorization": `Bearer ${accessToken}`
         }
@@ -104,32 +89,35 @@ export async function unbookmarkPost(postId, accessToken) {
     }
 }
 
-export async function moodsAndFeelingsForTheDay(state, accessToken) {
-    // do something
-}
+export async function logLog(state, accessToken, userType, date, method = "POST") {
+    const {moods, symptoms} = state;
+    const jsonBody = JSON.stringify({
+        mood: moods,
+        symptoms,
+        date: formatDate(date)
+    })
+    Log("Dashboard/actions/action.js logLog: request objects", {date, state, jsonBody})
 
-export async function logLog(state, accessToken, userType) {
-    // console.log(state)
     const response = await fetch(`${PUBLICHOSTNAME}/logs/`, {
-        method: 'POST',
+        method,
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${accessToken}`
         },
-        body: JSON.stringify({
-            type: userType,
-            entry: state
-        })
+        body: jsonBody
     })
     const res = await response.json()
     if (!response.ok) {
+        Log("Dashboard/actions/action.js logLog: User symptoms and moods Log failure response", {res})
         return {
             success: false,
             data: res
         }
     }
 
+    Log("Dashboard/actions/action.js logLog: User symptoms and moods Log successfully response", {res})
     return {
+        success: true,
         data: res
     }
 }

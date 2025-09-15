@@ -7,19 +7,20 @@ import {montserrat} from "@/app/_fonts";
 import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
 import {richTextToJsx} from "@madebyconnor/rich-text-to-jsx";
 import {convertDashDelimitedToSpacedString} from "@/app/_lib/functions";
-import {formatDistanceToNow} from "date-fns"; // todo: use for date
+import {formatDistanceToNow} from "date-fns";
+import {Log} from "@/app/_lib/utils"; // todo: use for date
 
 export function Reader({blogTitle}) {
-    console.log({blogTitle});
+    Log({blogTitle});
     const {blogData} = useContentFetcher(getOnePostQuery(blogTitle));
-    console.log({blogData});
-    console.log(blogData && blogData[0]?.blogInsight?.insight)
+    Log({blogData});
+    Log(blogData && blogData[0]?.blogInsight?.insight)
 
     const blogInsight = blogData ? blogData[0]?.blogInsight?.insight : undefined;
     const blogHeaderImage = blogData ? blogData[0]?.headerImage : undefined;
 
-    console.log(blogData ? richTextToJsx(blogData[0]?.mainParagraph.json) : undefined)
-    console.log(blogData ? blogData[0]?.mainParagraph.json : undefined)
+    Log(blogData ? richTextToJsx(blogData[0]?.mainParagraph.json) : undefined)
+    Log(blogData ? blogData[0]?.mainParagraph.json : undefined)
 
     return (
         <section>

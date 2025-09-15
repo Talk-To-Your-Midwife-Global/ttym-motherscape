@@ -9,12 +9,13 @@ import React from "react";
 import {useEventFetcher} from "@/app/_hooks/useContentFetcher";
 import {eventsQuery} from "@/app/dashboard/hooks/graphContentFetchers";
 import healthImage from "@/public/images/adobe-stock-health-image.webp";
+import {ImageDisplay} from "@/app/dashboard/components/ui/ArticleCard";
 
 export function Events({accessToken}) {
     const {data, isLoading, error} = useEventFetcher({query: eventsQuery, variables: null});
 
     if (error) {
-        console.log(error)
+        Log(error)
         return <div> Error; Could not get events </div>
     }
 
@@ -25,7 +26,6 @@ export function Events({accessToken}) {
             <header>
                 <div className={"flex justify-between"}>
                     <h2 className={"text-primaryText font-bold text-xl"}>Upcoming Events</h2>
-                    {/*<Link href={"/"}>See More</Link> /!* TODO: use the right link*!/*/}
                 </div>
                 <p className={`${montserrat.className} text-subText`}>Live Health Talk events by your Global midwife</p>
             </header>
@@ -36,14 +36,9 @@ export function Events({accessToken}) {
                                  className="flex justify-between overflow-hidden gap-3 bg-white carousel-item rounded-2xl px-5 py-4 h-[250px]
                              flex-shrink-0 w-52">
                                 <a target="_blank" rel={'noopener'} href={event?.onlineLink}
-                                   className=".w-[inherit] .h-[inherit] border-2 w-[300px]">
-                                    {/*<Image src={event?.eventFlyer?.url} width={300} height={200} alt={`event`}/>*/}
-                                    {/*<div className="absolute h-[inherit]">*/}
-                                    {/*<img src="" alt="some image"/>*/}
-                                    <Image src={event?.eventFlyer.url} width={300} height={250}
-                                           alt="Some blue background image"
-                                           className="rounded-lg w-full. aspect-square "/>
-                                    {/*</div>*/}
+                                   className="w-[300px]">
+                                    <ImageDisplay images={[event?.eventFlyer.url]} className={"w-[177px] h-[201px]"}
+                                                  aspectRatio={"square"}/>
                                 </a>
                             </div>
                         )

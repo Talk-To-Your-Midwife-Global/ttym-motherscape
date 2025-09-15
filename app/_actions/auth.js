@@ -1,15 +1,17 @@
-'use server'
+"use server";
 // import {SignJWT, JWTVer} from 'jose'
 import {
     SignUpFormSchema,
     SignInFormSchema,
     ForgotPasswordFormSchema,
-    PasswordResetSchema
+    PasswordResetSchema,
 } from "../auth/lib/definitions";
 import {cookies} from "next/headers";
 import {HOSTNAME_URI} from "@/app/_config/main";
 import {matchUserStatus, putColonBack} from "@/app/_lib/functions";
 import {getLocalCookies} from "@/app/_lib/getCookies";
+import posthog from "posthog-js";
+import {Log} from "@/app/_lib/utils";
 
 
 // const secretKey = 'somekeybiIwillmakeinenvironmentvairables'
@@ -59,13 +61,15 @@ export async function returnTypeOfPatient() {
  */
 export async function signup(state, formData) {
     const fields = {
-        name: formData.get('name'),
+        first_name: formData.get('firstName'),
+        last_name: formData.get('lastName'),
         email: formData.get('email'),
-        phone: formData.get('phone'),
+        phone_number: formData.get('phone'),
         password: formData.get('password'),
         date_of_birth: formData.get('dob')
     }
-    console.log({fields});
+
+    Log({fields});
     const validatedFields = SignUpFormSchema.safeParse(fields)
 
     // return early if there is an error
@@ -79,19 +83,13 @@ export async function signup(state, formData) {
 
     // call the provider
     try {
-        console.log(formData.get('email'), formData.get('name'), formData.get('password'), formData.get('phone'), formData.get('dob'), `${HOSTNAME_URI}/auth/register/`);
+        posthog.capture('user_signup_attempt', {method: 'email'});
         const response = await fetch(`${HOSTNAME_URI}/auth/register/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                full_name: formData.get('name'),
-                email: formData.get('email'),
-                password: formData.get('password'),
-                phone_number: formData.get('phone'),
-                date_of_birth: formData.get('dob'),
-            }),
+            body: JSON.stringify(fields),
         })
         const errors = []
         console.log({response});
@@ -109,9 +107,6 @@ export async function signup(state, formData) {
                 serverError: errors,
             }
         }
-        // let cookieStore = await cookies();
-        // cookieStore.set('access_token', result.tokens.access, {httpOnly: true, path: '/'}) // TODO: remove the http only
-        // cookieStore.set('refresh_token', result.tokens.refresh, {httpOnly: true, path: '/'})
 
         const emailRequest = await requestEmailVerification(formData.get('email'));
 
@@ -129,8 +124,7 @@ export async function signup(state, formData) {
             route: `/auth/verify-email`
         }
     } catch (errors) {
-        console.log({errors})
-        // TODO: setup a logger here
+        Log({errors})
 
         return {
             success: undefined,
@@ -154,6 +148,7 @@ export async function signin(state, formData) {
 
     // return early if there is an error
     if (!validatedFields.success) {
+        Log("auth.js; field validation failed", {validatedFields});
         return {
             state: {
                 email: formData.get('email'),
@@ -161,6 +156,13 @@ export async function signin(state, formData) {
             errors: validatedFields.error.flatten().fieldErrors,
         }
     }
+
+    const jsonBody = JSON.stringify({
+        email: formData.get('email'),
+        password: formData.get('password')
+    })
+
+    Log("auth.js body for signin", {jsonBody})
 
     try {
         const response = await fetch(`${HOSTNAME_URI}/auth/login/`, {
@@ -175,23 +177,25 @@ export async function signin(state, formData) {
         })
 
         const result = await response.json()
-        // console.log({result});
-        // console.log({response})
+        Log({result});
+        Log({response})
+
         const errors = []
         if (!response.ok) {
             // for (const key in result) {
             //     errors.push(result[key][0])
             // }
-            // console.log('Response is not okay')
-            console.log(result)
+            Log("auth.js; Signin failed", {result})
 
-            if (response.status === 401 && result.code === "auth/email-not-verified") {
-                console.log('about to request email verification')
-                console.log(formData.get('email'));
-                const emailRequest = await requestEmailVerification(formData.get('email'));
-                console.log({emailRequest});
+            const userIsUnAuthorized = response.status === 401;
+            if (userIsUnAuthorized) {
+                const email = formData.get('email')
+                Log("auth.js; Email verification request object", {email});
+
+                const emailRequest = await requestEmailVerification(email);
+                Log("auth.js: emailRequest (var) response", {emailRequest});
+
                 // route the user
-                console.log(emailRequest);
                 if (emailRequest?.success) {
                     return {
                         success: true,
@@ -211,16 +215,26 @@ export async function signin(state, formData) {
         cookieStore.set('refresh_token', result.tokens.refresh)
         cookieStore.set('ttym-user-type', matchUserStatus(result.user.status, true));
 
-        console.log({result});
+        Log({result});
         if (!result.user.is_configured) {
             cookieStore.set('last_login', null)
         } else {
             cookieStore.set('last_login', result.user.last_login)
         }
+        const user = result.user
+
+        const userDetails = {
+            uuid: user.uuid,
+            username: user.username,
+            email: user.email,
+            status: user.status
+        }
+
         return {
             success: true,
             token: result.tokens.access,
-            route: result.user.status != "UNASSIGNED" ? '/dashboard' : `/onboarding`
+            route: result.user.status !== "UNASSIGNED" ? '/dashboard' : `/onboarding`,
+            userDetails
         }
     } catch (errors) {
         return {
@@ -230,14 +244,11 @@ export async function signin(state, formData) {
 }
 
 export async function logout() {
-    console.log('logging out')
     const cookieStore = await cookies()
     const accessToken = cookieStore.get('access_token')?.value;
     const refreshToken = cookieStore.get('refresh_token')?.value;
 
-    const items = ['access_token', 'refresh_token', 'last_login', 'ttym-user-type']
-    console.log(accessToken);
-    console.log(refreshToken);
+    const items = ['access_token', 'refresh_token', 'last_login', 'ttym-user-type', 'user_email']
     try {
         const response = await fetch(`${HOSTNAME_URI}/auth/logout/`, {
             method: 'POST',
@@ -253,7 +264,7 @@ export async function logout() {
         const result = await response.json()
         const errors = []
         if (!response.ok) {
-            console.log(result)
+            Log(result)
             for (const key in result) {
                 errors.push(result[key][0])
             }
@@ -263,7 +274,7 @@ export async function logout() {
             }
 
         }
-        console.log('log out success')
+        Log('auth.js; log out success');
         for (const item of items) {
             cookieStore.delete(item)
         }
@@ -272,6 +283,7 @@ export async function logout() {
             success: true,
         }
     } catch (errors) {
+        Log("auth.js; Logout unsuccessful");
         return {
             error: errors
         }
@@ -279,8 +291,8 @@ export async function logout() {
 }
 
 export async function requestEmailVerification(email) {
-    console.log('requesting email verification')
-    console.log({HOSTNAME_URI})
+    const logMsg = 'auth.js; requestEmailVerification; requesting email verification'
+    Log(logMsg, {HOSTNAME_URI})
 
     // save email to cookies
     const cookieStore = await cookies();
@@ -293,20 +305,18 @@ export async function requestEmailVerification(email) {
         },
         body: JSON.stringify({email})
     })
-    console.log({res});
     const response = await res.json();
-    console.log(response)
+
     if (!res.ok) {
-        console.log(res);
-        console.log(response)
-        console.log('An error occured')
+        Log(logMsg, {res});
+        Log(logMsg, {response})
         return {
             success: false,
             fieldErrors: undefined,
             serverErrors: undefined
         }
     }
-    console.log('success in requesting')
+    Log(`${logMsg}: success in requesting`)
 
     return {
         success: true,
@@ -317,8 +327,6 @@ export async function requestEmailVerification(email) {
 
 
 export async function initiatePasswordChange(state, formData) {
-    // const {access_token} = await getLocalCookies('access_token');
-    // console.log({access_token});
     const validatedField = ForgotPasswordFormSchema.safeParse({
         email: formData.get('email'),
     })
@@ -337,19 +345,17 @@ export async function initiatePasswordChange(state, formData) {
         },
         body: JSON.stringify({email: formData.get('email')})
     })
-
     const response = await res.json()
 
     if (!res.ok) {
-        console.log(res.statusText);
-        console.log(response);
+        Log(res.statusText);
+        Log(response);
         return {
             fieldErrors: false,
             serverError: true,
             success: false
         }
     }
-    // simulate success
     return {
         fieldErrors: false,
         serverError: false,
@@ -376,13 +382,13 @@ export async function changePassword(state, formData) {
         }
     }
 
-    console.log({HOSTNAME_URI, validateField, key: formData.get('key')})
+    Log({HOSTNAME_URI, validateField, key: formData.get('key')})
     const requestBody = JSON.stringify({
         password: formData.get('password'),
         token: putColonBack(formData.get('key'))
     })
 
-    console.log(requestBody);
+    Log(requestBody);
     const res = await fetch(`${HOSTNAME_URI}/auth/reset-password/confirm/`, {
         method: 'POST',
         headers: {
@@ -392,14 +398,14 @@ export async function changePassword(state, formData) {
     })
 
     if (!res.ok) {
-        console.log({res});
-        console.log(res.statusText);
+        Log({res});
+        Log(res.statusText);
         return {
             success: false
         }
     }
     const response = await res.json();
-    console.log(response);
+    Log(response);
 
     return {
         success: true

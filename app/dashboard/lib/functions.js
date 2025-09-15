@@ -1,5 +1,9 @@
+import {Log} from "@/app/_lib/utils";
+
 export function getRelativeTime(date) {
     const now = new Date();
+    date = new Date(date)
+    
     const seconds = Math.floor((now - date) / 1000);
 
     const intervals = [
@@ -26,7 +30,7 @@ export function getRelativeTime(date) {
 }
 
 export function convertCommaStringToArray(string) {
-    console.log(string.split(',').map(item => item.trim()))
+    Log(string.split(',').map(item => item.trim()))
     return string.split(',').map(item => item.trim());
 }
 
@@ -59,7 +63,7 @@ export function poundsToGrams(pounds) {
 }
 
 export function generateNumbers(k) {
-   
+
     const intervalStart = (k - 3) > 0 ? (k - 3) : 0;
     const intervalEnd = k + 3;
 

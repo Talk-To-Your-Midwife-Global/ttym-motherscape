@@ -17,6 +17,8 @@
     --pink: #F26A8D;
     --some: #0F969C21;
 
+    color-scheme: only light;
+
     .rdp-root {
         --rdp-accent-color: #0F969C; /* Change the accent color to indigo. */
         --rdp-accent-background-color: #f0f0f0; /* Change the accent background color. */
@@ -83,13 +85,6 @@
 
 }
 
-
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
 * {
     box-sizing: border-box;
 }
@@ -97,7 +92,6 @@
 body {
     color: var(--foreground);
     background: var(--background);
-    /* font-family: "Montserrat", serif; */
 }
 
 .fade-container {
@@ -105,16 +99,6 @@ body {
     width: 100%;
     height: 100%;
 
-}
-
-.background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 300px;
-    background: #fff;
-    z-index: 1;
 }
 
 .icon-placeholder {
@@ -254,4 +238,33 @@ body {
     font-size: 28px;
     display: flex;
     background: white;
+}
+
+/*Tooltip for feelings viewer */
+details.inline-def summary {
+    cursor: help;
+    width: 150px;
+    max-width: 157px;
+    max-height: 76px;
+    display: inline-block;
+    /*color: #2563eb; !* blue *!*/
+}
+
+details.inline-def[open] {
+    position: relative;
+    display: inline-block;
+}
+
+details.inline-def[open] p {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .15);
+    width: 220px;
+    bottom: 130%;
+    left: 30%;
+    z-index: 10;
+    margin: 6px 0 0 0;
 }

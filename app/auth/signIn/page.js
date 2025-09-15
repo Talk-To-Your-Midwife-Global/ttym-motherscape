@@ -1,18 +1,19 @@
 "use client"
-import Link from "next/link";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
 import {useActionState, useState, useEffect} from 'react'
 import {signin} from "@/app/_actions/auth";
 import {SignInForm} from "@/app/auth/_components/SignInForm";
 import appLogo from "../../../public/icons/Obaa-logo-Horizontal.svg"
+import posthog from "posthog-js";
+import {Log} from "@/app/_lib/utils";
 
 export default function Page() {
-    const [state, action] = useActionState(signin, undefined)
+    const [state, action, isPending] = useActionState(signin, undefined)
     const [userRoute, setUserRoute] = useState('');
     const [error, setError] = useState([]);
     const router = useRouter()
-
+    Log("sigin/page.js; on ", {isPending})
     const getUserRouteFromLocalStorage = () => {
         return localStorage.getItem('userType')
     }
@@ -20,8 +21,10 @@ export default function Page() {
     useEffect(() => {
         setUserRoute(getUserRouteFromLocalStorage())
         if (state?.success) {
-            router.push(state.route)
+            posthog.identify(state?.userDetails.uuid, state?.userDetails);
+            router.push(state.route);
         } else if (state?.success === false) {
+            Log("sigin/page.js useEffect; on ", {state})
             setError([...state?.error])
         }
     }, [state?.success])
@@ -44,7 +47,7 @@ export default function Page() {
                     </div>
                     : ""}
             </header>
-            <SignInForm action={action} state={state}/>
+            <SignInForm action={action} state={state} isPending={isPending}/>
         </section>
     )
 }

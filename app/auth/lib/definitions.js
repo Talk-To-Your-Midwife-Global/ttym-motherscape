@@ -1,13 +1,17 @@
 import {z} from "zod"
 
 export const SignUpFormSchema = z.object({
-    name: z
+    first_name: z
         .string()
-        .min(2, {message: 'Name must be at least 2 characters long.'})
+        .min(2, {message: 'First name must be at least 2 characters long.'})
+        .trim(),
+    last_name: z
+        .string()
+        .min(2, {message: 'Last Name must be at least 2 characters long.'})
         .trim(),
     email: z.string().email({message: 'Please enter a valid email.'}).trim(),
     // address: z.string().min(5, {message: 'Must be at least 5 characters long'}).trim(),
-    phone: z.string().regex(
+    phone_number: z.string().regex(
         /^\+\d{1,3}\d{7,14}$/,
         {message: "Phone number must start with a '+' followed by a 1-3 digit country code and a valid phone number."}
     ),

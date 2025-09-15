@@ -2,6 +2,7 @@ import useSWR from 'swr'
 import {fetchCycle, fetcher, fetchPregnancy, fetchUser} from "@/app/_lib/functions";
 import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {contentGqlFetcher} from "@/app/dashboard/actions/action";
+import {Log} from "@/app/_lib/utils";
 
 export function useUserInfo(accessToken) {
     const {
@@ -18,11 +19,12 @@ export function useUserInfo(accessToken) {
 
 
 export function useCycleInfo(accessToken) {
+    Log("useCycleINfo", {accessToken});
     const {
         data,
         isLoading,
         error
-    } = useSWR([`${PUBLICHOSTNAME}/user/menstrual/`, accessToken], ([url, accessToken]) => fetchCycle(url, accessToken));
+    } = useSWR([`${PUBLICHOSTNAME}/menstrual/profile/`, accessToken], ([url, accessToken]) => fetchCycle(url, accessToken));
     return {
         data,
         isLoading,
@@ -35,8 +37,8 @@ export function usePregnancyInfo(accessToken) {
         data,
         isLoading,
         error
-    } = useSWR([`${PUBLICHOSTNAME}/user/pregnancy/`, accessToken], ([url, accessToken]) => fetchPregnancy(url, accessToken))
-    console.log('usePregnancyInfo', {data})
+    } = useSWR([`${PUBLICHOSTNAME}/pregnancy/`, accessToken], ([url, accessToken]) => fetchPregnancy(url, accessToken))
+    Log('usePregnancyInfo', {data})
     return {
         pregnancyData: data,
         pregnancyError: error,
@@ -46,7 +48,7 @@ export function usePregnancyInfo(accessToken) {
 
 export function useInsightsInfo() {
     const {data, isLoading, error} = useSWR([`${PUBLICHOSTNAME}/insights/`], ([url]) => fetcher(url));
-    // console.log(data)
+    // Log(data)
     return {
         insights: data,
         isLoadingInsights: isLoading,
@@ -54,15 +56,15 @@ export function useInsightsInfo() {
     }
 }
 
-export function useLogsInfo(accessToken) {
+export function useLogsInfo(accessToken, dateRange = '') {
     const {
         data,
         isLoading,
         error
-    } = useSWR([`${PUBLICHOSTNAME}/logs/`, accessToken], ([url, accessToken]) => fetcher(url, accessToken));
+    } = useSWR([`${PUBLICHOSTNAME}/logs/?${dateRange}`, accessToken], ([url, accessToken]) => fetcher(url, accessToken));
 
     return {
-        logs: data,
+        logData: data,
         isLoadingLogs: isLoading,
         logsError: error,
     }
