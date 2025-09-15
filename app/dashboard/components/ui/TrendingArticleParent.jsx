@@ -1,6 +1,6 @@
 "use client"
 import {useTransition} from "react";
-import {ArticleCard, SmallArticleCard} from "@/app/dashboard/components/ui/ArticleCard";
+import {ArticleCard} from "@/app/dashboard/components/ui/ArticleCard";
 import {postsPreviewQuery} from "@/app/dashboard/hooks/graphContentFetchers";
 import {useContentFetcher} from "@/app/_hooks/useContentFetcher";
 import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
@@ -8,7 +8,7 @@ import {bookmarkPost} from "@/app/dashboard/actions/action";
 import {Log} from "@/app/_lib/utils";
 
 
-export function ArticleParent() {
+export function TrendingArticleParent() {
     const [isPending, startTransition] = useTransition();
     const {blogData, isLoading, error} = useContentFetcher({query: postsPreviewQuery, variables: null})
     Log(blogData)
@@ -39,11 +39,11 @@ export function ArticleParent() {
 
     if (theresContent) {
         return (
-            <section className={`carousel flex flex-col gap-10 overflow-x-auto scroll-smooth .space-x-4 px-4`}>
+            <section className={`carousel flex overflow-x-auto scroll-smooth space-x-4 p-4`}>
                 {
                     blogData && blogData.map(item => {
                             return <div key={item.title}>
-                                <SmallArticleCard
+                                <ArticleCard
                                     content={{
                                         title: item.title,
                                         id: item.sys.id,

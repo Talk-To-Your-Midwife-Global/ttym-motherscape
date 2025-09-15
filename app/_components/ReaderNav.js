@@ -10,9 +10,9 @@ export function ReaderNav() {
                 </Link>
             </div>
 
-            <div className="bg-[#16898E1A] w-12 h-12 rounded-full flex justify-center items-center">
-                <span className="iconify lucide--bookmark"></span>
-            </div>
+            {/*<div className="bg-[#16898E1A] w-12 h-12 rounded-full flex justify-center items-center">*/}
+            {/*    <span className="iconify lucide--bookmark"></span>*/}
+            {/*</div>*/}
         </div>
 
     )
