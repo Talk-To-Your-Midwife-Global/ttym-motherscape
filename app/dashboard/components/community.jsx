@@ -6,6 +6,7 @@ import {Insights} from "@/app/dashboard/components/insights";
 import {ArticleCard} from "@/app/dashboard/components/ui/ArticleCard";
 import bookMarkIcon from "@/public/icons/bookmark-main.svg"
 import searchIcon from "@/public/icons/search-icon.svg"
+import {TrendingArticleParent} from "@/app/dashboard/components/ui/TrendingArticleParent";
 import {ArticleParent} from "@/app/dashboard/components/ui/ArticleParent";
 
 export function Community({accessToken}) {
@@ -36,23 +37,24 @@ export function Community({accessToken}) {
             {/*</section>*/}
             <section className={"overflow-x-hidden h-[360px] mb-10 w-full"}>
                 <header className={`px-[26px] my-5 text-[#000] font-medium`}>
-                    <h1 className={`text-xl`}>My Feed</h1>
+                    <h1 className={`text-xl`}>Trending</h1>
                 </header>
                 {/*    Article Parent goes here*/}
-                <ArticleParent/>
+                <TrendingArticleParent/>
             </section>
 
-            {/*<section className={"overflow-x-hidden h-[260px] w-full"}>*/}
-            {/*    <header className={`px-[26px] my-5 text-[#000] font-medium`}>*/}
-            {/*        <h1 className={`text-xl`}>Popular Questions</h1>*/}
-            {/*        <section>*/}
+            <section className={"overflow-x-hidden h-[260px] w-full"}>
+                <header className={`px-[26px] my-5 text-[#000] font-medium`}>
+                    <h1 className={`text-xl`}>Articles</h1>
+                    <section>
 
-            {/*        </section>*/}
-            {/*    </header>*/}
-            {/*    <section className={`carousel flex overflow-x-auto scroll-smooth space-x-4 p-4`}>*/}
-            {/*        /!*<Insights accessToken={accessToken}/>*!/*/}
-            {/*    </section>*/}
-            {/*</section>*/}
+                    </section>
+                </header>
+                <section className={`carousel flex overflow-x-auto scroll-smooth space-x-4 p-4`}>
+                    {/*<Insights accessToken={accessToken}/>*/}
+                    <ArticleParent/>
+                </section>
+            </section>
         </section>
     )
 }

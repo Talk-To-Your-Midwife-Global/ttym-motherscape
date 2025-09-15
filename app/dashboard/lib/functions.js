@@ -2,6 +2,8 @@ import {Log} from "@/app/_lib/utils";
 
 export function getRelativeTime(date) {
     const now = new Date();
+    date = new Date(date)
+    
     const seconds = Math.floor((now - date) / 1000);
 
     const intervals = [
