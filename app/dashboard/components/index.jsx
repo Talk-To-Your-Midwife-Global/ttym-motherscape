@@ -251,12 +251,7 @@ export function MenstrualCycleCardMain({accessToken}) {
     Log("dashboard/components/index.jsx; MenstrualCycleCardMain", {data, generalCycleInfo});
 
     if (error) {
-        return (
-            <div>
-                error
-                {error.message}
-            </div>
-        )
+        throw new Error(`dashboard/components/index.jsx: MenstrualCycleCardMain; useCycleInfo() ${error}`)
     }
 
     return (

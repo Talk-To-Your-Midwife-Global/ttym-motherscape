@@ -24,7 +24,9 @@ export function ArticleParent() {
 
 
     if (error) {
-        throw new Error(error.message);
+        // throw new Error(error.message);
+        throw new Error(`ArticleParent.jsx: useContentFetcher() ${error}`)
+
     }
 
     if (isLoading) {
