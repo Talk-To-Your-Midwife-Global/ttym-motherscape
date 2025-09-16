@@ -22,7 +22,7 @@ export function MenstrualHome({accessToken}) {
     )
 
     if (error) {
-        Log(error)
+        Log({error})
         return (
             <div> errorL</div>
         )
