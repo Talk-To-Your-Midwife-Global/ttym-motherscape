@@ -341,7 +341,7 @@ export async function initiatePasswordChange(state, formData) {
     const res = await fetch(`${HOSTNAME_URI}/auth/reset-password/request/`, {
         method: 'POST',
         headers: {
-            'Origin': HOSTNAME_URI,
+            'X-Client-Origin': HOSTNAME_URI,
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({email: formData.get('email')})
