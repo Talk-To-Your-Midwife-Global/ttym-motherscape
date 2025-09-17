@@ -36,7 +36,7 @@ export default function Page() {
             setEnable(false)
             const successfullyUpdatedUserType = await updateUserStatus(USERTYPE.menstrual);
             if (!successfullyUpdatedUserType) {
-                Log("update_user_status_menstrual", {successfullyUpdatedUserType})
+                Log("update_user_status_menstrual failed", {successfullyUpdatedUserType})
                 setEnable(true)
             } else {
                 router.push(`/onboarding/${routeName}/1`)
