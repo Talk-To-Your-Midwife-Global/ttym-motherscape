@@ -10,7 +10,8 @@ import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {Log} from "@/app/_lib/utils";
 import posthog from "posthog-js";
 
-export function RestartCalendar({accessToken}) {
+
+export function RestartCalendar({refreshPage, accessToken}) {
     const [isPending, startTransition] = useTransition();
     const {isUsingPredictedCycle, setIsUsingPredictedCycle} = useCalendarView();
     const [selectedDate, setSelectedDate] = useState('');
@@ -33,7 +34,7 @@ export function RestartCalendar({accessToken}) {
         Log("RestartCalendar.jsx; restart date handleDateConfirm", {jsonBody})
 
         startTransition(async () => {
-            const response = await fetch(`${PUBLICHOSTNAME}/menstrual/cycles/end/`, {
+            const res = await fetch(`${PUBLICHOSTNAME}/menstrual/cycles/start/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -41,20 +42,23 @@ export function RestartCalendar({accessToken}) {
                 },
                 body: jsonBody
             })
-
-            if (!response.ok) {
-                Log("RestartCalendar.jsx; handleDateConfirm @ /cycles/end failed");
-                return
+            const response = await res.json();
+            if (!res.ok) {
+                Log("RestartCalendar.jsx; handleDateConfirm @ /cycles/end failed", {response});
+                posthog.captureException(`RestartCalendar.jsx; handleDateConfirm @ /cycles/end failed, ${response}`);
             }
-
+            Log("RestartCalendar.jsx; handleDateConfirm success", {response})
             setIsUsingPredictedCycle(false);
         })
+        window.location.reload() // because all the other SPA related ways of refreshing for Next.js failed to work
+        setSelectedDate(selectedDate)
     }
 
     return (
-        <Drawer.Root open={isUsingPredictedCycle} onOpenChange={setIsUsingPredictedCycle}>
+        <Drawer.Root dismissible={false} open={isUsingPredictedCycle}
+                     onOpenChange={setIsUsingPredictedCycle}>
             <Drawer.Portal>
-                <Drawer.Overlay className="fixed inset-0 bg-black/40"/>
+                <Drawer.Overlay className="fixed .h-screen .w-screen inset-0 .bg-red-100 bg-[#00000061] .z-40"/>
                 <Drawer.Content
                     className="bg-white flex flex-col rounded-t-[10px] mt-24 max-h-[578px] fixed bottom-0 left-0 right-0 outline-none text-primaryText shadow-xl">
                     <div className="mx-auto my-2 w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 .mb-2"/>

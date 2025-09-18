@@ -1,8 +1,8 @@
 "use client"
 import {useEffect, useState, useTransition} from "react";
+import {toast} from "sonner"
 import {inter} from "@/app/_fonts";
 import {IconButton} from "@/app/_components";
-import {ShortCalendar} from "@/app/dashboard/components/index";
 import {logLog} from "@/app/dashboard/actions/action";
 import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {formatDate} from "@/app/_lib/functions";
@@ -97,7 +97,6 @@ export function Logs({accessToken}) {
     }
 
     const handleSubmit = () => {
-        posthog.capture('userlog_logging');
         const method = shouldUpdate ? "PUT" : "POST";
         Log("logs.jsx; handleSubmit", {method})
         startTransition(async () => {
@@ -105,6 +104,10 @@ export function Logs({accessToken}) {
             if (res.success) {
                 setDisableButton(true)
                 getUserLogs(); // to update the context
+                toast.success("Successfully logged your feelings and moods")
+            } else {
+                posthog.captureException("logs.jsx: handleSubmit; failed to log feelings", {feelingState, res});
+                toast.error("An error occurred");
             }
         })
     }

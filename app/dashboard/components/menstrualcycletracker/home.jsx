@@ -9,24 +9,28 @@ import {MiniLoader} from "@/app/_components";
 import {Log} from "@/app/_lib/utils";
 import {CombinedCalendar} from "@/app/dashboard/components/ui/CombinedCalendar";
 import {RestartCalendar} from "@/app/dashboard/components/ui/RestartCalendar";
+import {useRouter} from "next/navigation";
+import posthog from "posthog-js";
 
 
 export function MenstrualHome({accessToken}) {
     const {user, isLoading, error} = useUserInfo(accessToken);
+    const router = useRouter();
 
     Log({user});
-    Log({user})
 
     if (isLoading) return (
         <MiniLoader/>
     )
 
     if (error) {
-        Log(error)
-        return (
-            <div> errorL</div>
-        )
+        Log({error})
+        posthog.captureException(`home.jsx ${error}`)
     }
+    const handleRefresh = () => {
+        router.refresh();
+    }
+
     return (
         <section className={"my-2"}>
             <section className={"mt-1"}>
@@ -42,7 +46,7 @@ export function MenstrualHome({accessToken}) {
             </section>
 
             <FeelingsInsightsAndEvents accessToken={accessToken}/>
-            <RestartCalendar accessToken={accessToken}/>
+            <RestartCalendar refreshPage={handleRefresh} router={router} accessToken={accessToken}/>
         </section>
     )
 }

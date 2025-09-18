@@ -9,7 +9,7 @@ export function CalendarViewContextProvider({children}) {
     const [viewingDate, setViewingDate] = useState(new Date());
     const [logs, setLogs] = useState(undefined);
     const [viewLogs, setViewLogs] = useState(false);
-    const [isUsingPredictedCycle, setIsUsingPredictedCycle] = useState(true);
+    const [isUsingPredictedCycle, setIsUsingPredictedCycle] = useState(false);
     const [cycleInfo, setCycleInfo] = useState({})
 
     const values = {
