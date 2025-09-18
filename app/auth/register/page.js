@@ -47,7 +47,7 @@ export default function Page() {
             Log({error});
             if (state?.serverError) {
                 toast.error('An error occurred while creating account')
-                error.map(err => {
+                state?.serverError.map(err => {
                     console.log("erro", {err});
                     const timer = setTimeout(() => toast.warning(err), 1000);
                 })

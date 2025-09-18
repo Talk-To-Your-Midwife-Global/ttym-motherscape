@@ -204,10 +204,10 @@ export async function signin(state, formData) {
                         route: '/auth/verify-email/'
                     }
                 }
-                return {
-                    success: false,
-                    error: [result.message]
-                }
+            }
+            return {
+                success: false,
+                error: [result.message]
             }
         }
 
