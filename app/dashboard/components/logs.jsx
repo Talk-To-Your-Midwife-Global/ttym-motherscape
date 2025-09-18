@@ -97,7 +97,6 @@ export function Logs({accessToken}) {
     }
 
     const handleSubmit = () => {
-        posthog.capture('userlog_logging');
         const method = shouldUpdate ? "PUT" : "POST";
         Log("logs.jsx; handleSubmit", {method})
         startTransition(async () => {
@@ -105,7 +104,10 @@ export function Logs({accessToken}) {
             if (res.success) {
                 setDisableButton(true)
                 getUserLogs(); // to update the context
-                toast.success("Successfully Logged your feelings for today")
+                toast.success("Successfully logged your feelings and moods")
+            } else {
+                posthog.captureException("logs.jsx: handleSubmit; failed to log feelings", {feelingState, res});
+                toast.error("An error occurred");
             }
         })
     }

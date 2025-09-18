@@ -9,15 +9,12 @@ import {MiniLoader} from "@/app/_components";
 import {Log} from "@/app/_lib/utils";
 import {CombinedCalendar} from "@/app/dashboard/components/ui/CombinedCalendar";
 import {RestartCalendar} from "@/app/dashboard/components/ui/RestartCalendar";
-import {useEffect} from "react";
-import {useCalendarView} from "@/app/contexts/showCalendarContext";
 import {useRouter} from "next/navigation";
 import posthog from "posthog-js";
 
 
 export function MenstrualHome({accessToken}) {
     const {user, isLoading, error} = useUserInfo(accessToken);
-    const {isUsingPredictedCycle} = useCalendarView();
     const router = useRouter();
 
     Log({user});
@@ -33,6 +30,7 @@ export function MenstrualHome({accessToken}) {
     const handleRefresh = () => {
         router.refresh();
     }
+
     return (
         <section className={"my-2"}>
             <section className={"mt-1"}>
