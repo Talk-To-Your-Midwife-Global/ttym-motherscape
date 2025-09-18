@@ -1,15 +1,14 @@
 "use client"
 import Image from "next/image"
-import {storeUserType, updateUserStatus} from "../_actions"
+import {storeUserType} from "../_actions"
 import {LongPersonaCard} from "./_components"
 import pregnantImageNoBg from "../../public/images/pregnancy-profile-img-no-bg.png"
 import trackerImageNoBg from "../../public/images/tracker-profile-image.png"
-import {IconButton} from "../_components"
+import {IconContinuousButton} from "../_components"
 import {useState} from "react"
 import {OnboardHeading} from "@/app/onboarding/_components/OnboardHeading";
 import {useTransition} from "react";
 import {useRouter} from "next/navigation";
-import {Log, USERTYPE} from "@/app/_lib/utils";
 
 export default function Page() {
     const [isPending, startTransition] = useTransition();
@@ -30,18 +29,10 @@ export default function Page() {
     }
 
     const handleSubmit = () => {
-        // event.preventDefault();
-
         startTransition(async () => {
-            setEnable(false)
-            const successfullyUpdatedUserType = await updateUserStatus(USERTYPE.menstrual);
-            if (!successfullyUpdatedUserType) {
-                Log("update_user_status_menstrual", {successfullyUpdatedUserType})
-                setEnable(true)
-            } else {
-                router.push(`/onboarding/${routeName}/1`)
+                setEnable(false)
             }
-        })
+        )
     }
 
     const cardActions = {
@@ -69,11 +60,10 @@ export default function Page() {
                 </LongPersonaCard>
             </section>
             <section className="fixed  bottom-10 w-full flex justify-center">
-                <IconButton text="Continue" icon="iconify lucide--arrow-right"
-                    // href={`/onboarding/${routeName}/1`}
-                            isPending={isPending}
-                            onClick={handleSubmit}
-                            disabled={enable}/>
+                <IconContinuousButton text="Continue" icon="iconify lucide--arrow-right"
+                                      href={`/onboarding/${routeName}/1`}
+                                      onClick={handleSubmit}
+                                      disabled={enable}/>
             </section>
         </section>
     )

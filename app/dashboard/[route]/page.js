@@ -7,6 +7,7 @@ import {PregnantCalendarMain} from "@/app/dashboard/components/pregnancytracker/
 import {PregnancyHome} from "@/app/dashboard/components/pregnancytracker/home";
 import {cookies} from "next/headers";
 import {InstallPrompt} from "@/app/_components/InstallPrompt";
+import {IOSInstallPrompt} from "@/app/_components/IOSInstallPrompt";
 
 
 export default async function Page({params}) {
@@ -34,6 +35,7 @@ export default async function Page({params}) {
         return (
             <section>
                 <InstallPrompt/>
+                <IOSInstallPrompt/>
                 {menstrualViews[routeName.route]}
             </section>
         )
