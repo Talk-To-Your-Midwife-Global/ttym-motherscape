@@ -198,15 +198,16 @@ export async function signin(state, formData) {
                 // route the user
                 if (emailRequest?.success) {
                     return {
-                        success: true,
+                        success: false,
                         token: false,
+                        shouldVerifyEmail: true,
                         route: '/auth/verify-email/'
                     }
                 }
-            }
-            return {
-                success: false,
-                error: [result.message]
+                return {
+                    success: false,
+                    error: [result.message]
+                }
             }
         }
 
@@ -216,20 +217,20 @@ export async function signin(state, formData) {
         cookieStore.set('ttym-user-type', matchUserStatus(result.user.status, true));
 
         Log({result});
+        Log("auth.js",)
         if (!result.user.is_configured) {
             cookieStore.set('last_login', null)
         } else {
+
             cookieStore.set('last_login', result.user.last_login)
         }
         const user = result.user
-
         const userDetails = {
             uuid: user.uuid,
             username: user.username,
             email: user.email,
             status: user.status
         }
-
         return {
             success: true,
             token: result.tokens.access,

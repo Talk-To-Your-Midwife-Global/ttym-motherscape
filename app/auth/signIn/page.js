@@ -7,6 +7,7 @@ import {SignInForm} from "@/app/auth/_components/SignInForm";
 import appLogo from "../../../public/icons/Obaa-logo-Horizontal.svg"
 import posthog from "posthog-js";
 import {Log} from "@/app/_lib/utils";
+import {toast} from "sonner";
 
 export default function Page() {
     const [state, action, isPending] = useActionState(signin, undefined)
@@ -18,14 +19,24 @@ export default function Page() {
         return localStorage.getItem('userType')
     }
 
+    const handleErrorReset = () => {
+        setError([]);
+    }
+
     useEffect(() => {
         setUserRoute(getUserRouteFromLocalStorage())
         if (state?.success) {
-            posthog.identify(state?.userDetails.uuid, state?.userDetails);
+            posthog.identify(state?.userDetails?.uuid, state?.userDetails);
+            toast.success("Successfully logged in")
             router.push(state.route);
         } else if (state?.success === false) {
-            Log("sigin/page.js useEffect; on ", {state})
-            setError([...state?.error])
+            Log("signin/page.js useEffect; on ", {state})
+            if (state?.shouldVerifyEmail) {
+                toast.warning("Email not verified");
+                router.push(state.route);
+            } else {
+                setError([...state?.error])
+            }
         }
     }, [state?.success])
 
@@ -42,12 +53,15 @@ export default function Page() {
                 </section>
                 {error.length > 0 ?
                     <div className=" flex items-center gap-1 px-6">
-                        <span className={`iconify lucide--info text-red-500`}></span>
-                        {error?.map((err, index) => <p key={index} className={`text-red-500`}>{err}</p>)}
+                        {/*<span className={`iconify lucide--info text-red-500`}></span>*/}
+                        {/*{error?.map((err, index) => <p key={index} className={`text-red-500`}>{err}</p>)}*/}
+                        {error?.map((err, index) => {
+                            toast.error(err)
+                        })}
                     </div>
                     : ""}
             </header>
-            <SignInForm action={action} state={state} isPending={isPending}/>
+            <SignInForm action={action} state={state} resetError={handleErrorReset} isPending={isPending}/>
         </section>
     )
 }

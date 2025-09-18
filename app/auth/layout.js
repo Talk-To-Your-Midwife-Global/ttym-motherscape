@@ -1,5 +1,6 @@
 "use client"
 import {motion, AnimatePresence} from "framer-motion"
+import {Toaster} from "sonner";
 import {IOSInstallPrompt} from "@/app/_components/IOSInstallPrompt";
 
 const fadeVariants = {
@@ -21,6 +22,7 @@ export default function AuthLayout({children}) {
                 className="fade-container"
             >
                 {children}
+                <Toaster position={"top-center"} richColors/>
                 <IOSInstallPrompt/>
             </motion.div>
         </AnimatePresence>
