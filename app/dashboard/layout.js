@@ -1,9 +1,12 @@
 import {CalendarViewContextProvider} from "@/app/contexts/showCalendarContext";
+import {GeneralContextProvider} from "@/app/contexts/GeneralContext";
 
 export default function DashboardLayout({children}) {
     return (
-        <CalendarViewContextProvider>
-            {children}
-        </CalendarViewContextProvider>
+        <GeneralContextProvider>
+            <CalendarViewContextProvider>
+                {children}
+            </CalendarViewContextProvider>
+        </GeneralContextProvider>
     )
 }
