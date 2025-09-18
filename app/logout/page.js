@@ -6,6 +6,7 @@ import {logout} from "@/app/_actions/auth";
 import Logo from "@/public/icons/ObaaLogo-HorizontalC.png"
 import {montserrat} from "@/app/_fonts";
 import {Log} from "@/app/_lib/utils";
+import posthog from "posthog-js";
 
 export default function Page() {
     const router = useRouter()
@@ -17,6 +18,9 @@ export default function Page() {
             if (response?.success) {
                 localStorage.removeItem("chatDisplay");
                 localStorage.removeItem('answers');
+                router.push("/")
+            } else {
+                posthog.captureException(`logout/page.js ${response?.error}`)
                 router.push("/")
             }
         }
