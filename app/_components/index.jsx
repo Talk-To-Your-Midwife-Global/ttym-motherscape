@@ -138,7 +138,7 @@ export function IconButton({
             <button tabIndex={0} type={type === 'submit' ? 'submit' : "button"} onClick={() => handleClick()}
                     disabled={disabled}
                     className={cn('mb-2', `${variant === "primary" && disabled ? "bg-[#A8CCD0] text-white" : "bg-primaryColor text-white border border-primaryColor "} transition-all duration-500 ease-in-out  w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2 ${pending || isPending && 'w-[fit] h-fit py-4 px-4'}`, variant === 'secondary' && 'bg-white border border-primaryColor text-primaryColor font-semibold', customStyles)}>
-                {isPending ? <> <Spinner/> <p>{loadingText}</p></> :
+                {pending || isPending ? <> <Spinner/> <p>{loadingText}</p></> :
                     <>
                         {text}
                         <span className={icon}></span>
@@ -149,6 +149,41 @@ export function IconButton({
     }
 }
 
+export function IconContinuousButton({
+                                         text = "Button",
+                                         icon = "",
+                                         variant = "primary",
+                                         type = "link",
+                                         href = " ",
+                                         disabled = false,
+                                         onClick = undefined,
+                                         loadingText = 'loading',
+                                         customStyles = "",
+                                         isPending = false
+                                     }) {
+    const [pending, setPending] = useState(false);
+    const handleClick = () => {
+        setPending(true)
+        if (onClick) {
+            onClick();
+        }
+        Log("index.jsx IconContinuousButton", {pending})
+    }
+    return (
+        <Link href={href ? href : undefined}>
+            <button tabIndex={0} type={type === 'submit' ? 'submit' : "button"} onClick={() => handleClick()}
+                    disabled={disabled}
+                    className={cn('mb-2', `${variant === "primary" && disabled ? "bg-[#A8CCD0] text-white" : "bg-primaryColor text-white border border-primaryColor "} transition-all duration-500 ease-in-out  w-[273px] h-[48px] rounded-[40px] flex items-center justify-center gap-2 ${pending || isPending && 'w-[fit] h-fit py-4 px-4'}`, variant === 'secondary' && 'bg-white border border-primaryColor text-primaryColor font-semibold', customStyles)}>
+                {pending || isPending ? <> <Spinner/> <p>{loadingText}</p></> :
+                    <>
+                        {text}
+                        <span className={icon}></span>
+                    </>
+                }
+            </button>
+        </Link>
+    )
+}
 
 export function ActionLink({
                                text = "Button",

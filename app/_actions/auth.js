@@ -7,7 +7,7 @@ import {
     PasswordResetSchema,
 } from "../auth/lib/definitions";
 import {cookies} from "next/headers";
-import {currentRoute, HOSTNAME_URI} from "@/app/_config/main";
+import {CURRENTROUTE, HOSTNAME_URI} from "@/app/_config/main";
 import {matchUserStatus, putColonBack} from "@/app/_lib/functions";
 import {getLocalCookies} from "@/app/_lib/getCookies";
 import posthog from "posthog-js";
@@ -233,7 +233,7 @@ export async function signin(state, formData) {
         return {
             success: true,
             token: result.tokens.access,
-            route: result.user.status !== "UNASSIGNED" ? '/dashboard' : `/onboarding`,
+            route: result.user.menstrual_profile_created ? '/dashboard' : `/onboarding`,
             userDetails
         }
     } catch (errors) {
@@ -330,7 +330,7 @@ export async function initiatePasswordChange(state, formData) {
     const validatedField = ForgotPasswordFormSchema.safeParse({
         email: formData.get('email'),
     })
-
+    Log("initiatePasswordChange", {state});
     if (!validatedField.success) {
         return {
             fieldErrors: validatedField.error.flatten().fieldErrors,
@@ -341,7 +341,7 @@ export async function initiatePasswordChange(state, formData) {
     const res = await fetch(`${HOSTNAME_URI}/auth/reset-password/request/`, {
         method: 'POST',
         headers: {
-            'X-Client-Origin': currentRoute,
+            'X-Client-Origin': CURRENTROUTE,
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({email: formData.get('email')})
