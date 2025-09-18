@@ -1,6 +1,6 @@
 "use client"
 import {useState} from "react";
-import {Button} from "@/app/_components";
+import {Button, IconButton} from "@/app/_components";
 // import Image from "next/image";
 // import facebook from "@/public/images/facebook.svg";
 // import google from "@/public/images/google.svg";
@@ -223,7 +223,9 @@ export function SignUpForm({state, action, isPending}) {
             </section>
 
             <div className="flex flex-col justify-center items-center">
-                <Button disabled={!enableButton} text="Create Account"/>
+                <IconButton isPending={isPending} disabled={!enableButton} loadingText={"Creating account"}
+                            text="Create Account"
+                            type="submit"/>
             </div>
             {/*<div className="relative flex flex-col items-center justify-center">*/}
             {/*    <div className="h-[1px] w-full bg-[#9C979759] top-[10px] absolute "></div>*/}
