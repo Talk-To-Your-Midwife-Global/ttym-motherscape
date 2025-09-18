@@ -137,7 +137,7 @@ export function Card({head, status, highlight = "", children}) {
                 {children}
             </div>
 
-            <div className={"flex-1"}>
+            <div className={"flex-1 capitalize"}>
                 <p> {head} <span className="text-primaryColor font-medium text-sm">{highlight}</span></p>
                 <p className={`text-[#72777A] text-sm`}>{status}</p>
             </div>
@@ -251,16 +251,17 @@ export function MenstrualCycleCardMain({accessToken}) {
     Log("dashboard/components/index.jsx; MenstrualCycleCardMain", {data, generalCycleInfo});
 
     if (error) {
-        throw new Error(`dashboard/components/index.jsx: MenstrualCycleCardMain; useCycleInfo() ${error}`)
+        // throw new Error(`dashboard/components/index.jsx: MenstrualCycleCardMain; useCycleInfo() ${error}`)
+        posthog.captureException(`dashboard/components/index.jsx: MenstrualCycleCardMain; useCycleInfo() ${error}`)
     }
 
     return (
         <section className={"mt-4"}>
             {
-                generalCycleInfo?.stage === "Menstrual" ?
+                generalCycleInfo?.stage === "menstrual" ?
                     <>
                         <Card head={`You are currently in: ${generalCycleInfo?.stage} Phase`}
-                              status={` Period started  days ago`}>
+                              status={` Period started ${generalCycleInfo?.daysDone} days ago`}>
                             <Image src={drip} alt={"drip "}/>
                         </Card>
                         <Card head={`Period Length: ${generalCycleInfo?.periodLength} days`}
