@@ -2,7 +2,7 @@
 import {useEffect} from 'react'
 import posthog from "posthog-js";
 import {Log} from "@/app/_lib/utils";
-import {IconButton} from "@/app/_components";
+import {IconContinuousButton} from "@/app/_components";
 import {OnboardHeading} from "@/app/onboarding/_components/OnboardHeading";
 import Image from "next/image";
 import ErrorImage from "@/public/images/computererr.svg";
@@ -24,8 +24,8 @@ export default function Error({error, reset}) {
                            alt={"Computer with an exclamation at the side"}/>
                 </div>
                 <div className={"flex flex-col items-center justify-center fixed bottom-10"}>
-                    <IconButton onClick={() => router.push('/logout')} text={"Report Issue"} href={"/logout"}
-                                type={"link"}/>
+                    <IconContinuousButton text={"Report Issue"} href={"/logout"}
+                                          type={"link"}/>
                     <p className={"text-center text-[#3A3A3A99]"}>Report it once, we’ll handle the rest and make your
                         experience better.</p>
                 </div>

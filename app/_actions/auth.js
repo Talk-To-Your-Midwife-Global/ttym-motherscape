@@ -245,9 +245,9 @@ export async function signin(state, formData) {
 }
 
 export async function logout() {
-    const cookieStore = await cookies()
-    const accessToken = cookieStore.get('access_token')?.value;
-    const refreshToken = cookieStore.get('refresh_token')?.value;
+    const cookieStore = await cookies();
+    const {access_token, refresh_token} = await getLocalCookies(['access_token', 'refresh_token'])
+    Log(`auth.js; Logout unsuccessful`, {access_token, refresh_token})
 
     const items = ['access_token', 'refresh_token', 'last_login', 'ttym-user-type', 'user_email']
     try {
@@ -255,10 +255,10 @@ export async function logout() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
+                'Authorization': `Bearer ${access_token}`
             },
             body: JSON.stringify({
-                refresh: refreshToken,
+                refresh: refresh_token,
             })
         })
 
@@ -285,6 +285,10 @@ export async function logout() {
         }
     } catch (errors) {
         Log("auth.js; Logout unsuccessful");
+        for (const item of items) {
+            cookieStore.delete(item)
+        }
+
         return {
             error: errors
         }
