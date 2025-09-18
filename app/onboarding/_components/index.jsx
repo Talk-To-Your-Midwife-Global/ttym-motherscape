@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link"
 import {removeSpaces} from "@/app/_lib/functions"
-import {IconButton} from "@/app/_components"
+import {IconButton, IconContinuousButton} from "@/app/_components"
 import {PageSlideAnimator} from "@/app/_components"
 import {cn} from "@/app/_lib/utils";
 import {SideSliderButtons} from "@/app/onboarding/_components/SideSliderButtons";
@@ -44,11 +44,16 @@ export function StepOne({userType, children, title, description}) {
                 <PageSlideAnimator>
                     <section className="flex flex-col justify-between">
                         <OnboardHeading title={title} subTitle={description}/>
-                        <section className="flex-1 relative -bottom-10">
+                        <section className="flex-1 relative -bottom-10 -z-10">
                             {children}
                         </section>
                     </section>
                 </PageSlideAnimator>
+                <div className={"flex items-center justify-center z-40 fixed bottom-10 w-screen"}>
+                    <IconContinuousButton text="Continue" icon="iconify lucide--arrow-right"
+                                          href={`/onboarding/${userType}/2`}
+                    />
+                </div>
             </section>
         </SideSliderButtons>
     )
@@ -84,15 +89,15 @@ export function FlashThree({children, title, description, question = 7}) {
                         {children}
                     </section>
                 </section>
-                <div className="fixed bottom-10 w-full flex justify-center">
-                    <IconButton href={"/dashboard"} text="Continue" icon="iconify lucide--arrow-right"/>
-                </div>
             </PageSlideAnimator>
+            <div className="fixed bottom-10 w-full flex justify-center">
+                <IconContinuousButton href={"/dashboard"} text="Continue" icon="iconify lucide--arrow-right"/>
+            </div>
         </section>
     )
 }
 
-export function FlashTwo({children, title, description, question}) {
+export function FlashTwo({children, title, description, question, userType}) {
     return (
         <section className="overflow-hidden w-screen h-screen bg-onboarding-bg">
             <QuestionNav
@@ -110,6 +115,11 @@ export function FlashTwo({children, title, description, question}) {
                     </section>
                 </section>
             </PageSlideAnimator>
+            <div className={"fixed bottom-10 w-screen flex items-center justify-center z-40"}>
+                <IconContinuousButton text="Continue" icon="iconify lucide--arrow-right"
+                                      href={`/onboarding/${userType}/5`}
+                />
+            </div>
         </section>
 
     );
