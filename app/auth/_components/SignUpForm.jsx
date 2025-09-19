@@ -154,7 +154,7 @@ export function SignUpForm({state, action, isPending, resetError, fieldErrors}) 
                     name="phones" // all unknown props will be passed to the input elem itself
                     className='custom-outline placeholder:text-[#999999] text-black bg-white border-2 w-full h-[42px] flex gap-2 items-center rounded-xl pl-[15px] pr-[5px]'
                 />
-                {fieldErrors?.phone && <p className="text-red-500 text-sm">{state.fieldErrors.phone}</p>}
+                {fieldErrors?.phone_number && <p className="text-red-500 text-sm">{fieldErrors.phone_number}</p>}
             </div>
 
             <div>
