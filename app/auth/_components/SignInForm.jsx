@@ -41,22 +41,41 @@ export function SignInForm({state, action, isPending, resetError}) {
         Log("SignInForm.jsx: handleInputChange(): ", {inputState, isValidCredentials})
     }
     useEffect(() => {
-        // autocomplete event handler
+        // autocomplete event handler for Android
         let emailStyle = window.getComputedStyle(emailRef.current);
         let passwordStyle = window.getComputedStyle(passwordRef.current);
 
-        Log("sytle bg", {style: passwordStyle.backgroundColor})
-
-        if (emailStyle && (emailStyle.backgroundColor !== "rgb(255, 255, 255)")) {
-            Log("autofilled", {style: emailStyle.backgroundColor})
-            resetError();
-        }
+        Log("sytle password", {style: passwordStyle.backgroundColor})
 
         if (passwordStyle && (passwordStyle.backgroundColor !== "rgb(255, 255, 255)")) {
-            Log("autofilled", {style: passwordStyle.backgroundColor})
+            Log("autofilled password", {style: passwordStyle.backgroundColor})
             resetError();
-            setDisableBtn(false);
         }
+
+        if (emailStyle && (emailStyle.backgroundColor !== "rgb(255, 255, 255)")) {
+            Log("autofilled email", {style: emailStyle.backgroundColor})
+            setDisableBtn(false);
+            resetError();
+        }
+
+
+        //     Autocomplete event handler for iOS
+        function detectAutofill(input) {
+            const observer = new MutationObserver(() => {
+                if (input.matches(":-webkit-autofill")) {
+                    Log("Autofilled detected:", input.name || input.type);
+                    setDisableBtn(false);
+                }
+            });
+
+            observer.observe(input, {
+                attributes: true,
+                attributeFilter: ["style", "class"],
+            });
+        }
+
+        detectAutofill(emailRef.current);
+        detectAutofill(passwordRef.current);
     }, [inputState])
     return (
         <form action={action} className="px-[30px] flex flex-col gap-5">
