@@ -306,6 +306,7 @@ export async function requestEmailVerification(email) {
     const res = await fetch(`${HOSTNAME_URI}/auth/verify-email/request`, {
         method: 'POST',
         headers: {
+            'X-Client-Origin': CURRENTROUTE,
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({email})

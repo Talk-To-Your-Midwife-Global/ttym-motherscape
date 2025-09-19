@@ -13,7 +13,7 @@ export const SignUpFormSchema = z.object({
     // address: z.string().min(5, {message: 'Must be at least 5 characters long'}).trim(),
     phone_number: z.string().regex(
         /^\+\d{1,3}\d{7,14}$/,
-        {message: "Phone number must start with a '+' followed by a 1-3 digit country code and a valid phone number."}
+        {message: "Please enter a valid phone number."}
     ),
     password: z
         .string()
