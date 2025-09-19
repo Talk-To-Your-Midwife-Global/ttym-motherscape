@@ -187,7 +187,7 @@ function CycleRegularity({handleAnswers, submit, state, isPending}) {
                             <div>
                                 <p className="font-medium">Irregular</p>
                                 <p className="text-sm">
-                                    Your period usually comes around the same time each month (within a few days).
+                                    Your period timing often changes, or is hard to predict.
                                 </p>
                             </div>
                         </label>

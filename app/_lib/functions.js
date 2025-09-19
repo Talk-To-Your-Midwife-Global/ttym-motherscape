@@ -231,26 +231,29 @@ function computeProgressBarValues(days, week) {
 
 // Convert this whole thing into a class soon
 export function necessaryDataForMenstrualUI(allData) {
-    const {current_cycle} = allData;
-    Log({current_cycle});
-    const dates = menstrualCycleDateGenerator(current_cycle?.start_date, allData.period_length, current_cycle?.ovulation_day, "general", allData.cycle_length)
-    const daysDone = computeDaysDone(current_cycle?.start_date)
-    const daysToPeriod = computeDaysToPeriod(current_cycle?.start_date, allData.cycle_length)
-    const percentageComplete = computeCycleCompletion(daysDone, allData.cycle_length)
-    return {
-        cycleLength: allData.cycle_length,
-        periodLength: allData.period_length,
-        stage: current_cycle?.current_phase,
-        pregnancyProb: current_cycle?.pregnancy_probability,
-        periodStartDate: current_cycle?.start_date,
-        nextPeriodDate: current_cycle?.next_phase_date,
-        nextPhaseStartDate: current_cycle?.next_phase_date,
-        daysDone,
-        daysToPeriod,
-        percentageComplete,
-        daysToOvulation: computeDaysToOvulation(daysDone, daysToPeriod, allData.cycle_length),
-        calendar: dates,
-        isPredictedCycle: current_cycle?.predicted,
+    if (allData) {
+        const {current_cycle} = allData;
+        Log("functions.js: necessaryDataForMenstrualUI(); ", {current_cycle});
+
+        const dates = menstrualCycleDateGenerator(current_cycle?.start_date, allData?.period_length, current_cycle?.ovulation_day, "general", allData?.cycle_length)
+        const daysDone = computeDaysDone(current_cycle?.start_date)
+        const daysToPeriod = computeDaysToPeriod(current_cycle?.start_date, allData?.cycle_length)
+        const percentageComplete = computeCycleCompletion(daysDone, allData?.cycle_length)
+        return {
+            cycleLength: allData?.cycle_length,
+            periodLength: allData?.period_length,
+            stage: current_cycle?.current_phase,
+            pregnancyProb: current_cycle?.pregnancy_probability,
+            periodStartDate: current_cycle?.start_date,
+            nextPeriodDate: current_cycle?.next_phase_date,
+            nextPhaseStartDate: current_cycle?.next_phase_date,
+            daysDone,
+            daysToPeriod,
+            percentageComplete,
+            daysToOvulation: computeDaysToOvulation(daysDone, daysToPeriod, allData?.cycle_length),
+            calendar: dates,
+            isPredictedCycle: current_cycle?.predicted,
+        }
     }
 }
 

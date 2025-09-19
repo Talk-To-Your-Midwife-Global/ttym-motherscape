@@ -112,7 +112,7 @@ export async function updateUser(info) {
         }
         const json = await response.json()
         if (json) {
-            Log('user_menstrual_profile_submit', {json})
+            Log('user_menstrual_profile_submit success', {json})
             return {
                 success: true,
             }

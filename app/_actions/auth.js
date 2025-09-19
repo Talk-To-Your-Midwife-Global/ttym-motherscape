@@ -7,7 +7,7 @@ import {
     PasswordResetSchema,
 } from "../auth/lib/definitions";
 import {cookies} from "next/headers";
-import {currentRoute, HOSTNAME_URI} from "@/app/_config/main";
+import {CURRENTROUTE, HOSTNAME_URI} from "@/app/_config/main";
 import {matchUserStatus, putColonBack} from "@/app/_lib/functions";
 import {getLocalCookies} from "@/app/_lib/getCookies";
 import posthog from "posthog-js";
@@ -198,8 +198,9 @@ export async function signin(state, formData) {
                 // route the user
                 if (emailRequest?.success) {
                     return {
-                        success: true,
+                        success: false,
                         token: false,
+                        shouldVerifyEmail: true,
                         route: '/auth/verify-email/'
                     }
                 }
@@ -216,24 +217,24 @@ export async function signin(state, formData) {
         cookieStore.set('ttym-user-type', matchUserStatus(result.user.status, true));
 
         Log({result});
+        Log("auth.js",)
         if (!result.user.is_configured) {
             cookieStore.set('last_login', null)
         } else {
+
             cookieStore.set('last_login', result.user.last_login)
         }
         const user = result.user
-
         const userDetails = {
             uuid: user.uuid,
             username: user.username,
             email: user.email,
             status: user.status
         }
-
         return {
             success: true,
             token: result.tokens.access,
-            route: result.user.status !== "UNASSIGNED" ? '/dashboard' : `/onboarding`,
+            route: result.user.menstrual_profile_created ? '/dashboard' : `/onboarding`,
             userDetails
         }
     } catch (errors) {
@@ -244,9 +245,9 @@ export async function signin(state, formData) {
 }
 
 export async function logout() {
-    const cookieStore = await cookies()
-    const accessToken = cookieStore.get('access_token')?.value;
-    const refreshToken = cookieStore.get('refresh_token')?.value;
+    const cookieStore = await cookies();
+    const {access_token, refresh_token} = await getLocalCookies(['access_token', 'refresh_token'])
+    Log(`auth.js; Logout unsuccessful`, {access_token, refresh_token})
 
     const items = ['access_token', 'refresh_token', 'last_login', 'ttym-user-type', 'user_email']
     try {
@@ -254,10 +255,10 @@ export async function logout() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
+                'Authorization': `Bearer ${access_token}`
             },
             body: JSON.stringify({
-                refresh: refreshToken,
+                refresh: refresh_token,
             })
         })
 
@@ -284,6 +285,10 @@ export async function logout() {
         }
     } catch (errors) {
         Log("auth.js; Logout unsuccessful");
+        for (const item of items) {
+            cookieStore.delete(item)
+        }
+
         return {
             error: errors
         }
@@ -301,6 +306,7 @@ export async function requestEmailVerification(email) {
     const res = await fetch(`${HOSTNAME_URI}/auth/verify-email/request`, {
         method: 'POST',
         headers: {
+            'X-Client-Origin': CURRENTROUTE,
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({email})
@@ -330,7 +336,7 @@ export async function initiatePasswordChange(state, formData) {
     const validatedField = ForgotPasswordFormSchema.safeParse({
         email: formData.get('email'),
     })
-
+    Log("initiatePasswordChange", {state});
     if (!validatedField.success) {
         return {
             fieldErrors: validatedField.error.flatten().fieldErrors,
@@ -341,7 +347,7 @@ export async function initiatePasswordChange(state, formData) {
     const res = await fetch(`${HOSTNAME_URI}/auth/reset-password/request/`, {
         method: 'POST',
         headers: {
-            'X-Client-Origin': currentRoute,
+            'X-Client-Origin': CURRENTROUTE,
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({email: formData.get('email')})

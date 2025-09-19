@@ -1,6 +1,6 @@
 import {AuthNav} from "@/app/auth/_components";
 import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
-import {IconButton} from "@/app/_components";
+import {IconContinuousButton} from "@/app/_components";
 import {HOSTNAME_URI} from "@/app/_config/main";
 import {getLocalCookies} from "@/app/_lib/getCookies";
 
@@ -29,6 +29,7 @@ export default async function Page({params}) {
 
     const successfulVerification = await verifyEmail(token);
 
+
     if (successfulVerification) {
         return (
             <>
@@ -37,12 +38,12 @@ export default async function Page({params}) {
                     <div className="text-black flex flex-col gap-3 items-center justify-center">
                         <span className="iconify ic--twotone-email text-[#667085] text-5xl"></span>
                         <h2 className="font-medium text-xl">Account Verified</h2>
-                        <p className="text-subText text-center">Congratulations, your email account {user_email}.
+                        <p className="text-subText text-center">Congratulations, your email account {user_email}
                             has
                             been verified</p>
                     </div>
                     <div className="flex flex-col gap-3 items-center justify-center mt-5">
-                        <IconButton text='Continue to sign in' href="/auth/signIn"/>
+                        <IconContinuousButton text='Continue to sign in' href="/auth/signIn"/>
                     </div>
                 </ContainerWrapper>
             </>
@@ -59,7 +60,8 @@ export default async function Page({params}) {
                             test@example.com has expired. No worries we can send the link again</p>
                     </div>
                     <div className="flex flex-col gap-3 items-center justify-center mt-5">
-                        <IconButton text='Resend Verification Link'/>
+                        <IconContinuousButton text='Resend Verification Link' href={"/auth/verify-email"}>Resend
+                            Link</IconContinuousButton>
                     </div>
                 </ContainerWrapper>
             </>

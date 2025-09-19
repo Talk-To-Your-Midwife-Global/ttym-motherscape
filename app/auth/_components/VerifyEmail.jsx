@@ -2,7 +2,7 @@
 import {useState, useTransition} from "react";
 import {AuthNav} from "@/app/auth/_components/index";
 import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
-import {IconButton} from "@/app/_components";
+import {IconButton, IconContinuousButton} from "@/app/_components";
 import {requestEmailVerification} from "@/app/_actions/auth";
 
 export function VerifyEmailPage({user_email}) {
@@ -36,10 +36,11 @@ export function VerifyEmailPage({user_email}) {
                         message.</p>
                 </div>
                 <div className="flex flex-col gap-3 items-center justify-center mt-5">
-                    <IconButton text='Continue to Sign in' href="/auth/signIn"/>
+                    <IconContinuousButton text='Continue to Sign in' href="/auth/signIn"/>
                     {
                         !sentStatus &&
-                        <IconButton text='Resend Link' onClick={handleEmailResend} variant={'secondary'}>Resend
+                        <IconButton text='Resend Link' isPending={isPending} onClick={handleEmailResend}
+                                    variant={'secondary'}>Resend
                             Link</IconButton>
                     }
                     {

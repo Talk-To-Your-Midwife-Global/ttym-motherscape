@@ -3,21 +3,21 @@ import {z} from "zod"
 export const SignUpFormSchema = z.object({
     first_name: z
         .string()
-        .min(2, {message: 'First name must be at least 2 characters long.'})
+        .min(2, {message: 'Invalid first name.'})
         .trim(),
     last_name: z
         .string()
-        .min(2, {message: 'Last Name must be at least 2 characters long.'})
+        .min(2, {message: 'Invalid last name.'})
         .trim(),
     email: z.string().email({message: 'Please enter a valid email.'}).trim(),
     // address: z.string().min(5, {message: 'Must be at least 5 characters long'}).trim(),
     phone_number: z.string().regex(
         /^\+\d{1,3}\d{7,14}$/,
-        {message: "Phone number must start with a '+' followed by a 1-3 digit country code and a valid phone number."}
+        {message: "Please enter a valid phone number."}
     ),
     password: z
         .string()
-        .min(8, {message: 'Be at least 8 characters long'})
+        .min(8, {message: 'Be at least 8 characters long.'})
         .regex(/[a-zA-Z]/, {message: 'Contain at least one letter.'})
         .regex(/[0-9]/, {message: 'Contain at least one number.'})
         .regex(/[^a-zA-Z0-9]/, {

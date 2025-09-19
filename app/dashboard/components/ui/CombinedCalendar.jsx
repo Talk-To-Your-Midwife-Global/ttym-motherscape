@@ -45,11 +45,14 @@ export function CombinedCalendar({accessToken}) {
     }
 
     useEffect(() => {
-        const isNotUsingAssumedSystemPredictedValues = generalCycleInfo?.stage !== "upcoming" || generalCycleInfo?.stage !== "missed";
-        if (isNotUsingAssumedSystemPredictedValues) {
-            setIsUsingPredictedCycle(false)
+        const isUsingAssumedSystemPredictedValues = generalCycleInfo?.stage === "upcoming" || generalCycleInfo?.stage === "missed" || generalCycleInfo?.stage === "completed" || generalCycleInfo?.isPredictedCycle;
+
+        Log("CombinedCalendar.jsx: useEffect()", {isUsingAssumedSystemPredictedValues});
+
+        if (isUsingAssumedSystemPredictedValues) {
+            setIsUsingPredictedCycle(true);
         }
-    }, [])
+    }, [data])
     return (
         <>
             {

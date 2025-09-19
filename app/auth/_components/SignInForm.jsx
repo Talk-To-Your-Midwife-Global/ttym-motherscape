@@ -1,5 +1,5 @@
 "use client"
-import {useState} from "react";
+import {useState, useRef, useEffect} from "react";
 import Link from "next/link";
 import {IconButton} from "@/app/_components";
 // import Image from "next/image";
@@ -11,12 +11,12 @@ import {HelpCenterLinks} from "@/app/auth/_components/index";
 import {SignInFormSchema} from "@/app/auth/lib/definitions";
 import {Log} from "@/app/_lib/utils";
 
-export function SignInForm({state, action, isPending}) {
+export function SignInForm({state, action, isPending, resetError}) {
     const [hidePassword, setHidePassword] = useState(true)
-    const {pending} = useFormStatus();
-    Log("SignInForm", {pending})
     const [inputState, setInputState] = useState({email: '', password: ''});
     const [disableBtn, setDisableBtn] = useState(true);
+    const emailRef = useRef(null);
+    const passwordRef = useRef(null);
 
 
     const handlePasswordView = (event) => {
@@ -25,7 +25,8 @@ export function SignInForm({state, action, isPending}) {
     }
 
     const handleInputChange = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
+        resetError();
         const {name, value} = e.target;
         setInputState({...inputState, [name]: value});
 
@@ -39,7 +40,43 @@ export function SignInForm({state, action, isPending}) {
 
         Log("SignInForm.jsx: handleInputChange(): ", {inputState, isValidCredentials})
     }
+    useEffect(() => {
+        // autocomplete event handler for Android
+        let emailStyle = window.getComputedStyle(emailRef.current);
+        let passwordStyle = window.getComputedStyle(passwordRef.current);
 
+        Log("sytle password", {style: passwordStyle.backgroundColor})
+
+        if (passwordStyle && (passwordStyle.backgroundColor !== "rgb(255, 255, 255)")) {
+            Log("autofilled password", {style: passwordStyle.backgroundColor})
+            resetError();
+        }
+
+        if (emailStyle && (emailStyle.backgroundColor !== "rgb(255, 255, 255)")) {
+            Log("autofilled email", {style: emailStyle.backgroundColor})
+            setDisableBtn(false);
+            resetError();
+        }
+
+
+        //     Autocomplete event handler for iOS
+        function detectAutofill(input) {
+            const observer = new MutationObserver(() => {
+                if (input.matches(":-webkit-autofill")) {
+                    Log("Autofilled detected:", input.name || input.type);
+                    setDisableBtn(false);
+                }
+            });
+
+            observer.observe(input, {
+                attributes: true,
+                attributeFilter: ["style", "class"],
+            });
+        }
+
+        detectAutofill(emailRef.current);
+        detectAutofill(passwordRef.current);
+    }, [inputState])
     return (
         <form action={action} className="px-[30px] flex flex-col gap-5">
             <div>
@@ -47,9 +84,10 @@ export function SignInForm({state, action, isPending}) {
                 <div
                     className="bg-white border-2 w-full h-[42px] flex gap-2 items-center rounded-full pl-[15px] pr-[5px]">
                     <span className="iconify lucide--mail font-medium"></span>
-                    <input onChange={handleInputChange} autoFocus required type="email"
+                    <input autoComplete="email" ref={emailRef} onChange={handleInputChange} autoFocus required
+                           type="email"
                            name="email" id="email" placeholder="linda@framcreative.com"
-                           className="flex-1 outline-none bg-transparent text-mainText"/>
+                           className="flex-1 outline-none .bg-white text-mainText"/>
                 </div>
                 {state?.errors?.email && <p className="text-red-500 text-sm">{state.errors.email}</p>}
             </div>
@@ -65,18 +103,22 @@ export function SignInForm({state, action, isPending}) {
                 <div
                     className="bg-white border-2 w-full h-[42px] flex gap-2 items-center rounded-full pl-[15px] pr-[5px]">
                     <span className="iconify lucide--lock-keyhole font-medium"></span>
-                    <input onChange={handleInputChange} required
+                    <input ref={passwordRef} onChange={handleInputChange} required
                            type={hidePassword ? "password" : "text"} name="password" id="password"
-                           placeholder="••••••••••••••••" className="flex-1 outline-none bg-transparent text-mainText"/>
+                           placeholder="••••••••••••••••" className="flex-1 outline-none .bg-white text-mainText"/>
                 </div>
                 {state?.errors?.email && <p className="text-red-500 text-sm">{state.errors.email}</p>}
-                <div className="flex justify-end gap-4 space-between">
-                    <p className="text-red-600 text-sm text-right">
-                        <Link href="/auth/forgotPassword" className="font-medium">
-                            Forgot Password?
-                        </Link>
-                    </p>
-                </div>
+                {
+                    // Not an input field error
+                    state?.error &&
+                    <div className="flex justify-end gap-4 space-between transition-all ">
+                        <p className="text-red-600 text-sm text-right">
+                            <Link href="/auth/forgotPassword" className="font-medium">
+                                Forgot Password?
+                            </Link>
+                        </p>
+                    </div>
+                }
             </div>
 
             <div className="flex flex-col justify-center items-center mt-10">
