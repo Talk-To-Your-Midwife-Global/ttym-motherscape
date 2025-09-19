@@ -81,6 +81,9 @@ export async function signup(state, formData) {
         }
     }
 
+    const cookieStore = await cookies();
+    cookieStore.set('user_email', formData.get('email'));
+
     // call the provider
     try {
         posthog.capture('user_signup_attempt', {method: 'email'});
