@@ -49,33 +49,15 @@ export function SignInForm({state, action, isPending, resetError}) {
 
         if (passwordStyle && (passwordStyle.backgroundColor !== "rgb(255, 255, 255)")) {
             Log("autofilled password", {style: passwordStyle.backgroundColor})
+            setDisableBtn(false);
             resetError();
         }
-
+        // autofill seems to detect only the email (first input) and so
         if (emailStyle && (emailStyle.backgroundColor !== "rgb(255, 255, 255)")) {
             Log("autofilled email", {style: emailStyle.backgroundColor})
             setDisableBtn(false);
             resetError();
         }
-
-
-        //     Autocomplete event handler for iOS
-        function detectAutofill(input) {
-            const observer = new MutationObserver(() => {
-                if (input.matches(":-webkit-autofill")) {
-                    Log("Autofilled detected:", input.name || input.type);
-                    setDisableBtn(false);
-                }
-            });
-
-            observer.observe(input, {
-                attributes: true,
-                attributeFilter: ["style", "class"],
-            });
-        }
-
-        detectAutofill(emailRef.current);
-        detectAutofill(passwordRef.current);
     }, [inputState])
     return (
         <form action={action} className="px-[30px] flex flex-col gap-5">

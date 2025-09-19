@@ -249,6 +249,10 @@ export function MenstrualCycleCardMain({accessToken}) {
 
     if (isLoading) return <div>loading...</div>
     Log("dashboard/components/index.jsx; MenstrualCycleCardMain", {data, generalCycleInfo});
+    posthog.capture(`"dashboard/components/index.jsx; MenstrualCycleCardMain", ${JSON.stringify({
+        data,
+        generalCycleInfo
+    })}`)
 
     if (error) {
         // throw new Error(`dashboard/components/index.jsx: MenstrualCycleCardMain; useCycleInfo() ${error}`)
