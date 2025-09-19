@@ -20,6 +20,7 @@ export function RestartCalendar({refreshPage, accessToken}) {
     const handleDateChange = (date) => {
         // Because passing it directly is causing issues
         const formattedDate = date.toISOString().split('T')[0];
+        Log("RestartCalendar.jsx: handleDateChange", {formattedDate});
         if (date) {
             setSelectedDate(formattedDate); // the raw date was passed because the formatted date causes an error
         }
@@ -48,13 +49,12 @@ export function RestartCalendar({refreshPage, accessToken}) {
                 Log("RestartCalendar.jsx; handleDateConfirm @ /cycles/start failed", {response});
                 posthog.captureException(`RestartCalendar.jsx; handleDateConfirm @ /cycles/start failed, ${JSON.stringify(response)}`);
                 toast.error("An error occurred while updating cycle")
-                return;
+            } else {
+                Log("RestartCalendar.jsx; handleDateConfirm success", {response})
+                setIsUsingPredictedCycle(false);
+                window.location.reload() // because all the other SPA related ways of refreshing for Next.js failed to work
             }
-            Log("RestartCalendar.jsx; handleDateConfirm success", {response})
-            setIsUsingPredictedCycle(false);
-            window.location.reload() // because all the other SPA related ways of refreshing for Next.js failed to work
         })
-        setSelectedDate(selectedDate)
     }
 
     return (
