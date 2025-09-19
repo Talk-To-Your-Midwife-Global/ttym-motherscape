@@ -81,12 +81,16 @@ export async function signup(state, formData) {
         }
     }
 
+    const cookieStore = await cookies();
+    cookieStore.set('user_email', formData.get('email'));
+
     // call the provider
     try {
         posthog.capture('user_signup_attempt', {method: 'email'});
         const response = await fetch(`${HOSTNAME_URI}/auth/register/`, {
             method: 'POST',
             headers: {
+                'X-Client-Origin': CURRENTROUTE,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(fields),
@@ -108,15 +112,15 @@ export async function signup(state, formData) {
             }
         }
 
-        const emailRequest = await requestEmailVerification(formData.get('email'));
-
-        if (emailRequest?.success) {
-            return {
-                success: true,
-                token: result.tokens.access,
-                route: `/auth/verify-email/`
-            }
-        }
+        // const emailRequest = await requestEmailVerification(formData.get('email'));
+        //
+        // if (emailRequest?.success) {
+        //     return {
+        //         success: true,
+        //         token: result.tokens.access,
+        //         route: `/auth/verify-email/`
+        //     }
+        // }
 
         return {
             success: true,
