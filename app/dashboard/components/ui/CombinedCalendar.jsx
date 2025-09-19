@@ -45,7 +45,7 @@ export function CombinedCalendar({accessToken}) {
     }
 
     useEffect(() => {
-        const isUsingAssumedSystemPredictedValues = generalCycleInfo?.stage === "upcoming" || generalCycleInfo?.stage === "missed" || generalCycleInfo?.stage === "completed";
+        const isUsingAssumedSystemPredictedValues = generalCycleInfo?.stage === "upcoming" || generalCycleInfo?.stage === "missed" || generalCycleInfo?.stage === "completed" || generalCycleInfo?.isPredictedCycle;
 
         Log("CombinedCalendar.jsx: useEffect()", {isUsingAssumedSystemPredictedValues});
 
