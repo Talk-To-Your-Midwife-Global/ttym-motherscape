@@ -45,8 +45,8 @@ export function RestartCalendar({refreshPage, accessToken}) {
             })
             const response = await res.json();
             if (!res.ok) {
-                Log("RestartCalendar.jsx; handleDateConfirm @ /cycles/end failed", {response});
-                posthog.captureException(`RestartCalendar.jsx; handleDateConfirm @ /cycles/end failed, ${response}`);
+                Log("RestartCalendar.jsx; handleDateConfirm @ /cycles/start failed", {response});
+                posthog.captureException(`RestartCalendar.jsx; handleDateConfirm @ /cycles/start failed, ${JSON.stringify(response)}`);
                 toast.error("An error occurred while updating cycle")
                 return;
             }
