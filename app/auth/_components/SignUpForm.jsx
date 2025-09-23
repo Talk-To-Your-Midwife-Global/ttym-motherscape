@@ -174,7 +174,7 @@ export function SignUpForm({state, action, isPending, resetError, fieldErrors}) 
                             animate
                             captionLayout="dropdown"
                             mode="single"
-                            startMonth={new Date(new Date().getFullYear() - 30, 0)}
+                            startMonth={new Date(new Date().getFullYear() - 50, 0)}
                             endMonth={new Date(new Date().getFullYear() - 13, new Date().getMonth())}
                             selected={birthdate}
                             onSelect={handleBirthdateChange}
