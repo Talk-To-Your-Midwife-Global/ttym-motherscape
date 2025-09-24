@@ -68,33 +68,33 @@ export const ImageDisplay = ({
     );
 };
 
-export function ArticleCard({content, imagery, bookmarkAction}) {
+export function ArticleCard({content, imagery, handleClick}) {
     const link = content && content?.slug;
     return (
-        <article tabIndex={0}
-                 className="shadow-md w-[271px] max-w-[300px] h-[230px] rounded-md outline-[#0F969C] p-2 border-2 border-[#DADADA] overflow-hidden">
-            <div className="aspect-video">
-                {/*<Image src={imagery?.url || healthImage} width={237} height={120} alt="Some blue background image"*/}
-                {/*       className="rounded-lg"/>*/}
-                <ImageDisplay images={[imagery?.url || healthImage]} aspectRatio={"video"}/>
+        // <Link href={`/read/${link}`}>
+        <article tabIndex={0} onClick={() => handleClick(content)}
+                 className="shadow-md w-[301px] max-w-[300px] h-[293px] rounded-md p-2 border-2 border-[#DADADA]">
+            <div>
+                <ImageDisplay images={[imagery?.url || healthImage]} aspectRatio={"long"}/>
             </div>
             <div
-                className=".h-[150px] flex flex-col py-4 z-5 px-4 backdrop-blur-md rounded-lg">
+                className="flex flex-col z-5 px-2 py-4 backdrop-blur-md rounded-lg">
                 <div>
-                    <p className="font-bold text-black h-[50px] .w-[150px] text-pretty truncate">
-                        <Link href={`/read/${link}`}>
+                    <p className="font-bold text-black .h-[50px] text-pretty line-clamp-2">
                             <span
-                                className="text-wrap truncate .h-[100px] .w-[150px] capitalize">{content?.title}</span>
-                        </Link>
+                                className="text-wrap capitalize">{content?.title}</span>
+                    </p>
+                    <p className={"line-clamp-2 text-[#3A3A3A99]"}>
+                        {content?.insight}
                     </p>
                 </div>
-                {/*<div className="text-transparent flex items-center gap-3 mt-2 fixed bottom-4 ">*/}
-                {/*    <div className="flex items-center gap-2" tabIndex="0" onClick={() => bookmarkAction(content.id)}>*/}
-                {/*        <BookmarkingIcon/> <span className="text-primaryText text-[12px]">bookmark</span>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
+                <div className={"flex items-center gap-1 mt-2 text-[#666869]"}>
+                    <span className={"iconify mdi--clock-outline "}></span>
+                    <span>{getRelativeTime(content?.publishDate)}</span>
+                </div>
             </div>
         </article>
+        // </Link>
     )
 }
 
@@ -108,10 +108,10 @@ export function SmallArticleCard({content, imagery,}) {
                                   aspectRatio={"square"}/>
                 </div>
                 <div>
-                    <div className={"w-[200px] h-[50px] wrap"}>
-                        <h3 className={"text-primaryText wrap line-clamp-2 capitalize font-bold"}>{content?.title}</h3>
+                    <div className={"w-[200px] h-[50px]"}>
+                        <h3 className={"text-primaryText line-clamp-2 capitalize font-bold"}>{content?.title}</h3>
                     </div>
-                    <div className={"flex items-center gap-1 "}>
+                    <div className={"flex items-center gap-1 text-[#666869] "}>
                         <span className={"iconify mdi--clock-outline "}></span>
                         <span>{getRelativeTime(content?.publishDate)}</span>
                     </div>

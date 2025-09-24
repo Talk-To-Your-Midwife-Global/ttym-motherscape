@@ -9,19 +9,10 @@ import {Log} from "@/app/_lib/utils";
 
 
 export function ArticleParent() {
-    const [isPending, startTransition] = useTransition();
     const {blogData, isLoading, error} = useContentFetcher({query: postsPreviewQuery, variables: null})
     Log(blogData)
 
     const theresContent = blogData ? blogData.length > 0 : false;
-
-    const handleBookmarking = (id) => {
-        startTransition(async () => {
-            const res = await bookmarkPost(id);
-            Log(res);
-        })
-    }
-
 
     if (error) {
         // throw new Error(error.message);
