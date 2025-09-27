@@ -3,23 +3,23 @@
 import {clsx} from 'clsx';
 import {useState} from 'react';
 import {Drawer} from 'vaul';
-import {Log} from "@/app/_lib/utils";
 import {useContentFetcher} from "@/app/_hooks/useContentFetcher";
 import {getOnePostQuery} from "@/app/dashboard/hooks/graphContentFetchers";
-import {richTextToJsx} from "@madebyconnor/rich-text-to-jsx";
 import {Spinner} from "@/app/_components/Spinner";
 import {Reader} from "@/app/(reader)/read/_components/Reader";
+import {useArticles} from "@/app/contexts/ArticlesContext";
+import posthog from "posthog-js";
 
 const snapPoints = ['200px', 1];
 
-export function ModifiedReader({read, setRead, article, handleNotReading}) {
+export function ModifiedReader() {
+    const {currentArticle, read, setRead, handleNotReading} = useArticles();
     const [snap, setSnap] = useState(snapPoints[0]);
-    const {blogData, isLoading} = useContentFetcher(getOnePostQuery(article.slug));
-    const blogInsight = blogData ? blogData[0]?.blogInsight?.insight : undefined;
-    const blogHeaderImage = blogData ? blogData[0]?.headerImage : undefined;
-    Log({snap})
+    const {blogData, isLoading, error} = useContentFetcher(getOnePostQuery(currentArticle.slug));
 
-
+    if (error) {
+        posthog.captureException(`ModifiedReader.jsx: useContentFetcher(); ${error}`);
+    }
     if (isLoading) {
         return (
             <Drawer.Root open={read} setOpen={setRead} snapPoints={snapPoints} activeSnapPoint={snap}
@@ -35,13 +35,13 @@ export function ModifiedReader({read, setRead, article, handleNotReading}) {
                                 'overflow-hidden': snap !== 1,
                             })}
                         >
-                            <p className={"text-yellow-600 flex items-center gap-2"}><Spinner/> Fetching Article
+                            <p className={"text-yellow-600 flex items-center gap-2"}><Spinner/> Getting Article
                             </p>
                             <Drawer.Title
-                                className="text-2xl mt-2 font-medium text-gray-400 capitalize">{article?.title}</Drawer.Title>
+                                className="text-2xl mt-2 font-medium text-gray-400 capitalize">{currentArticle?.title}</Drawer.Title>
                             {/*<p className="text-sm mt-1 text-gray-600 mb-6">40 videos, 20+ exercises</p>*/}
                             <p className="text-gray-600">
-                                {article?.insight}
+                                {currentArticle?.insight}
                             </p>
                         </div>
                     </Drawer.Content>
@@ -77,10 +77,9 @@ export function ModifiedReader({read, setRead, article, handleNotReading}) {
                                         </div>
                                     </div>
                                     <Drawer.Title
-                                        className="text-2xl mt-2 font-medium text-gray-400 capitalize">{article?.title}</Drawer.Title>
-                                    {/*<p className="text-sm mt-1 text-gray-600 mb-6">40 videos, 20+ exercises</p>*/}
+                                        className="text-2xl mt-2 font-medium text-gray-400 capitalize">{currentArticle?.title}</Drawer.Title>
                                     <p className="text-gray-600 line-clamp-2">
-                                        {article?.insight}
+                                        {currentArticle?.insight}
                                     </p>
                                 </div>
                             }

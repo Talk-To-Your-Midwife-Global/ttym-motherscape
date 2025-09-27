@@ -1,20 +1,20 @@
 "use client"
-import {useTransition} from "react";
-import {ArticleCard} from "@/app/dashboard/components/ui/ArticleCard";
-import {postsPreviewQuery} from "@/app/dashboard/hooks/graphContentFetchers";
-import {useContentFetcher} from "@/app/_hooks/useContentFetcher";
 import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
-import {bookmarkPost} from "@/app/dashboard/actions/action";
 import {Log} from "@/app/_lib/utils";
+import {ArticleCard} from "@/app/dashboard/components/ui/Articles";
+import {useArticles} from "@/app/contexts/ArticlesContext";
+import posthog from "posthog-js";
 
 
 export function TrendingArticleParent() {
-    const {blogData, isLoading, error} = useContentFetcher({query: postsPreviewQuery, variables: null})
-    Log(blogData)
+    const {blogData, error, isLoading, handleArticleCardClick} = useArticles();
+    Log({blogData});
+
     const theresContent = blogData ? blogData.length > 0 : false;
 
     if (error) {
-        throw new Error(`ArticleParent.jsx: useContentFetcher() ${error}`)
+        posthog.captureException(`ArticleParent.jsx: useContentFetcher() ${error}`)
+        // throw new Error(`ArticleParent.jsx: useContentFetcher() ${error}`)
     }
 
     if (isLoading) {
@@ -27,16 +27,18 @@ export function TrendingArticleParent() {
 
     if (theresContent) {
         return (
-            <section className={`carousel flex overflow-x-auto scroll-smooth space-x-4 p-4`}>
+            <section className={`.carousel flex overflow-x-auto scroll-smooth space-x-4 p-4`}>
                 {
                     blogData && blogData.map(item => {
                             return <div key={item.title}>
                                 <ArticleCard
+                                    handleClick={handleArticleCardClick}
                                     content={{
                                         title: item.title,
                                         id: item.sys.id,
                                         publishDate: item.sys.publishedAt,
-                                        slug: item.titleSlug
+                                        slug: item.titleSlug,
+                                        insight: item.blogInsight.insight
                                     }}
                                     imagery={item?.headerImage}
                                 />

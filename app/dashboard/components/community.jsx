@@ -1,36 +1,10 @@
 "use client"
-import {useState} from "react";
-import {ArticleCard, SmallArticleCard} from "@/app/dashboard/components/ui/ArticleCard";
-import {useContentFetcher} from "@/app/_hooks/useContentFetcher";
-import {postsPreviewQuery} from "@/app/dashboard/hooks/graphContentFetchers";
-import {Log} from "@/app/_lib/utils";
-import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
-import {ModifiedReader} from "@/app/(reader)/read/_components/ModifiedReader";
+import {TapWrapper} from "@/app/_components/TapWrapper";
+import {ArticlesHQ} from "@/app/contexts/ArticlesContext";
 
-export function Community({accessToken}) {
-    const [read, setRead] = useState(false);
-    const [article, setArticle] = useState({});
+export function Community() {
     const tags = ['all', 'pregnancy', 'menopause', 'weight loss', 'something']
-    const {blogData, isLoading, error} = useContentFetcher({query: postsPreviewQuery, variables: null})
-    const theresContent = blogData ? blogData.length > 0 : false;
 
-    if (error) {
-        throw new Error(`ArticleParent.jsx: useContentFetcher() ${error}`)
-    }
-
-    if (isLoading) {
-        return <div>
-            <ContainerWrapper>
-                Loading...
-            </ContainerWrapper>
-        </div>
-    }
-
-    const handleArticleClick = (article) => {
-        Log({article});
-        setArticle(article);
-        setRead(true);
-    }
     return (
         <section className={"mt-1"}>
             {/*<section className={`flex gap-2 mx-6 my-5`}>*/}
@@ -55,34 +29,34 @@ export function Community({accessToken}) {
             {/*        </button>*/}
             {/*    ))}*/}
             {/*</section>*/}
-            <section className={"overflow-x-hidden h-[360px] mb-10 w-full"}>
+            <section className={"overflow-x-hidden overflow-y-clip h-[360px] mb-10 w-full"}>
                 <header className={`px-[26px] my-5 text-[#000] font-medium`}>
                     <h1 className={`text-xl`}>Trending Articles</h1>
                 </header>
-                {/*    Trending Articles  go here*/}
-                <section className={`carousel flex overflow-x-auto scroll-smooth space-x-4 p-4`}>
-                    {
-                        blogData && blogData.map(item => {
-                                return <div key={item.title}>
-                                    <ArticleCard
-                                        handleClick={handleArticleClick}
-                                        content={{
-                                            title: item.title,
-                                            id: item.sys.id,
-                                            publishDate: item.sys.publishedAt,
-                                            slug: item.titleSlug,
-                                            insight: item.blogInsight.insight
-                                        }}
-                                        imagery={item?.headerImage}
-                                    />
-                                </div>
-                            }
-                        )
-                    }
+
+                <ArticlesHQ.Trending/>
+                <ArticlesHQ.Reader/>
+            </section>
+            {/*Talktoyoursister*/}
+            <section className={'px-4'}>
+                <section
+                    className={"border-2 h-[108px] rounded-xl bg-radial-glow grid grid-cols-2 max-w-[400px] "}>
+                    <div className={"text-white pl-3 py-2 flex flex-col .items-center justify-center"}>
+                        <h3 className={"font-light text-sm"}>Talk To Your Sisters 💬</h3>
+                        <p>Real women. Real stories. Real support.</p>
+                    </div>
+                    <div className={"flex items-center justify-center"}>
+                        <TapWrapper customStyles={"flex items-center justify-center mt-3"}
+                                    link={"https://chat.whatsapp.com/IqHGnXGfxTSAadI946eLuq?mode=ems_copy_t"}>
+                            <div
+                                className={"bg-white rounded-3xl text-center p-2"}>Join Community
+                            </div>
+                        </TapWrapper>
+                    </div>
                 </section>
             </section>
 
-            <section className={"overflow-x-hidden h-[260px] w-full"}>
+            <section className={"overflow-x-hidden overflow-y-clip w-full"}>
                 <header className={`px-[26px] my-5 text-[#000] font-medium`}>
                     <h1 className={`text-xl`}>Articles</h1>
                     <section>
@@ -90,33 +64,10 @@ export function Community({accessToken}) {
                     </section>
                 </header>
                 <section className={`carousel flex overflow-x-auto scroll-smooth space-x-4 p-4`}>
-                    {/*<Insights accessToken={accessToken}/>*/}
-                    {/*<ArticleParent/>*/}
-                    <section className={`carousel flex flex-col gap-10 overflow-x-auto scroll-smooth .space-x-4 px-4`}>
-                        {
-                            blogData && blogData.map(item => {
-                                    return <div key={item.title}>
-                                        <SmallArticleCard
-                                            content={{
-                                                title: item.title,
-                                                id: item.sys.id,
-                                                publishDate: item.sys.publishedAt,
-                                                slug: item.titleSlug
-                                            }}
-                                            imagery={item?.headerImage}
-                                        />
-                                    </div>
-                                }
-                            )
-                        }
-                    </section>
+                    <ArticlesHQ.Articles/>
+                    <ArticlesHQ.Reader/>
                 </section>
             </section>
-
-            {
-                read && <ModifiedReader handleNotReading={() => setRead(false)} read={read} setRead={setRead}
-                                        article={article}/>
-            }
         </section>
     )
 }

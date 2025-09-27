@@ -6,11 +6,13 @@ module.exports = {
         "./_components/**/*.{js,ts,jsx,tsx,mdx}",
         "./app/**/*.{js,ts,jsx,tsx,mdx}",
     ],
+    // .bg-gradient-to-br from-[#015364] via-[#015364] to-[#0FCAD2]
     theme: {
         extend: {
             backgroundImage: {
                 'onboarding-bg': "url('/images/bg-1.png')",
                 'onbaording-bg-2': "url('/images/bg-2.png')",
+                'radial-glow': 'radial-gradient(circle at 80% 70%, #0FCAD2,  #015364, #015364)',
             },
             dropShadow: {
                 "custom-green": "0px 14px 6px #0F969C21",

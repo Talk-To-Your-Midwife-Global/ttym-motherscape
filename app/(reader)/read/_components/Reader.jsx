@@ -2,6 +2,7 @@
 import Image from "next/image";
 import {montserrat} from "@/app/_fonts";
 import {richTextToJsx} from "@madebyconnor/rich-text-to-jsx";
+import RichText from '@madebyconnor/rich-text-to-jsx';
 import {Log} from "@/app/_lib/utils";
 import {getRelativeTime} from "@/app/dashboard/lib/functions";
 
@@ -48,10 +49,11 @@ export function Reader({blogTitle, blogData}) {
             <div className="text-black mt-5">
                 {/*TODO: attempt to give more spacing to the paragraphs; modify the way the elements look*/}
                 {
-                    richTextToJsx(blogData ? blogData[0]?.mainParagraph.json : [])
+                    // richTextToJsx(blogData ? blogData[0]?.mainParagraph.json : [])
+                    <RichText richText={blogData[0]?.mainParagraph.json}/>
                 }
             </div>
-
+            
 
         </section>
     )

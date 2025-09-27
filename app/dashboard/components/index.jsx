@@ -53,6 +53,7 @@ import {ProfileImage} from "@/app/_components/ProfileImage";
 import {SideNav} from "@/app/dashboard/components/sideNav";
 import {TapWrapper} from "@/app/_components/TapWrapper";
 import {useCalendarView} from "@/app/contexts/showCalendarContext";
+import {ArticlesHQ} from "@/app/contexts/ArticlesContext";
 
 export function DashboardHeader(user) {
     Log('dashboard/components/index.jsx; DashboardHeader', {user});
@@ -446,38 +447,19 @@ export function ChatCard({key, info}) {
     )
 }
 
-export function InsightParent({head, desc, accessToken}) {
-    // const {insights, isLoadingInsights, insightError} = useInsightsInfo()
-    //
-    // if (isLoadingInsights) {
-    //     return <MiniLoader/>
-    // }
-    //
-    // if (insightError) {
-    //     return <section>
-    //         <p>Error loading insights {insightError.message}</p>
-    //     </section>
-    // }
-
+export function InsightParent({head, desc}) {
     return (
         <section className={"px-5 my-10 "}>
             <header>
                 <div className={"flex justify-between"}>
-                    <h2 className={"text-primaryText font-bold text-xl"}>{head} </h2> <Link href={"/"}>See
-                    More</Link> {/* TODO: use the right link*/}
+                    <h2 className={"text-primaryText font-bold text-xl"}>{head} </h2> <Link
+                    href={"/dashboard/community"}>See
+                    More</Link>
                 </div>
                 <p className={`${montserrat.className} text-subText`}>{desc}</p>
             </header>
-            <section className={'`carousel flex overflow-x-auto scroll-smooth space-x-4 py-4'}>
-                {/* TODO: Empty state ui and loop instead */}
-                {/*{*/}
-                {/*    insights &&*/}
-                {/*    insights?.data?.map(insight => (*/}
-                {/*        <InsightCard key={insight.id} insight={insight} accessToken={accessToken}/>*/}
-                {/*    ))*/}
-                {/*}*/}
-                <TrendingArticleParent/>
-            </section>
+            <ArticlesHQ.Articles/>
+            <ArticlesHQ.Reader/>
         </section>
     )
 }
@@ -669,7 +651,8 @@ export function FeelingsInsightsAndEvents({accessToken}) {
                     <p className={`${montserrat.className} text-subText`}>Personalized health tips based on logged
                         data</p>
                 </header>
-                <TrendingArticleParent/>
+                <ArticlesHQ.Trending/>
+                <ArticlesHQ.Reader/>
             </section>
             <Events accessToken={accessToken}/>
         </section>
