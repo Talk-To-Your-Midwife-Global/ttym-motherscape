@@ -5,6 +5,8 @@ import {richTextToJsx} from "@madebyconnor/rich-text-to-jsx";
 import RichText from '@madebyconnor/rich-text-to-jsx';
 import {Log} from "@/app/_lib/utils";
 import {getRelativeTime} from "@/app/dashboard/lib/functions";
+import {documentToReactComponents} from "@contentful/rich-text-react-renderer";
+import {OPTIONS} from "@/app/(data-protection)/_components/BeautifullyRich";
 
 export function Reader({blogTitle, blogData}) {
     Log({blogTitle});
@@ -13,6 +15,7 @@ export function Reader({blogTitle, blogData}) {
 
     const blogInsight = blogData ? blogData[0]?.blogInsight?.insight : undefined;
     const blogHeaderImage = blogData ? blogData[0]?.headerImage : undefined;
+    const blogAuthor = blogData ? blogData[0]?.author : undefined;
 
     Log(blogData ? richTextToJsx(blogData[0]?.mainParagraph.json) : undefined)
     Log(blogData ? blogData[0]?.mainParagraph.json : undefined)
@@ -24,13 +27,13 @@ export function Reader({blogTitle, blogData}) {
                 <div className=".my-10 flex gap-5 items-center">
                     <div>
                         {blogHeaderImage &&
-                            <Image src={blogHeaderImage?.url} alt={blogHeaderImage?.title}
+                            <Image src={blogAuthor?.profileImage.url} alt={blogAuthor?.name}
                                    width={50} height={50}
                                    className="rounded-full w-[50px] h-[50px]"/>
                         }
                     </div>
                     <div className={`${montserrat.className}`}>
-                        <p className={`${montserrat.className} font-medium`}>{blogData[0]?.author.name}</p>
+                        <p className={`${montserrat.className} font-medium`}>{blogAuthor.name}</p>
                         <p className="text-sm">{getRelativeTime(blogData[0]?.sys.publishedAt)}</p>
                     </div>
                 </div>
@@ -49,7 +52,8 @@ export function Reader({blogTitle, blogData}) {
             <div className="text-black mt-5">
                 {/*TODO: attempt to give more spacing to the paragraphs; modify the way the elements look*/}
                 {
-                    <RichText richText={blogData[0]?.mainParagraph.json}/>
+                    // <RichText richText={blogData[0]?.mainParagraph.json}/>
+                    documentToReactComponents(blogData[0]?.mainParagraph.json, OPTIONS)
                 }
             </div>
 
