@@ -1,16 +1,10 @@
 "use client"
-import Image from "next/image";
-import {motion} from "framer-motion";
-import {tapVariants} from "@/app/_lib/motions";
-import {Insights} from "@/app/dashboard/components/insights";
-import {ArticleCard} from "@/app/dashboard/components/ui/ArticleCard";
-import bookMarkIcon from "@/public/icons/bookmark-main.svg"
-import searchIcon from "@/public/icons/search-icon.svg"
-import {TrendingArticleParent} from "@/app/dashboard/components/ui/TrendingArticleParent";
-import {ArticleParent} from "@/app/dashboard/components/ui/ArticleParent";
+import {TapWrapper} from "@/app/_components/TapWrapper";
+import {ArticlesHQ} from "@/app/contexts/ArticlesContext";
 
-export function Community({accessToken}) {
+export function Community() {
     const tags = ['all', 'pregnancy', 'menopause', 'weight loss', 'something']
+
     return (
         <section className={"mt-1"}>
             {/*<section className={`flex gap-2 mx-6 my-5`}>*/}
@@ -35,15 +29,34 @@ export function Community({accessToken}) {
             {/*        </button>*/}
             {/*    ))}*/}
             {/*</section>*/}
-            <section className={"overflow-x-hidden h-[360px] mb-10 w-full"}>
+            <section className={"overflow-x-hidden overflow-y-clip h-[360px] mb-10 w-full"}>
                 <header className={`px-[26px] my-5 text-[#000] font-medium`}>
-                    <h1 className={`text-xl`}>Trending</h1>
+                    <h1 className={`text-xl`}>Trending Articles</h1>
                 </header>
-                {/*    Article Parent goes here*/}
-                <TrendingArticleParent/>
+
+                <ArticlesHQ.Trending/>
+                <ArticlesHQ.Reader/>
+            </section>
+            {/*Talktoyoursister*/}
+            <section className={'px-4'}>
+                <section
+                    className={"border-2 h-[108px] rounded-xl bg-radial-glow grid grid-cols-2 max-w-[400px] "}>
+                    <div className={"text-white pl-3 py-2 flex flex-col .items-center justify-center"}>
+                        <h3 className={"font-light text-sm"}>Talk To Your Sisters 💬</h3>
+                        <p>Real women. Real stories. Real support.</p>
+                    </div>
+                    <div className={"flex items-center justify-center"}>
+                        <TapWrapper customStyles={"flex items-center justify-center mt-3"}
+                                    link={"https://chat.whatsapp.com/IqHGnXGfxTSAadI946eLuq?mode=ems_copy_t"}>
+                            <div
+                                className={"bg-white rounded-3xl text-center p-2"}>Join Community
+                            </div>
+                        </TapWrapper>
+                    </div>
+                </section>
             </section>
 
-            <section className={"overflow-x-hidden h-[260px] w-full"}>
+            <section className={"overflow-x-hidden overflow-y-clip w-full"}>
                 <header className={`px-[26px] my-5 text-[#000] font-medium`}>
                     <h1 className={`text-xl`}>Articles</h1>
                     <section>
@@ -51,8 +64,8 @@ export function Community({accessToken}) {
                     </section>
                 </header>
                 <section className={`carousel flex overflow-x-auto scroll-smooth space-x-4 p-4`}>
-                    {/*<Insights accessToken={accessToken}/>*/}
-                    <ArticleParent/>
+                    <ArticlesHQ.Articles/>
+                    <ArticlesHQ.Reader/>
                 </section>
             </section>
         </section>
