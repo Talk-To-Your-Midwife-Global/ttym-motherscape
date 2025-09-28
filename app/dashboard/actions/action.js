@@ -26,6 +26,7 @@ export async function startCycle() {
 
 }
 
+
 export async function contentGqlFetcher(query, variables) {
     Log(JSON.stringify({query, variables}));
     const response = await fetch(`https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,

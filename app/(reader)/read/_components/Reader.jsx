@@ -49,11 +49,10 @@ export function Reader({blogTitle, blogData}) {
             <div className="text-black mt-5">
                 {/*TODO: attempt to give more spacing to the paragraphs; modify the way the elements look*/}
                 {
-                    // richTextToJsx(blogData ? blogData[0]?.mainParagraph.json : [])
                     <RichText richText={blogData[0]?.mainParagraph.json}/>
                 }
             </div>
-            
+
 
         </section>
     )

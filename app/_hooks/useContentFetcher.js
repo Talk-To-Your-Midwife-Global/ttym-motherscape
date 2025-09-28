@@ -19,6 +19,19 @@ export const useContentFetcher = ({query, variables}) => {
     }
 }
 
+export const usePrivacyPolicyFetcher = ({query, variables}) => {
+    const {
+        data,
+        isLoading,
+        error
+    } = useSWR([query, variables], ([query, variables]) => contentGqlFetcher(query, variables));
+
+    return {
+        data,
+        isLoading, error
+    }
+}
+
 export const useEventFetcher = ({query, variables}) => {
     const {
         data,
