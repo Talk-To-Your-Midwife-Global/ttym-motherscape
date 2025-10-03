@@ -22,23 +22,47 @@ const variants = {
 };
 
 
-export const TapWrapper = ({i, link, children, keys = 'randomness', customStyles = "", clickAction = undefined,}) => {
-    return (
-        <motion.li
-            variants={variants}
-            whileHover={{scale: 1.1}}
-            whileTap={{scale: 0.95}}
-            className={`li `}
-            key={keys}
-            onClick={(e) => {
-                e.preventDefault();
-                Log("click action tap wrapper", clickAction)
-                clickAction && clickAction()
-            }}
-        >
-            <Link key={keys} href={link || '#'} className={`list-none ${customStyles}`}>
-                {children}
-            </Link>
-        </motion.li>
-    );
+export const TapWrapper = ({
+                               link = undefined,
+                               children,
+                               keys = 'randomness',
+                               customStyles = "",
+                               clickAction = undefined,
+                           }) => {
+    if (link) {
+        return (
+            <motion.li
+                variants={variants}
+                whileHover={{scale: 1.1}}
+                whileTap={{scale: 0.95}}
+                className={`li `}
+                key={keys}
+            >
+                <Link key={keys} href={link} className={`list-none ${customStyles}`}>
+                    {children}
+                </Link>
+            </motion.li>
+        );
+    } else {
+        return (
+            <motion.li
+                variants={variants}
+                whileHover={{scale: 1.1}}
+                whileTap={{scale: 0.95}}
+                className={`li `}
+                key={keys}
+                onClick={(e, vars) => {
+                    e.preventDefault();
+                    Log("click action tap wrapper", clickAction, {vars})
+                    clickAction && clickAction(vars)
+                }}
+            >
+                <div key={keys} className={`list-none ${customStyles}`}>
+                    {children}
+                </div>
+            </motion.li>
+        )
+    }
+
+
 };

@@ -11,6 +11,7 @@ import "react-day-picker/style.css";
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import {Log} from "@/app/_lib/utils";
+import Link from "next/link";
 
 export function SignUpForm({state, action, isPending, resetError, fieldErrors}) {
     const [hidePassword, setHidePassword] = useState(true);
@@ -242,7 +243,10 @@ export function SignUpForm({state, action, isPending, resetError, fieldErrors}) 
                 </div>
 
                 <p className="text-[10px] text-subText font-medium">By checking the box to create a TTYM Global account,
-                    you agree to the Terms and Conditions and Privacy Policy</p>
+                    you agree to the <Link className={"underline text-primaryColor"}
+                                           href={"/privacy-policy"}>Terms and Conditions </Link> and <Link
+                        className={"underline text-primaryColor"}
+                        href={"/privacy-policy"}>Privacy Policy </Link></p>
             </section>
 
             <div className="flex flex-col justify-center items-center">

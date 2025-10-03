@@ -1,69 +1,63 @@
 "use client"
-import {getOnePostQuery} from "@/app/dashboard/hooks/graphContentFetchers";
-import {useContentFetcher} from "@/app/_hooks/useContentFetcher";
-import {ReaderNav} from "@/app/_components/ReaderNav";
 import Image from "next/image";
 import {montserrat} from "@/app/_fonts";
-import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
 import {richTextToJsx} from "@madebyconnor/rich-text-to-jsx";
-import {convertDashDelimitedToSpacedString} from "@/app/_lib/functions";
-import {formatDistanceToNow} from "date-fns";
-import {Log} from "@/app/_lib/utils"; // todo: use for date
+import RichText from '@madebyconnor/rich-text-to-jsx';
+import {Log} from "@/app/_lib/utils";
+import {getRelativeTime} from "@/app/dashboard/lib/functions";
+import {documentToReactComponents} from "@contentful/rich-text-react-renderer";
+import {OPTIONS} from "@/app/(data-protection)/_components/BeautifullyRich";
 
-export function Reader({blogTitle}) {
+export function Reader({blogTitle, blogData}) {
     Log({blogTitle});
-    const {blogData} = useContentFetcher(getOnePostQuery(blogTitle));
     Log({blogData});
     Log(blogData && blogData[0]?.blogInsight?.insight)
 
     const blogInsight = blogData ? blogData[0]?.blogInsight?.insight : undefined;
     const blogHeaderImage = blogData ? blogData[0]?.headerImage : undefined;
+    const blogAuthor = blogData ? blogData[0]?.author : undefined;
 
     Log(blogData ? richTextToJsx(blogData[0]?.mainParagraph.json) : undefined)
     Log(blogData ? blogData[0]?.mainParagraph.json : undefined)
 
     return (
         <section>
-            <nav>
-                <ContainerWrapper>
-                    <ReaderNav/>
-                </ContainerWrapper>
-            </nav>
-            <ContainerWrapper>
-                <section className="text-black">
-                    <p className={`${montserrat.className} capitalize text-gray-500`}>{convertDashDelimitedToSpacedString(blogTitle)}</p>
-                    <h2 className="text-xl font-bold wrap mt-5 ">{blogInsight ? blogInsight : ''}</h2>
-                    {/*    Author stuff */}
-                    <div className="my-10 flex gap-5 items-center">
-                        <div>
-                            {blogHeaderImage &&
-                                <Image src={blogHeaderImage?.url} alt={blogHeaderImage?.title}
-                                       width={50} height={50}
-                                       className="rounded-full"/>
-                            }
-                        </div>
-                        <div className={`${montserrat.className}`}>
-                            <p className={`${montserrat.className} font-medium`}>Trudy Akorita</p>
-                            <p className="text-sm">Today at 11:37 am </p>
-                        </div>
-                    </div>
-
-                    <div className="my-4 h-[300px] relative">
+            <section className="text-black">
+                {/*    Author stuff */}
+                <div className=".my-10 flex gap-5 items-center">
+                    <div>
                         {blogHeaderImage &&
-                            <Image src={blogHeaderImage?.url} alt={blogHeaderImage?.title}
-                                   fill={true}
-                                   className="w-full rounded-md"/>
+                            <Image src={blogAuthor?.profileImage.url} alt={blogAuthor?.name}
+                                   width={50} height={50}
+                                   className="rounded-full w-[50px] h-[50px]"/>
                         }
                     </div>
-                </section>
-                <div className="text-black">
-                    {/*TODO: attempt to give more spacing to the paragraphs; modify the way the elements look*/}
-                    {
-                        richTextToJsx(blogData ? blogData[0]?.mainParagraph.json : [])
-                    }
+                    <div className={`${montserrat.className}`}>
+                        <p className={`${montserrat.className} font-medium`}>{blogAuthor.name}</p>
+                        <p className="text-sm">{getRelativeTime(blogData[0]?.sys.publishedAt)}</p>
+                    </div>
                 </div>
 
-            </ContainerWrapper>
+                <div className="my-4 h-[300px] relative">
+                    {blogHeaderImage &&
+                        <Image src={blogHeaderImage?.url} alt={blogHeaderImage?.title}
+                               fill={true}
+                               className="w-full rounded-3xl"/>
+                    }
+                </div>
+                <header>
+                    <h2 className={"text-2xl text-black font-semibold capitalize"}>{blogData[0]?.title}</h2>
+                </header>
+            </section>
+            <div className="text-black mt-5">
+                {/*TODO: attempt to give more spacing to the paragraphs; modify the way the elements look*/}
+                {
+                    // <RichText richText={blogData[0]?.mainParagraph.json}/>
+                    documentToReactComponents(blogData[0]?.mainParagraph.json, OPTIONS)
+                }
+            </div>
+
+
         </section>
     )
 }
