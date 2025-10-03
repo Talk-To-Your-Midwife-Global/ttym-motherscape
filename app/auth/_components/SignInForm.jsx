@@ -43,7 +43,7 @@ export function SignInForm({state, action, isPending, resetError}) {
     }
 
     // key submit controller
-    const callAction = (e) => {
+    const submitAction = (e) => {
         Log('SigninForm', e.code)
         if (e.code === "ENTER" && !disableBtn) {
             formRef.submit();
@@ -72,11 +72,11 @@ export function SignInForm({state, action, isPending, resetError}) {
 
     useEffect(() => {
         if (window) {
-            window.addEventListener('keydown', (e) => callAction(e))
+            window.addEventListener('keydown', (e) => submitAction(e))
         }
 
         () => {
-            window.removeEventListener('keydown', (e) => callAction(e));
+            window.removeEventListener('keydown', (e) => submitAction(e));
         }
     }, []);
     return (
