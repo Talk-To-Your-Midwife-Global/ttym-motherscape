@@ -594,6 +594,11 @@ export function FeelingsInsightsAndEvents({accessToken}) {
         setFeelingRecorded(true);
     }
 
+    const handleClose = () => {
+        setFeelingRecorded(false);
+        setFeeling({feeling: '', number: 0})
+    }
+
     const getRespectiveImage = (feelingName) => {
         const respectiveFeeling = faces.filter((face) => face.desc === feelingName);
         return respectiveFeeling[0].img;
@@ -629,12 +634,12 @@ export function FeelingsInsightsAndEvents({accessToken}) {
                             <Image className={'text-white'} src={getRespectiveImage(feeling.feeling)}
                                    alt={"face"}/>
                         </div>
-                        <span className="iconify lucide--x"></span>
+                        <span onClick={handleClose} className="iconify lucide--x"></span>
                     </heading>
                     <p className={`font-extralight text-sm my-4`}>
                         You are feeling <span>{feeling.feeling}</span> with <b>{feeling.number} others</b>
                     </p>
-                    <div className="flex mt-3 .items-end justify-end mt-5">
+                    <div className="flex justify-end mt-5">
                         <Link href="/dashboard/community">
                             <span className="text-sm text-left underline">Learn more about your emotions</span>
                         </Link>

@@ -1,5 +1,5 @@
 "use client"
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Button, IconButton} from "@/app/_components";
 // import Image from "next/image";
 // import facebook from "@/public/images/facebook.svg";
@@ -86,6 +86,19 @@ export function SignUpForm({state, action, isPending, resetError, fieldErrors}) 
             setEnableButton(false)
         }
     }
+
+    const submitAction = (e) => {
+        Log('SignupForm', e.code)
+        if (e.code === "ENTER" && !disableBtn) {
+            formRef.submit();
+        }
+    }
+
+    useEffect(() => {
+        if (window) {
+            window.addEventListener('keydown', (e) => submitAction(e))
+        }
+    }, []);
 
     return (
         <form action={passCorrect ? action : "#"} className="px-[30px] flex flex-col gap-5">
@@ -197,9 +210,9 @@ export function SignUpForm({state, action, isPending, resetError, fieldErrors}) 
                     <input value={pass} onChange={(e) => handlePassChange(e)} type={hidePassword ? "password" : "text"}
                            name="password" id="password" placeholder="••••••••••••••••"
                            className="flex-1 outline-none bg-transparent text-mainText"/>
-                    <button onClick={(e) => handlePasswordView(e)} className="text-mainText flex items-center gap-1">
+                    <span onClick={(e) => handlePasswordView(e)} className="text-mainText flex items-center gap-1">
                         <span className="iconify lucide--eye"></span>
-                    </button>
+                    </span>
                 </div>
                 {fieldErrors?.password && (
                     <div className="text-red-500 text-sm">
@@ -224,9 +237,9 @@ export function SignUpForm({state, action, isPending, resetError, fieldErrors}) 
                            id="confirm-password"
                            placeholder="••••••••••••••••" className="flex-1 outline-none bg-transparent text-mainText"
                            onChange={(e) => handlePassCorrect(e)}/>
-                    <button onClick={(e) => handlePasswordView(e)} className="text-mainText flex items-center gap-1">
+                    <span onClick={(e) => handlePasswordView(e)} className="text-mainText flex items-center gap-1">
                         <span className="iconify lucide--eye"></span>
-                    </button>
+                    </span>
                 </div>
                 {passErr && <p className="text-red-500 text-sm"> {passErr} </p>}
             </div>
