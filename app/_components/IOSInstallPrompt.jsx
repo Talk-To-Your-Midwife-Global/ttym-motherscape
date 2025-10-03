@@ -3,11 +3,22 @@ import {Drawer} from "vaul";
 import Image from "next/image";
 import ObaaLogo from "@/public/images/obaa-circular-logo.png";
 import {useEffect, useState} from "react";
-import {Log} from "@/app/_lib/utils";
+import {generateFibonacci, Log} from "@/app/_lib/utils";
 
 export function IOSInstallPrompt() {
     const [showInstallMsg, setShowInstallMsg] = useState(false);
+
+    const shouldShow = () => {
+        const nums = JSON.parse(localStorage.getItem('sequence'));
+        const counter = JSON.parse(localStorage.getItem('counter')) || 1;
+
+        Log("shouldShow IOSInstallPrompt", {counter, nums});
+        localStorage.setItem('counter', JSON.stringify(counter + 1));
+        return !!nums[counter];
+    }
+
     useEffect(() => {
+        localStorage.setItem('sequence', JSON.stringify(generateFibonacci()));
         const isIos = () => {
             const userAgent = window.navigator.userAgent.toLowerCase();
             Log("IOSInstallPrompt", {userAgent})
@@ -21,7 +32,9 @@ export function IOSInstallPrompt() {
 
         // Checks if should display install popup notification:
         if (isIos() && !isInStandaloneMode()) {
-            setShowInstallMsg(true);
+            // const count = JSON.parse(localStorage.getItem('counter'))
+            // localStorage.setItem('counter', JSON.stringify(count + 1))
+            setShowInstallMsg(shouldShow());
         }
     }, [])
     return (
