@@ -17,6 +17,7 @@ export function SignInForm({state, action, isPending, resetError}) {
     const [disableBtn, setDisableBtn] = useState(true);
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
+    const formRef = useRef(null);
 
 
     const handlePasswordView = (event) => {
@@ -40,6 +41,15 @@ export function SignInForm({state, action, isPending, resetError}) {
 
         Log("SignInForm.jsx: handleInputChange(): ", {inputState, isValidCredentials})
     }
+
+    // key submit controller
+    const callAction = (e) => {
+        Log('SigninForm', e.code)
+        if (e.code === "ENTER" && !disableBtn) {
+            formRef.submit();
+        }
+    }
+
     useEffect(() => {
         // autocomplete event handler for Android
         let emailStyle = window.getComputedStyle(emailRef.current);
@@ -59,8 +69,18 @@ export function SignInForm({state, action, isPending, resetError}) {
             resetError();
         }
     }, [inputState])
+
+    useEffect(() => {
+        if (window) {
+            window.addEventListener('keydown', (e) => callAction(e))
+        }
+
+        () => {
+            window.removeEventListener('keydown', (e) => callAction(e));
+        }
+    }, []);
     return (
-        <form action={action} className="px-[30px] flex flex-col gap-5">
+        <form ref={formRef} action={action} className="px-[30px] flex flex-col gap-5">
             <div>
                 <label htmlFor="email" className="font-medium text-mainText">Email</label>
                 <div
@@ -77,10 +97,10 @@ export function SignInForm({state, action, isPending, resetError}) {
             <div>
                 <div className="flex justify-between items-center">
                     <label htmlFor="password" className="font-medium text-mainText">Password</label>
-                    <button onClick={(e) => handlePasswordView(e)} className="text-mainText flex items-center gap-1">
+                    <span onClick={(e) => handlePasswordView(e)} className="text-mainText flex items-center gap-1">
                         <span className="iconify lucide--eye"></span>
                         <span className="text-sm">show</span>
-                    </button>
+                    </span>
                 </div>
                 <div
                     className="bg-white border-2 w-full h-[42px] flex gap-2 items-center rounded-full pl-[15px] pr-[5px]">
