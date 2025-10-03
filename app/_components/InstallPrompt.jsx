@@ -3,22 +3,34 @@ import {useEffect, useState} from "react";
 import Image from "next/image";
 import {Drawer} from "vaul";
 import ObaaLogo from "@/public/images/obaa-circular-logo.png";
+import {generateFibonacci, Log} from "@/app/_lib/utils";
 
 export function InstallPrompt() {
     const [installPrompt, setInstallPrompt] = useState(null);
     const [isInstallable, setIsInstallable] = useState(false);
 
+    const shouldShow = () => {
+        const nums = JSON.parse(localStorage.getItem('sequence'));
+        const counter = JSON.parse(localStorage.getItem('counter')) || 1;
+
+        Log("shouldShow INstallPrompt", {counter, nums});
+        localStorage.setItem('counter', JSON.stringify(counter + 1));
+        return !!nums[counter];
+    }
+
     useEffect(() => {
         const handleBeforeInstallPrompt = (e) => {
             e.preventDefault();
             setInstallPrompt(e)
-            console.log('Before Install prompt fired!')
-            setIsInstallable(true); // change this to false; to prevent showing and make it a todos
+            const shShow = shouldShow()
+            Log('Before Install prompt fired!', {shouldShow: shShow})
+            setIsInstallable(shShow); // change this to false; to prevent showing and make it a todos
         }
         // check if the user is opening from the PWA
         const openedFromPWA = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
         if (!openedFromPWA) {
             window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+            localStorage.setItem('sequence', JSON.stringify(generateFibonacci()));
         }
 
         return () => {
