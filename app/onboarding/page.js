@@ -48,7 +48,8 @@ export default function Page() {
                 <LongPersonaCard header={'Track my pregnancy'}
                                  desc={'Monitor your pregnancy week by week with personalized tips and insights.'}
                                  bgColor={'from-[#F4AE94] to-[#EB6737]'}
-                                 actions={cardActions}>
+                    // actions={cardActions}
+                >
                     <Image src={pregnantImageNoBg} width={157} height={100} alt="pregnant woman"/>
                 </LongPersonaCard>
 
