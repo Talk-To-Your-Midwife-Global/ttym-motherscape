@@ -48,14 +48,14 @@ export default function Page() {
                                  bgColor={'from-[#F4AE94] to-[#EB6737]'}
                     // actions={cardActions}
                 >
-                    <Image src={pregnantImageNoBg} width={157} height={100} alt="pregnant woman"/>
+                    <Image src={pregnantImageNoBg} width={157} height={100} alt="pregnant woman" priority={true}/>
                 </LongPersonaCard>
 
                 <LongPersonaCard header={'Track my period'}
                                  desc={'Keep a detailed record of your menstrual cycle and symptoms.'}
                                  bgColor={'from-[#D9AEFF] to-[#BC6EFF]'}
                                  actions={cardActions}>
-                    <Image src={trackerImageNoBg} width={157} height={100} alt="pregnant woman"/>
+                    <Image src={trackerImageNoBg} width={157} height={100} alt="pregnant woman" priority={true}/>
                 </LongPersonaCard>
             </section>
             <section className="fixed  bottom-10 w-full flex justify-center">

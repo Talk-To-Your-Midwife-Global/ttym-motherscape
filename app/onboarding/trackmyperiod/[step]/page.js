@@ -39,7 +39,7 @@ export default async function Page({params}) {
                     userType="trackmyperiod"
                     title={"Your Personalized Tracker"}
                     description={"Your insights help us understand your unique cycle better"}>
-                    <Image src={pinkCalendar} className="" alt="pink calendar"/>
+                    <Image src={pinkCalendar} className="" alt="pink calendar" priority={true}/>
                 </FlashTwo>
         },
         '5': {
@@ -57,7 +57,7 @@ export default async function Page({params}) {
                     userType="trackmyperiod"
                     title={"A Community to Rely on"}
                     description={"A community forum to share your journey or listen to success stories"}>
-                    <Image src={cuate} className="" alt="three women talking"/>
+                    <Image src={cuate} className="" alt="three women talking" priority={true}/>
                 </FlashThree>
         },
     };
