@@ -11,7 +11,7 @@
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^16.1.5",
     "@contentful/rich-text-types": "^17.2.4",
-    "@iconify-json/lucide": "^1.2.57",
+    "@iconify-json/lucide": "^1.2.68",
     "@iconify-json/material-symbols": "^1.2.34",
     "@iconify-json/material-symbols-light": "^1.2.29",
     "@iconify-json/mdi": "^1.2.3",
