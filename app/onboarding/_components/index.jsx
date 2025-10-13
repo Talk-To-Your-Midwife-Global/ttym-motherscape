@@ -30,7 +30,7 @@ export function LongPersonaCard({
         <section tabIndex={0} onClick={() => {
             actions.enableButton(removeSpaces(header.toLowerCase()))
         }}
-                 className={cn(`w-full max-w-[380px] h-[140px] rounded-xl p-4 flex gap-2 shadow-md space-between transition .delay-150 duration-300 ease-in-out focus:border-2 focus:border-primaryColor bg-gradient-to-br focus:from-[#0F9C84] focus:to-[#0F9C84] border-2`, !actions && "grayscale py-2 px-4 ")}>
+                 className={cn(`w-full max-w-[380px] h-[140px] rounded-xl p-4 flex gap-2 shadow-md space-between transition .delay-150 duration-300 ease-in-out`, actions && `focus:border-2 focus:border-primaryColor bg-gradient-to-br focus:from-[#0F9C84] focus:to-[#0F9C84] border-2`, !actions && "grayscale py-2 px-4 ")}>
             <div className="text-black w-[214px] relative">
                 {
                     !actions &&
