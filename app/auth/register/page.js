@@ -40,7 +40,7 @@ export default function Page() {
             router.replace(state.route);
         } else {
             Log('Error routing stage', state?.serverError, state.fieldErrors)
-            posthog.captureException(`register/page.js: useEffect: signup error ${state}`);
+            posthog.captureException(`register/page.js: useEffect: signup error ${JSON.stringify(state)}`);
             setError(state?.serverError)
             setFieldErrors(state?.fieldErrors)
 
