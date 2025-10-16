@@ -1,6 +1,6 @@
 "use client"
 
-import {useActionState, useEffect, useState, useTransition, useRef} from "react";
+import {useEffect, useState, useTransition, useRef} from "react";
 import {changePassword} from "@/app/_actions/auth";
 import {SettingsNav} from "@/app/(settings)/_components/SettingsNav";
 import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
@@ -24,6 +24,10 @@ export function ChangePasswordForm({specialKey}) {
     const passwordRef = useRef(null)
     const confirmPasswordRef = useRef(null);
 
+    const resetError = () => {
+        setPassErr('');
+        setErrors([]);
+    }
     const handlePasswordChange = () => {
         startTransition(async () => {
             if (!(pass === passConfirm)) {
