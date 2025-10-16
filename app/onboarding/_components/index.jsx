@@ -18,15 +18,28 @@ export function OnboardNav({url, icon = "lucide--chevron-left", last = false}) {
     )
 }
 
-export function LongPersonaCard({header, desc, actions, bgColor = undefined, illustration = undefined, children}) {
+export function LongPersonaCard({
+                                    header,
+                                    desc,
+                                    actions = undefined,
+                                    bgColor = undefined,
+                                    illustration = undefined,
+                                    children
+                                }) {
     return (
         <section tabIndex={0} onClick={() => {
             actions.enableButton(removeSpaces(header.toLowerCase()))
         }}
-                 className={cn(`w-full max-w-[380px] h-[140px] rounded-xl p-4 flex gap-2 shadow-md space-between transition .delay-150 duration-300 ease-in-out focus:border-2 focus:border-primaryColor bg-gradient-to-br focus:from-[#0F9C84] focus:to-[#0F9C84] border-2`)}>
-            <div className="text-black w-[214px]">
+                 className={cn(`w-full max-w-[380px] h-[140px] rounded-xl p-4 flex gap-2 shadow-md space-between transition .delay-150 duration-300 ease-in-out`, actions && `focus:border-2 focus:border-primaryColor bg-gradient-to-br focus:from-[#0F9C84] focus:to-[#0F9C84] border-2`, !actions && "grayscale py-2 px-4 ")}>
+            <div className="text-black w-[214px] relative">
+                {
+                    !actions &&
+                    <div className={"absolute. top-0 border shadow-md rounded-lg px-2 mb-2 w-fit text-primaryText"}>
+                        <p>Coming soon</p>
+                    </div>
+                }
                 <h2 className={'text-[16px] font-medium'}>{header}</h2>
-                <p className={'text-[14px] '}>{desc}</p>
+                <p className={'text-[14px] line-clamp-3'}>{desc}</p>
             </div>
             <div>
                 {children}

@@ -15,6 +15,7 @@ export default function Page() {
     const [error, setError] = useState([]);
     const router = useRouter()
     Log("sigin/page.js; on ", {isPending})
+
     const getUserRouteFromLocalStorage = () => {
         return localStorage.getItem('userType')
     }

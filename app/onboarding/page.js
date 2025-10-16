@@ -9,23 +9,21 @@ import {useState} from "react"
 import {OnboardHeading} from "@/app/onboarding/_components/OnboardHeading";
 import {useTransition} from "react";
 import {useRouter} from "next/navigation";
+import {addToWaitlist} from "@/app/_actions/waitlist";
 
 export default function Page() {
     const [isPending, startTransition] = useTransition();
-    const router = useRouter();
-    const [enable, setEnable] = useState(true)
+    const [enable, setEnable] = useState(false)
     const [routeName, setRouteName] = useState('');
-
-    const handleButtonEnabler = (userType) => {
-        setEnable(true);
-        enableUserType(userType)
-        setEnable(false)
-    }
 
     const enableUserType = (userType) => {
         setRouteName(userType)
         localStorage.setItem('userType', userType)
-        storeUserType(userType);
+
+        startTransition(async () => {
+            await storeUserType(userType);
+            setEnable(true);
+        })
     }
 
     const handleSubmit = () => {
@@ -37,7 +35,7 @@ export default function Page() {
 
     const cardActions = {
         onClick: storeUserType,
-        enableButton: handleButtonEnabler
+        enableButton: enableUserType
     }
 
     return (
@@ -48,22 +46,23 @@ export default function Page() {
                 <LongPersonaCard header={'Track my pregnancy'}
                                  desc={'Monitor your pregnancy week by week with personalized tips and insights.'}
                                  bgColor={'from-[#F4AE94] to-[#EB6737]'}
-                                 actions={cardActions}>
-                    <Image src={pregnantImageNoBg} width={157} height={100} alt="pregnant woman"/>
+                    // actions={cardActions}
+                >
+                    <Image src={pregnantImageNoBg} width={157} height={100} alt="pregnant woman" priority={true}/>
                 </LongPersonaCard>
 
                 <LongPersonaCard header={'Track my period'}
                                  desc={'Keep a detailed record of your menstrual cycle and symptoms.'}
                                  bgColor={'from-[#D9AEFF] to-[#BC6EFF]'}
                                  actions={cardActions}>
-                    <Image src={trackerImageNoBg} width={157} height={100} alt="pregnant woman"/>
+                    <Image src={trackerImageNoBg} width={157} height={100} alt="pregnant woman" priority={true}/>
                 </LongPersonaCard>
             </section>
             <section className="fixed  bottom-10 w-full flex justify-center">
                 <IconContinuousButton text="Continue" icon="iconify lucide--arrow-right"
                                       href={`/onboarding/${routeName}/1`}
                                       onClick={handleSubmit}
-                                      disabled={enable}/>
+                                      disabled={!enable}/>
             </section>
         </section>
     )

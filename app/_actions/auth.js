@@ -336,11 +336,11 @@ export async function requestEmailVerification(email) {
 }
 
 
-export async function initiatePasswordChange(state, formData) {
+export async function initiatePasswordChange(formData) {
     const validatedField = ForgotPasswordFormSchema.safeParse({
-        email: formData.get('email'),
+        email: formData.email,
     })
-    Log("initiatePasswordChange", {state});
+    Log("initiatePasswordChange", {formData});
     if (!validatedField.success) {
         return {
             fieldErrors: validatedField.error.flatten().fieldErrors,
@@ -348,42 +348,52 @@ export async function initiatePasswordChange(state, formData) {
             success: false
         }
     }
-    const res = await fetch(`${HOSTNAME_URI}/auth/reset-password/request/`, {
-        method: 'POST',
-        headers: {
-            'X-Client-Origin': CURRENTROUTE,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({email: formData.get('email')})
-    })
-    const response = await res.json()
 
-    if (!res.ok) {
-        Log(res.statusText);
-        Log(response);
+    try {
+        const res = await fetch(`${HOSTNAME_URI}/auth/reset-password/request/`, {
+            method: 'POST',
+            headers: {
+                'X-Client-Origin': CURRENTROUTE,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({email: formData.email})
+        })
+        const response = await res.json()
+
+        if (!res.ok) {
+            Log(res.statusText);
+            Log(response);
+            return {
+                fieldErrors: false,
+                serverError: true,
+                success: false
+            }
+        }
+        return {
+            fieldErrors: false,
+            serverError: false,
+            success: true
+        }
+    } catch (err) {
+        posthog.captureException(`auth.js: initiatePasswordChange() catch block: ${JSON.stringify(err)}`);
         return {
             fieldErrors: false,
             serverError: true,
             success: false
         }
     }
-    return {
-        fieldErrors: false,
-        serverError: false,
-        success: true
-    }
+
 }
 
 
 /**
  * Validates forgotPassword email form
- * @param state
  * @param formData
  * @returns {Promise<{success: boolean}|{errors: {email?: string[]}}>}
  */
-export async function changePassword(state, formData) {
+export async function changePassword(formData) {
     const validateField = PasswordResetSchema.safeParse({
-        password: formData.get('password'),
+        password: formData.password,
     })
 
     if (!validateField.success) {
@@ -393,32 +403,42 @@ export async function changePassword(state, formData) {
         }
     }
 
-    Log({HOSTNAME_URI, validateField, key: formData.get('key')})
+    Log({HOSTNAME_URI, validateField, key: formData.key})
     const requestBody = JSON.stringify({
-        password: formData.get('password'),
-        token: putColonBack(formData.get('key'))
+        password: formData.password,
+        token: putColonBack(formData.key)
     })
 
-    Log(requestBody);
-    const res = await fetch(`${HOSTNAME_URI}/auth/reset-password/confirm/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: requestBody
-    })
+    Log({requestBody});
+    try {
+        const res = await fetch(`${HOSTNAME_URI}/auth/reset-password/confirm/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: requestBody
+        })
 
-    if (!res.ok) {
-        Log({res});
-        Log(res.statusText);
-        return {
-            success: false
+        if (!res.ok) {
+            const data = await res.json();
+            Log({res, data});
+            Log(res.statusText);
+            return {
+                fieldErrors: false,
+                success: false,
+                serverError: true
+            }
         }
-    }
-    const response = await res.json();
-    Log(response);
+        const response = await res.json();
+        Log(response);
 
-    return {
-        success: true
+        return {
+            fieldErrors: false,
+            serverError: false,
+            success: true
+        }
+    } catch (err) {
+        Log({err})
+        posthog.captureException(`auth.js: changePassword(); catch block error ${JSON.stringify(err)}`);
     }
 }
