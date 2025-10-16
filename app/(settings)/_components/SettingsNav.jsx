@@ -1,5 +1,5 @@
+"use client"
 import Link from "next/link";
-import Image from "next/image";
 import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
 import dullBell from "@/public/icons/notification.svg"
 import activeBell from "@/public/icons/notification-active.svg"
