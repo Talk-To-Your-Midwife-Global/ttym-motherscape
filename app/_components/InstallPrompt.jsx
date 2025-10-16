@@ -4,6 +4,7 @@ import Image from "next/image";
 import {Drawer} from "vaul";
 import ObaaLogo from "@/public/images/obaa-circular-logo.png";
 import {generateFibonacci, Log} from "@/app/_lib/utils";
+import posthog from "posthog-js";
 
 export function InstallPrompt() {
     const [installPrompt, setInstallPrompt] = useState(null);
@@ -43,6 +44,8 @@ export function InstallPrompt() {
 
     const handleInstallClick = () => {
         if (!installPrompt) return
+
+        posthog.capture('Installed app');
 
         const result = installPrompt.prompt();
         const {outcome} = result.userChoice;
