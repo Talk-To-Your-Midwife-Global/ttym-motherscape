@@ -414,6 +414,7 @@ export async function changePassword(formData) {
         const res = await fetch(`${HOSTNAME_URI}/auth/reset-password/confirm/`, {
             method: 'POST',
             headers: {
+                'X-Client-Origin': CURRENTROUTE,
                 'Content-Type': 'application/json',
             },
             body: requestBody
