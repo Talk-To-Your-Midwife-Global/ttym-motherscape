@@ -363,6 +363,9 @@ export async function initiatePasswordChange(formData) {
         if (!res.ok) {
             Log(res.statusText);
             Log(response);
+            posthog.captureException(`auth.js: initiatePasswordChange() unsuccessful res: ${JSON.stringify(response)}`, {
+                errorMessage: JSON.stringify(response)
+            });
             return {
                 fieldErrors: false,
                 serverError: true,
