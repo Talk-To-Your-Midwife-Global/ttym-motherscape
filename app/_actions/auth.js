@@ -369,7 +369,8 @@ export async function initiatePasswordChange(formData) {
             return {
                 fieldErrors: false,
                 serverError: true,
-                success: false
+                success: false,
+                message: response.message
             }
         }
         return {

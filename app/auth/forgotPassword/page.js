@@ -31,7 +31,7 @@ export default function Page() {
             }
 
             if (initiateChange.serverError) {
-                toast.error('An unexpected error occurred on our end. Try again later!')
+                initiateChange?.message ? toast.error(initiateChange.message) : toast.error('An unexpected error occurred on our end. Try again later!')
             }
             setState(initiateChange)
         })
