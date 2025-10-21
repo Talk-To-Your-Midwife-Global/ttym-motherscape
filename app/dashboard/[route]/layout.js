@@ -3,6 +3,7 @@ import {PageFadeAnimator} from "@/app/_components";
 import {Log} from "@/app/_lib/utils";
 import {getLocalCookies} from "@/app/_lib/getCookies";
 import {DashboardBottomNav} from "@/app/dashboard/components/DashboardBottomNav";
+import {OfflineBanner} from "@/app/_components/OfflineBanner";
 
 export default async function DashboardRouteLayout({children, params}) {
     const paramName = await params;
@@ -18,6 +19,7 @@ export default async function DashboardRouteLayout({children, params}) {
 
     return (
         <section>
+            <OfflineBanner/>
             <header className={"pl-4"}>
                 <DashboardNav text={shouldName[paramName.route]} accessToken={access_token}/>
             </header>
