@@ -3,7 +3,7 @@
 import {useEffect, useState} from "react";
 
 export function OfflineBanner() {
-    const [isOnline, setIsOnline] = useState(false);
+    const [isOnline, setIsOnline] = useState(true);
     useEffect(() => {
         if (window) {
             console.log("isOnline", navigator.onLine);
