@@ -7,7 +7,7 @@ import {CalendarIcon, ChatIcon, CommunityIcon, HomeIcon, LogsIcon} from "@/app/d
 export function DashboardBottomNav({paramName}) {
     return (
         <nav
-            className={"bg-white w-screen fixed bottom-0 pt-1 h-[80px] flex justify-evenly drop-shadow-custom-black"}>
+            className={"bg-white w-screen fixed bottom-0 pt-1 h-[100px] flex justify-evenly drop-shadow-custom-black"}>
             <TapWrapper link={"/dashboard/me"}>
                 <NavItem text={"me"} active={paramName.route === "me"}><HomeIcon/></NavItem>
             </TapWrapper>

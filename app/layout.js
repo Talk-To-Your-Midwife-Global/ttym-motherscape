@@ -9,6 +9,7 @@ const APP_DESCRIPTION = "Designed to help women manage their reproductive health
 export const metadata = {
     title: APP_NAME,
     description: APP_DESCRIPTION,
+    viewport: "width=device-width, initial-scale=1.0, viewport-fit=cover",
     manifest: "/manifest.json",
 
     appleWebApp: {
