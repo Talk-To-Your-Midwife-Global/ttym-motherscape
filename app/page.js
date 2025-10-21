@@ -9,6 +9,7 @@ export default function Page() {
     const router = useRouter()
 
     useEffect(() => {
+        localStorage.setItem('counter', JSON.stringify(0))
         const timer = setTimeout(() => {
             router.push('/auth/signIn');
             // router.push('/wait-list');

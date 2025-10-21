@@ -18,6 +18,8 @@ import {Log} from "@/app/_lib/utils";
 import {CombinedCalendar} from "@/app/dashboard/components/ui/CombinedCalendar";
 import {TapWrapper} from "@/app/_components/TapWrapper";
 import {RestartCalendar} from "@/app/dashboard/components/ui/RestartCalendar";
+import {InstallApp} from "@/app/_components/InstallApp";
+import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
 
 export function CalendarMain({accessToken}) {
     const phaseImages = {
@@ -127,25 +129,9 @@ export function CalendarMain({accessToken}) {
                 </article>
             </section>
             <section>
-                {
-                    hideDailyTip && <section className={`flex justify-center items-center px-4`}>
-                        <PageFadeAnimator>
-                            <article className={'bg-tertiaryColor text-white max-w-[400px] h-[140px] rounded-xl px-4 py-4'}>
-                                <header className={`flex space-between items-center w-full mb-2`}>
-                                    <h2 className={'flex-1 text-xl font-semibold'}>Daily Tip</h2>
-                                    <span tabIndex={0} onClick={() => handleHideDailyTip()}
-                                          className={'iconify lucide--x text-xl'}></span>
-                                </header>
-                                <p className={`font-light text-[13px]`}>
-                                    Navigating your fertility path involves understanding when it&apos;s appropriate to seek
-                                </p>
-                                <div className={`flex justify-end mt-3`}>
-                                    <Link href={"/dashboard/community"} className={'text-right text-sm'}>Learn more</Link>
-                                </div>
-                            </article>
-                        </PageFadeAnimator>
-                    </section>
-                }
+                <ContainerWrapper>
+                    <InstallApp/>
+                </ContainerWrapper>
             </section>
 
             <InsightParent head={"Daily Insights"} desc={"Personalized health tips based on logged data"}

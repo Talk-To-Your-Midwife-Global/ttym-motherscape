@@ -38,7 +38,7 @@ export function fetchCycle(url, token) {
         const result = res.json()
         return result
     }).then(result => {
-        Log({result});
+        Log('cycleInfo', {result});
         const formattedData = {
             ...result,
             dates: menstrualCycleDateGenerator(result.current_cycle?.start_date, result.period_length, "general", result.current_cycle.cycle_length),
@@ -232,6 +232,7 @@ function computeProgressBarValues(days, week) {
 // Convert this whole thing into a class soon
 export function necessaryDataForMenstrualUI(allData) {
     if (allData) {
+        Log({allData});
         const {current_cycle} = allData;
         Log("functions.js: necessaryDataForMenstrualUI(); ", {current_cycle});
 
