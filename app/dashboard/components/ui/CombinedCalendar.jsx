@@ -79,7 +79,7 @@ export function CombinedCalendar({accessToken}) {
                             accessToken={accessToken}
                             specialDates={currentViewingMonthDates}
                             withFlower={true}/>
-                        <div className={'text-[#72777A] text-[10px] px-5 flex gap-3'}>
+                        <div className={'text-[#72777A] text-[10px] px-5 grid grid-cols-3 gap-3'}>
                             <span className={`flex gap-2 w-fit `}>
                                 <div className={'w-4 h-4 bg-[#F8CEDE] rounded-full'}> </div> <span className="w-fit">Recorded Flows</span>
                             </span>
@@ -89,6 +89,12 @@ export function CombinedCalendar({accessToken}) {
                             </span>
                             <span className={`flex gap-2`}>
                                 <div className={'w-4 h-4 bg-[#DEE4F5] rounded-full'}> </div> <span>Fertile Window</span>
+                            </span>
+                            <span className={`flex gap-2`}>
+                                <div className={'w-4 h-4 bg-[#07226B] rounded-full'}> </div> <span>Ovulation day</span>
+                            </span>
+                            <span className={`flex gap-2`}>
+                                <div className={'w-4 h-4 bg-[#3CB9FB50] rounded-full'}> </div> <span>Safe days</span>
                             </span>
                         </div>
                     </section> : <ShortCalendar
