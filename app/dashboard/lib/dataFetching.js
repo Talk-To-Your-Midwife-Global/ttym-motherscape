@@ -32,6 +32,7 @@ export function useCycleInfo(accessToken) {
     }
 }
 
+
 export function usePregnancyInfo(accessToken) {
     const {
         data,

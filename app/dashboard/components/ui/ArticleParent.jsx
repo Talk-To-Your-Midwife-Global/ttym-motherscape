@@ -3,6 +3,7 @@ import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
 import {Log} from "@/app/_lib/utils";
 import {SmallArticleCard} from "@/app/dashboard/components/ui/Articles";
 import {useArticles} from "@/app/contexts/ArticlesContext";
+import posthog from "posthog-js";
 
 
 export function ArticleParent() {
@@ -12,7 +13,7 @@ export function ArticleParent() {
     const theresContent = blogData ? blogData.length > 0 : false;
 
     if (error) {
-        throw new Error(`ArticleParent.jsx: useContentFetcher() ${error}`)
+        posthog.captureException(`ArticleParent.jsx: useContentFetcher() ${JSON.stringify(error)}`)
     }
 
     if (isLoading) {

@@ -18,6 +18,7 @@ export default function Page() {
             if (response?.success) {
                 localStorage.removeItem("chatDisplay");
                 localStorage.removeItem('answers');
+                localStorage.clear();
                 router.push("/")
             } else {
                 posthog.captureException(`logout/page.js ${response?.error}`)
