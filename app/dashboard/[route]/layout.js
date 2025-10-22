@@ -19,7 +19,6 @@ export default async function DashboardRouteLayout({children, params}) {
 
     return (
         <section>
-            <OfflineBanner/>
             <header className={"pl-4"}>
                 <DashboardNav text={shouldName[paramName.route]} accessToken={access_token}/>
             </header>
