@@ -123,7 +123,7 @@ export function NavItem({children, text = "default", style = "", withText = true
                     {children}
                 </div>
 
-                {withText && <p className={"capitalize text-sm font-medium"}>
+                {withText && <p className={"capitalize text-xs font-medium"}>
                     {text}
                 </p>}
             </div>
@@ -468,8 +468,9 @@ function CalendarTemplate({
                               startWeek,
                               endWeek,
                               currentMonth,
+                              moveBackwards,
+                              moveForwards,
                               specialDates = [],
-                              action = {},
                               dateClick = undefined
                           }, withFlower = true) {
     const days = []
@@ -486,8 +487,13 @@ function CalendarTemplate({
                     <h2> {format(currentMonth, "MMMM yyyy")} </h2>
                     {withFlower && <Image src={nameFlower} alt={'pink flower'}/>}
                 </div>
-                <div>
-                    <ActionLink text={action?.actionText} href={action?.link} onClick={action?.action}/>
+                <div className={"flex relative top-1 .items-center gap-5 "}>
+                    <TapWrapper clickAction={moveBackwards}>
+                        <span className={"iconify lucide--chevron-left text-2xl border-2 p-2 border-gray-200"}></span>
+                    </TapWrapper>
+                    <TapWrapper clickAction={moveForwards}>
+                        <span className={"iconify lucide--chevron-right text-2xl"}></span>
+                    </TapWrapper>
                 </div>
             </div>
             <div className={`grid grid-cols-7 gap-2`}>
@@ -502,7 +508,7 @@ function CalendarTemplate({
                         const customStyle = specialDates.find((styleDate) => isSameDay(styleDate?.date, day))?.style
 
                         return (
-                            <div key={index} onClick={() => dateClick(day)} className={`p-2 text-center rounded-full
+                            <div key={index} onClick={() => dateClick(day)} className={`w-[40px] h-[40px] text-center flex items-center justify-center relative left-1 text-xs rounded-full
                                 ${isCurrentMonth ? 'text-gray-900' : 'text-gray-400'}
                                 ${customStyle && customStyle}
                             `}>
@@ -519,58 +525,47 @@ function CalendarTemplate({
 export function ShortCalendar({
                                   action,
                                   withFlower,
-                                  accessToken,
+                                  moveForwards,
+                                  moveBackwards,
                                   specialDates,
-                                  type = "menstrual",
+                                  currentMonth,
                                   dateClick = undefined
                               }) {
     let specialDays = specialDates;
-    Log({specialDays});
-
-    const [currentMonth, setCurrentMonth] = useState(new Date())
-    const startWeek = startOfWeek(new Date())
-    const endWeek = endOfWeek(new Date())
+    const startWeek = startOfWeek(currentMonth)
+    const endWeek = endOfWeek(currentMonth);
 
     return (
         <div>
             <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth}
                               specialDates={specialDays} action={action} dateClick={dateClick}
+                              moveForwards={moveForwards}
+                              moveBackwards={moveBackwards}
                               withFlower={withFlower}/>
         </div>
     )
 }
 
-export function Calendar({action, withFlower, specialDates = undefined, accessToken, dateClick}) {
-    const {data, error, isLoading} = useCycleInfo(accessToken);
-    Log("calendar data output", {data})
-    specialDates = specialDates ? specialDates : menstrualCycleDateGenerator(data?.start_date, data?.period_length, data?.ovulation_day, "general", data?.cycle_length);
-    const [currentMonth, setCurrentMonth] = useState(new Date())
+export function Calendar({
+                             action,
+                             withFlower,
+                             moveBackwards,
+                             moveForwards,
+                             currentMonth,
+                             specialDates = undefined,
+                             accessToken,
+                             dateClick
+                         }) {
     const startMonth = startOfMonth(currentMonth)
     const endMonth = endOfMonth(currentMonth)
     const startWeek = startOfWeek(startMonth)
     const endWeek = endOfWeek(endMonth)
 
-    if (isLoading) {
-        return (
-            <div>
-                loading...
-            </div>
-        )
-    }
-
-    if (error) {
-        return (
-            <div>
-                error
-                {error.message}
-            </div>
-        )
-    }
-
     return (
         <div>
             <CalendarTemplate dateClick={dateClick} startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth}
-                              specialDates={specialDates} action={action} withFlower={withFlower}/>
+                              specialDates={specialDates} action={action} withFlower={withFlower}
+                              moveForwards={moveForwards} moveBackwards={moveBackwards}/>
         </div>
     )
 }
