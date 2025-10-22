@@ -133,14 +133,14 @@ export function NavItem({children, text = "default", style = "", withText = true
 
 export function Card({head, status, highlight = "", children}) {
     return (
-        <article className={"bg-white rounded-lg w-full h-16 drop-shadow-sm border my-5 flex items-center"}>
+        <article className={"bg-white rounded-lg text-sm w-full h-16 drop-shadow-sm border my-5 flex items-center"}>
             <div className={"flex items-center px-2"}>
                 {children}
             </div>
 
             <div className={"flex-1 capitalize"}>
                 <p> {head} <span className="text-primaryColor font-medium text-sm">{highlight}</span></p>
-                <p className={`text-[#72777A] text-sm`}>{status}</p>
+                <p className={`text-[#72777A] text-xs`}>{status}</p>
             </div>
         </article>
     )
@@ -596,7 +596,7 @@ export function FeelingsInsightsAndEvents({accessToken}) {
 
     const getRespectiveImage = (feelingName) => {
         const respectiveFeeling = faces.filter((face) => face.desc === feelingName);
-        return respectiveFeeling[0].img;
+        return respectiveFeeling[0].emoji;
     }
     return (
         <section>
@@ -612,9 +612,9 @@ export function FeelingsInsightsAndEvents({accessToken}) {
                                     <div tabIndex={0}
                                          onClick={(e) => handleFeeling(e, face.desc)}
                                          key={face.desc}
-                                         className={"w-[70px] h-[80px] flex flex-col items-center justify-evenly border-2 .p-2 border-[#D2D2D2] rounded-md"}>
-                                        <p>{face.emoji}</p>
-                                        <p>{face.desc}</p>
+                                         className={"w-[60px] h-[60px] flex flex-col items-center justify-evenly border-2 .p-2 border-[#D2D2D2] rounded-2xl"}>
+                                        <p className={"text-2xl"}>{face.emoji}</p>
+                                        <p className={"text-xs"}>{face.desc}</p>
                                     </div>
                                 </TapWrapper>
                             )
@@ -625,13 +625,14 @@ export function FeelingsInsightsAndEvents({accessToken}) {
                 <div className={"bg-tertiaryColor text-white p-4 rounded-3xl  mx-5"}>
                     <heading className="text-white flex justify-between text-xl">
                         <div className="text-white flex gap-2">
-                            <h2 className='capitalize'>Feeling {feeling.feeling}?</h2>
-                            <Image className={'text-white'} src={getRespectiveImage(feeling.feeling)}
-                                   alt={"face"}/>
+                            <h2 className='capitalize text-md'>Feeling {feeling.feeling}?</h2>
+                            {/*<Image className={'text-white'} src={getRespectiveImage(feeling.feeling)}*/}
+                            {/*       alt={"face"}/>*/}
+                            <span>{getRespectiveImage(feeling.feeling)}</span>
                         </div>
                         <span onClick={handleClose} className="iconify lucide--x"></span>
                     </heading>
-                    <p className={`font-extralight text-sm my-4`}>
+                    <p className={`font-extralight text-sm mb-4`}>
                         You are feeling <span>{feeling.feeling}</span> with <b>{feeling.number} others</b>
                     </p>
                     <div className="flex justify-end mt-5">
