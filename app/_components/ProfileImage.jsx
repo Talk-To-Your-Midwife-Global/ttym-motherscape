@@ -1,5 +1,3 @@
-import Image from "next/image"
-import sarah from "@/public/images/sarah.png"
 import {Log} from "@/app/_lib/utils";
 
 export function ProfileImage({userProfileInfo, onClick}) {
@@ -9,7 +7,7 @@ export function ProfileImage({userProfileInfo, onClick}) {
     Log("Profile Image", {userProfileInfo, firstName, src});
 
     return (
-        <section className={'flex gap-3 bg-white items-center'}>
+        <section className={'flex gap-3 bg-white items-center relative'}>
             <div tabIndex={0} onClick={() => onClick(true)}
                  className="bg-[#92857E] rounded-full w-[45px] h-[45px] flex items-center">
                 <img
@@ -17,7 +15,10 @@ export function ProfileImage({userProfileInfo, onClick}) {
                     alt={"avatar"}
                     className="rounded-full w-[35px] h-[35px]"/>
             </div>
-            <h2 className={"text-[20px] font-medium text-[#3A3A3A]"}>{firstName}</h2>
+            <div>
+                <h2 className={"text-[20px] font-medium text-[#3A3A3A]"}>{firstName}</h2>
+                <p className={"text-sm text-[#3A3A3A]"}>{userProfileInfo?.user?.email}</p>
+            </div>
         </section>
     )
 }
