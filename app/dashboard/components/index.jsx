@@ -86,8 +86,8 @@ export function DashboardNav({text = "", accessToken}) {
     return (
         <section>
             <nav className={"w-full flex justify-between items-center my-5"}>
-                <div className={"bg-[#0F969C] w-[55px] h-[55px] rounded-full w-fit h-fit"}>
-                    <SideNav userProfileInfo={user} accessToken={accessToken} open={open} handleOpen={handleOpen}/>
+                <div className={".bg-[#0F969C] rounded-full w-fit h-fit"}>
+                    <SideNav userProfileInfo={user}/>
                 </div>
 
                 <div className={`rounded-full h-[50px] p-4 flex gap-4 items-center justify-end`}>
