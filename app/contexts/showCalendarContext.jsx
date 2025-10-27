@@ -30,11 +30,15 @@ export function CalendarViewContextProvider({children}) {
     }
 
     const moveCalendarForwards = () => {
-        setCurrentViewingMonth(addMonths(currentViewingMonth, 1))
+        setCurrentViewingMonth(addMonths(currentViewingMonth, 1));
+        const month = getMonth(addMonths(currentViewingMonth, 1));
+        setCurrentViewingMonthDates(parseMonthForCalendar(months[month]));
     }
 
     const moveCalendarBackwards = () => {
         setCurrentViewingMonth(subMonths(currentViewingMonth, 1));
+        const month = getMonth(subMonths(currentViewingMonth, 1));
+        setCurrentViewingMonthDates(parseMonthForCalendar(months[month]));
     }
 
     const values = {
