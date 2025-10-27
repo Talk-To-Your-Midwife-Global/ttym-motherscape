@@ -66,3 +66,12 @@ export const waitListFormSchema = z.object({
     firstName: z.string().min(1, {message: "First name is required"}),
     lastName: z.string().min(1, {message: "Last name is required"}),
 });
+
+export const ProfileSettingsSchema = z.object({
+    full_name: z.string().min(5, {message: "Full name is required"}),
+    email: z.string().email({message: "Please enter a valid email address"}),
+    phone_number: z.string().regex(
+        /^\+\d{1,3}\d{7,14}$/,
+        {message: "Please enter a valid phone number."}
+    ),
+})
