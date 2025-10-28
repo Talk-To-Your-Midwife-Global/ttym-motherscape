@@ -81,12 +81,12 @@ export function CombinedCalendar({accessToken}) {
                             withFlower={true}/>
                         <div className={'text-[#72777A] text-[10px] px-5 grid grid-cols-3 gap-3'}>
                             <span className={`flex gap-2 w-fit `}>
-                                <div className={'w-4 h-4 bg-[#F8CEDE] rounded-full'}> </div> <span className="w-fit">Recorded Flows</span>
+                                <div className={'w-4 h-4 bg-[#F8CEDE] rounded-full'}> </div> <span className="w-fit">Blood Flow</span>
                             </span>
-                            <span className={`flex gap-2`}>
-                                <div
-                                    className={'w-4 h-4 border border-dashed border-[#E82A73] rounded-full'}> </div> <span>Predicted Period</span>
-                            </span>
+                            {/*<span className={`flex gap-2`}>*/}
+                            {/*    <div*/}
+                            {/*        className={'w-4 h-4 border border-dashed border-[#E82A73] rounded-full'}> </div> <span>Predicted Period</span>*/}
+                            {/*</span>*/}
                             <span className={`flex gap-2`}>
                                 <div className={'w-4 h-4 bg-[#DEE4F5] rounded-full'}> </div> <span>Fertile Window</span>
                             </span>
