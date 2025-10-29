@@ -1,6 +1,5 @@
 import {addDays, eachDayOfInterval, endOfMonth, format, getMonth, subDays} from "date-fns";
 import {Log} from "@/app/_lib/utils";
-import {convertStringToNumberByType} from "jsdom/lib/jsdom/living/helpers/number-and-date-inputs";
 
 /**
  * Generate an object containing months and all the days of the month for the calendar component
@@ -57,6 +56,8 @@ export function generateMonths() {
 // for each cycle, the menstrual, the ovulation, the safe and pass them to the monthAllocator
 
 export function getMenstrualDates(start, end) {
+    start = new Date(start);
+    end = new Date(end)
     const days = eachDayOfInterval({
         start, end
     });
@@ -99,12 +100,12 @@ function styleDates(dates, style) {
 export function enrichMonthsObject(cycles) {
     const months = generateMonths();
     for (const cycle of cycles) {
-        const menstrualDates = getMenstrualDates(cycle.start_date, cycle.end_date);
+        const menstrualDates = getMenstrualDates(cycle.start_date, cycle.bleed_end_date);
         const ovulationDates = getOvulationDates(cycle.ovulation_day);
         const safeDates = getSafeDays(cycle.safe_days);
-        monthAllocator(menstrualDates, STAGES.MENSTRUAL, months);
-        monthAllocator(safeDates, STAGES.SAFE, months);
-        monthAllocator(ovulationDates, STAGES.OVULATION, months)
+        monthAllocator(safeDates, STAGES.SAFE, months, cycle.id);
+        monthAllocator(menstrualDates, STAGES.MENSTRUAL, months, cycle.id);
+        monthAllocator(ovulationDates, STAGES.OVULATION, months, cycle.id)
 
         const today = format(new Date(), "yyyy-MM-dd");
         const month = new Date().getMonth();
@@ -115,12 +116,13 @@ export function enrichMonthsObject(cycles) {
 }
 
 
-export function monthAllocator(dates, stage = undefined, months) {
+export function monthAllocator(dates, stage = undefined, months, id = undefined) {
     for (const day of dates) {
         const month = getMonth(day.date);
         months[month][day.date] = {
             style: day.style,
-            stage: stage
+            stage: stage,
+            id: id
         }
     }
 }

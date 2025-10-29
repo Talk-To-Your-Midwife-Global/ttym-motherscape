@@ -17,6 +17,8 @@ export function CalendarViewContextProvider({children}) {
     const [months, setMonths] = useState({}); // all the months
     const [currentViewingMonth, setCurrentViewingMonth] = useState(new Date());
     const [currentViewingMonthDates, setCurrentViewingMonthDates] = useState([]);
+    const [activeCycle, setActiveCycle] = useState({});
+    const [showMenstrualQuestion, setShowMenstrualQuestion] = useState(false);
 
     const handleMonthSetting = (data, month = undefined) => {
         month = month || getMonth(new Date());
@@ -38,7 +40,9 @@ export function CalendarViewContextProvider({children}) {
     const moveCalendarBackwards = () => {
         setCurrentViewingMonth(subMonths(currentViewingMonth, 1));
         const month = getMonth(subMonths(currentViewingMonth, 1));
-        setCurrentViewingMonthDates(parseMonthForCalendar(months[month]));
+        const parsedDates = parseMonthForCalendar(months[month])
+        Log("current viewing months", {parsedDates});
+        setCurrentViewingMonthDates(parsedDates);
     }
 
     const values = {
@@ -51,7 +55,8 @@ export function CalendarViewContextProvider({children}) {
         months, setMonths,
         currentViewingMonthDates, setCurrentViewingMonthDates,
         currentViewingMonth, setCurrentViewingMonth,
-        handleMonthSetting, moveCalendarBackwards, moveCalendarForwards
+        handleMonthSetting, moveCalendarBackwards, moveCalendarForwards,
+        showMenstrualQuestion, setShowMenstrualQuestion
     }
 
     return <CalendarViewContext.Provider value={values}>
