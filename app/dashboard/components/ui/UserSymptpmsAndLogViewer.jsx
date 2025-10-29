@@ -1,3 +1,4 @@
+"use client"
 import {Drawer} from "vaul";
 import Link from "next/link";
 import {cn, Log} from "@/app/_lib/utils";
@@ -6,6 +7,10 @@ import {differenceInDays, format} from "date-fns";
 import {formatDate} from "@/app/_lib/functions";
 import {moodEmoticons, symptomEmoticons} from "@/app/dashboard/components/logs";
 import {TapWrapper} from "@/app/_components/TapWrapper";
+import posthog from "posthog-js";
+import {PUBLICHOSTNAME} from "@/app/_config/main";
+import {toast} from "sonner";
+import {useTransition} from "react";
 
 
 function FaceCard({details}) {
@@ -30,8 +35,9 @@ function ExcessCard({num = 0}) {
     )
 }
 
-export function UserSymptomsAndLogViewer({open, setOpen, cycleInfo}) {
-    const {logs, viewingDate} = useCalendarView();
+export function UserSymptomsAndLogViewer({open, setOpen, cycleInfo, showMenstrualQuestion, accessToken}) {
+    const {logs, viewingDate, setIsUsingPredictedCycle} = useCalendarView();
+    const [isPending, startTransition] = useTransition();
     const date = formatDate(viewingDate);
     Log("UserSymptomsAndLogViewer details1", {logs, date})
     const details = logs ? logs[date] : undefined;
@@ -76,12 +82,50 @@ export function UserSymptomsAndLogViewer({open, setOpen, cycleInfo}) {
 
     const isPreviousCycle = differenceInDays(viewingDate, cycleInfo?.periodStartDate) <= 0;
 
+    const handleDateConfirm = () => {
+        posthog.capture('user_newcycle_indication');
+        Log("UserSymptomsAndLogViewer", {viewingDate});
+        const jsonBody = JSON.stringify({
+            start_date: format(viewingDate, "yyyy-MM-dd")
+        })
+
+        Log("RestartCalendar.jsx; restart date handleDateConfirm", {jsonBody})
+
+        startTransition(async () => {
+            const res = await fetch(`${PUBLICHOSTNAME}/menstrual/cycles/start/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`
+                },
+                body: jsonBody
+            })
+            const response = await res.json();
+            if (!res.ok) {
+                Log("UserSymptomsAndLogViewer.jsx; handleDateConfirm @ /cycles/start failed", {response});
+                posthog.captureException(`"UserSymptomsAndLogViewer.jsx; handleDateConfirm @ /cycles/start failed", ${JSON.stringify(response)}`);
+                toast.error("An error occurred while updating cycle")
+            } else {
+                Log("UserSymptomsAndLogViewer.jsx; handleDateConfirm @ /cycles/start success", {response})
+                setIsUsingPredictedCycle(false);
+                window.location.reload() // because all the other SPA related ways of refreshing for Next.js failed to work
+            }
+        })
+    }
+
     return (
         <Drawer.Root open={open} onOpenChange={setOpen}>
             <Drawer.Portal>
                 <Drawer.Overlay className="fixed inset-0 bg-black/40"/>
                 <Drawer.Content
-                    className="bg-white text-primaryText shadow-2xl flex flex-col rounded-t-[10px] mt-24 max-w-[432px] h-[232px] fixed bottom-0 left-0 right-0 outline-none p-4">
+                    className="bg-white text-primaryText shadow-3xl flex flex-col rounded-t-[10px] mt-24 max-w-[432px] h-[242px] fixed bottom-0 left-0 right-0 outline-none p-4">
+                    {
+                        showMenstrualQuestion &&
+                        <div className={"rounded-md px-2 py-1 text-white mb-2 bg-[#E82A73] flex gap-1"}>
+                            Spotted blood today? <span className={"underline"} onClick={handleDateConfirm}>Yes, I saw blood</span> / <span
+                            className={"underline"}>Not yet</span>
+                        </div>
+                    }
                     <Drawer.Title className={"text-xl flex justify-between font-semibold  mb-6"}>
                         <div>
                             <div>

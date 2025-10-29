@@ -58,7 +58,7 @@ export function RestartCalendar({refreshPage, accessToken}) {
     }
 
     return (
-        <Drawer.Root dismissible={false} open={isUsingPredictedCycle}
+        <Drawer.Root dismissible={false} open={false}
                      onOpenChange={setIsUsingPredictedCycle}>
             <Drawer.Portal>
                 <Drawer.Overlay className="fixed .h-screen .w-screen inset-0 .bg-red-100 bg-[#00000061] .z-40"/>
