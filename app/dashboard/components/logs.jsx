@@ -11,6 +11,8 @@ import {Log} from "@/app/_lib/utils";
 import {useCalendarView} from "@/app/contexts/showCalendarContext";
 import posthog from "posthog-js";
 import {CombinedCalendar} from "@/app/dashboard/components/ui/CombinedCalendar";
+import {InstallApp} from "@/app/_components/InstallApp";
+import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
 
 
 export const moodEmoticons = {
@@ -159,6 +161,9 @@ export function Logs({accessToken}) {
     return (
         <section className={`${inter.className} h-[100%] mt-5`}>
             <CombinedCalendar accessToken={accessToken}/>
+            <ContainerWrapper>
+                <InstallApp/>
+            </ContainerWrapper>
             <form className="px-[20px] text-primaryText">
                 <div className="flex flex-col gap-2 mb-8">
                     <h3 className="text-xl font-semibold">Mood</h3>

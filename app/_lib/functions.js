@@ -10,7 +10,7 @@ export function fetcher(url, token = "") {
                 "Authorization": `Bearer ${token}`
             }
         }).then(res => {
-            Log(res);
+            Log('fetcher response', {res});
             return res.json()
         })
     }
@@ -38,7 +38,7 @@ export function fetchCycle(url, token) {
         const result = res.json()
         return result
     }).then(result => {
-        Log({result});
+        Log('cycleInfo', {result});
         const formattedData = {
             ...result,
             dates: menstrualCycleDateGenerator(result.current_cycle?.start_date, result.period_length, "general", result.current_cycle.cycle_length),
@@ -232,6 +232,7 @@ function computeProgressBarValues(days, week) {
 // Convert this whole thing into a class soon
 export function necessaryDataForMenstrualUI(allData) {
     if (allData) {
+        Log({allData});
         const {current_cycle} = allData;
         Log("functions.js: necessaryDataForMenstrualUI(); ", {current_cycle});
 
@@ -245,8 +246,7 @@ export function necessaryDataForMenstrualUI(allData) {
             stage: current_cycle?.current_phase,
             pregnancyProb: current_cycle?.pregnancy_probability,
             periodStartDate: current_cycle?.start_date,
-            nextPeriodDate: current_cycle?.next_phase_date,
-            nextPhaseStartDate: current_cycle?.next_phase_date,
+            periodEndDate: current_cycle?.end_date,
             daysDone,
             daysToPeriod,
             percentageComplete,

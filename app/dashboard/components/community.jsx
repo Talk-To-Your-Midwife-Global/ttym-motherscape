@@ -37,30 +37,30 @@ export function Community() {
                 <ArticlesHQ.Trending/>
                 <ArticlesHQ.Reader/>
             </section>
-            {/*Talktoyoursister*/}
-            <section className={'px-4'}>
+            {/*Talktoyoursisters*/}
+            <section>
                 <section
-                    className={"border-2 h-[108px] rounded-xl bg-radial-glow grid grid-cols-2 max-w-[400px] "}>
+                    className={"border-2 mx-4 h-[108px] rounded-xl bg-radial-glow grid grid-cols-2 max-w-[400px] "}>
                     <div className={"text-white pl-3 py-2 flex flex-col .items-center justify-center"}>
-                        <h3 className={"font-light text-sm"}>Talk To Your Sisters 💬</h3>
-                        <p>Real women. Real stories. Real support.</p>
+                        <h3 className={"font-light text-[12px]"}>Talk To Your Sisters 💬</h3>
+                        <p className={'text-sm'}>Real women. Real stories. Real support.</p>
                     </div>
                     <div className={"flex items-center justify-center"}>
                         <TapWrapper customStyles={"flex items-center justify-center mt-3"}
                                     link={"https://chat.whatsapp.com/IqHGnXGfxTSAadI946eLuq?mode=ems_copy_t"}>
                             <div
-                                className={"bg-white rounded-3xl text-center p-2"}>Join Community
+                                className={"bg-white rounded-3xl text-[12px] text-center p-2"}>Join Community
                             </div>
                         </TapWrapper>
                     </div>
                 </section>
+
             </section>
 
             <section className={"overflow-x-hidden overflow-y-clip w-full"}>
                 <header className={`px-[26px] my-5 text-[#000] font-medium`}>
                     <h1 className={`text-xl`}>Articles</h1>
                     <section>
-
                     </section>
                 </header>
                 <section className={`carousel flex overflow-x-auto scroll-smooth space-x-4 p-4`}>

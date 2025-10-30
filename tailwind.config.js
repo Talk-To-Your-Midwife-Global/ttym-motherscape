@@ -13,6 +13,7 @@ module.exports = {
                 'onboarding-bg': "url('/images/bg-1.png')",
                 'onbaording-bg-2': "url('/images/bg-2.png')",
                 'radial-glow': 'radial-gradient(circle at 80% 70%, #0FCAD2,  #015364, #015364)',
+                'radial-glow-bottom': "radial-gradient(ellipse at 20% 150%, #0FCAD2, #015364, #015364)"
             },
             dropShadow: {
                 "custom-green": "0px 14px 6px #0F969C21",

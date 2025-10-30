@@ -86,8 +86,8 @@ export function DashboardNav({text = "", accessToken}) {
     return (
         <section>
             <nav className={"w-full flex justify-between items-center my-5"}>
-                <div className={"bg-[#0F969C] w-[55px] h-[55px] rounded-full w-fit h-fit"}>
-                    <SideNav userProfileInfo={user} accessToken={accessToken} open={open} handleOpen={handleOpen}/>
+                <div className={".bg-[#0F969C] rounded-full w-fit h-fit"}>
+                    <SideNav userProfileInfo={user}/>
                 </div>
 
                 <div className={`rounded-full h-[50px] p-4 flex gap-4 items-center justify-end`}>
@@ -123,7 +123,7 @@ export function NavItem({children, text = "default", style = "", withText = true
                     {children}
                 </div>
 
-                {withText && <p className={"capitalize text-sm font-medium"}>
+                {withText && <p className={"capitalize text-xs font-medium"}>
                     {text}
                 </p>}
             </div>
@@ -133,14 +133,14 @@ export function NavItem({children, text = "default", style = "", withText = true
 
 export function Card({head, status, highlight = "", children}) {
     return (
-        <article className={"bg-white rounded-lg w-full h-16 drop-shadow-sm border my-5 flex items-center"}>
+        <article className={"bg-white rounded-lg text-sm w-full h-16 drop-shadow-sm border my-5 flex items-center"}>
             <div className={"flex items-center px-2"}>
                 {children}
             </div>
 
             <div className={"flex-1 capitalize"}>
                 <p> {head} <span className="text-primaryColor font-medium text-sm">{highlight}</span></p>
-                <p className={`text-[#72777A] text-sm`}>{status}</p>
+                <p className={`text-[#72777A] text-xs`}>{status}</p>
             </div>
         </article>
     )
@@ -468,8 +468,9 @@ function CalendarTemplate({
                               startWeek,
                               endWeek,
                               currentMonth,
+                              moveBackwards,
+                              moveForwards,
                               specialDates = [],
-                              action = {},
                               dateClick = undefined
                           }, withFlower = true) {
     const days = []
@@ -486,8 +487,13 @@ function CalendarTemplate({
                     <h2> {format(currentMonth, "MMMM yyyy")} </h2>
                     {withFlower && <Image src={nameFlower} alt={'pink flower'}/>}
                 </div>
-                <div>
-                    <ActionLink text={action?.actionText} href={action?.link} onClick={action?.action}/>
+                <div className={"flex relative top-1 .items-center gap-5 "}>
+                    <TapWrapper clickAction={moveBackwards}>
+                        <span className={"iconify lucide--chevron-left text-2xl border-2 p-2 border-gray-200"}></span>
+                    </TapWrapper>
+                    <TapWrapper clickAction={moveForwards}>
+                        <span className={"iconify lucide--chevron-right text-2xl"}></span>
+                    </TapWrapper>
                 </div>
             </div>
             <div className={`grid grid-cols-7 gap-2`}>
@@ -499,12 +505,14 @@ function CalendarTemplate({
                 {
                     days.map((day, index) => {
                         const isCurrentMonth = isSameMonth(day, currentMonth)
-                        const customStyle = specialDates.find((styleDate) => isSameDay(styleDate?.date, day))?.style
+                        const customStyle = specialDates.find((styleDate) => isSameDay(styleDate?.date, day));
 
                         return (
-                            <div key={index} onClick={() => dateClick(day)} className={`p-2 text-center rounded-full
+                            <div key={index}
+                                 onClick={() => customStyle.stage === "MENSTRUAL" ? dateClick(customStyle) : dateClick(day)}
+                                 className={`w-[40px] h-[40px] text-center flex items-center justify-center relative left-1 text-xs rounded-full
                                 ${isCurrentMonth ? 'text-gray-900' : 'text-gray-400'}
-                                ${customStyle && customStyle}
+                                ${customStyle && customStyle.style}
                             `}>
                                 {format(day, 'd')}
                             </div>
@@ -519,58 +527,47 @@ function CalendarTemplate({
 export function ShortCalendar({
                                   action,
                                   withFlower,
-                                  accessToken,
+                                  moveForwards,
+                                  moveBackwards,
                                   specialDates,
-                                  type = "menstrual",
+                                  currentMonth,
                                   dateClick = undefined
                               }) {
     let specialDays = specialDates;
-    Log({specialDays});
-
-    const [currentMonth, setCurrentMonth] = useState(new Date())
-    const startWeek = startOfWeek(new Date())
-    const endWeek = endOfWeek(new Date())
+    const startWeek = startOfWeek(currentMonth)
+    const endWeek = endOfWeek(currentMonth);
 
     return (
         <div>
             <CalendarTemplate startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth}
                               specialDates={specialDays} action={action} dateClick={dateClick}
+                              moveForwards={moveForwards}
+                              moveBackwards={moveBackwards}
                               withFlower={withFlower}/>
         </div>
     )
 }
 
-export function Calendar({action, withFlower, specialDates = undefined, accessToken, dateClick}) {
-    const {data, error, isLoading} = useCycleInfo(accessToken);
-    Log("calendar data output", {data})
-    specialDates = specialDates ? specialDates : menstrualCycleDateGenerator(data?.start_date, data?.period_length, data?.ovulation_day, "general", data?.cycle_length);
-    const [currentMonth, setCurrentMonth] = useState(new Date())
+export function Calendar({
+                             action,
+                             withFlower,
+                             moveBackwards,
+                             moveForwards,
+                             currentMonth,
+                             specialDates = undefined,
+                             accessToken,
+                             dateClick
+                         }) {
     const startMonth = startOfMonth(currentMonth)
     const endMonth = endOfMonth(currentMonth)
     const startWeek = startOfWeek(startMonth)
     const endWeek = endOfWeek(endMonth)
 
-    if (isLoading) {
-        return (
-            <div>
-                loading...
-            </div>
-        )
-    }
-
-    if (error) {
-        return (
-            <div>
-                error
-                {error.message}
-            </div>
-        )
-    }
-
     return (
         <div>
             <CalendarTemplate dateClick={dateClick} startWeek={startWeek} endWeek={endWeek} currentMonth={currentMonth}
-                              specialDates={specialDates} action={action} withFlower={withFlower}/>
+                              specialDates={specialDates} action={action} withFlower={withFlower}
+                              moveForwards={moveForwards} moveBackwards={moveBackwards}/>
         </div>
     )
 }
@@ -601,7 +598,7 @@ export function FeelingsInsightsAndEvents({accessToken}) {
 
     const getRespectiveImage = (feelingName) => {
         const respectiveFeeling = faces.filter((face) => face.desc === feelingName);
-        return respectiveFeeling[0].img;
+        return respectiveFeeling[0].emoji;
     }
     return (
         <section>
@@ -617,9 +614,9 @@ export function FeelingsInsightsAndEvents({accessToken}) {
                                     <div tabIndex={0}
                                          onClick={(e) => handleFeeling(e, face.desc)}
                                          key={face.desc}
-                                         className={"w-[70px] h-[80px] flex flex-col items-center justify-evenly border-2 .p-2 border-[#D2D2D2] rounded-md"}>
-                                        <p>{face.emoji}</p>
-                                        <p>{face.desc}</p>
+                                         className={"w-[60px] h-[60px] flex flex-col items-center justify-evenly border-2 .p-2 border-[#D2D2D2] rounded-2xl"}>
+                                        <p className={"text-2xl"}>{face.emoji}</p>
+                                        <p className={"text-xs"}>{face.desc}</p>
                                     </div>
                                 </TapWrapper>
                             )
@@ -630,13 +627,14 @@ export function FeelingsInsightsAndEvents({accessToken}) {
                 <div className={"bg-tertiaryColor text-white p-4 rounded-3xl  mx-5"}>
                     <heading className="text-white flex justify-between text-xl">
                         <div className="text-white flex gap-2">
-                            <h2 className='capitalize'>Feeling {feeling.feeling}?</h2>
-                            <Image className={'text-white'} src={getRespectiveImage(feeling.feeling)}
-                                   alt={"face"}/>
+                            <h2 className='capitalize text-md'>Feeling {feeling.feeling}?</h2>
+                            {/*<Image className={'text-white'} src={getRespectiveImage(feeling.feeling)}*/}
+                            {/*       alt={"face"}/>*/}
+                            <span>{getRespectiveImage(feeling.feeling)}</span>
                         </div>
                         <span onClick={handleClose} className="iconify lucide--x"></span>
                     </heading>
-                    <p className={`font-extralight text-sm my-4`}>
+                    <p className={`font-extralight text-sm mb-4`}>
                         You are feeling <span>{feeling.feeling}</span> with <b>{feeling.number} others</b>
                     </p>
                     <div className="flex justify-end mt-5">

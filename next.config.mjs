@@ -1,20 +1,26 @@
 // next._config.mjs
 /** @type {import('next').NextConfig} */
+import withSerwistInit from "@serwist/next";
+// import withPWA from "next-pwa"
 
-import withPWA from "next-pwa"
-
-const withPWAInit = withPWA({
-    dest: 'public',
-    register: true,
-    disable: false,
-    // app router specific optimizations
-    skipWaiting: true, // update service worker automatically
-    cacheOnFrontEndNav: true, // to cache while navigating with next/link
-    reloadOnOnline: true, // update when network is restored
-    buildExcludes: [
-        /app-build-manifest\.json$/,
-    ],
+const withSerwist = withSerwistInit({
+    swSrc: "app/sw.js",
+    swDest: "public/sw.js",
+    reloadOnOnline: true,
 })
+// const withPWAInit = withPWA({
+//     dest: 'public',
+//     register: true,
+//     disable: false,
+//     // app router specific optimizations
+//     skipWaiting: true, // update service worker automatically
+//     cacheOnFrontEndNav: true, // to cache while navigating with next/link
+//     reloadOnOnline: true, // update when network is restored
+//     buildExcludes: [
+//         /app-build-manifest\.json$/,
+//     ],
+// })
+
 
 const nextConfig = {
     images: {
@@ -39,4 +45,5 @@ const nextConfig = {
     },
 };
 
-export default withPWAInit(nextConfig);
+// export default withPWAInit(nextConfig);
+export default withSerwist(nextConfig);

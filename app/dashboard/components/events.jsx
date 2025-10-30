@@ -1,15 +1,10 @@
-import Link from "next/link";
-import useSWR from "swr";
-import {fetcher} from "@/app/_lib/functions";
 import {montserrat} from "@/app/_fonts";
-import Image from "next/image";
-import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {SmallEmptyState} from "@/app/_components";
 import React from "react";
 import {useEventFetcher} from "@/app/_hooks/useContentFetcher";
 import {eventsQuery} from "@/app/dashboard/hooks/graphContentFetchers";
-import healthImage from "@/public/images/adobe-stock-health-image.webp";
 import {ImageDisplay} from "@/app/dashboard/components/ui/ArticleCard";
+import {Log} from "@/app/_lib/utils";
 
 export function Events({accessToken}) {
     const {data, isLoading, error} = useEventFetcher({query: eventsQuery, variables: null});

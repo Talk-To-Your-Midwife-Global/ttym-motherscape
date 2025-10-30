@@ -11,6 +11,8 @@ import {CombinedCalendar} from "@/app/dashboard/components/ui/CombinedCalendar";
 import {RestartCalendar} from "@/app/dashboard/components/ui/RestartCalendar";
 import {useRouter} from "next/navigation";
 import posthog from "posthog-js";
+import {InstallApp} from "@/app/_components/InstallApp";
+import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
 
 
 export function MenstrualHome({accessToken}) {
@@ -44,7 +46,9 @@ export function MenstrualHome({accessToken}) {
                 </header>
                 <MenstrualCycleCardMain accessToken={accessToken}/>
             </section>
-
+            <ContainerWrapper>
+                <InstallApp/>
+            </ContainerWrapper>
             <FeelingsInsightsAndEvents accessToken={accessToken}/>
             <RestartCalendar refreshPage={handleRefresh} router={router} accessToken={accessToken}/>
         </section>
