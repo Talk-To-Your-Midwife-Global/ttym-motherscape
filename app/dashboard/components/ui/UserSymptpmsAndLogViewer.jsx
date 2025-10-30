@@ -3,7 +3,7 @@ import {Drawer} from "vaul";
 import Link from "next/link";
 import {cn, Log} from "@/app/_lib/utils";
 import {useCalendarView} from "@/app/contexts/showCalendarContext";
-import {differenceInDays, format} from "date-fns";
+import {differenceInDays, format, isWithinInterval} from "date-fns";
 import {formatDate} from "@/app/_lib/functions";
 import {moodEmoticons, symptomEmoticons} from "@/app/dashboard/components/logs";
 import {TapWrapper} from "@/app/_components/TapWrapper";
@@ -80,7 +80,11 @@ export function UserSymptomsAndLogViewer({open, setOpen, cycleInfo, showMenstrua
     Log("UserSymptomsAndLogViewer details", {details, feelings})
     Log("Final computation", {moodIcons, symptomIcons, withoutIcons})
 
-    const isPreviousCycle = differenceInDays(viewingDate, cycleInfo?.periodStartDate) <= 0;
+    // const isPreviousCycle = differenceInDays(viewingDate, cycleInfo?.periodStartDate) <= 0; // todo: fix this
+    const isPreviousCycle = !isWithinInterval(viewingDate, {
+        start: cycleInfo?.periodStartDate,
+        end: cycleInfo.periodEndDate
+    });
 
     const handleDateConfirm = () => {
         posthog.capture('user_newcycle_indication');
