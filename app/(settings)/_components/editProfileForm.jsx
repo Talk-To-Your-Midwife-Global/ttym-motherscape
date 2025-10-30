@@ -1,15 +1,17 @@
 "use client"
 import {SettingsNav} from "@/app/(settings)/_components/SettingsNav";
 import {useUserProfileInfo} from "@/app/_lib/fetchers";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState, useTransition} from "react";
 import {Log} from "@/app/_lib/utils";
 import {useActionState} from "react";
-import {updateUserProfile} from "@/app/_actions/userProfileAndSettings";
+import {updateUserEmail, updateUserProfile} from "@/app/_actions/userProfileAndSettings";
 import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
 import {IconButton} from "@/app/_components";
 import PhoneInput from "react-phone-number-input";
 import 'react-phone-number-input/style.css'
 import {toast} from "sonner";
+import {Spinner} from "@/app/_components/Spinner";
+import posthog from "posthog-js";
 
 export function EditProfileForm({accessToken}) {
     const {userProfileInfo, isLoading, error} = useUserProfileInfo(accessToken);
@@ -20,16 +22,41 @@ export function EditProfileForm({accessToken}) {
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
 
-    const [state, action, isPending] = useActionState(updateUserProfile, undefined);
+    const [state, action, isPendingState] = useActionState(updateUserProfile, undefined);
     const formRef = useRef(null);
     const emailRef = useRef(null);
     const fullNameRef = useRef(null);
     const phoneRef = useRef(null);
     const [disableBtn, setDisableBtn] = useState(false);
 
+    const [isPending, startTransition] = useTransition();
     const resetError = () => {
         //     do something
     }
+
+
+    const submitAction = (e) => {
+        Log('SigninForm', e.code)
+        if (e.code === "ENTER" && !disableBtn) {
+            formRef.submit();
+        }
+    }
+
+    const handleEmailChange = (e) => {
+        e.preventDefault()
+        Log("EmailRef", emailRef);
+        startTransition(async () => {
+            const initiateChangeEmail = await updateUserEmail(email);
+            Log({initiateChangeEmail})
+            if (initiateChangeEmail?.success) {
+                toast.success('Profile updated successfully!')
+            } else {
+                posthog.captureException(`editProfileForm.jsx: handleEmailChange() Error ${JSON.stringify(initiateChangeEmail)}`);
+                toast.error(initiateChangeEmail.message ? initiateChangeEmail.message : "An error occurred while changing email");
+            }
+        })
+    }
+
     useEffect(() => {
         if (userProfileInfo) {
             const user = userProfileInfo.user;
@@ -39,13 +66,6 @@ export function EditProfileForm({accessToken}) {
         }
         Log(`editProfileForm`, {userProfileInfo});
     }, [userProfileInfo]);
-
-    const submitAction = (e) => {
-        Log('SigninForm', e.code)
-        if (e.code === "ENTER" && !disableBtn) {
-            formRef.submit();
-        }
-    }
 
     useEffect(() => {
         if (window) {
@@ -110,6 +130,10 @@ export function EditProfileForm({accessToken}) {
                                        placeholder="linda@framcreative.com"
                                        className="flex-1 outline-none bg-transparent text-mainText"
                                 />
+                                <button onClick={handleEmailChange}
+                                        className={"text-black text-xs border border-[#CCCCCC] p-2 rounded-xl flex items-center"}> {isPending ?
+                                    <><Spinner/> Changing</> : "Change"}
+                                </button>
                             </div>
                             {state?.fieldErrors?.email &&
                                 <p className="text-red-500 text-sm">{state.fieldErrors?.email}</p>}
@@ -139,7 +163,7 @@ export function EditProfileForm({accessToken}) {
 
 
                         <div className="flex flex-col justify-center items-center mt-10">
-                            <IconButton isPending={isPending} loadingText={"Saving"}
+                            <IconButton isPending={isPendingState} loadingText={"Saving"}
                                         text="Save"
                                         type="submit"/>
                         </div>
