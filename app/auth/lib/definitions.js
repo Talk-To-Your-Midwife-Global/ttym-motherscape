@@ -75,3 +75,7 @@ export const ProfileSettingsSchema = z.object({
         {message: "Please enter a valid phone number."}
     ),
 })
+
+export const emailSchema = z.object({
+    email: z.string().email({message: "Please enter a valid email address"})
+})
