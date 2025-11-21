@@ -55,14 +55,31 @@ export function generateMonths() {
 
 // for each cycle, the menstrual, the ovulation, the safe and pass them to the monthAllocator
 
-export function getMenstrualDates(start, end) {
+export function getMenstrualDates(start, end, periodLength = null, cycleId = null) {
     start = new Date(start);
     end = new Date(end)
+    let periodLengthIndicatedEndDate;
+    if (periodLength) periodLengthIndicatedEndDate = addDays(start, periodLength);
+
+    let unconfirmedStyledDates;
+    let unconfirmedStyle = "text-black rounded-full border border-[#E82A73] border-dashed"
+    if (!(end === periodLengthIndicatedEndDate)) {
+        const unconfirmedIntervalDates = eachDayOfInterval(
+            {start: end, end: periodLengthIndicatedEndDate})
+        unconfirmedStyledDates = styleDates(unconfirmedIntervalDates, unconfirmedStyle);
+    }
+
+    if (!cycleId) {
+        const unconfirmedIntervalDates = eachDayOfInterval(
+            {start: start, end: periodLengthIndicatedEndDate || end})
+        return styleDates(unconfirmedIntervalDates, unconfirmedStyle);
+    }
+
     const days = eachDayOfInterval({
         start, end
     });
     const style = "bg-[#E82A73] text-white rounded-2xl"
-    return styleDates(days, style);
+    return [...styleDates(days, style), ...unconfirmedStyledDates];
 }
 
 export function getOvulationDates(ovulationDay) {
@@ -97,10 +114,10 @@ function styleDates(dates, style) {
     });
 }
 
-export function enrichMonthsObject(cycles) {
+export function enrichMonthsObject(cycles, periodLength = null) {
     const months = generateMonths();
     for (const cycle of cycles) {
-        const menstrualDates = getMenstrualDates(cycle.start_date, cycle.bleed_end_date);
+        const menstrualDates = getMenstrualDates(cycle.start_date, cycle.bleed_end_date, periodLength, cycle.id);
         const ovulationDates = getOvulationDates(cycle.ovulation_day);
         const safeDates = getSafeDays(cycle.safe_days);
         monthAllocator(safeDates, STAGES.SAFE, months, cycle.id);
@@ -133,7 +150,8 @@ export function parseMonthForCalendar(monthObject) {
         res.push({
             date: day,
             style: monthObject[day].style,
-            stage: monthObject[day].stage
+            stage: monthObject[day].stage,
+            id: monthObject[day].id
         })
     }
     return res;

@@ -9,7 +9,7 @@ const CalendarViewContext = createContext();
 
 export function CalendarViewContextProvider({children}) {
     const [viewLarge, setViewLarge] = useState(false);
-    const [viewingDate, setViewingDate] = useState(new Date());
+    const [viewingDate, setViewingDate] = useState({date: new Date()});
     const [logs, setLogs] = useState(undefined);
     const [viewLogs, setViewLogs] = useState(false);
     const [isUsingPredictedCycle, setIsUsingPredictedCycle] = useState(false); // TODO: this has to go
@@ -17,7 +17,6 @@ export function CalendarViewContextProvider({children}) {
     const [months, setMonths] = useState({}); // all the months
     const [currentViewingMonth, setCurrentViewingMonth] = useState(new Date());
     const [currentViewingMonthDates, setCurrentViewingMonthDates] = useState([]);
-    const [activeCycle, setActiveCycle] = useState({});
     const [showMenstrualQuestion, setShowMenstrualQuestion] = useState(false);
 
     const handleMonthSetting = (data, month = undefined) => {

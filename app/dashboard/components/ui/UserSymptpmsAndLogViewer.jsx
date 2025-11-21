@@ -3,7 +3,7 @@ import {Drawer} from "vaul";
 import Link from "next/link";
 import {cn, Log} from "@/app/_lib/utils";
 import {useCalendarView} from "@/app/contexts/showCalendarContext";
-import {differenceInDays, format, isWithinInterval} from "date-fns";
+import {differenceInDays, format, isAfter, isBefore, isWithinInterval, subDays} from "date-fns";
 import {formatDate} from "@/app/_lib/functions";
 import {moodEmoticons, symptomEmoticons} from "@/app/dashboard/components/logs";
 import {TapWrapper} from "@/app/_components/TapWrapper";
@@ -38,8 +38,8 @@ function ExcessCard({num = 0}) {
 export function UserSymptomsAndLogViewer({open, setOpen, cycleInfo, showMenstrualQuestion, accessToken}) {
     const {logs, viewingDate, setIsUsingPredictedCycle} = useCalendarView();
     const [isPending, startTransition] = useTransition();
-    const date = formatDate(viewingDate);
-    Log("UserSymptomsAndLogViewer details1", {logs, date})
+    const date = formatDate(viewingDate.date);
+    Log("interest", {viewingDate: viewingDate})
     const details = logs ? logs[date] : undefined;
     const withoutIcons = [{feelings: []}]; // for the items without icons
 
@@ -76,21 +76,18 @@ export function UserSymptomsAndLogViewer({open, setOpen, cycleInfo, showMenstrua
     const feelingsToDisplay = feelings && feelings.slice(0, 4);
     const count = (feelings && feelings.length > 4 && feelings.slice(4).length > 1) && feelings.slice(4).length || 0;
 
-
     Log("UserSymptomsAndLogViewer details", {details, feelings})
     Log("Final computation", {moodIcons, symptomIcons, withoutIcons})
 
-    // const isPreviousCycle = differenceInDays(viewingDate, cycleInfo?.periodStartDate) <= 0; // todo: fix this
-    const isPreviousCycle = !isWithinInterval(viewingDate, {
-        start: cycleInfo?.periodStartDate,
-        end: cycleInfo.periodEndDate
-    });
+    const isPreviousCycle = isBefore(viewingDate.date, cycleInfo.periodStartDate);
+    const isUpcomingCycle = isAfter(viewingDate.date, cycleInfo.periodEndDate);
 
     const handleDateConfirm = () => {
         posthog.capture('user_newcycle_indication');
-        Log("UserSymptomsAndLogViewer", {viewingDate});
+        Log("UserSymptomsAndLogViewer", {viewingDate: date});
+
         const jsonBody = JSON.stringify({
-            start_date: format(viewingDate, "yyyy-MM-dd")
+            start_date: format(viewingDate.date, "yyyy-MM-dd")
         })
 
         Log("RestartCalendar.jsx; restart date handleDateConfirm", {jsonBody})
@@ -112,6 +109,7 @@ export function UserSymptomsAndLogViewer({open, setOpen, cycleInfo, showMenstrua
             } else {
                 Log("UserSymptomsAndLogViewer.jsx; handleDateConfirm @ /cycles/start success", {response})
                 setIsUsingPredictedCycle(false);
+                toast.info('Updating cycle information...')
                 window.location.reload() // because all the other SPA related ways of refreshing for Next.js failed to work
             }
         })
@@ -133,10 +131,11 @@ export function UserSymptomsAndLogViewer({open, setOpen, cycleInfo, showMenstrua
                     <Drawer.Title className={"text-xl flex justify-between font-semibold  mb-6"}>
                         <div>
                             <div>
-                                <span>{format(viewingDate, 'd MMM') || "Day Month"} - </span>
-                                <span> {!isPreviousCycle ? `Cycle Day ${differenceInDays(viewingDate, cycleInfo?.periodStartDate)}` : "Previous Cycle"}</span>
+                                <span>{format(viewingDate.date, 'd MMM') || "Day Month"} - </span>
+                                <span> {isPreviousCycle ? "Previous Cycle"
+                                    : isUpcomingCycle ? "Upcoming cycle" : `Cycle Day ${differenceInDays(viewingDate.date, cycleInfo?.periodStartDate)}`}</span>
                             </div>
-                            <p className={"font-normal text-[14px] capitalize"}>{cycleInfo?.stage} phase</p>
+                            <p className={"font-normal text-[14px] capitalize"}>{viewingDate.stage} phase</p>
                         </div>
                         <div tabIndex={0} onClick={() => setOpen(false)}
                              className={"w-[22px] h-[22px] bg-[#898D8E] rounded-full flex items-center justify-center " +

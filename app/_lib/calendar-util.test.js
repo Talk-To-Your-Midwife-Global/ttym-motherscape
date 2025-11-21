@@ -25,6 +25,11 @@ const cycles = [
     }
 ]
 
+const styles = {
+    menstrualDashed: "text-black rounded-full border border-[#E82A73] border-dashed",
+
+}
+
 describe("generateMonths()", () => {
     it('should return an object of date key paired with an object having style and stage props', () => {
         const generatedMonths = generateMonths();
@@ -50,17 +55,18 @@ describe("getMenstrualDates()", () => {
 
     it('should return a suitable range of dates from the start date to end date', () => {
         const currentCycle = cycles[0];
-        const menstrualDates = calendarUtils.getMenstrualDates(currentCycle.start_date, currentCycle.bleed_end_date);
+        const menstrualDates = calendarUtils.getMenstrualDates(currentCycle.start_date, currentCycle.bleed_end_date, null, null);
         const distance = formatDistance(new Date(currentCycle.start_date), new Date(currentCycle.bleed_end_date), {
             unit: 'days'
         });
+
         expect(menstrualDates[0]).toEqual(expect.objectContaining({
             date: expect.stringMatching(/\d{4}-\d{2}-\d{2}/g),
-            style: expect.stringContaining("bg-[#E82A73] text-white")
+            style: expect.stringContaining(styles.menstrualDashed)
         }))
         expect(menstrualDates[menstrualDates.length - 1]).toEqual(expect.objectContaining({
             date: expect.stringMatching(/\d{4}-\d{2}-\d{2}/g),
-            style: expect.stringContaining("bg-[#E82A73] text-white")
+            style: expect.stringContaining(styles.menstrualDashed)
         }))
         expect(menstrualDates.length).toBe(Number(distance.match(/\d/)[0]) + 1);
         expect(menstrualDates.length).toBeLessThanOrEqual(7);
@@ -122,13 +128,12 @@ describe("monthAllocator()", () => {
         const currentCycle = cycles[0];
         const months = generateMonths();
         const menstrualDates = calendarUtils.getMenstrualDates(currentCycle.start_date, currentCycle.bleed_end_date);
-        const style = "bg-[#E82A73] text-white"
+        const style = styles.menstrualDashed;
         calendarUtils.monthAllocator(menstrualDates, STAGES.MENSTRUAL, months);
-
-        expect(months[9][currentCycle.start_date]).toEqual({
+        expect(months[9][currentCycle.start_date]).toEqual(expect.objectContaining({
             style: expect.stringContaining(style),
             stage: STAGES.MENSTRUAL
-        })
+        }))
 
         expect(months[9][currentCycle.bleed_end_date]).toEqual({
             style: expect.stringContaining(style),
