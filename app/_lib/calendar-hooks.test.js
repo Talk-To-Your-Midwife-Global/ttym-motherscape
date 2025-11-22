@@ -5,6 +5,7 @@ import {fetcher} from "@/app/_lib/functions";
 
 describe("useCycleForTheYear()", () => {
     describe("The fetcher", () => {
+        // TODO: replace this
         let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYxMTY3ODMxLCJpYXQiOjE3NjEwODE0MzEsImp0aSI6ImJjODIwNzVhMGJiYTRlMTJiMjU0YTk5NGZlNGZlMGU0IiwidXNlcl9pZCI6MTB9.UpnRIg-UOvviX7g0Eq9j8Bdhy75B9QWV8C0dTgw0VAc";
 
         test("accessToken should be defined", () => {
