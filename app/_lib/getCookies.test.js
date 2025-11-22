@@ -1,2 +1,7 @@
 // TODO: write the test
-// import {}
+import {test} from "vitest";
+
+test.todo('something', () => {
+
+})
+

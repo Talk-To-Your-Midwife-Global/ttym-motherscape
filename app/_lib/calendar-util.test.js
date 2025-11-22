@@ -135,10 +135,10 @@ describe("monthAllocator()", () => {
             stage: STAGES.MENSTRUAL
         }))
 
-        expect(months[9][currentCycle.bleed_end_date]).toEqual({
+        expect(months[9][currentCycle.bleed_end_date]).toEqual(expect.objectContaining({
             style: expect.stringContaining(style),
             stage: STAGES.MENSTRUAL
-        })
+        }));
     });
 
     it('should modify the month with ovulation days style and stage', () => {

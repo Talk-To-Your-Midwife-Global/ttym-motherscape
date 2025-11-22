@@ -60,26 +60,32 @@ export function getMenstrualDates(start, end, periodLength = null, cycleId = nul
     end = new Date(end)
     let periodLengthIndicatedEndDate;
     if (periodLength) periodLengthIndicatedEndDate = addDays(start, periodLength);
-
+    console.log("interest", {
+        end,
+        periodLengthIndicatedEndDate,
+        equalizer: end > periodLengthIndicatedEndDate,
+        formatedE: format(end, 'yyyy-MM-dd') === format(periodLengthIndicatedEndDate, 'yyyy-MM-dd')
+    });
     let unconfirmedStyledDates;
     let unconfirmedStyle = "text-black rounded-full border border-[#E82A73] border-dashed"
-    if (!(end === periodLengthIndicatedEndDate)) {
+    if (format(end, 'yyyy-MM-dd') !== format(periodLengthIndicatedEndDate, 'yyyy-MM-dd')) {
         const unconfirmedIntervalDates = eachDayOfInterval(
             {start: end, end: periodLengthIndicatedEndDate})
-        unconfirmedStyledDates = styleDates(unconfirmedIntervalDates, unconfirmedStyle);
+        unconfirmedStyledDates = styleDates(unconfirmedIntervalDates, unconfirmedStyle, {isPredicted: true});
     }
 
     if (!cycleId) {
         const unconfirmedIntervalDates = eachDayOfInterval(
             {start: start, end: periodLengthIndicatedEndDate || end})
-        return styleDates(unconfirmedIntervalDates, unconfirmedStyle);
+        return styleDates(unconfirmedIntervalDates, unconfirmedStyle, {isPredicted: true});
     }
 
     const days = eachDayOfInterval({
         start, end
     });
-    const style = "bg-[#E82A73] text-white rounded-2xl"
-    return [...styleDates(days, style), ...unconfirmedStyledDates];
+    const style = "bg-[#E82A73] text-white rounded-2xl";
+    if (unconfirmedStyledDates) return [...styleDates(days, style), ...unconfirmedStyledDates];
+    return styleDates(days, style);
 }
 
 export function getOvulationDates(ovulationDay) {
@@ -104,12 +110,13 @@ export function getSafeDays(safeDaysArray) {
     return res;
 }
 
-function styleDates(dates, style) {
+function styleDates(dates, style, extraOptions = null) {
     return dates.map(day => {
         return {
+            ...extraOptions,
             date: format(day, 'yyyy-MM-dd'),
             style: day.style ? `${day.style} ${style}` : style,
-            stage: undefined
+            stage: undefined,
         }
     });
 }
@@ -126,7 +133,6 @@ export function enrichMonthsObject(cycles, periodLength = null) {
 
         const today = format(new Date(), "yyyy-MM-dd");
         const month = new Date().getMonth();
-
         months[month][today].style = months[month][today].style + ' border-2 border-primaryColor'
     }
     return months
@@ -139,7 +145,8 @@ export function monthAllocator(dates, stage = undefined, months, id = undefined)
         months[month][day.date] = {
             style: day.style,
             stage: stage,
-            id: id
+            id: id,
+            isPredicted: day.isPredicted
         }
     }
 }
@@ -147,12 +154,22 @@ export function monthAllocator(dates, stage = undefined, months, id = undefined)
 export function parseMonthForCalendar(monthObject) {
     const res = []
     for (const day in monthObject) {
-        res.push({
-            date: day,
-            style: monthObject[day].style,
-            stage: monthObject[day].stage,
-            id: monthObject[day].id
-        })
+        if (monthObject[day].isPredicted) {
+            res.push({
+                date: day,
+                style: monthObject[day].style,
+                stage: monthObject[day].stage,
+                id: monthObject[day].id,
+                isPredicted: monthObject[day].isPredicted
+            })
+        } else {
+            res.push({
+                date: day,
+                style: monthObject[day].style,
+                stage: monthObject[day].stage,
+                id: monthObject[day].id,
+            })
+        }
     }
     return res;
 }

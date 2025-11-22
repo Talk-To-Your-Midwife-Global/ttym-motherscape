@@ -26,7 +26,9 @@ export function CombinedCalendar({accessToken}) {
         currentViewingMonth,
         currentViewingMonthDates, handleMonthSetting,
         moveCalendarBackwards, moveCalendarForwards,
-        showMenstrualQuestion, setShowMenstrualQuestion
+        showMenstrualQuestion, setShowMenstrualQuestion,
+        showUnConfirmMenstrualDateQuestion, setShowUnConfirmMenstrualDateQuestion,
+        setShowConfirmPredictedMenstrualDateQuestion
     } = useCalendarView();
     const today = new Date();
     const dateRange = `${formatDate(startOfMonth(today))}&${formatDate(today)}`;
@@ -41,23 +43,32 @@ export function CombinedCalendar({accessToken}) {
         const currentDay = new Date(date.date);
         setViewingDate(date);
 
-        const dayIsAPredictedMenstrualDate = !(!date.id && date.stage === STAGES.MENSTRUAL);
-        if (dayIsAPredictedMenstrualDate) {
+        const dayIsNotAPredictedMenstrualDate = !(!date.id && date.stage === STAGES.MENSTRUAL);
+        const dayIsAConfirmedMenstrualDate = date.id && date.stage === STAGES.MENSTRUAL;
+
+        if (dayIsNotAPredictedMenstrualDate) {
+            if (dayIsAConfirmedMenstrualDate && !(date.isPredicted)) {
+                setShowConfirmPredictedMenstrualDateQuestion(false);
+                setShowUnConfirmMenstrualDateQuestion(true)
+            } else {
+                setShowConfirmPredictedMenstrualDateQuestion(true)
+            }
             posthog.capture("combined_calendar_date_clicked");
             setShowMenstrualQuestion(false)
-            setViewLogs(true); //the pop-up
-            // save logs in context if it is not having it already
-            if (!logs) {
-                const parsedLogs = parseLogs(logData);
-                setLogs(parsedLogs);
-            }
             setViewLarge(false)
         } else {
-            // set the menstrual question to true as well if there is a past date or today
+            setShowConfirmPredictedMenstrualDateQuestion(false);
+            setShowUnConfirmMenstrualDateQuestion(false);
+            // set the menstrual question to true as well if the date is a past date or today
             if (isPast(currentDay)) {
                 setShowMenstrualQuestion(true);
             }
-            setViewLogs(true)
+        }
+        setViewLogs(true)
+        // save logs in context if it is not having it already
+        if (!logs) {
+            const parsedLogs = parseLogs(logData);
+            setLogs(parsedLogs);
         }
     }
 
@@ -120,7 +131,9 @@ export function CombinedCalendar({accessToken}) {
             }
             {/*TODO: make it such that a tap on the short calendar reveals the large*/}
             <UserSymptomsAndLogViewer accessToken={accessToken} open={viewLogs} setOpen={setViewLogs}
-                                      showMenstrualQuestion={showMenstrualQuestion} cycleInfo={generalCycleInfo}/>
+                                      showMenstrualQuestion={showMenstrualQuestion}
+                                      showUnConfirmMenstrualDateQuestion={showUnConfirmMenstrualDateQuestion}
+                                      cycleInfo={generalCycleInfo}/>
         </>
     )
 }
