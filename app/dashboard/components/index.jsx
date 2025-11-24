@@ -505,14 +505,14 @@ function CalendarTemplate({
                 {
                     days.map((day, index) => {
                         const isCurrentMonth = isSameMonth(day, currentMonth)
-                        const customStyle = specialDates.find((styleDate) => isSameDay(styleDate?.date, day));
+                        const dateObject = specialDates.find((styleDate) => isSameDay(styleDate?.date, day));
 
                         return (
                             <div key={index}
-                                 onClick={() => customStyle.stage === "MENSTRUAL" ? dateClick(customStyle) : dateClick(day)}
+                                 onClick={() => dateClick(dateObject)}
                                  className={`w-[40px] h-[40px] text-center flex items-center justify-center relative left-1 text-xs rounded-full
                                 ${isCurrentMonth ? 'text-gray-900' : 'text-gray-400'}
-                                ${customStyle && customStyle.style}
+                                ${dateObject && dateObject.style}
                             `}>
                                 {format(day, 'd')}
                             </div>
