@@ -20,7 +20,7 @@ export function RefreshTokenizer({children}) {
     }
 
     useEffect(() => {
-        const refreshTokenInterval = setInterval(callRefreshFunction, 60 * 60 * 1000)
+        const refreshTokenInterval = setInterval(callRefreshFunction, 60 * 13 * 1000);
         return () => {
             clearInterval(refreshTokenInterval);
         }
