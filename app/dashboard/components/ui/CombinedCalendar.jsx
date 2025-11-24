@@ -43,23 +43,12 @@ export function CombinedCalendar({accessToken}) {
         const currentDay = new Date(date.date);
         setViewingDate(date);
 
-        const dayIsNotAPredictedMenstrualDate = !(!date.id && date.stage === STAGES.MENSTRUAL);
         const dayIsAConfirmedMenstrualDate = date.id && date.stage === STAGES.MENSTRUAL;
 
-        if (dayIsNotAPredictedMenstrualDate) {
-            if (dayIsAConfirmedMenstrualDate && !(date.isPredicted)) {
-                setShowConfirmPredictedMenstrualDateQuestion(false);
-                setShowUnConfirmMenstrualDateQuestion(true)
-            } else {
-                setShowConfirmPredictedMenstrualDateQuestion(true)
-            }
-            posthog.capture("combined_calendar_date_clicked");
-            setShowMenstrualQuestion(false)
-            setViewLarge(false)
-        } else {
+        if (dayIsAConfirmedMenstrualDate && !(date.isPredicted)) {
             setShowConfirmPredictedMenstrualDateQuestion(false);
-            setShowUnConfirmMenstrualDateQuestion(false);
-            // set the menstrual question to true as well if the date is a past date or today
+            setShowUnConfirmMenstrualDateQuestion(true);
+        } else {
             if (isPast(currentDay)) {
                 setShowMenstrualQuestion(true);
             }

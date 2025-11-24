@@ -1,4 +1,4 @@
-import {addDays, eachDayOfInterval, endOfMonth, format, getMonth, subDays} from "date-fns";
+import {addDays, eachDayOfInterval, endOfMonth, format, getMonth, isWithinInterval, subDays} from "date-fns";
 import {Log} from "@/app/_lib/utils";
 
 /**
@@ -60,26 +60,23 @@ export function getMenstrualDates(start, end, periodLength = null, cycleId = nul
     end = new Date(end)
     let periodLengthIndicatedEndDate;
     if (periodLength) periodLengthIndicatedEndDate = addDays(start, periodLength);
-    console.log("interest", {
-        end,
-        periodLengthIndicatedEndDate,
-        equalizer: end > periodLengthIndicatedEndDate,
-        formatedE: format(end, 'yyyy-MM-dd') === format(periodLengthIndicatedEndDate, 'yyyy-MM-dd')
-    });
-    let unconfirmedStyledDates;
-    let unconfirmedStyle = "text-black rounded-full border border-[#E82A73] border-dashed"
-    if (format(end, 'yyyy-MM-dd') !== format(periodLengthIndicatedEndDate, 'yyyy-MM-dd')) {
-        const unconfirmedIntervalDates = eachDayOfInterval(
-            {start: end, end: periodLengthIndicatedEndDate})
-        unconfirmedStyledDates = styleDates(unconfirmedIntervalDates, unconfirmedStyle, {isPredicted: true});
-    }
 
-    if (!cycleId) {
+    let unconfirmedStyledDates;
+    let unconfirmedStyle = "text-black rounded-full border border-[#E82A73] border-dashed";
+    const cycleHasNotActuallyStartedYet = !cycleId;
+    if (cycleHasNotActuallyStartedYet) {
         const unconfirmedIntervalDates = eachDayOfInterval(
             {start: start, end: periodLengthIndicatedEndDate || end})
         return styleDates(unconfirmedIntervalDates, unconfirmedStyle, {isPredicted: true});
     }
-
+    let unconfirmedIntervalDates;
+    const today = new Date();
+    const isLatestAvailableCycle = isWithinInterval(today, {start, end});
+    if (isLatestAvailableCycle) {
+        unconfirmedIntervalDates = eachDayOfInterval(
+            {start: addDays(today, 1), end: end})
+        unconfirmedStyledDates = styleDates(unconfirmedIntervalDates, unconfirmedStyle, {isPredicted: true});
+    }
     const days = eachDayOfInterval({
         start, end
     });

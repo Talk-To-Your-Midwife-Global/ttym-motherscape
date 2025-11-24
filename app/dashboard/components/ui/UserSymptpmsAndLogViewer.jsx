@@ -172,7 +172,7 @@ export function UserSymptomsAndLogViewer({
                         <div className={"rounded-md px-2 py-1 text-white mb-2 bg-[#E82A73] flex gap-1"}>
                             Spotted blood today?
                             <span className={"underline"}
-                                  onClick={() => handleUnConfirmDate(addDays(viewingDate.date, 1))}>
+                                  onClick={() => handleUnConfirmDate(viewingDate.date)}>
                                 Yes, I saw blood
                             </span>
                         </div>
