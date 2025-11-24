@@ -84,14 +84,14 @@ export async function refreshUserAccessToken() {
                 value: response.access,
                 httpOnly: true,
                 sameSite: "lax",
-                maxAge: 60 * 60 * 24
+                maxAge: 60 * 15
             });
             cookieStore.set({
                 name: "refresh_token",
                 value: response.refresh,
                 httpOnly: true,
                 sameSite: "lax",
-                maxAge: 60 * 60 * 24
+                maxAge: 60 * 15
             });
             return {
                 serverError: false,
@@ -293,14 +293,14 @@ export async function signin(state, formData) {
             value: result.tokens.access,
             httpOnly: true,
             sameSite: 'lax',
-            maxAge: 60 * 60 * 24
+            maxAge: 60 * 15
         })
         cookieStore.set({
             name: 'refresh_token',
             value: result.tokens.refresh,
             httpOnly: true,
             sameSite: 'lax',
-            maxAge: 60 * 60 * 24
+            maxAge: 60 * 15
         })
         cookieStore.set({
             name: 'ttym-user-type',
