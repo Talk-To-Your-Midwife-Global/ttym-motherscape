@@ -32,15 +32,90 @@ import {Log} from "@/app/_lib/utils";
 //
 //     return payload
 // }
+export async function refreshUserAccessToken() {
+    const functionExceptionTag = "auth.js; refreshUserAccessToken()"
+    const {refresh_token} = await getLocalCookies(['refresh_token']);
+    let jsonBody;
+    if (refresh_token) {
+        jsonBody = JSON.stringify({
+            refresh: refresh_token
+        })
+    } else {
+        posthog.captureException(`${functionExceptionTag} missing refresh_token, ${JSON.stringify({jsonBody})}`);
+        return {
+            serverError: true,
+            message: "refresh token not found",
+            success: false
+        }
+    }
 
+    try {
+        console.log("Refresh token as JSON body", jsonBody);
+        const request = await fetch(`${HOSTNAME_URI}/auth/token/refresh/`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                'X-Client-Origin': CURRENTROUTE,
+            },
+            body: jsonBody
+        })
+        console.log({request})
+        if (!request.ok) {
+            const errMessage = `${functionExceptionTag} request not okay: ${JSON.stringify({
+                request,
+                response: await request.json()
+            })}`
+            posthog.captureException(errMessage)
 
-async function patientOrMidwife() {
-    const cookieStore = await cookies()
-    if (cookieStore.has('ttym-user-type')) {
-        if (cookieStore.get('ttym-user-type') !== 'midwife') {
-            return 'PATIENT'
+            return {
+                serverError: true,
+                message: errMessage,
+                success: false,
+            }
+        }
+
+        const response = await request.json();
+        console.log({response});
+
+        const cookieStore = await cookies();
+        if (response.access && response.refresh) {
+            cookieStore.set({
+                name: "access_token",
+                value: response.access,
+                httpOnly: true,
+                sameSite: "lax",
+                maxAge: 60 * 15
+            });
+            cookieStore.set({
+                name: "refresh_token",
+                value: response.refresh,
+                httpOnly: true,
+                sameSite: "lax",
+                maxAge: 60 * 15
+            });
+            return {
+                serverError: false,
+                success: true,
+                message: undefined
+            }
         } else {
-            return 'MIDWIFE'
+            const errMessage = `${functionExceptionTag} tokens not in response: ${JSON.stringify({
+                request,
+                response: await request.json()
+            })}`
+            return {
+                serverError: true,
+                message: errMessage,
+                success: false,
+            }
+        }
+    } catch (err) {
+        const errMessage = `${functionExceptionTag} catch() ${JSON.stringify(err)}`
+        posthog.captureException(errMessage);
+        return {
+            serverError: true,
+            message: errMessage,
+            success: false,
         }
     }
 }
@@ -82,7 +157,14 @@ export async function signup(state, formData) {
     }
 
     const cookieStore = await cookies();
-    cookieStore.set('user_email', formData.get('email'));
+    cookieStore.set({
+        name: 'user_email',
+        value: formData.get('email'),
+        maxAge: 60 * 60 * 24,
+        httpOnly: true,
+        path: "/",
+        sameSite: 'Lax'
+    });
 
     // call the provider
     try {
@@ -96,9 +178,9 @@ export async function signup(state, formData) {
             body: JSON.stringify(fields),
         })
         const errors = []
-        console.log({response});
+        console.log({response, time: new Date()});
         const result = await response.json();
-        console.log({result});
+        console.log({result, time: new Date()});
 
         if (!response.ok) {
             for (const err in result) {
@@ -111,16 +193,6 @@ export async function signup(state, formData) {
                 serverError: errors,
             }
         }
-
-        // const emailRequest = await requestEmailVerification(formData.get('email'));
-        //
-        // if (emailRequest?.success) {
-        //     return {
-        //         success: true,
-        //         token: result.tokens.access,
-        //         route: `/auth/verify-email/`
-        //     }
-        // }
 
         return {
             success: true,
@@ -216,17 +288,43 @@ export async function signin(state, formData) {
         }
 
         let cookieStore = await cookies()
-        cookieStore.set('access_token', result.tokens.access)
-        cookieStore.set('refresh_token', result.tokens.refresh)
-        cookieStore.set('ttym-user-type', matchUserStatus(result.user.status, true));
+        cookieStore.set({
+            name: 'access_token',
+            value: result.tokens.access,
+            httpOnly: true,
+            sameSite: 'lax',
+            maxAge: 60 * 15
+        })
+        cookieStore.set({
+            name: 'refresh_token',
+            value: result.tokens.refresh,
+            httpOnly: true,
+            sameSite: 'lax',
+            maxAge: 60 * 15
+        })
+        cookieStore.set({
+            name: 'ttym-user-type',
+            value: matchUserStatus(result.user.status, true),
+            httpOnly: true,
+            sameSite: 'lax',
+        });
 
         Log({result});
         Log("auth.js",)
         if (!result.user.is_configured) {
-            cookieStore.set('last_login', null)
+            cookieStore.set({
+                name: 'last_login',
+                value: null,
+                httpOnly: true,
+                sameSite: 'lax',
+            })
         } else {
-
-            cookieStore.set('last_login', result.user.last_login)
+            cookieStore.set({
+                name: 'last_login',
+                value: result.user.last_login,
+                httpOnly: true,
+                sameSite: 'lax',
+            })
         }
         const user = result.user
         const userDetails = {
