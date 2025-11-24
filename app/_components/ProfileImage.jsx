@@ -17,7 +17,7 @@ export function ProfileImage({userProfileInfo, onClick}) {
             </div>
             <div>
                 <h2 className={"text-[20px] font-medium text-[#3A3A3A]"}>{firstName}</h2>
-                <p className={"text-sm text-[#3A3A3A]"}>{userProfileInfo?.user?.email}</p>
+                <p className={"text-xs text-[#3A3A3A]"}>{userProfileInfo?.user?.email}</p>
             </div>
         </section>
     )
