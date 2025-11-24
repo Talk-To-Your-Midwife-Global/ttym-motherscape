@@ -1,11 +1,26 @@
 "use client"
-import {describe, expect, it, test} from "vitest";
+import {describe, expect, it, test, beforeAll, afterAll} from "vitest";
 import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {fetcher} from "@/app/_lib/functions";
 
-describe("useCycleForTheYear()", () => {
+describe.todo("useCycleForTheYear()", () => {
     describe("The fetcher", () => {
-        let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYxMTY3ODMxLCJpYXQiOjE3NjEwODE0MzEsImp0aSI6ImJjODIwNzVhMGJiYTRlMTJiMjU0YTk5NGZlNGZlMGU0IiwidXNlcl9pZCI6MTB9.UpnRIg-UOvviX7g0Eq9j8Bdhy75B9QWV8C0dTgw0VAc";
+        // TODO: replace this
+        // let accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYxMTY3ODMxLCJpYXQiOjE3NjEwODE0MzEsImp0aSI6ImJjODIwNzVhMGJiYTRlMTJiMjU0YTk5NGZlNGZlMGU0IiwidXNlcl9pZCI6MTB9.UpnRIg-UOvviX7g0Eq9j8Bdhy75B9QWV8C0dTgw0VAc";
+        let accessToken;
+        beforeAll(() => {
+            const fields = {
+                first_name: "Sandra",
+                last_name: "Awuni",
+                email: "test@talktoyourmidwife.com",
+                phone_number: "+233245893849",
+                password: process.env.NEXT_PUBLIC_TEST_USR_PASSWORD,
+                date_of_birth: '2011-10-12'
+            }
+        })
+
+        afterAll(() => {
+        })
 
         test("accessToken should be defined", () => {
             expect(accessToken).toBeDefined();

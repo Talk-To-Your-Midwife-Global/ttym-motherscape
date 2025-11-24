@@ -9,16 +9,17 @@ const CalendarViewContext = createContext();
 
 export function CalendarViewContextProvider({children}) {
     const [viewLarge, setViewLarge] = useState(false);
-    const [viewingDate, setViewingDate] = useState(new Date());
+    const [viewingDate, setViewingDate] = useState({date: new Date()});
     const [logs, setLogs] = useState(undefined);
     const [viewLogs, setViewLogs] = useState(false);
-    const [isUsingPredictedCycle, setIsUsingPredictedCycle] = useState(false); // TODO: this has to go
+    const [isUsingPredictedCycle, setIsUsingPredictedCycle] = useState(false); // around because of the restartCalendar component
     const [cycleInfo, setCycleInfo] = useState({});
     const [months, setMonths] = useState({}); // all the months
     const [currentViewingMonth, setCurrentViewingMonth] = useState(new Date());
     const [currentViewingMonthDates, setCurrentViewingMonthDates] = useState([]);
-    const [activeCycle, setActiveCycle] = useState({});
     const [showMenstrualQuestion, setShowMenstrualQuestion] = useState(false);
+    const [showUnConfirmMenstrualDateQuestion, setShowUnConfirmMenstrualDateQuestion] = useState(false);
+    const [showConfirmPredictedMenstrualDateQuestion, setShowConfirmPredictedMenstrualDateQuestion] = useState(false);
 
     const handleMonthSetting = (data, month = undefined) => {
         month = month || getMonth(new Date());
@@ -56,7 +57,9 @@ export function CalendarViewContextProvider({children}) {
         currentViewingMonthDates, setCurrentViewingMonthDates,
         currentViewingMonth, setCurrentViewingMonth,
         handleMonthSetting, moveCalendarBackwards, moveCalendarForwards,
-        showMenstrualQuestion, setShowMenstrualQuestion
+        showMenstrualQuestion, setShowMenstrualQuestion,
+        showUnConfirmMenstrualDateQuestion, setShowUnConfirmMenstrualDateQuestion,
+        showConfirmPredictedMenstrualDateQuestion, setShowConfirmPredictedMenstrualDateQuestion
     }
 
     return <CalendarViewContext.Provider value={values}>

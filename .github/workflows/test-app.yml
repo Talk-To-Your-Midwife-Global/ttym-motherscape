@@ -1,0 +1,21 @@
+name: test-app.yml
+on:
+  pull_request:
+    branches: [ develop, test, main ]
+  push:
+    branches: [ develop, test, main ]
+
+jobs:
+  run-all-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+      - name: Install node
+        uses: actions/setup-node@v4
+      - name: Install pnpm
+        run: npm install -g pnpm@latest-10
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Run all tests
+        run: pnpm run test
