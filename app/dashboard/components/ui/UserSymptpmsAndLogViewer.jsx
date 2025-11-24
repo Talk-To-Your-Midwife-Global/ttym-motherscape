@@ -153,8 +153,7 @@ export function UserSymptomsAndLogViewer({
                     {
                         showMenstrualQuestion &&
                         <div className={"rounded-md px-2 py-1 text-white mb-2 bg-[#E82A73] flex gap-1"}>
-                            Spotted blood today? <span className={"underline"} onClick={handleDateConfirm}>Yes, I saw blood</span> / <span
-                            className={"underline"}>Not yet</span>
+                            Spotted blood today? <span className={"underline"} onClick={handleDateConfirm}>Yes, I saw blood</span>
                         </div>
                     }
                     {

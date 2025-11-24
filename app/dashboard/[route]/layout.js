@@ -3,7 +3,6 @@ import {PageFadeAnimator} from "@/app/_components";
 import {Log} from "@/app/_lib/utils";
 import {getLocalCookies} from "@/app/_lib/getCookies";
 import {DashboardBottomNav} from "@/app/dashboard/components/DashboardBottomNav";
-import {OfflineBanner} from "@/app/_components/OfflineBanner";
 
 export default async function DashboardRouteLayout({children, params}) {
     const paramName = await params;
