@@ -124,9 +124,9 @@ export function enrichMonthsObject(cycles, periodLength = null) {
         const menstrualDates = getMenstrualDates(cycle.start_date, cycle.bleed_end_date, periodLength, cycle.id);
         const ovulationDates = getOvulationDates(cycle.ovulation_day);
         const safeDates = getSafeDays(cycle.safe_days);
-        monthAllocator(safeDates, STAGES.SAFE, months, cycle.id);
-        monthAllocator(menstrualDates, STAGES.MENSTRUAL, months, cycle.id);
-        monthAllocator(ovulationDates, STAGES.OVULATION, months, cycle.id)
+        monthAllocator(safeDates, STAGES.SAFE, months, cycle.id, cycle.paused);
+        monthAllocator(menstrualDates, STAGES.MENSTRUAL, months, cycle.id, cycle.paused);
+        monthAllocator(ovulationDates, STAGES.OVULATION, months, cycle.id, cycle.paused)
 
         const today = format(new Date(), "yyyy-MM-dd");
         const month = new Date().getMonth();
@@ -136,14 +136,15 @@ export function enrichMonthsObject(cycles, periodLength = null) {
 }
 
 
-export function monthAllocator(dates, stage = undefined, months, id = undefined) {
+export function monthAllocator(dates, stage = undefined, months, id = undefined, isPaused = false) {
     for (const day of dates) {
         const month = getMonth(day.date);
         months[month][day.date] = {
             style: day.style,
             stage: stage,
             id: id,
-            isPredicted: day.isPredicted
+            isPredicted: day.isPredicted,
+            isPaused: isPaused
         }
     }
 }
@@ -157,7 +158,8 @@ export function parseMonthForCalendar(monthObject) {
                 style: monthObject[day].style,
                 stage: monthObject[day].stage,
                 id: monthObject[day].id,
-                isPredicted: monthObject[day].isPredicted
+                isPredicted: monthObject[day].isPredicted,
+                isPaused: monthObject[day].isPaused
             })
         } else {
             res.push({
@@ -165,6 +167,7 @@ export function parseMonthForCalendar(monthObject) {
                 style: monthObject[day].style,
                 stage: monthObject[day].stage,
                 id: monthObject[day].id,
+                isPaused: monthObject[day].isPaused
             })
         }
     }

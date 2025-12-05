@@ -64,9 +64,9 @@ export function CombinedCalendar({accessToken}) {
     useEffect(() => {
         const isUsingAssumedSystemPredictedValues = generalCycleInfo?.stage === "completed";
         Log("CombinedCalendar.jsx: useEffect()", {isUsingAssumedSystemPredictedValues});
-        if (isUsingAssumedSystemPredictedValues) {
-            setIsUsingPredictedCycle(true);
-        }
+        // if (isUsingAssumedSystemPredictedValues) {
+        //     setIsUsingPredictedCycle(true);
+        // }
     }, [data]);
 
     useEffect(() => {
@@ -75,6 +75,18 @@ export function CombinedCalendar({accessToken}) {
             setMonths(cyclesData)
             handleMonthSetting(cyclesData);
         }
+        // determine if is in paused state
+        if (cyclesForYear) {
+            const actualRecordedCycles = cyclesForYear.filter(cycle => !!cycle.id);
+            const isInPausedState = actualRecordedCycles[actualRecordedCycles.length - 1]['paused'];
+            // console.log({actualRecordedCycles, isInPausedState});
+            if (isInPausedState) {
+                setIsUsingPredictedCycle(true);
+            } else {
+                setIsUsingPredictedCycle(false);
+            }
+        }
+
     }, [cyclesForYear]);
 
     return (
