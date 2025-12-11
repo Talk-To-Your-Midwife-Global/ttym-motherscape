@@ -46,8 +46,8 @@ export function RestartCalendar({refreshPage, accessToken}) {
             })
             const response = await res.json();
             if (!res.ok) {
-                Log("RestartCalendar.jsx; handleDateConfirm @ /cycles/start failed", {response});
-                posthog.captureException(`RestartCalendar.jsx; handleDateConfirm @ /cycles/start failed, ${JSON.stringify(response)}`);
+                Log("RestartCalendar.jsx; handleDateConfirm @ /cycles/end failed", {response});
+                posthog.captureException(`RestartCalendar.jsx; handleDateConfirm @ /cycles/end failed, ${JSON.stringify(response)}`);
                 toast.error("An error occurred while updating cycle")
             } else {
                 Log("RestartCalendar.jsx; handleDateConfirm success", {response})
@@ -58,7 +58,7 @@ export function RestartCalendar({refreshPage, accessToken}) {
     }
 
     return (
-        <Drawer.Root dismissible={false} open={false}
+        <Drawer.Root dismissible={false} open={isUsingPredictedCycle}
                      onOpenChange={setIsUsingPredictedCycle}>
             <Drawer.Portal>
                 <Drawer.Overlay className="fixed .h-screen .w-screen inset-0 .bg-red-100 bg-[#00000061] .z-40"/>
