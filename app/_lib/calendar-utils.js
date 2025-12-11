@@ -118,7 +118,7 @@ function styleDates(dates, style, extraOptions = null) {
     });
 }
 
-export function enrichMonthsObject(cycles, periodLength = null) {
+export function enrichMonthsObject(cycles = [], periodLength = null) {
     const months = generateMonths();
     for (const cycle of cycles) {
         const menstrualDates = getMenstrualDates(cycle.start_date, cycle.bleed_end_date, periodLength, cycle.id);

@@ -78,7 +78,7 @@ export function CombinedCalendar({accessToken}) {
         // determine if is in paused state
         if (cyclesForYear) {
             const actualRecordedCycles = cyclesForYear.filter(cycle => !!cycle.id);
-            const isInPausedState = actualRecordedCycles[actualRecordedCycles.length - 1]['paused'];
+            const isInPausedState = actualRecordedCycles[actualRecordedCycles.length - 1]?.paused;
             // console.log({actualRecordedCycles, isInPausedState});
             if (isInPausedState) {
                 setIsUsingPredictedCycle(true);
