@@ -171,10 +171,6 @@ describe("parseMonthForCalendar()", () => {
         const style = "bg-[#07226B] text-white"
         calendarUtils.monthAllocator(ovulationDates, STAGES.OVULATION, months);
 
-        // expect(months[9][currentCycle.ovulation_day]).toEqual(expect.objectContaining({
-        //     style: expect.stringContaining(style),
-        //     stage: STAGES.OVULATION
-        // }))
         const parsedMonths = calendarUtils.parseMonthForCalendar(months[9]);
         expect(parseMonthForCalendarSpy).toHaveBeenCalledWith(expect.objectContaining({
             '2025-10-20': expect.objectContaining({
