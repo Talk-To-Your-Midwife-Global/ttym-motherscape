@@ -25,7 +25,7 @@ export default function Error({error, reset}) {
                 </div>
                 <div className={"flex flex-col items-center justify-center fixed bottom-10"}>
                     <IconContinuousButton text={"Report Issue"} href={"/logout"}
-                                          type={"link"}/>
+                                          type={"link"} loadingText={"Reporting"}/>
                     <p className={"text-center text-[#3A3A3A99]"}>Report it once, we’ll handle the rest and make your
                         experience better.</p>
                 </div>

@@ -233,7 +233,7 @@ function LastPeriod({handleAnswers, submit, state, isPending}) {
                         animate
                         captionLayout="dropdown"
                         mode="single"
-                        startMonth={new Date(new Date().getFullYear(), new Date().getMonth() - 1)}
+                        startMonth={new Date(new Date().getFullYear(), new Date().getMonth() - 3)}
                         endMonth={new Date(new Date().getFullYear(), new Date().getMonth())}
                         selected={selected}
                         onSelect={handleChange}
