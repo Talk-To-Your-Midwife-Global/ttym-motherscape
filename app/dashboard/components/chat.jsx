@@ -5,6 +5,7 @@ import {useWebSocket} from "@/app/_hooks/useWebSocket";
 import {montserrat} from "@/app/_fonts";
 import {ChatCard} from "@/app/dashboard/components/index";
 import messageImage from "@/public/images/message-undraw.svg"
+import {Log} from "@/app/_lib/utils";
 
 // import voice from "@/public/icons/voice.svg"
 
@@ -21,7 +22,7 @@ export function Chat({accessToken}) {
     } = useWebSocket(`${process.env.NEXT_PUBLIC_ENVIRONMENT === 'development' ? 'ws' : 'wss'}://${process.env.NEXT_PUBLIC_WS_URL}/ws/`, accessToken)
 
     const handleIsAssigned = (data) => {
-        console.log('handleAssigned', data);
+        Log('handleAssigned', data);
         if (data?.length > 0) {
             localStorage.setItem("chatDisplay", JSON.stringify(true));
             setIsPaired(prevState => ({...prevState, pending: true, status: true}));
@@ -33,7 +34,7 @@ export function Chat({accessToken}) {
     }
 
     const handlePendingAssignment = (data) => {
-        console.log('pending assignment', data[0]?.status);
+        Log('pending assignment', data[0]?.status);
         if (data[0]?.length > 0 && data[0]?.status === "pending-them") {
             localStorage.setItem("chatDisplay", JSON.stringify(false));
             setIsPaired(({...isPaired, pending: true}));

@@ -235,6 +235,11 @@ export function necessaryDataForMenstrualUI(allData) {
     if (allData) {
         Log({allData});
         const {current_cycle} = allData;
+        if (current_cycle === undefined) {
+            return {
+                cycleNull: true
+            }
+        }
         Log("functions.js: necessaryDataForMenstrualUI(); ", {current_cycle});
 
         const dates = menstrualCycleDateGenerator(current_cycle?.start_date, allData?.period_length, current_cycle?.ovulation_day, "general", allData?.cycle_length)
@@ -255,6 +260,8 @@ export function necessaryDataForMenstrualUI(allData) {
             calendar: dates,
             isPredictedCycle: current_cycle?.predicted,
         }
+    } else {
+        return undefined
     }
 }
 

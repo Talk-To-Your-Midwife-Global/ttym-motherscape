@@ -33,10 +33,10 @@ export function CombinedCalendar({accessToken}) {
     const today = new Date();
     const dateRange = `${formatDate(startOfMonth(today))}&${formatDate(today)}`;
     const {logData} = useLogsInfo(accessToken, dateRange);
-    const generalCycleInfo = necessaryDataForMenstrualUI(data || []); // TODO: this becomes the current viewing calendar dates
+    const generalCycleInfo = necessaryDataForMenstrualUI(data); // TODO: this becomes the current viewing calendar dates
     const {cyclesForYear, cyclesForYearError} = useCyclesForTheYear(accessToken);
-    const cyclesData = enrichMonthsObject(cyclesForYear || [], generalCycleInfo.periodLength);
-
+    const cyclesData = enrichMonthsObject(cyclesForYear || [], generalCycleInfo?.periodLength);
+    Log({data})
 
     const handleDateClick = (date) => {
         Log("interest", {date});
@@ -64,9 +64,11 @@ export function CombinedCalendar({accessToken}) {
     useEffect(() => {
         const isUsingAssumedSystemPredictedValues = generalCycleInfo?.stage === "completed";
         Log("CombinedCalendar.jsx: useEffect()", {isUsingAssumedSystemPredictedValues});
-        // if (isUsingAssumedSystemPredictedValues) {
-        //     setIsUsingPredictedCycle(true);
-        // }
+        if (generalCycleInfo?.cycleNull) {
+            setIsUsingPredictedCycle(true);
+        } else {
+            setIsUsingPredictedCycle(false);
+        }
     }, [data]);
 
     useEffect(() => {
@@ -76,10 +78,9 @@ export function CombinedCalendar({accessToken}) {
             handleMonthSetting(cyclesData);
         }
         // determine if is in paused state
-        if (cyclesForYear) {
+        if (cyclesForYear && generalCycleInfo) {
             const actualRecordedCycles = cyclesForYear.filter(cycle => !!cycle.id);
             const isInPausedState = actualRecordedCycles[actualRecordedCycles.length - 1]?.paused;
-            // console.log({actualRecordedCycles, isInPausedState});
             if (isInPausedState) {
                 setIsUsingPredictedCycle(true);
             } else {
