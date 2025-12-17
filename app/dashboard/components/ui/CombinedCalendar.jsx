@@ -62,32 +62,28 @@ export function CombinedCalendar({accessToken}) {
     }
 
     useEffect(() => {
-        const isUsingAssumedSystemPredictedValues = generalCycleInfo?.stage === "completed";
-        Log("CombinedCalendar.jsx: useEffect()", {isUsingAssumedSystemPredictedValues});
-        if (generalCycleInfo?.cycleNull) {
-            setIsUsingPredictedCycle(true);
+        Log({cyclesForYears: cyclesData, cyclesForYear, cyclesForYearError});
+        if (generalCycleInfo) {
+            if (generalCycleInfo.cycleNull === true) {
+                setIsUsingPredictedCycle(true);
+            }
         } else {
             setIsUsingPredictedCycle(false);
         }
-    }, [data]);
 
-    useEffect(() => {
-        Log({cyclesForYears: cyclesData, cyclesForYear, cyclesForYearError});
         if (cyclesData) {
             setMonths(cyclesData)
             handleMonthSetting(cyclesData);
         }
-        // determine if is in paused state
-        if (cyclesForYear && generalCycleInfo) {
+        // determine if is in paused state or has null current_cycle
+        if (cyclesForYear) {
             const actualRecordedCycles = cyclesForYear.filter(cycle => !!cycle.id);
             const isInPausedState = actualRecordedCycles[actualRecordedCycles.length - 1]?.paused;
-            if (isInPausedState) {
+            Log({isInPausedState, check: generalCycleInfo?.cycleNull})
+            if (isInPausedState || !data) {
                 setIsUsingPredictedCycle(true);
-            } else {
-                setIsUsingPredictedCycle(false);
             }
         }
-
     }, [cyclesForYear]);
 
     return (
@@ -131,7 +127,6 @@ export function CombinedCalendar({accessToken}) {
                         moveBackwards={moveCalendarBackwards}
                         accessToken={accessToken} withFlower={true}/>
             }
-            {/*TODO: make it such that a tap on the short calendar reveals the large*/}
             <UserSymptomsAndLogViewer accessToken={accessToken} open={viewLogs} setOpen={setViewLogs}
                                       showMenstrualQuestion={showMenstrualQuestion}
                                       showUnConfirmMenstrualDateQuestion={showUnConfirmMenstrualDateQuestion}

@@ -232,14 +232,17 @@ function computeProgressBarValues(days, week) {
 
 // Convert this whole thing into a class soon
 export function necessaryDataForMenstrualUI(allData) {
-    if (allData) {
-        Log({allData});
-        const {current_cycle} = allData;
-        if (current_cycle === undefined) {
+    if (Array.isArray(allData) || allData?.length === 0) {
+        if (allData?.current_cycle === undefined) {
             return {
                 cycleNull: true
             }
         }
+    }
+    if (allData) {
+        Log({allData});
+        const {current_cycle} = allData;
+
         Log("functions.js: necessaryDataForMenstrualUI(); ", {current_cycle});
 
         const dates = menstrualCycleDateGenerator(current_cycle?.start_date, allData?.period_length, current_cycle?.ovulation_day, "general", allData?.cycle_length)
@@ -260,8 +263,6 @@ export function necessaryDataForMenstrualUI(allData) {
             calendar: dates,
             isPredictedCycle: current_cycle?.predicted,
         }
-    } else {
-        return undefined
     }
 }
 
