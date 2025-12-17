@@ -67,7 +67,7 @@ export function InstallApp() {
         }
 
         return () => {
-            console.log('Removing install prompt')
+            Log('Removing install prompt')
             if (!openedFromPWA) {
                 window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
             }

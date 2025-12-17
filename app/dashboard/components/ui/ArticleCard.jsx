@@ -1,5 +1,5 @@
 import Image from "next/image";
-import {cn} from "@/app/_lib/utils";
+import {cn, Log} from "@/app/_lib/utils";
 import {CustomCarousel} from "@/app/_components/CustomeCarousel"
 
 
@@ -17,7 +17,7 @@ export const ImageDisplay = ({
         long: "aspect-[21/9]",
         other9: "aspect-[9/16]"
     }[aspectRatio];
-    console.log(images.length);
+    Log(images.length);
     if (images.length === 0) {
         return (
             <div className={cn(

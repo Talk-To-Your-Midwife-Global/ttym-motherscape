@@ -6,6 +6,7 @@ import {useEffect, useState, useRef} from "react";
 import {motion, AnimatePresence} from "framer-motion";
 import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {useWebSocket} from "@/app/_hooks/useWebSocket";
+import {Log} from "@/app/_lib/utils";
 
 export function ChatPage({chatId, accessToken}) {
     const [messages, setMessages] = useState([]);
@@ -15,7 +16,7 @@ export function ChatPage({chatId, accessToken}) {
         onEvent,
         sendMessage,
     } = useWebSocket(`wss://${process.env.NEXT_PUBLIC_WS_URL}/ws/`, accessToken)
-    
+
 
     const handleNewMessage = (data) => {
         setMessages(prevMessages => [...prevMessages, data?.messages])
@@ -83,11 +84,11 @@ export const ChatContainer = ({forwardMessage, messages, chatId, profileImg}) =>
     const messagesEndRef = useRef(null);
     const handleChange = (e) => {
         setCurrentMessage(e.target.value);
-        console.log(messages)
+        Log(messages)
     }
 
     const handleSendChat = () => {
-        console.log(currentMessage, chatId)
+        Log(currentMessage, chatId)
 
         forwardMessage('message.send', {
             connection_id: chatId,
@@ -106,7 +107,7 @@ export const ChatContainer = ({forwardMessage, messages, chatId, profileImg}) =>
             <ul className={`chat-ul`}>
                 <AnimatePresence initial={false} mode="popLayout">
                     {messages.map((chat) => {
-                        console.log(chat);
+                        Log(chat);
                         return (
                             !chat?.is_mine ? (<motion.li
                                 key={chat.id}

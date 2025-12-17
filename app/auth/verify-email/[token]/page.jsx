@@ -3,9 +3,10 @@ import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
 import {IconContinuousButton} from "@/app/_components";
 import {HOSTNAME_URI} from "@/app/_config/main";
 import {getLocalCookies} from "@/app/_lib/getCookies";
+import {Log} from "@/app/_lib/utils";
 
 async function verifyEmail(token) {
-    console.log('verify email verification')
+    Log('verify email verification')
     const res = await fetch(`${HOSTNAME_URI}/auth/verify-email?token=${token}`, {
         headers: {
             'Content-Type': 'application/json'
@@ -13,19 +14,19 @@ async function verifyEmail(token) {
     })
 
     if (!res.ok) {
-        console.log(res)
+        Log(res)
         return false;
     }
 
     const response = await res.json();
-    console.log(response);
+    Log(response);
     return true;
 }
 
 export default async function Page({params}) {
     const {token} = await params;
     const {user_email} = await getLocalCookies(['user_email'])
-    console.log({token, user_email});
+    Log({token, user_email});
 
     const successfulVerification = await verifyEmail(token);
 

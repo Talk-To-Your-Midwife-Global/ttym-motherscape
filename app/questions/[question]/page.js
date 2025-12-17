@@ -6,7 +6,7 @@ import {returnTypeOfPatient} from "@/app/_actions/auth";
 export default async function Page({params}) {
     const {question} = await params;
     const patientType = await returnTypeOfPatient();
-    console.log({patientType});
+    Log({patientType});
 
     if (patientType === "trackmyperiod") {
         return (
