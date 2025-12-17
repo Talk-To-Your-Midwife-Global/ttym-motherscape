@@ -255,7 +255,6 @@ export function MenstrualCycleCardMain({accessToken}) {
     })}`)
 
     if (error) {
-        // throw new Error(`dashboard/components/index.jsx: MenstrualCycleCardMain; useCycleInfo() ${error}`)
         posthog.captureException(`dashboard/components/index.jsx: MenstrualCycleCardMain; useCycleInfo() ${error}`)
     }
 

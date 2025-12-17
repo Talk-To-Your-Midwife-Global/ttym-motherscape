@@ -4,13 +4,14 @@ import {waitListFormSchema} from "@/app/auth/lib/definitions";
 
 import path from 'path';
 import fs from 'fs/promises';
+import {Log} from "@/app/_lib/utils";
 
 // Absolute path to app/wait-list/_waitlist.json
 const FILE_PATH = path.join(process.cwd(), 'app', 'wait-list', '_waitlist.json');
 
 export async function addToWaitlist(formState, formData) {
-    console.log('adding to waitlist')
-    console.log(formData.get('firstName'))
+    Log('adding to waitlist')
+    Log(formData.get('firstName'))
     const validatedFields = waitListFormSchema.safeParse({
         email: formData.get('email'),
         firstName: formData.get('firstName'),
@@ -61,7 +62,7 @@ export async function addToWaitlist(formState, formData) {
 
         }
     } catch (err) {
-        console.error('Error writing to _waitlist.json:', err);
+        Log('Error writing to _waitlist.json:', err);
         // throw new Error('Could not save entry');
         return {
             success: false,

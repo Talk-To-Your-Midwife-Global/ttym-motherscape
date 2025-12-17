@@ -48,7 +48,8 @@ export default function Page() {
             if (state?.serverError) {
                 toast.error('An error occurred while creating account')
                 state?.serverError.map(err => {
-                    console.log("erro", {err});
+                    Log("erro", {err});
+                    posthog.captureException(`register/page.js creating account err: ${JSON.stringify({err})}}`)
                     const timer = setTimeout(() => toast.warning(err), 1000);
                 })
                 handleErrorReset()

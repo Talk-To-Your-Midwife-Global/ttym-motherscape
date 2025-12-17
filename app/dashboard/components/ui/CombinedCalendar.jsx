@@ -33,26 +33,39 @@ export function CombinedCalendar({accessToken}) {
     const today = new Date();
     const dateRange = `${formatDate(startOfMonth(today))}&${formatDate(today)}`;
     const {logData} = useLogsInfo(accessToken, dateRange);
-    const generalCycleInfo = necessaryDataForMenstrualUI(data || []); // TODO: this becomes the current viewing calendar dates
+    const generalCycleInfo = necessaryDataForMenstrualUI(data);
     const {cyclesForYear, cyclesForYearError} = useCyclesForTheYear(accessToken);
-    const cyclesData = enrichMonthsObject(cyclesForYear || [], generalCycleInfo.periodLength);
-
-
+    const cyclesData = enrichMonthsObject(cyclesForYear || [], generalCycleInfo?.periodLength);
+    Log({data});
     const handleDateClick = (date) => {
-        Log("interest", {date});
         const currentDay = new Date(date.date);
         setViewingDate(date);
-
         const dayIsAConfirmedMenstrualDate = date.id && date.stage === STAGES.MENSTRUAL;
+        const dayIsAMenstrualDateInCurrentCycle = dayIsAConfirmedMenstrualDate && isWithinInterval(currentDay, {
+            start: data.current_cycle.start_date,
+            end: data.current_cycle.end_date
+        });
+        const dayIsNotMenstrual = date.stage !== STAGES.MENSTRUAL || !(date.hasOwnProperty('stage'));
+        const dayIsAMenstrualDateInPredictedCycle = !date.id && date.stage === STAGES.MENSTRUAL;
 
-        if (dayIsAConfirmedMenstrualDate && !(date.isPredicted)) {
-            setShowConfirmPredictedMenstrualDateQuestion(false);
-            setShowUnConfirmMenstrualDateQuestion(true);
-        } else {
-            if (isPast(currentDay)) {
-                setShowMenstrualQuestion(true);
-            }
+        if (dayIsNotMenstrual) {
+            setShowUnConfirmMenstrualDateQuestion(false);
+            setShowMenstrualQuestion(false);
         }
+        if (dayIsAMenstrualDateInCurrentCycle) {
+            if (isPast(currentDay)) {
+                setShowUnConfirmMenstrualDateQuestion(true);
+                setShowMenstrualQuestion(false);
+            } else {
+                setShowMenstrualQuestion(false);
+                setShowUnConfirmMenstrualDateQuestion(false);
+            }
+        } else if (dayIsAMenstrualDateInPredictedCycle) {
+            setShowMenstrualQuestion(true);
+            setShowUnConfirmMenstrualDateQuestion(false);
+
+        }
+       
         setViewLogs(true)
         // save logs in context if it is not having it already
         if (!logs) {
@@ -62,31 +75,28 @@ export function CombinedCalendar({accessToken}) {
     }
 
     useEffect(() => {
-        const isUsingAssumedSystemPredictedValues = generalCycleInfo?.stage === "completed";
-        Log("CombinedCalendar.jsx: useEffect()", {isUsingAssumedSystemPredictedValues});
-        // if (isUsingAssumedSystemPredictedValues) {
-        //     setIsUsingPredictedCycle(true);
-        // }
-    }, [data]);
-
-    useEffect(() => {
         Log({cyclesForYears: cyclesData, cyclesForYear, cyclesForYearError});
+        if (generalCycleInfo) {
+            if (generalCycleInfo.cycleNull === true) {
+                setIsUsingPredictedCycle(true);
+            }
+        } else {
+            setIsUsingPredictedCycle(false);
+        }
+
         if (cyclesData) {
             setMonths(cyclesData)
             handleMonthSetting(cyclesData);
         }
-        // determine if is in paused state
+        // determine if is in paused state or has null current_cycle
         if (cyclesForYear) {
             const actualRecordedCycles = cyclesForYear.filter(cycle => !!cycle.id);
             const isInPausedState = actualRecordedCycles[actualRecordedCycles.length - 1]?.paused;
-            // console.log({actualRecordedCycles, isInPausedState});
-            if (isInPausedState) {
+            Log({isInPausedState, check: generalCycleInfo?.cycleNull})
+            if (isInPausedState || !data) {
                 setIsUsingPredictedCycle(true);
-            } else {
-                setIsUsingPredictedCycle(false);
             }
         }
-
     }, [cyclesForYear]);
 
     return (
@@ -130,7 +140,6 @@ export function CombinedCalendar({accessToken}) {
                         moveBackwards={moveCalendarBackwards}
                         accessToken={accessToken} withFlower={true}/>
             }
-            {/*TODO: make it such that a tap on the short calendar reveals the large*/}
             <UserSymptomsAndLogViewer accessToken={accessToken} open={viewLogs} setOpen={setViewLogs}
                                       showMenstrualQuestion={showMenstrualQuestion}
                                       showUnConfirmMenstrualDateQuestion={showUnConfirmMenstrualDateQuestion}

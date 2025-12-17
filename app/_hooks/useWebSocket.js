@@ -1,5 +1,7 @@
 "use client"
 import {useCallback, useEffect, useState, useRef} from "react";
+import {Log} from "@/app/_lib/utils";
+import posthog from "posthog-js";
 
 export const useWebSocket = (url, token) => {
     const [newEvent, setNewEvent] = useState("");
@@ -12,12 +14,12 @@ export const useWebSocket = (url, token) => {
         setWs(socket);
 
         socket.onopen = () => {
-            console.log("WebSocket opened");
+            Log("WebSocket opened");
             setIsConnected(true);
         }
 
         socket.onmessage = (event) => {
-            console.log('message received', event.data)
+            Log('message received', event.data)
             setNewEvent(event.data)
 
             try {
@@ -27,15 +29,15 @@ export const useWebSocket = (url, token) => {
                 if (eventHandlers.current[source]) {
                     eventHandlers.current[source](data);
                 } else {
-                    console.warn('Event type does not have a handler')
+                    Log('Event type does not have a handler')
                 }
             } catch (error) {
-                console.log(error);
+                posthog.captureException(error);
             }
         }
 
         socket.onerror = (error) => {
-            console.log(error);
+            posthog.captureException(error);
         }
 
         socket.onclose = () => {
@@ -53,13 +55,13 @@ export const useWebSocket = (url, token) => {
 
 
     const sendMessage = useCallback((eventType, data = {}) => {
-        console.log(data);
+        Log(data);
         const message = JSON.stringify({source: eventType, ...data})
-        console.log(message)
+        Log(message)
         if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send(message)
         } else {
-            console.warn('Websocket not ready', message)
+            Log('Websocket not ready', message)
         }
 
     }, [ws])

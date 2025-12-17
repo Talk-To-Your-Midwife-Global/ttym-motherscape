@@ -1,12 +1,13 @@
 "use client"
 
 import {useEffect, useState} from "react";
+import {Log} from "@/app/_lib/utils";
 
 export function OfflineBanner() {
     const [isOnline, setIsOnline] = useState(true);
     useEffect(() => {
         if (window) {
-            console.log("isOnline", navigator.onLine);
+            Log("isOnline", navigator.onLine);
             setIsOnline(navigator.onLine);
         }
     }, []);
