@@ -3,6 +3,7 @@
 import {useEffect, useTransition} from "react";
 import {refreshUserAccessToken} from "@/app/_actions/auth";
 import posthog from "posthog-js";
+import {Log} from "@/app/_lib/utils";
 
 export function RefreshTokenizer({children}) {
     const [isPending, startTransition] = useTransition();
@@ -11,9 +12,9 @@ export function RefreshTokenizer({children}) {
             const {serverError, success, message} = await refreshUserAccessToken();
             if (serverError) {
                 posthog.captureException(`refreshTokenizer.js callRefreshFunction() error: `);
-                console.log({serverError, success, message});
+                Log({serverError, success, message});
             } else {
-                console.log({serverError, success, message});
+                Log({serverError, success, message});
                 posthog.capture(`refreshTokenizer.js callRefreshFunction success`);
             }
         })

@@ -4,14 +4,15 @@ import {AuthNav} from "@/app/auth/_components/index";
 import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
 import {IconButton, IconContinuousButton} from "@/app/_components";
 import {requestEmailVerification} from "@/app/_actions/auth";
+import {Log} from "@/app/_lib/utils";
 
 export function VerifyEmailPage({user_email}) {
     const [isPending, startTransition] = useTransition();
     const [sentStatus, setSentStatus] = useState(undefined);
-    console.log(user_email)
+    Log(user_email)
 
     const handleEmailResend = async () => {
-        console.log('handleEmailREsend working')
+        Log('handleEmailREsend working')
         startTransition(async () => {
             const req = await requestEmailVerification(user_email);
             if (req.success) {

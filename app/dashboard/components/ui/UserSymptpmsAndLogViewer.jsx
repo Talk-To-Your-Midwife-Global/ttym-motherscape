@@ -86,8 +86,8 @@ export function UserSymptomsAndLogViewer({
     Log("UserSymptomsAndLogViewer details", {details, feelings})
     Log("Final computation", {moodIcons, symptomIcons, withoutIcons})
 
-    const isPreviousCycle = isBefore(viewingDate.date, cycleInfo.periodStartDate);
-    const isUpcomingCycle = isAfter(viewingDate.date, cycleInfo.periodEndDate);
+    const isPreviousCycle = cycleInfo && isBefore(viewingDate.date, cycleInfo.periodStartDate);
+    const isUpcomingCycle = cycleInfo && isAfter(viewingDate.date, cycleInfo.periodEndDate);
 
     const makeTransition = (args) => {
         startTransition(async () => {
