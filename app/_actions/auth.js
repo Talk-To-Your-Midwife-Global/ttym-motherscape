@@ -50,7 +50,7 @@ export async function refreshUserAccessToken() {
     }
 
     try {
-        console.log("Refresh token as JSON body", jsonBody);
+        Log("Refresh token as JSON body", jsonBody);
         const request = await fetch(`${HOSTNAME_URI}/auth/token/refresh/`, {
             method: 'POST',
             headers: {
@@ -59,7 +59,7 @@ export async function refreshUserAccessToken() {
             },
             body: jsonBody
         })
-        console.log({request})
+        Log({request})
         if (!request.ok) {
             const errMessage = `${functionExceptionTag} request not okay: ${JSON.stringify({
                 request,
@@ -75,7 +75,7 @@ export async function refreshUserAccessToken() {
         }
 
         const response = await request.json();
-        console.log({response});
+        Log({response});
 
         const cookieStore = await cookies();
         if (response.access && response.refresh) {
@@ -178,9 +178,9 @@ export async function signup(state, formData) {
             body: JSON.stringify(fields),
         })
         const errors = []
-        console.log({response, time: new Date()});
+        Log({response, time: new Date()});
         const result = await response.json();
-        console.log({result, time: new Date()});
+        Log({result, time: new Date()});
 
         if (!response.ok) {
             for (const err in result) {
