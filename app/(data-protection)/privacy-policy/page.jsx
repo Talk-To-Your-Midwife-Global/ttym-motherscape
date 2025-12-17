@@ -6,6 +6,7 @@ import {documentToReactComponents} from '@contentful/rich-text-react-renderer';
 import {OPTIONS} from "@/app/(data-protection)/_components/BeautifullyRich";
 import {TapWrapper} from "@/app/_components/TapWrapper";
 import {Loader} from "@/app/_components";
+import {Log} from "@/app/_lib/utils";
 
 
 export default function Page() {
@@ -14,7 +15,7 @@ export default function Page() {
     if (isLoading) {
         return <Loader/>
     }
-    console.log({data, privacyPolicyQuery});
+    Log({data, privacyPolicyQuery});
 
     return (
         <ContainerWrapper>
