@@ -36,25 +36,36 @@ export function CombinedCalendar({accessToken}) {
     const generalCycleInfo = necessaryDataForMenstrualUI(data);
     const {cyclesForYear, cyclesForYearError} = useCyclesForTheYear(accessToken);
     const cyclesData = enrichMonthsObject(cyclesForYear || [], generalCycleInfo?.periodLength);
-    Log({data})
-
+    Log({data});
     const handleDateClick = (date) => {
-        Log("interest", {date});
         const currentDay = new Date(date.date);
         setViewingDate(date);
-
         const dayIsAConfirmedMenstrualDate = date.id && date.stage === STAGES.MENSTRUAL;
+        const dayIsAMenstrualDateInCurrentCycle = dayIsAConfirmedMenstrualDate && isWithinInterval(currentDay, {
+            start: data.current_cycle.start_date,
+            end: data.current_cycle.end_date
+        });
+        const dayIsNotMenstrual = date.stage !== STAGES.MENSTRUAL || !(date.hasOwnProperty('stage'));
+        const dayIsAMenstrualDateInPredictedCycle = !date.id && date.stage === STAGES.MENSTRUAL;
 
-        if (dayIsAConfirmedMenstrualDate && !(date.isPredicted)) {
-            setShowConfirmPredictedMenstrualDateQuestion(false);
-            setShowUnConfirmMenstrualDateQuestion(true);
-            setShowMenstrualQuestion(false);
-        } else {
+        if (dayIsNotMenstrual) {
             setShowUnConfirmMenstrualDateQuestion(false);
-            if (isPast(currentDay)) {
-                setShowMenstrualQuestion(true);
-            }
+            setShowMenstrualQuestion(false);
         }
+        if (dayIsAMenstrualDateInCurrentCycle) {
+            if (isPast(currentDay)) {
+                setShowUnConfirmMenstrualDateQuestion(true);
+                setShowMenstrualQuestion(false);
+            } else {
+                setShowMenstrualQuestion(false);
+                setShowUnConfirmMenstrualDateQuestion(false);
+            }
+        } else if (dayIsAMenstrualDateInPredictedCycle) {
+            setShowMenstrualQuestion(true);
+            setShowUnConfirmMenstrualDateQuestion(false);
+
+        }
+       
         setViewLogs(true)
         // save logs in context if it is not having it already
         if (!logs) {
