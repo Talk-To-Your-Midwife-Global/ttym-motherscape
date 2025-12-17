@@ -33,7 +33,7 @@ export function CombinedCalendar({accessToken}) {
     const today = new Date();
     const dateRange = `${formatDate(startOfMonth(today))}&${formatDate(today)}`;
     const {logData} = useLogsInfo(accessToken, dateRange);
-    const generalCycleInfo = necessaryDataForMenstrualUI(data); // TODO: this becomes the current viewing calendar dates
+    const generalCycleInfo = necessaryDataForMenstrualUI(data);
     const {cyclesForYear, cyclesForYearError} = useCyclesForTheYear(accessToken);
     const cyclesData = enrichMonthsObject(cyclesForYear || [], generalCycleInfo?.periodLength);
     Log({data})
@@ -48,7 +48,9 @@ export function CombinedCalendar({accessToken}) {
         if (dayIsAConfirmedMenstrualDate && !(date.isPredicted)) {
             setShowConfirmPredictedMenstrualDateQuestion(false);
             setShowUnConfirmMenstrualDateQuestion(true);
+            setShowMenstrualQuestion(false);
         } else {
+            setShowUnConfirmMenstrualDateQuestion(false);
             if (isPast(currentDay)) {
                 setShowMenstrualQuestion(true);
             }
