@@ -1,11 +1,12 @@
 "use client"
 
 import {createContext, useContext, useState} from "react";
-import {parseMonthForCalendar} from "@/app/_lib/calendar-utils";
+import {ParseMonthForCalendar, parseMonthForCalendar} from "@/app/_lib/calendar-utils";
 import {addMonths, getMonth, subMonths} from "date-fns";
 import {Log} from "@/app/_lib/utils";
 
 const CalendarViewContext = createContext();
+
 
 export function CalendarViewContextProvider({children}) {
     const [viewLarge, setViewLarge] = useState(false);
@@ -15,14 +16,15 @@ export function CalendarViewContextProvider({children}) {
     const [isUsingPredictedCycle, setIsUsingPredictedCycle] = useState(false); // around because of the restartCalendar component
     const [cycleInfo, setCycleInfo] = useState({});
     const [months, setMonths] = useState({}); // all the months
-    const [currentViewingMonth, setCurrentViewingMonth] = useState(new Date());
-    const [currentViewingMonthDates, setCurrentViewingMonthDates] = useState([]);
+    const [currentViewingMonth, setCurrentViewingMonth] = useState<Date>(new Date());
+    const [currentViewingMonthDates, setCurrentViewingMonthDates] = useState<ParseMonthForCalendar[]>([]);
     const [showMenstrualQuestion, setShowMenstrualQuestion] = useState(false);
     const [showUnConfirmMenstrualDateQuestion, setShowUnConfirmMenstrualDateQuestion] = useState(false);
     const [showConfirmPredictedMenstrualDateQuestion, setShowConfirmPredictedMenstrualDateQuestion] = useState(false);
+    const [showEditCycleFlow, setShowEditCycleFlow] = useState<boolean>(false);
 
     const handleMonthSetting = (data, month = undefined) => {
-        month = month || getMonth(new Date());
+        month = currentViewingMonth || getMonth(new Date());
         setCurrentViewingMonthDates(parseMonthForCalendar(data[month]));
         Log("showCalendarContext.jsx", {
             month,
@@ -59,7 +61,8 @@ export function CalendarViewContextProvider({children}) {
         handleMonthSetting, moveCalendarBackwards, moveCalendarForwards,
         showMenstrualQuestion, setShowMenstrualQuestion,
         showUnConfirmMenstrualDateQuestion, setShowUnConfirmMenstrualDateQuestion,
-        showConfirmPredictedMenstrualDateQuestion, setShowConfirmPredictedMenstrualDateQuestion
+        showConfirmPredictedMenstrualDateQuestion, setShowConfirmPredictedMenstrualDateQuestion,
+        showEditCycleFlow, setShowEditCycleFlow
     }
 
     return <CalendarViewContext.Provider value={values}>

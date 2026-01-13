@@ -43,6 +43,7 @@ export function UserSymptomsAndLogViewer({
                                              showUnConfirmMenstrualDateQuestion,
                                              accessToken
                                          }) {
+    // @ts-ignore
     const {logs, viewingDate, setIsUsingPredictedCycle, showConfirmPredictedMenstrualDateQuestion} = useCalendarView();
     const [isPending, startTransition] = useTransition();
     const date = formatDate(viewingDate.date);

@@ -13,7 +13,8 @@ module.exports = {
                 'onboarding-bg': "url('/images/bg-1.png')",
                 'onbaording-bg-2': "url('/images/bg-2.png')",
                 'radial-glow': 'radial-gradient(circle at 80% 70%, #0FCAD2,  #015364, #015364)',
-                'radial-glow-bottom': "radial-gradient(ellipse at 20% 150%, #0FCAD2, #015364, #015364)"
+                'radial-glow-bottom': "radial-gradient(ellipse at 20% 150%, #0FCAD2, #015364, #015364)",
+                'green-radial-bg': "url('/images/green-ellipse.svg')",
             },
             dropShadow: {
                 "custom-green": "0px 14px 6px #0F969C21",
@@ -33,7 +34,8 @@ module.exports = {
                 pink: "var(--pink)",
                 primaryText: "var(--primary-text-color)",
                 primaryColor: "var(--primary-color)",
-                tertiaryColor: "var(--tertiary-color)"
+                tertiaryColor: "var(--tertiary-color)",
+                hotpink: "var(--hot-pink)"
             },
         },
     },

@@ -55,6 +55,9 @@ import {TapWrapper} from "@/app/_components/TapWrapper";
 import {useCalendarView} from "@/app/contexts/showCalendarContext";
 import {ArticlesHQ} from "@/app/contexts/ArticlesContext";
 import {ContainerWrapper} from "@/app/_components/ContainerWrapper";
+import string from "zod/src/v3/benchmarks/string";
+import {CalendarDate, ShortCalendarProps} from "@/app/dashboard/components/componentTypes/definedTypes";
+import {ParseMonthForCalendar} from "@/app/_lib/calendar-utils";
 
 export function DashboardHeader(user) {
     Log('dashboard/components/index.jsx; DashboardHeader', {user});
@@ -503,7 +506,7 @@ function CalendarTemplate({
                 {
                     days.map((day, index) => {
                         const isCurrentMonth = isSameMonth(day, currentMonth)
-                        const dateObject = specialDates.find((styleDate) => isSameDay(styleDate?.date, day));
+                        const dateObject: ParseMonthForCalendar = specialDates.find((styleDate) => isSameDay(styleDate?.date, day));
 
                         return (
                             <div key={index}
@@ -530,7 +533,7 @@ export function ShortCalendar({
                                   specialDates,
                                   currentMonth,
                                   dateClick = undefined
-                              }) {
+                              }: ShortCalendarProps) {
     let specialDays = specialDates;
     const startWeek = startOfWeek(currentMonth)
     const endWeek = endOfWeek(currentMonth);
@@ -546,6 +549,17 @@ export function ShortCalendar({
     )
 }
 
+type CalendarType = {
+    withFlower?: boolean;
+    currentMonth: string;
+    accessToken: string;
+    specialDates: ParseMonthForCalendar[];
+    action: () => void;
+    moveBackwards: () => void;
+    moveForwards: () => void;
+    dateClick: () => void;
+}
+
 export function Calendar({
                              action,
                              withFlower,
@@ -555,7 +569,7 @@ export function Calendar({
                              specialDates = undefined,
                              accessToken,
                              dateClick
-                         }) {
+                         }: CalendarType) {
     const startMonth = startOfMonth(currentMonth)
     const endMonth = endOfMonth(currentMonth)
     const startWeek = startOfWeek(startMonth)

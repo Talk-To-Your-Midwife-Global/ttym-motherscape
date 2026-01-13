@@ -9,14 +9,17 @@ import {formatDate, necessaryDataForMenstrualUI, parseLogs} from "@/app/_lib/fun
 import {useEffect} from "react";
 import posthog from "posthog-js";
 import {useCyclesForTheYear} from "@/app/_lib/calendar-hooks";
-import {enrichMonthsObject, STAGES} from "@/app/_lib/calendar-utils";
+import {enrichMonthsObject, ReturnedMonths, STAGES} from "@/app/_lib/calendar-utils";
+import {CalendarDate} from "@/app/dashboard/components/componentTypes/definedTypes";
+import {EditCycleFlowMain} from "@/app/dashboard/components/ui/EditCycleFlow";
+import {IconButton, IconContinuousButton} from "@/app/_components";
 
 export function CombinedCalendar({accessToken}) {
     const {data, error: cycleError, isLoading: cycleLoading} = useCycleInfo(accessToken);
     const {
         viewLarge,
         setViewLarge,
-        setViewingDate,
+        viewingDate, setViewingDate,
         logs,
         setLogs,
         viewLogs,
@@ -28,33 +31,35 @@ export function CombinedCalendar({accessToken}) {
         moveCalendarBackwards, moveCalendarForwards,
         showMenstrualQuestion, setShowMenstrualQuestion,
         showUnConfirmMenstrualDateQuestion, setShowUnConfirmMenstrualDateQuestion,
-        setShowConfirmPredictedMenstrualDateQuestion
+        setShowConfirmPredictedMenstrualDateQuestion,
+        showEditCycleFlow, setShowEditCycleFlow
     } = useCalendarView();
-    const today = new Date();
-    const dateRange = `${formatDate(startOfMonth(today))}&${formatDate(today)}`;
+    const today: Date = new Date();
+    const dateRange: string = `${formatDate(startOfMonth(today))}&${formatDate(today)}`;
     const {logData} = useLogsInfo(accessToken, dateRange);
     const generalCycleInfo = necessaryDataForMenstrualUI(data);
-    const {cyclesForYear, cyclesForYearError} = useCyclesForTheYear(accessToken);
-    const cyclesData = enrichMonthsObject(cyclesForYear || [], generalCycleInfo?.periodLength);
+    const {cyclesForYear, cyclesForYearError} = useCyclesForTheYear(accessToken, viewingDate.date);
+    const cyclesData: ReturnedMonths | [] = enrichMonthsObject(cyclesForYear || [], generalCycleInfo?.periodLength);
     Log({data});
 
-    const handleDateClick = (date) => {
-        const currentDay = new Date(date.date);
-        setViewingDate(date);
+    const handleDateClick = (calendarDate: CalendarDate) => {
+        const currentDay: Date = new Date(calendarDate.date);
+        setViewingDate({date: currentDay});
 
         // if date is a future date do nothing
-        const today = new Date();
-        const isFutureDate = isAfter(currentDay, today);
-
+        const isFutureDate: boolean = isAfter(currentDay, today);
         if (isFutureDate) {
             // TODO: clear all conditional user flows
-
             return;
         }
 
         if (!isFutureDate) {
-            const isRegisteredCycle = !!data.id;
+            const isRegisteredCycle: boolean = !!calendarDate.id;
             if (isRegisteredCycle) {
+                // TODO: show edit cycle user flow
+
+            } else {
+                // TODO: show start cycle user flow
             }
         }
         // const dayIsAConfirmedMenstrualDate = date.id && date.stage === STAGES.MENSTRUAL;
@@ -109,6 +114,8 @@ export function CombinedCalendar({accessToken}) {
         if (cyclesForYear) {
             const actualRecordedCycles = cyclesForYear.filter(cycle => !!cycle.id);
             const isInPausedState = actualRecordedCycles[actualRecordedCycles.length - 1]?.paused;
+
+            // TODO: have start cycle flow here for paused status
             Log({isInPausedState, check: generalCycleInfo?.cycleNull})
             if (isInPausedState || !data) {
                 setIsUsingPredictedCycle(true);
@@ -149,6 +156,7 @@ export function CombinedCalendar({accessToken}) {
                                 <div className={'w-4 h-4 bg-[#3CB9FB50] rounded-full'}> </div> <span>Safe days</span>
                             </span>
                         </div>
+                        <IconButton text={"Edit Cycle"} onClick={() => setShowEditCycleFlow(true)}/>
                     </section> : <ShortCalendar
                         specialDates={currentViewingMonthDates}
                         currentMonth={currentViewingMonth}
@@ -162,6 +170,13 @@ export function CombinedCalendar({accessToken}) {
                                       showUnConfirmMenstrualDateQuestion={showUnConfirmMenstrualDateQuestion}
                                       cycleInfo={generalCycleInfo}/>
             {/*    Start Cycle user flow component */}
+            {
+                showEditCycleFlow &&
+                <EditCycleFlowMain shouldOpen={showEditCycleFlow} setShouldOpen={setShowEditCycleFlow}
+                                   id={currentViewingMonthDates[currentViewingMonthDates.length - 1]?.id}
+                                   info={cyclesForYear || []}/>
+
+            }
             {/*    Edit cycle user flow component*/}
         </>
     )

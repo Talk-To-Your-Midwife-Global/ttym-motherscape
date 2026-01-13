@@ -118,7 +118,18 @@ function styleDates(dates, style, extraOptions = null) {
     });
 }
 
-export function enrichMonthsObject(cycles = [], periodLength = null) {
+export type ReturnedMonths = {
+    [monthNumber: string]: {
+        [day: string]: {
+            style: string;
+            stage: string;
+            id?: number;
+            isPredicted?: boolean;
+        }
+    }
+}
+
+export function enrichMonthsObject(cycles = [], periodLength = null): ReturnedMonths {
     const months = generateMonths();
     for (const cycle of cycles) {
         const menstrualDates = getMenstrualDates(cycle.start_date, cycle.bleed_end_date, periodLength, cycle.id);
@@ -149,7 +160,16 @@ export function monthAllocator(dates, stage = undefined, months, id = undefined,
     }
 }
 
-export function parseMonthForCalendar(monthObject) {
+export type ParseMonthForCalendar = {
+    date: string;
+    style: string;
+    stage?: string;
+    id?: number | null;
+    isPredicted?: boolean;
+    isPaused?: boolean;
+}
+
+export function parseMonthForCalendar(monthObject): ParseMonthForCalendar[] {
     const res = []
     for (const day in monthObject) {
         if (monthObject[day].isPredicted) {

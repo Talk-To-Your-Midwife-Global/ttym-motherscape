@@ -8,7 +8,7 @@ import {ModifiedReader} from "@/app/(reader)/read/_components/ModifiedReader";
 import {Log} from "@/app/_lib/utils";
 import {TrendingArticleParent} from "@/app/dashboard/components/ui/TrendingArticleParent";
 
-const ArticlesContext = createContext();
+const ArticlesContext = createContext({});
 
 function ArticlesHQ({children}) {
     const [currentArticle, setCurrentArticle] = useState({});

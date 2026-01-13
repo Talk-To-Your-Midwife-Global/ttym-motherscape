@@ -50,7 +50,8 @@ export function MenstrualHome({accessToken}) {
                 <InstallApp/>
             </ContainerWrapper>
             <FeelingsInsightsAndEvents accessToken={accessToken}/>
-            <RestartCalendar refreshPage={handleRefresh} router={router} accessToken={accessToken}/>
+            {/*TODO: remove this*/}
+            {/*<RestartCalendar refreshPage={handleRefresh} router={router} accessToken={accessToken}/>*/}
         </section>
     )
 }

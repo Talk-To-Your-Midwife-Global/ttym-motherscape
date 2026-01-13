@@ -14,6 +14,7 @@ import {toast} from "sonner";
 
 export function RestartCalendar({refreshPage, accessToken}) {
     const [isPending, startTransition] = useTransition();
+    // @ts-ignore
     const {isUsingPredictedCycle, setIsUsingPredictedCycle} = useCalendarView();
     const [selectedDate, setSelectedDate] = useState('');
 

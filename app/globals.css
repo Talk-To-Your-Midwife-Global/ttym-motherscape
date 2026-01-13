@@ -15,16 +15,23 @@
     --sub-text: #455A64;
     --black: #030303;
     --pink: #F26A8D;
+    --hot-pink: #E82A73;
     --some: #0F969C21;
 
     color-scheme: only light;
 
-    .rdp-root {
-        --rdp-accent-color: #0F969C; /* Change the accent color to indigo. */
-        --rdp-accent-background-color: #f0f0f0; /* Change the accent background color. */
-        /* Add more CSS variables here. */
-    }
+
+    /*.rdp-root {*/
+    /*    --rdp-accent-color: #0F969C; !* Change the accent color to indigo. *!*/
+    /*    --rdp-accent-background-color: #f0f0f0; !* Change the accent background color. *!*/
+    /*    !*--rdp-accent-background-color: var(--pink); !* Change the accent background color. *!*!*/
+    /*    !* Add more CSS variables here. *!*/
+    /*    --rdp-range_middle-background-color: var(--primary-color);*/
+    /*    --rdp-range_middle-color: #000;*/
+    /*    --rdp-range_start-background: white;*/
+    /*}*/
 }
+
 
 @layer utilities {
     .custom-outline *:focus:not(:focus-visible) {

@@ -150,6 +150,18 @@ export function IconButton({
     }
 }
 
+type IconContinuousButtonProps = {
+    text: string;
+    icon?: string;
+    variant?: "primary" | "secondary";
+    type?: "link";
+    href?: string
+    disabled?: boolean;
+    loadingText?: string;
+    customStyles?: string;
+    onClickAction?: () => void;
+}
+
 export function IconContinuousButton({
                                          text = "Button",
                                          icon = "",
@@ -157,15 +169,15 @@ export function IconContinuousButton({
                                          type = "link",
                                          href = " ",
                                          disabled = false,
-                                         onClick = undefined,
+                                         onClickAction = undefined,
                                          loadingText = 'loading',
                                          customStyles = "",
-                                     }) {
+                                     }: IconContinuousButtonProps) {
     const [pending, setPending] = useState(false);
     const handleClick = () => {
         setPending(true)
-        if (onClick) {
-            onClick();
+        if (onClickAction) {
+            onClickAction();
         }
         Log("index.jsx IconContinuousButton", {pending})
     }
