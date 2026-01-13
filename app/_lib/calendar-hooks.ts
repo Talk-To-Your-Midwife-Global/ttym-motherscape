@@ -4,7 +4,10 @@ import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {fetcher} from "@/app/_lib/functions";
 import {Log} from "@/app/_lib/utils";
 
-export function useCyclesForTheYear(accessToken) {
+
+const CURRENT_YEAR = new Date().getFullYear();
+
+export function useCyclesForTheYear(accessToken,) {
     const {
         data,
         isLoading,

@@ -4,7 +4,7 @@ import {useCalendarView} from "@/app/contexts/showCalendarContext";
 import {useCycleInfo, useLogsInfo} from "@/app/dashboard/lib/dataFetching";
 import {UserSymptomsAndLogViewer} from "@/app/dashboard/components/ui/UserSymptpmsAndLogViewer";
 import {Log} from "@/app/_lib/utils";
-import {isPast, isSameMonth, isThisMonth, isWithinInterval, startOfMonth} from "date-fns";
+import {isAfter, isPast, isSameMonth, isThisMonth, isWithinInterval, startOfMonth} from "date-fns";
 import {formatDate, necessaryDataForMenstrualUI, parseLogs} from "@/app/_lib/functions";
 import {useEffect} from "react";
 import posthog from "posthog-js";
@@ -37,36 +37,53 @@ export function CombinedCalendar({accessToken}) {
     const {cyclesForYear, cyclesForYearError} = useCyclesForTheYear(accessToken);
     const cyclesData = enrichMonthsObject(cyclesForYear || [], generalCycleInfo?.periodLength);
     Log({data});
+
     const handleDateClick = (date) => {
         const currentDay = new Date(date.date);
         setViewingDate(date);
-        const dayIsAConfirmedMenstrualDate = date.id && date.stage === STAGES.MENSTRUAL;
-        const dayIsAMenstrualDateInCurrentCycle = dayIsAConfirmedMenstrualDate && isWithinInterval(currentDay, {
-            start: data.current_cycle.start_date,
-            end: data.current_cycle.end_date
-        });
-        const dayIsNotMenstrual = date.stage !== STAGES.MENSTRUAL || !(date.hasOwnProperty('stage'));
-        const dayIsAMenstrualDateInPredictedCycle = !date.id && date.stage === STAGES.MENSTRUAL;
 
-        if (dayIsNotMenstrual) {
-            setShowUnConfirmMenstrualDateQuestion(false);
-            setShowMenstrualQuestion(false);
+        // if date is a future date do nothing
+        const today = new Date();
+        const isFutureDate = isAfter(currentDay, today);
+
+        if (isFutureDate) {
+            // TODO: clear all conditional user flows
+
+            return;
         }
-        if (dayIsAMenstrualDateInCurrentCycle) {
-            if (isPast(currentDay)) {
-                setShowUnConfirmMenstrualDateQuestion(true);
-                setShowMenstrualQuestion(false);
-            } else {
-                setShowMenstrualQuestion(false);
-                setShowUnConfirmMenstrualDateQuestion(false);
+
+        if (!isFutureDate) {
+            const isRegisteredCycle = !!data.id;
+            if (isRegisteredCycle) {
             }
-        } else if (dayIsAMenstrualDateInPredictedCycle) {
-            setShowMenstrualQuestion(true);
-            setShowUnConfirmMenstrualDateQuestion(false);
-
         }
-       
-        setViewLogs(true)
+        // const dayIsAConfirmedMenstrualDate = date.id && date.stage === STAGES.MENSTRUAL;
+        // const dayIsAMenstrualDateInCurrentCycle = dayIsAConfirmedMenstrualDate && isWithinInterval(currentDay, {
+        //     start: data.current_cycle.start_date,
+        //     end: data.current_cycle.end_date
+        // });
+        // const dayIsNotMenstrual = date.stage !== STAGES.MENSTRUAL || !(date.hasOwnProperty('stage'));
+        // const dayIsAMenstrualDateInPredictedCycle = !date.id && date.stage === STAGES.MENSTRUAL;
+        //
+        // if (dayIsNotMenstrual) {
+        //     setShowUnConfirmMenstrualDateQuestion(false);
+        //     setShowMenstrualQuestion(false);
+        // }
+        // if (dayIsAMenstrualDateInCurrentCycle) {
+        //     if (isPast(currentDay)) {
+        //         setShowUnConfirmMenstrualDateQuestion(true);
+        //         setShowMenstrualQuestion(false);
+        //     } else {
+        //         setShowMenstrualQuestion(false);
+        //         setShowUnConfirmMenstrualDateQuestion(false);
+        //     }
+        // } else if (dayIsAMenstrualDateInPredictedCycle) {
+        //     setShowMenstrualQuestion(true);
+        //     setShowUnConfirmMenstrualDateQuestion(false);
+        //
+        // }
+        //
+        // setViewLogs(true)
         // save logs in context if it is not having it already
         if (!logs) {
             const parsedLogs = parseLogs(logData);
@@ -144,6 +161,8 @@ export function CombinedCalendar({accessToken}) {
                                       showMenstrualQuestion={showMenstrualQuestion}
                                       showUnConfirmMenstrualDateQuestion={showUnConfirmMenstrualDateQuestion}
                                       cycleInfo={generalCycleInfo}/>
+            {/*    Start Cycle user flow component */}
+            {/*    Edit cycle user flow component*/}
         </>
     )
 }

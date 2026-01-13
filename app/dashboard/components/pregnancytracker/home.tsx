@@ -2,7 +2,7 @@
 import {
     DashboardHeader, FeelingsInsightsAndEvents,
     ShortCalendar, PregnancyCycleCardMain, CircularProgressBar
-} from "@/app/dashboard/components/index";
+} from "@/app/dashboard/components";
 import {usePregnancyInfo, useUserInfo} from "@/app/dashboard/lib/dataFetching";
 import {MiniLoader} from "@/app/_components";
 import Link from "next/link";
