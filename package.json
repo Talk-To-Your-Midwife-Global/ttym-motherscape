@@ -19,7 +19,7 @@
     "@iconify-json/octicon": "^1.2.19",
     "@iconify/tailwind": "^1.2.0",
     "@madebyconnor/rich-text-to-jsx": "^2.3.0",
-    "@serwist/next": "^9.2.3",
+    "@serwist/next": "^9.3.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^11.18.2",
