@@ -4,10 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  glob@>=10.2.0 <10.5.0: '>=10.5.0'
-  js-yaml@>=4.0.0 <4.1.1: '>=4.1.1'
-
 importers:
 
   .:
@@ -76,8 +72,8 @@ importers:
         specifier: ^4.8.1
         version: 4.8.1(bufferutil@4.0.9)
       socket.io-client:
-        specifier: ^4.8.1
-        version: 4.8.1(bufferutil@4.0.9)
+        specifier: ^4.8.3
+        version: 4.8.3(bufferutil@4.0.9)
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -3079,8 +3075,8 @@ packages:
   socket.io-adapter@2.5.5:
     resolution: {integrity: sha512-eLDQas5dzPgOWCk9GuuJC2lBqItuhKI4uxGgo9aIV7MYbk2h9Q6uULEh8WBzThoI7l+qU9Ast9fVUmkqPP9wYg==}
 
-  socket.io-client@4.8.1:
-    resolution: {integrity: sha512-hJVXfu3E28NmzGk8o1sHhN3om52tRvwYeidbj7xKy2eIIse5IoKX3USlS6Tqt3BHAtflLIkCQBkzVrEEfWUyYQ==}
+  socket.io-client@4.8.3:
+    resolution: {integrity: sha512-uP0bpjWrjQmUt5DTHq9RuoCBdFJF10cdX9X+a368j/Ft0wmaVgxlrjvK3kjvgCODOMMOz9lcaRzxmso0bTWZ/g==}
     engines: {node: '>=10.0.0'}
 
   socket.io-parser@4.2.4:
@@ -4525,7 +4521,7 @@ snapshots:
       '@typescript-eslint/types': 8.36.0
       '@typescript-eslint/typescript-estree': 8.36.0(typescript@5.8.3)
       '@typescript-eslint/visitor-keys': 8.36.0
-      debug: 4.4.1
+      debug: 4.4.3
       eslint: 9.39.2(jiti@1.21.7)
       typescript: 5.8.3
     transitivePeerDependencies:
@@ -4535,7 +4531,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/tsconfig-utils': 8.36.0(typescript@5.8.3)
       '@typescript-eslint/types': 8.36.0
-      debug: 4.4.1
+      debug: 4.4.3
       typescript: 5.8.3
     transitivePeerDependencies:
       - supports-color
@@ -4568,7 +4564,7 @@ snapshots:
       '@typescript-eslint/tsconfig-utils': 8.36.0(typescript@5.8.3)
       '@typescript-eslint/types': 8.36.0
       '@typescript-eslint/visitor-keys': 8.36.0
-      debug: 4.4.1
+      debug: 4.4.3
       fast-glob: 3.3.3
       is-glob: 4.0.3
       minimatch: 9.0.5
@@ -5428,7 +5424,7 @@ snapshots:
   eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@1.21.7)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
-      debug: 4.4.1
+      debug: 4.4.3
       eslint: 9.39.2(jiti@1.21.7)
       get-tsconfig: 4.10.1
       is-bun-module: 2.0.0
@@ -5799,14 +5795,14 @@ snapshots:
   http-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.1
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
   https-proxy-agent@7.0.6:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.1
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
@@ -6672,10 +6668,10 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  socket.io-client@4.8.1(bufferutil@4.0.9):
+  socket.io-client@4.8.3(bufferutil@4.0.9):
     dependencies:
       '@socket.io/component-emitter': 3.1.2
-      debug: 4.3.7
+      debug: 4.4.3
       engine.io-client: 6.6.3(bufferutil@4.0.9)
       socket.io-parser: 4.2.4
     transitivePeerDependencies:
@@ -7077,7 +7073,7 @@ snapshots:
   vite-node@3.2.4(@types/node@24.0.13)(jiti@1.21.7)(terser@5.44.0)(yaml@2.8.0):
     dependencies:
       cac: 6.7.14
-      debug: 4.4.1
+      debug: 4.4.3
       es-module-lexer: 1.7.0
       pathe: 2.0.3
       vite: 7.1.11(@types/node@24.0.13)(jiti@1.21.7)(terser@5.44.0)(yaml@2.8.0)
