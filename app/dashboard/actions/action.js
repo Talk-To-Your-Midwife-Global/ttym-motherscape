@@ -4,11 +4,20 @@ import {PUBLICHOSTNAME} from "@/app/_config/main";
 import {formatDate} from "@/app/_lib/functions";
 import {getLocalCookies} from "@/app/_lib/getCookies";
 import {Log} from "@/app/_lib/utils";
+import {decrypt} from "@/app/_actions/auth";
 
 
 export async function startCycle() {
     const today = formatDate(new Date());
-    const {access_token} = await getLocalCookies(['access_token']);
+    const {access_token: encryptedAccessToken} = await getLocalCookies(['access_token']);
+    let access_token = null;
+    if (encryptedAccessToken) {
+        try {
+            access_token = await decrypt(encryptedAccessToken);
+        } catch (e) {
+            Log("action.js; startCycle failed to decrypt access token", e);
+        }
+    }
     Log("Dashboard/actions/action.js; startCycle", {access_token});
 
     const response = await fetch(`${PUBLICHOSTNAME}/menstrual/start/?period_start=${today}`, {
@@ -51,7 +60,15 @@ export async function contentGqlFetcher(query, variables) {
 
 
 export async function bookmarkPost(postId) {
-    const {access_token} = await getLocalCookies(['access_token']);
+    const {access_token: encryptedAccessToken} = await getLocalCookies(['access_token']);
+    let access_token = null;
+    if (encryptedAccessToken) {
+        try {
+            access_token = await decrypt(encryptedAccessToken);
+        } catch (e) {
+            Log("action.js; bookmarkPost failed to decrypt access token", e);
+        }
+    }
 
     const response = await fetch(`${PUBLICHOSTNAME}/bookmark/${postId}`, {
         headers: {

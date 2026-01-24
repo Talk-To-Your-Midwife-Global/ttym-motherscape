@@ -3,10 +3,19 @@ import {PageFadeAnimator} from "@/app/_components";
 import {Log} from "@/app/_lib/utils";
 import {getLocalCookies} from "@/app/_lib/getCookies";
 import {DashboardBottomNav} from "@/app/dashboard/components/DashboardBottomNav";
+import {decrypt} from "@/app/_actions/auth";
 
 export default async function DashboardRouteLayout({children, params}) {
     const paramName = await params;
-    const {access_token} = await getLocalCookies(['access_token']);
+    const {access_token: encryptedAccessToken} = await getLocalCookies(['access_token']);
+    let access_token = null;
+    if (encryptedAccessToken) {
+        try {
+            access_token = await decrypt(encryptedAccessToken);
+        } catch (e) {
+            Log("layout.js; DashboardRouteLayout failed to decrypt access token", e);
+        }
+    }
     Log(paramName);
 
     const shouldName = {

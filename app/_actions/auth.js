@@ -1,5 +1,5 @@
 "use server";
-// import {SignJWT, JWTVer} from 'jose'
+import {SignJWT, jwtVerify} from 'jose';
 import {
     SignUpFormSchema,
     SignInFormSchema,
@@ -14,27 +14,36 @@ import posthog from "posthog-js";
 import {Log} from "@/app/_lib/utils";
 
 
-// const secretKey = 'somekeybiIwillmakeinenvironmentvairables'
-// const key = new TextEncoder().encode(secretKey);
-//
-// export async function encrypt(payload) {
-//     return await SignJWT(payload)
-//         .setProtectedHeader({alg: 'HS256'})
-//         .setIssuedAt()
-//         .setExpirationTime('time goes here')
-//         .sign(key)
-// }
-//
-// export async function decrypt(input) {
-//     const {payload} = await JWTVerify(input, key,  {
-//         algorithms: ['HS256'],
-//     })
-//
-//     return payload
-// }
+const secretKey = process.env.SESSION_SECRET || 'fallback-secret-key-replace-me-in-production';
+const key = new TextEncoder().encode(secretKey);
+
+export async function encrypt(payload) {
+    return await new SignJWT(payload)
+        .setProtectedHeader({alg: 'HS256'})
+        .setIssuedAt()
+        .setExpirationTime('2h')
+        .sign(key);
+}
+
+export async function decrypt(input) {
+    const {payload} = await jwtVerify(input, key, {
+        algorithms: ['HS256'],
+    });
+
+    return payload;
+}
 export async function refreshUserAccessToken() {
     const functionExceptionTag = "auth.js; refreshUserAccessToken()"
-    const {refresh_token} = await getLocalCookies(['refresh_token']);
+    const {refresh_token: encryptedRefreshToken} = await getLocalCookies(['refresh_token']);
+    let refresh_token = null;
+    if (encryptedRefreshToken) {
+        try {
+            refresh_token = await decrypt(encryptedRefreshToken);
+        } catch (e) {
+            Log(`${functionExceptionTag} failed to decrypt refresh token`, e);
+        }
+    }
+
     let jsonBody;
     if (refresh_token) {
         jsonBody = JSON.stringify({
@@ -81,14 +90,14 @@ export async function refreshUserAccessToken() {
         if (response.access && response.refresh) {
             cookieStore.set({
                 name: "access_token",
-                value: response.access,
+                value: await encrypt(response.access),
                 httpOnly: true,
                 sameSite: "lax",
                 maxAge: 60 * 15
             });
             cookieStore.set({
                 name: "refresh_token",
-                value: response.refresh,
+                value: await encrypt(response.refresh),
                 httpOnly: true,
                 sameSite: "lax",
                 maxAge: 60 * 15
@@ -196,7 +205,7 @@ export async function signup(state, formData) {
 
         return {
             success: true,
-            token: result.tokens.access,
+            token: await encrypt(result.tokens.access),
             route: `/auth/verify-email`
         }
     } catch (errors) {
@@ -290,14 +299,14 @@ export async function signin(state, formData) {
         let cookieStore = await cookies()
         cookieStore.set({
             name: 'access_token',
-            value: result.tokens.access,
+            value: await encrypt(result.tokens.access),
             httpOnly: true,
             sameSite: 'lax',
             maxAge: 60 * 15
         })
         cookieStore.set({
             name: 'refresh_token',
-            value: result.tokens.refresh,
+            value: await encrypt(result.tokens.refresh),
             httpOnly: true,
             sameSite: 'lax',
             maxAge: 60 * 15
@@ -335,7 +344,7 @@ export async function signin(state, formData) {
         }
         return {
             success: true,
-            token: result.tokens.access,
+            token: await encrypt(result.tokens.access),
             route: result.user.menstrual_profile_created ? '/dashboard' : `/onboarding`,
             userDetails
         }
@@ -348,8 +357,28 @@ export async function signin(state, formData) {
 
 export async function logout() {
     const cookieStore = await cookies();
-    const {access_token, refresh_token} = await getLocalCookies(['access_token', 'refresh_token'])
-    Log(`auth.js; Logout unsuccessful`, {access_token, refresh_token})
+    const {access_token: encryptedAccessToken, refresh_token: encryptedRefreshToken} = await getLocalCookies(['access_token', 'refresh_token'])
+    
+    let access_token = null;
+    let refresh_token = null;
+
+    if (encryptedAccessToken) {
+        try {
+            access_token = await decrypt(encryptedAccessToken);
+        } catch (e) {
+            Log(`auth.js; logout failed to decrypt access token`, e);
+        }
+    }
+
+    if (encryptedRefreshToken) {
+        try {
+            refresh_token = await decrypt(encryptedRefreshToken);
+        } catch (e) {
+            Log(`auth.js; logout failed to decrypt refresh token`, e);
+        }
+    }
+
+    Log(`auth.js; Logout attempt`, {access_token, refresh_token})
 
     const items = ['access_token', 'refresh_token', 'last_login', 'ttym-user-type', 'user_email']
     try {
