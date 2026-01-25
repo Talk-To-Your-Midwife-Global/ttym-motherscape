@@ -41,7 +41,7 @@ export async function middleware(request) {
     if (
         isPublicRoute &&
         token &&
-        request.cookies.get('last_login') === null &&
+        request.cookies.get('menstrual_profile_created') === null &&
         request.nextUrl.pathname.startsWith('/dashboard')
     ) {
         return NextResponse.redirect(new URL('/questions', request.nextUrl))
