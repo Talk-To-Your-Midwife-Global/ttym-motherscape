@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
 import {jwtVerify} from 'jose';
 
-const secretKey = process.env.SESSION_SECRET || 'fallback-secret-key-replace-me-in-production';
+const secretKey = process.env.SESSION_SECRET;
 const key = new TextEncoder().encode(secretKey);
 
 async function decrypt(input) {
