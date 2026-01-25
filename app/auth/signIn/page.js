@@ -26,6 +26,7 @@ export default function Page() {
 
     useEffect(() => {
         setUserRoute(getUserRouteFromLocalStorage())
+        Log({state}, "from sign in page");
         if (state?.success) {
             posthog.identify(state?.userDetails?.uuid, state?.userDetails);
             toast.success("Successfully logged in")
@@ -39,7 +40,7 @@ export default function Page() {
                 setError([...state?.error])
             }
         }
-    }, [state?.success])
+    }, [state])
 
     return (
         <section>
