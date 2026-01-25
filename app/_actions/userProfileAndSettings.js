@@ -4,9 +4,18 @@ import posthog from "posthog-js";
 import {CURRENTROUTE, HOSTNAME_URI} from "@/app/_config/main";
 import {Log} from "@/app/_lib/utils";
 import {getLocalCookies} from "@/app/_lib/getCookies";
+import {decrypt} from "@/app/_actions/auth";
 
 export async function updateUserEmail(email) {
-    const {access_token} = await getLocalCookies(['access_token']);
+    const {access_token: encryptedAccessToken} = await getLocalCookies(['access_token']);
+    let access_token = null;
+    if (encryptedAccessToken) {
+        try {
+            access_token = await decrypt(encryptedAccessToken);
+        } catch (e) {
+            Log("userProfileAndSettings.js; updateUserEmail failed to decrypt access token", e);
+        }
+    }
 
     const validatedFields = emailSchema.safeParse({
         email: email
@@ -61,7 +70,15 @@ export async function updateUserEmail(email) {
 
 
 export async function updateUserProfile(state, formData) {
-    const {access_token} = await getLocalCookies(['access_token']);
+    const {access_token: encryptedAccessToken} = await getLocalCookies(['access_token']);
+    let access_token = null;
+    if (encryptedAccessToken) {
+        try {
+            access_token = await decrypt(encryptedAccessToken);
+        } catch (e) {
+            Log("userProfileAndSettings.js; updateUserProfile failed to decrypt access token", e);
+        }
+    }
 
     const validatedFields = ProfileSettingsSchema.safeParse({
         full_name: formData.get('fullName'),

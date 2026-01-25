@@ -1,5 +1,5 @@
 "use server";
-// import {SignJWT, JWTVer} from 'jose'
+import {SignJWT, jwtVerify} from 'jose';
 import {
     SignUpFormSchema,
     SignInFormSchema,
@@ -14,27 +14,56 @@ import posthog from "posthog-js";
 import {Log} from "@/app/_lib/utils";
 
 
-// const secretKey = 'somekeybiIwillmakeinenvironmentvairables'
-// const key = new TextEncoder().encode(secretKey);
-//
-// export async function encrypt(payload) {
-//     return await SignJWT(payload)
-//         .setProtectedHeader({alg: 'HS256'})
-//         .setIssuedAt()
-//         .setExpirationTime('time goes here')
-//         .sign(key)
-// }
-//
-// export async function decrypt(input) {
-//     const {payload} = await JWTVerify(input, key,  {
-//         algorithms: ['HS256'],
-//     })
-//
-//     return payload
-// }
+const secretKey = process.env.SESSION_SECRET || 'fallback-secret-key-replace-me-in-production';
+const key = new TextEncoder().encode(secretKey);
+
+/**
+ * @typedef {Object} SessionPayload
+ * @property {string} value
+ */
+
+/**
+ * Encrypts a payload into a JWT.
+ * @param {string | Object} payload - The data to encrypt.
+ * @returns {Promise<string>} The encrypted JWT.
+ */
+export async function encrypt(payload) {
+    const claims = typeof payload === 'object' ? payload : {value: payload};
+    return await new SignJWT(claims)
+        .setProtectedHeader({alg: 'HS256'})
+        .setIssuedAt()
+        .setExpirationTime('2h')
+        .sign(key);
+}
+
+/**
+ * Decrypts a JWT and returns the value.
+ * @param {string} input - The JWT to decrypt.
+ * @returns {Promise<string | any>} The decrypted value or payload.
+ */
+export async function decrypt(input) {
+    const {payload} = await jwtVerify(input, key, {
+        algorithms: ['HS256'],
+    });
+
+    return payload.value || payload;
+}
+/**
+ * Refreshes the user's access token using the refresh token.
+ * @returns {Promise<{success: boolean, serverError: boolean, message?: string}>}
+ */
 export async function refreshUserAccessToken() {
     const functionExceptionTag = "auth.js; refreshUserAccessToken()"
-    const {refresh_token} = await getLocalCookies(['refresh_token']);
+    const {refresh_token: encryptedRefreshToken} = await getLocalCookies(['refresh_token']);
+    let refresh_token = null;
+    if (encryptedRefreshToken) {
+        try {
+            refresh_token = await decrypt(encryptedRefreshToken);
+        } catch (e) {
+            Log(`${functionExceptionTag} failed to decrypt refresh token`, e);
+        }
+    }
+
     let jsonBody;
     if (refresh_token) {
         jsonBody = JSON.stringify({
@@ -81,14 +110,14 @@ export async function refreshUserAccessToken() {
         if (response.access && response.refresh) {
             cookieStore.set({
                 name: "access_token",
-                value: response.access,
+                value: await encrypt({value: response.access}),
                 httpOnly: true,
                 sameSite: "lax",
                 maxAge: 60 * 15
             });
             cookieStore.set({
                 name: "refresh_token",
-                value: response.refresh,
+                value: await encrypt({value: response.refresh}),
                 httpOnly: true,
                 sameSite: "lax",
                 maxAge: 60 * 15
@@ -120,6 +149,10 @@ export async function refreshUserAccessToken() {
     }
 }
 
+/**
+ * Retrieves the user type from cookies.
+ * @returns {Promise<string|null>}
+ */
 export async function returnTypeOfPatient() {
     const cookieStore = await cookies();
     if (cookieStore.has('ttym-user-type')) {
@@ -129,10 +162,25 @@ export async function returnTypeOfPatient() {
 }
 
 /**
+ * @typedef {Object} FormState
+ * @property {boolean} [success]
+ * @property {Record<string, string[]>} [fieldErrors]
+ * @property {any} [serverError]
+ * @property {Record<string, string[]>} [errors]
+ * @property {Object} [state]
+ * @property {string} [state.email]
+ * @property {string|boolean} [token]
+ * @property {string} [route]
+ * @property {boolean} [shouldVerifyEmail]
+ * @property {Object} [userDetails]
+ * @property {string} [message]
+ */
+
+/**
  * Validates sign up form fields
- * @param {state} state
- * @param {formData} formData
- * @returns
+ * @param {FormState} state
+ * @param {FormData} formData
+ * @returns {Promise<FormState>}
  */
 export async function signup(state, formData) {
     const fields = {
@@ -196,8 +244,9 @@ export async function signup(state, formData) {
 
         return {
             success: true,
-            token: result.tokens.access,
-            route: `/auth/verify-email`
+            token: await encrypt({value: result.tokens.access}),
+            route: `/auth/verify-email`,
+            serverError: undefined
         }
     } catch (errors) {
         Log({errors})
@@ -205,16 +254,16 @@ export async function signup(state, formData) {
         return {
             success: undefined,
             fieldErrors: undefined,
-            serverError: true,
+            serverError: errors,
         }
     }
 }
 
 /**
  * Validates sign in form fields
- * @param {state} state
- * @param {formData} formData
- * @returns
+ * @param {FormState} state
+ * @param {FormData} formData
+ * @returns {Promise<FormState>}
  */
 export async function signin(state, formData) {
     const validatedFields = SignInFormSchema.safeParse({
@@ -258,11 +307,7 @@ export async function signin(state, formData) {
 
         const errors = []
         if (!response.ok) {
-            // for (const key in result) {
-            //     errors.push(result[key][0])
-            // }
             Log("auth.js; Signin failed", {result})
-
             const userIsUnAuthorized = response.status === 401;
             if (userIsUnAuthorized) {
                 const email = formData.get('email')
@@ -287,17 +332,19 @@ export async function signin(state, formData) {
             }
         }
 
-        let cookieStore = await cookies()
+        let cookieStore = await cookies();
+        const encryptedAccessToken = await encrypt({value: result.tokens.access})
+        const encryptedRefreshToken = await encrypt({value: result.tokens.refresh})
         cookieStore.set({
             name: 'access_token',
-            value: result.tokens.access,
+            value: encryptedAccessToken,
             httpOnly: true,
             sameSite: 'lax',
             maxAge: 60 * 15
         })
         cookieStore.set({
             name: 'refresh_token',
-            value: result.tokens.refresh,
+            value: encryptedRefreshToken,
             httpOnly: true,
             sameSite: 'lax',
             maxAge: 60 * 15
@@ -308,10 +355,17 @@ export async function signin(state, formData) {
             httpOnly: true,
             sameSite: 'lax',
         });
+        cookieStore.set({
+            name: 'menstrual_profile_created',
+            value: result.user.menstrual_profile_created,
+            httpOnly: true,
+            sameSite: 'lax',
+        })
 
         Log({result});
         Log("auth.js",)
-        if (!result.user.is_configured) {
+        // TODO: Remove this is_configured part since it is no longer used
+        if (!result.user.last_login) {
             cookieStore.set({
                 name: 'last_login',
                 value: null,
@@ -335,21 +389,46 @@ export async function signin(state, formData) {
         }
         return {
             success: true,
-            token: result.tokens.access,
+            token: encryptedAccessToken,
             route: result.user.menstrual_profile_created ? '/dashboard' : `/onboarding`,
             userDetails
         }
     } catch (errors) {
+        Log({errors}, 'state errors')
         return {
             error: [errors.error_description]
         }
     }
 }
 
+/**
+ * Logs out the user by deleting session cookies and notifying the backend.
+ * @returns {Promise<{success?: boolean, error?: any}>}
+ */
 export async function logout() {
     const cookieStore = await cookies();
-    const {access_token, refresh_token} = await getLocalCookies(['access_token', 'refresh_token'])
-    Log(`auth.js; Logout unsuccessful`, {access_token, refresh_token})
+    const {access_token: encryptedAccessToken, refresh_token: encryptedRefreshToken} = await getLocalCookies(['access_token', 'refresh_token'])
+    
+    let access_token = null;
+    let refresh_token = null;
+
+    if (encryptedAccessToken) {
+        try {
+            access_token = await decrypt(encryptedAccessToken);
+        } catch (e) {
+            Log(`auth.js; logout failed to decrypt access token`, e);
+        }
+    }
+
+    if (encryptedRefreshToken) {
+        try {
+            refresh_token = await decrypt(encryptedRefreshToken);
+        } catch (e) {
+            Log(`auth.js; logout failed to decrypt refresh token`, e);
+        }
+    }
+
+    Log(`auth.js; Logout attempt`, {access_token, refresh_token})
 
     const items = ['access_token', 'refresh_token', 'last_login', 'ttym-user-type', 'user_email']
     try {
@@ -397,6 +476,11 @@ export async function logout() {
     }
 }
 
+/**
+ * Requests email verification for a given email address.
+ * @param {string} email
+ * @returns {Promise<{success: boolean, fieldErrors?: any, serverErrors?: any}>}
+ */
 export async function requestEmailVerification(email) {
     const logMsg = 'auth.js; requestEmailVerification; requesting email verification'
     Log(logMsg, {HOSTNAME_URI})
@@ -434,6 +518,12 @@ export async function requestEmailVerification(email) {
 }
 
 
+/**
+ * Initiates the password change process by sending a reset request.
+ * @param {Object} formData
+ * @param {string} formData.email
+ * @returns {Promise<{success: boolean, fieldErrors: any, serverError: boolean, message?: string}>}
+ */
 export async function initiatePasswordChange(formData) {
     const validatedField = ForgotPasswordFormSchema.safeParse({
         email: formData.email,
@@ -489,9 +579,11 @@ export async function initiatePasswordChange(formData) {
 
 
 /**
- * Validates forgotPassword email form
- * @param formData
- * @returns {Promise<{success: boolean}|{errors: {email?: string[]}}>}
+ * Completes the password change process.
+ * @param {Object} formData
+ * @param {string} formData.password
+ * @param {string} formData.key
+ * @returns {Promise<{success: boolean|undefined, fieldErrors: any, serverError?: boolean}>}
  */
 export async function changePassword(formData) {
     const validateField = PasswordResetSchema.safeParse({

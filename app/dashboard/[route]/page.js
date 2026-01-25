@@ -7,12 +7,22 @@ import {PregnantCalendarMain} from "@/app/dashboard/components/pregnancytracker/
 import {PregnancyHome} from "@/app/dashboard/components/pregnancytracker/home";
 import {cookies} from "next/headers";
 import {OfflineBanner} from "@/app/_components/OfflineBanner";
+import {decrypt} from "@/app/_actions/auth";
+import {Log} from "@/app/_lib/utils";
 
 
 export default async function Page({params}) {
     const routeName = await params;
     const cookieStore = await cookies();
-    const accessToken = cookieStore.get('access_token')?.value;
+    const encryptedAccessToken = cookieStore.get('access_token')?.value;
+    let accessToken = null;
+    if (encryptedAccessToken) {
+        try {
+            accessToken = await decrypt(encryptedAccessToken);
+        } catch (e) {
+            Log("dashboard/[route]/page.js; Page failed to decrypt access token", e);
+        }
+    }
     const userType = cookieStore.get('ttym-user-type')?.value;
     const socketUrl = process.env.NEXT_PUBLIC_WS_URL;
     const menstrualViews = {

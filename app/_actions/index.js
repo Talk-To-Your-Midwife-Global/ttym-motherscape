@@ -6,6 +6,7 @@ import {convertCommaStringToArray} from "@/app/dashboard/lib/functions";
 
 import {Log, USERTYPE} from "@/app/_lib/utils";
 import {getLocalCookies} from "@/app/_lib/getCookies";
+import {decrypt} from "@/app/_actions/auth";
 
 export async function storeUserType(userType) {
     const cookieStore = await cookies();
@@ -16,7 +17,15 @@ export async function storeUserType(userType) {
 }
 
 export async function updatePregnantUser(info) {
-    const {access_token} = await getLocalCookies(["access_token"]);
+    const {access_token: encryptedAccessToken} = await getLocalCookies(["access_token"]);
+    let access_token = null;
+    if (encryptedAccessToken) {
+        try {
+            access_token = await decrypt(encryptedAccessToken);
+        } catch (e) {
+            Log("index.js; updatePregnantUser failed to decrypt access token", e);
+        }
+    }
     Log(info)
     Log(HOSTNAME_URI)
     const dataInput = {
@@ -60,7 +69,15 @@ export async function updatePregnantUser(info) {
 }
 
 export async function updateUserStatus(status = USERTYPE.unassigned) {
-    const {access_token} = await getLocalCookies(["access_token"]);
+    const {access_token: encryptedAccessToken} = await getLocalCookies(["access_token"]);
+    let access_token = null;
+    if (encryptedAccessToken) {
+        try {
+            access_token = await decrypt(encryptedAccessToken);
+        } catch (e) {
+            Log("index.js; updateUserStatus failed to decrypt access token", e);
+        }
+    }
     const bodyValue = JSON.stringify({status});
 
     const response = await fetch(`${HOSTNAME_URI}/user/`, {
@@ -87,7 +104,15 @@ export async function updateUserStatus(status = USERTYPE.unassigned) {
 
 export async function updateUser(info) {
     Log({info})
-    const {access_token} = await getLocalCookies(["access_token"]);
+    const {access_token: encryptedAccessToken} = await getLocalCookies(["access_token"]);
+    let access_token = null;
+    if (encryptedAccessToken) {
+        try {
+            access_token = await decrypt(encryptedAccessToken);
+        } catch (e) {
+            Log("index.js; updateUser failed to decrypt access token", e);
+        }
+    }
 
     const data = {
         cycle_length: info.cycleInfo,
