@@ -14,7 +14,7 @@ import posthog from "posthog-js";
 import {Log} from "@/app/_lib/utils";
 
 
-const secretKey = process.env.SESSION_SECRET || 'fallback-secret-key-replace-me-in-production';
+const secretKey = process.env.SESSION_SECRET;
 const key = new TextEncoder().encode(secretKey);
 
 /**
