@@ -1,7 +1,7 @@
-import {vi, describe, expect, it, test} from "vitest";
+import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {generateMonths, STAGES} from "@/app/_lib/calendar-utils";
 import * as calendarUtils from "./calendar-utils";
-import {format, formatDistance} from "date-fns";
+import {differenceInCalendarDays, eachDayOfInterval, endOfMonth, format} from "date-fns";
 
 
 const cycles = [
@@ -30,11 +30,43 @@ const styles = {
 
 }
 
+const fixedDate = new Date("2025-10-15T12:00:00Z");
+const calendarYear = 2025;
+
+const buildMonthsForYear = (year) => {
+    const months = Object.fromEntries(Array.from({length: 12}, (_, index) => [index, {}]));
+
+    for (let month = 0; month < 12; month += 1) {
+        const currentDate = new Date(year, month, 1);
+        const endDate = endOfMonth(currentDate);
+        const interval = eachDayOfInterval({start: currentDate, end: endDate});
+
+        for (const day of interval) {
+            const formattedDay = format(day, "yyyy-MM-dd");
+            months[month][formattedDay] = {
+                style: "",
+                stage: ""
+            };
+        }
+    }
+
+    return months;
+};
+
 describe("generateMonths()", () => {
+    beforeEach(() => {
+        vi.useFakeTimers();
+        vi.setSystemTime(fixedDate);
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
     it('should return an object of date key paired with an object having style and stage props', () => {
         const generatedMonths = generateMonths();
         const today = new Date();
-        const formattedToday = format(new Date(), 'yyyy-MM-dd');
+        const formattedToday = format(fixedDate, 'yyyy-MM-dd');
         const currentMonth = today.getMonth();
         expect(generatedMonths[currentMonth]).toBeDefined();
         expect(generatedMonths[currentMonth]).toEqual(expect.objectContaining(
@@ -56,9 +88,10 @@ describe("getMenstrualDates()", () => {
     it('should return a suitable range of dates from the start date to end date', () => {
         const currentCycle = cycles[0];
         const menstrualDates = calendarUtils.getMenstrualDates(currentCycle.start_date, currentCycle.bleed_end_date, null, null);
-        const distance = formatDistance(new Date(currentCycle.start_date), new Date(currentCycle.bleed_end_date), {
-            unit: 'days'
-        });
+        const diff = differenceInCalendarDays(
+            new Date(currentCycle.bleed_end_date),
+            new Date(currentCycle.start_date)
+        );
 
         expect(menstrualDates[0]).toEqual(expect.objectContaining({
             date: expect.stringMatching(/\d{4}-\d{2}-\d{2}/g),
@@ -68,7 +101,7 @@ describe("getMenstrualDates()", () => {
             date: expect.stringMatching(/\d{4}-\d{2}-\d{2}/g),
             style: expect.stringContaining(styles.menstrualDashed)
         }))
-        expect(menstrualDates.length).toBe(Number(distance.match(/\d/)[0]) + 1);
+        expect(menstrualDates.length).toBe(diff + 1);
         expect(menstrualDates.length).toBeLessThanOrEqual(7);
     });
 })
@@ -126,7 +159,7 @@ describe("getSafeDays()", () => {
 describe("monthAllocator()", () => {
     it('should modify the month with menstrual days style and stage', () => {
         const currentCycle = cycles[0];
-        const months = generateMonths();
+        const months = buildMonthsForYear(calendarYear);
         const menstrualDates = calendarUtils.getMenstrualDates(currentCycle.start_date, currentCycle.bleed_end_date);
         const style = styles.menstrualDashed;
         calendarUtils.monthAllocator(menstrualDates, STAGES.MENSTRUAL, months);
@@ -143,9 +176,8 @@ describe("monthAllocator()", () => {
 
     it('should modify the month with ovulation days style and stage', () => {
         const currentCycle = cycles[0];
-        const months = generateMonths();
+        const months = buildMonthsForYear(calendarYear);
         const ovulationDates = calendarUtils.getOvulationDates(currentCycle.ovulation_day);
-        const style = "bg-[#DEE4F5] text-black"
         calendarUtils.monthAllocator(ovulationDates, STAGES.OVULATION, months);
         expect(months[9][currentCycle.ovulation_day]).toEqual(expect.objectContaining({
             style: expect.stringContaining("bg-[#07226B] text-white"),
@@ -153,7 +185,7 @@ describe("monthAllocator()", () => {
         }))
 
         expect(months[9][ovulationDates[0].date]).toEqual(expect.objectContaining({
-            style: expect.stringContaining(style),
+            style: expect.stringContaining("bg-[#DEE4F5] text-black rounded-full"),
             stage: STAGES.OVULATION
         }));
         expect(months[2]['2025-03-10']).toEqual(expect.objectContaining({
@@ -166,7 +198,7 @@ describe("parseMonthForCalendar()", () => {
     it('should accept an object of objects', () => {
         const parseMonthForCalendarSpy = vi.spyOn(calendarUtils, "parseMonthForCalendar");
         const currentCycle = cycles[0];
-        const months = generateMonths();
+        const months = buildMonthsForYear(calendarYear);
         const ovulationDates = calendarUtils.getOvulationDates(currentCycle.ovulation_day);
         const style = "bg-[#07226B] text-white"
         calendarUtils.monthAllocator(ovulationDates, STAGES.OVULATION, months);
@@ -187,9 +219,8 @@ describe("parseMonthForCalendar()", () => {
 
     it('should return an array of objects', () => {
         const currentCycle = cycles[0];
-        const months = generateMonths();
+        const months = buildMonthsForYear(calendarYear);
         const ovulationDates = calendarUtils.getOvulationDates(currentCycle.ovulation_day);
-        const style = "bg-[#DEE4F5] text-black"
         calendarUtils.monthAllocator(ovulationDates, STAGES.OVULATION, months);
 
         expect(months[9][currentCycle.ovulation_day]).toEqual(expect.objectContaining({
@@ -198,6 +229,10 @@ describe("parseMonthForCalendar()", () => {
         }))
 
         const parsedMonths = calendarUtils.parseMonthForCalendar(months[9]);
-        expect(parsedMonths[19].style).toContain(style);
+        const parsedEntry = parsedMonths.find((entry) => entry.date === currentCycle.ovulation_day);
+        expect(parsedEntry).toEqual(expect.objectContaining({
+            style: expect.stringContaining("bg-[#07226B] text-white"),
+            stage: STAGES.OVULATION
+        }));
     });
 })
