@@ -54,7 +54,33 @@ export async function decrypt(input) {
  */
 export async function refreshUserAccessToken() {
     const functionExceptionTag = "auth.js; refreshUserAccessToken()"
-    const {refresh_token: encryptedRefreshToken} = await getLocalCookies(['refresh_token']);
+    const cookieStore = await cookies();
+
+    const encryptedAccessToken = cookieStore.get('access_token')?.value;
+    const encryptedRefreshToken = cookieStore.get('refresh_token')?.value;
+
+    // Detect when there is an error with the access token
+    let isAccessTokenError = false;
+    if (encryptedAccessToken) {
+        try {
+            await decrypt(encryptedAccessToken);
+        } catch (e) {
+            isAccessTokenError = true;
+            Log(`${functionExceptionTag} Access token is invalid or expired`, e);
+        }
+    } else {
+        isAccessTokenError = true;
+        Log(`${functionExceptionTag} Access token is missing`);
+    }
+
+    if (!isAccessTokenError) {
+        return {
+            success: true,
+            serverError: false,
+            message: "Access token is still valid"
+        }
+    }
+
     let refresh_token = null;
     if (encryptedRefreshToken) {
         try {
@@ -106,7 +132,6 @@ export async function refreshUserAccessToken() {
         const response = await request.json();
         Log({response});
 
-        const cookieStore = await cookies();
         if (response.access && response.refresh) {
             cookieStore.set({
                 name: "access_token",
@@ -120,7 +145,7 @@ export async function refreshUserAccessToken() {
                 value: await encrypt({value: response.refresh}),
                 httpOnly: true,
                 sameSite: "lax",
-                maxAge: 60 * 15
+                maxAge: 60 * 60 * 24
             });
             return {
                 serverError: false,
@@ -130,7 +155,7 @@ export async function refreshUserAccessToken() {
         } else {
             const errMessage = `${functionExceptionTag} tokens not in response: ${JSON.stringify({
                 request,
-                response: await request.json()
+                response: response
             })}`
             return {
                 serverError: true,
@@ -347,7 +372,7 @@ export async function signin(state, formData) {
             value: encryptedRefreshToken,
             httpOnly: true,
             sameSite: 'lax',
-            maxAge: 60 * 15
+            maxAge: 60 * 60 * 24
         })
         cookieStore.set({
             name: 'ttym-user-type',
