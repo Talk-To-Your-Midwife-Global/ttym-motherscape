@@ -19,7 +19,7 @@ const protectedRoute = ['/questions', '/dashboard', '/dashboard/me', '/dashboard
 const publicRoutes = ['/', '/auth/register', '/auth/signIn']
 
 export async function middleware(request) {
-    const encryptedToken = request.cookies.get('access_token')?.value
+    const encryptedToken = request.cookies.get('refresh_token')?.value
     let token = null;
 
     if (encryptedToken) {

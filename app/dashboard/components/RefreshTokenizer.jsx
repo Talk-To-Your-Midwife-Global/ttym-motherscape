@@ -21,9 +21,16 @@ export function RefreshTokenizer({children}) {
     }
 
     useEffect(() => {
-        const refreshTokenInterval = setInterval(callRefreshFunction, 60 * 13 * 1000);
+        callRefreshFunction();
+
+        const handleFocus = () => {
+            callRefreshFunction();
+        }
+
+        window.addEventListener("focus", handleFocus);
+
         return () => {
-            clearInterval(refreshTokenInterval);
+            window.removeEventListener("focus", handleFocus);
         }
     }, []);
     return children
