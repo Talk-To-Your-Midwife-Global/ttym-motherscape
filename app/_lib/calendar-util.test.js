@@ -1,7 +1,7 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {generateMonths, STAGES} from "@/app/_lib/calendar-utils";
 import * as calendarUtils from "./calendar-utils";
-import {differenceInCalendarDays, format} from "date-fns";
+import {differenceInCalendarDays, eachDayOfInterval, endOfMonth, format} from "date-fns";
 
 
 const cycles = [
@@ -185,7 +185,7 @@ describe("monthAllocator()", () => {
         }))
 
         expect(months[9][ovulationDates[0].date]).toEqual(expect.objectContaining({
-            style: expect.stringContaining(style),
+            style: expect.stringContaining("bg-[#DEE4F5] text-black rounded-full"),
             stage: STAGES.OVULATION
         }));
         expect(months[2]['2025-03-10']).toEqual(expect.objectContaining({
