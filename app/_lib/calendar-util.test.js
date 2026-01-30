@@ -30,11 +30,22 @@ const styles = {
 
 }
 
+const fixedDate = new Date("2025-10-15T12:00:00Z");
+
 describe("generateMonths()", () => {
+    beforeEach(() => {
+        vi.useFakeTimers();
+        vi.setSystemTime(fixedDate);
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
     it('should return an object of date key paired with an object having style and stage props', () => {
         const generatedMonths = generateMonths();
         const today = new Date();
-        const formattedToday = format(new Date(), 'yyyy-MM-dd');
+        const formattedToday = format(fixedDate, 'yyyy-MM-dd');
         const currentMonth = today.getMonth();
         expect(generatedMonths[currentMonth]).toBeDefined();
         expect(generatedMonths[currentMonth]).toEqual(expect.objectContaining(
