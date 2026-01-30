@@ -1,4 +1,4 @@
-import {vi, describe, expect, it, test} from "vitest";
+import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {generateMonths, STAGES} from "@/app/_lib/calendar-utils";
 import * as calendarUtils from "./calendar-utils";
 import {differenceInCalendarDays, format} from "date-fns";
@@ -31,6 +31,27 @@ const styles = {
 }
 
 const fixedDate = new Date("2025-10-15T12:00:00Z");
+const calendarYear = 2025;
+
+const buildMonthsForYear = (year) => {
+    const months = Object.fromEntries(Array.from({length: 12}, (_, index) => [index, {}]));
+
+    for (let month = 0; month < 12; month += 1) {
+        const currentDate = new Date(year, month, 1);
+        const endDate = endOfMonth(currentDate);
+        const interval = eachDayOfInterval({start: currentDate, end: endDate});
+
+        for (const day of interval) {
+            const formattedDay = format(day, "yyyy-MM-dd");
+            months[month][formattedDay] = {
+                style: "",
+                stage: ""
+            };
+        }
+    }
+
+    return months;
+};
 
 describe("generateMonths()", () => {
     beforeEach(() => {
@@ -138,7 +159,7 @@ describe("getSafeDays()", () => {
 describe("monthAllocator()", () => {
     it('should modify the month with menstrual days style and stage', () => {
         const currentCycle = cycles[0];
-        const months = generateMonths();
+        const months = buildMonthsForYear(calendarYear);
         const menstrualDates = calendarUtils.getMenstrualDates(currentCycle.start_date, currentCycle.bleed_end_date);
         const style = styles.menstrualDashed;
         calendarUtils.monthAllocator(menstrualDates, STAGES.MENSTRUAL, months);
@@ -155,7 +176,7 @@ describe("monthAllocator()", () => {
 
     it('should modify the month with ovulation days style and stage', () => {
         const currentCycle = cycles[0];
-        const months = generateMonths();
+        const months = buildMonthsForYear(calendarYear);
         const ovulationDates = calendarUtils.getOvulationDates(currentCycle.ovulation_day);
         calendarUtils.monthAllocator(ovulationDates, STAGES.OVULATION, months);
         expect(months[9][currentCycle.ovulation_day]).toEqual(expect.objectContaining({
@@ -177,7 +198,7 @@ describe("parseMonthForCalendar()", () => {
     it('should accept an object of objects', () => {
         const parseMonthForCalendarSpy = vi.spyOn(calendarUtils, "parseMonthForCalendar");
         const currentCycle = cycles[0];
-        const months = generateMonths();
+        const months = buildMonthsForYear(calendarYear);
         const ovulationDates = calendarUtils.getOvulationDates(currentCycle.ovulation_day);
         const style = "bg-[#07226B] text-white"
         calendarUtils.monthAllocator(ovulationDates, STAGES.OVULATION, months);
@@ -198,7 +219,7 @@ describe("parseMonthForCalendar()", () => {
 
     it('should return an array of objects', () => {
         const currentCycle = cycles[0];
-        const months = generateMonths();
+        const months = buildMonthsForYear(calendarYear);
         const ovulationDates = calendarUtils.getOvulationDates(currentCycle.ovulation_day);
         calendarUtils.monthAllocator(ovulationDates, STAGES.OVULATION, months);
 
