@@ -1,7 +1,7 @@
 import {vi, describe, expect, it, test} from "vitest";
 import {generateMonths, STAGES} from "@/app/_lib/calendar-utils";
 import * as calendarUtils from "./calendar-utils";
-import {format, formatDistance} from "date-fns";
+import {differenceInCalendarDays, format} from "date-fns";
 
 
 const cycles = [
@@ -56,9 +56,10 @@ describe("getMenstrualDates()", () => {
     it('should return a suitable range of dates from the start date to end date', () => {
         const currentCycle = cycles[0];
         const menstrualDates = calendarUtils.getMenstrualDates(currentCycle.start_date, currentCycle.bleed_end_date, null, null);
-        const distance = formatDistance(new Date(currentCycle.start_date), new Date(currentCycle.bleed_end_date), {
-            unit: 'days'
-        });
+        const diff = differenceInCalendarDays(
+            new Date(currentCycle.bleed_end_date),
+            new Date(currentCycle.start_date)
+        );
 
         expect(menstrualDates[0]).toEqual(expect.objectContaining({
             date: expect.stringMatching(/\d{4}-\d{2}-\d{2}/g),
@@ -68,7 +69,7 @@ describe("getMenstrualDates()", () => {
             date: expect.stringMatching(/\d{4}-\d{2}-\d{2}/g),
             style: expect.stringContaining(styles.menstrualDashed)
         }))
-        expect(menstrualDates.length).toBe(Number(distance.match(/\d/)[0]) + 1);
+        expect(menstrualDates.length).toBe(diff + 1);
         expect(menstrualDates.length).toBeLessThanOrEqual(7);
     });
 })
