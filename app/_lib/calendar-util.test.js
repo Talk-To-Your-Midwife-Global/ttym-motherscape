@@ -1,7 +1,7 @@
-import {vi, describe, expect, it, test} from "vitest";
+import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
 import {generateMonths, STAGES} from "@/app/_lib/calendar-utils";
 import * as calendarUtils from "./calendar-utils";
-import {format, formatDistance} from "date-fns";
+import {eachDayOfInterval, endOfMonth, format, formatDistance} from "date-fns";
 
 
 const cycles = [
@@ -30,11 +30,43 @@ const styles = {
 
 }
 
+const fixedDate = new Date("2025-10-15T12:00:00Z");
+const calendarYear = 2025;
+
+const buildMonthsForYear = (year) => {
+    const months = Object.fromEntries(Array.from({length: 12}, (_, index) => [index, {}]));
+
+    for (let month = 0; month < 12; month += 1) {
+        const currentDate = new Date(year, month, 1);
+        const endDate = endOfMonth(currentDate);
+        const interval = eachDayOfInterval({start: currentDate, end: endDate});
+
+        for (const day of interval) {
+            const formattedDay = format(day, "yyyy-MM-dd");
+            months[month][formattedDay] = {
+                style: "",
+                stage: ""
+            };
+        }
+    }
+
+    return months;
+};
+
 describe("generateMonths()", () => {
+    beforeEach(() => {
+        vi.useFakeTimers();
+        vi.setSystemTime(fixedDate);
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
     it('should return an object of date key paired with an object having style and stage props', () => {
         const generatedMonths = generateMonths();
         const today = new Date();
-        const formattedToday = format(new Date(), 'yyyy-MM-dd');
+        const formattedToday = format(fixedDate, 'yyyy-MM-dd');
         const currentMonth = today.getMonth();
         expect(generatedMonths[currentMonth]).toBeDefined();
         expect(generatedMonths[currentMonth]).toEqual(expect.objectContaining(
@@ -126,7 +158,7 @@ describe("getSafeDays()", () => {
 describe("monthAllocator()", () => {
     it('should modify the month with menstrual days style and stage', () => {
         const currentCycle = cycles[0];
-        const months = generateMonths();
+        const months = buildMonthsForYear(calendarYear);
         const menstrualDates = calendarUtils.getMenstrualDates(currentCycle.start_date, currentCycle.bleed_end_date);
         const style = styles.menstrualDashed;
         calendarUtils.monthAllocator(menstrualDates, STAGES.MENSTRUAL, months);
@@ -143,7 +175,7 @@ describe("monthAllocator()", () => {
 
     it('should modify the month with ovulation days style and stage', () => {
         const currentCycle = cycles[0];
-        const months = generateMonths();
+        const months = buildMonthsForYear(calendarYear);
         const ovulationDates = calendarUtils.getOvulationDates(currentCycle.ovulation_day);
         const style = "bg-[#DEE4F5] text-black"
         calendarUtils.monthAllocator(ovulationDates, STAGES.OVULATION, months);
@@ -166,7 +198,7 @@ describe("parseMonthForCalendar()", () => {
     it('should accept an object of objects', () => {
         const parseMonthForCalendarSpy = vi.spyOn(calendarUtils, "parseMonthForCalendar");
         const currentCycle = cycles[0];
-        const months = generateMonths();
+        const months = buildMonthsForYear(calendarYear);
         const ovulationDates = calendarUtils.getOvulationDates(currentCycle.ovulation_day);
         const style = "bg-[#07226B] text-white"
         calendarUtils.monthAllocator(ovulationDates, STAGES.OVULATION, months);
@@ -187,7 +219,7 @@ describe("parseMonthForCalendar()", () => {
 
     it('should return an array of objects', () => {
         const currentCycle = cycles[0];
-        const months = generateMonths();
+        const months = buildMonthsForYear(calendarYear);
         const ovulationDates = calendarUtils.getOvulationDates(currentCycle.ovulation_day);
         const style = "bg-[#DEE4F5] text-black"
         calendarUtils.monthAllocator(ovulationDates, STAGES.OVULATION, months);
