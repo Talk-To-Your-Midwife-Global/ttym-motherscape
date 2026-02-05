@@ -278,7 +278,7 @@ export function EditCycleFlowNextPeriodStart({nextAction, prevAction, saveProgre
 
   return (
     <section className={"flex flex-col items-center justify-center gap-5 m-3 bg-white"}>
-      <EditCycleHeader currentStep={4} title={'🔁 When did your next period start?'}
+      <EditCycleHeader currentStep={3} title={'🔁 When did your next period start?'}
                        subTitle={"We use this to know when this cycle ended."}/>
       <DayPicker
         animate
