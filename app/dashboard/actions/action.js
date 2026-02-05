@@ -5,6 +5,51 @@ import {formatDate} from "@/app/_lib/functions";
 import {getLocalCookies} from "@/app/_lib/getCookies";
 import {Log} from "@/app/_lib/utils";
 import {decrypt} from "@/app/_actions/auth";
+import posthog from "posthog-js";
+
+export async function updateUserFlowInfoAction(id, reqBody) {
+    if (!id) {
+        return {
+            success: false,
+            msg: "No ID"
+        }
+    }
+
+    const {access_token: encryptedAccessToken} = await getLocalCookies(['access_token']);
+    let accessToken = null;
+
+    if (encryptedAccessToken) {
+        try {
+            accessToken = await decrypt(encryptedAccessToken);
+        } catch(err) {
+            posthog.captureException('dashboard/actions updateUserFlowInfo: Failed to decrypt token');
+        }
+    }
+
+    const response = await fetch(`${PUBLICHOSTNAME}/menstrual/cycles/${id}/` , {
+        method: "PUT",
+        body: JSON.stringify(reqBody),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + accessToken
+        }
+    })
+    if (!response.ok) {
+        Log("Dashboard/actions/action.js; startCycle", {response});
+        console.log({response});
+        return {
+            success: false,
+        }
+    }
+
+    const data = await response.json();
+
+    Log("Dashboard/actions/action.js; updateUserFlowInfo");
+    console.log({updateUserFlowInfo: data});
+    return {
+        success: true,
+    }
+}
 
 
 export async function startCycle() {

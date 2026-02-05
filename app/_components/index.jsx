@@ -106,10 +106,10 @@ export function IconButton({
                            }) {
     const [pending, setPending] = useState(false);
 
-    const handleClick = () => {
+    const handleClick = async () => {
         setPending(true)
         if (onClick) {
-            onClick();
+            await onClick();
             setPending(false);
         }
         // reset pending control to the isPending attribute
@@ -157,15 +157,16 @@ export function IconContinuousButton({
                                          type = "link",
                                          href = " ",
                                          disabled = false,
-                                         onClick = undefined,
+                                         onClickAction = undefined,
                                          loadingText = 'loading',
                                          customStyles = "",
                                      }) {
     const [pending, setPending] = useState(false);
-    const handleClick = () => {
+    const handleClick = async () => {
         setPending(true)
-        if (onClick) {
-            onClick();
+        if (onClickAction) {
+            await onClickAction();
+            setPending(false)
         }
         Log("index.jsx IconContinuousButton", {pending})
     }

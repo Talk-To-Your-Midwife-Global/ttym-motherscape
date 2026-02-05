@@ -1,5 +1,4 @@
 "use client"
-
 import {createContext, useContext, useState} from "react";
 import {parseMonthForCalendar} from "@/app/_lib/calendar-utils";
 import {addMonths, getMonth, subMonths} from "date-fns";
@@ -20,6 +19,7 @@ export function CalendarViewContextProvider({children}) {
     const [showMenstrualQuestion, setShowMenstrualQuestion] = useState(false);
     const [showUnConfirmMenstrualDateQuestion, setShowUnConfirmMenstrualDateQuestion] = useState(false);
     const [showConfirmPredictedMenstrualDateQuestion, setShowConfirmPredictedMenstrualDateQuestion] = useState(false);
+    const [showEditCycleFlow, setShowEditCycleFlow] = useState(false);
 
     const handleMonthSetting = (data, month = undefined) => {
         month = month || getMonth(new Date());
@@ -59,7 +59,8 @@ export function CalendarViewContextProvider({children}) {
         handleMonthSetting, moveCalendarBackwards, moveCalendarForwards,
         showMenstrualQuestion, setShowMenstrualQuestion,
         showUnConfirmMenstrualDateQuestion, setShowUnConfirmMenstrualDateQuestion,
-        showConfirmPredictedMenstrualDateQuestion, setShowConfirmPredictedMenstrualDateQuestion
+        showConfirmPredictedMenstrualDateQuestion, setShowConfirmPredictedMenstrualDateQuestion,
+        showEditCycleFlow, setShowEditCycleFlow
     }
 
     return <CalendarViewContext.Provider value={values}>

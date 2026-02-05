@@ -40,6 +40,7 @@ export function generateMonths() {
             start: currentDate,
             end: endDate
         })
+        // console.log(interval)
         // loop through each day and assign required object
         for (const day of interval) {
             let betterLookingDay = format(day, "yyyy-MM-dd")
@@ -49,6 +50,7 @@ export function generateMonths() {
             }
         }
     }
+    // console.log(months);
     return months
 }
 
@@ -120,6 +122,7 @@ function styleDates(dates, style, extraOptions = null) {
 
 export function enrichMonthsObject(cycles = [], periodLength = null) {
     const months = generateMonths();
+    console.log({cycles})
     for (const cycle of cycles) {
         const menstrualDates = getMenstrualDates(cycle.start_date, cycle.bleed_end_date, periodLength, cycle.id);
         const ovulationDates = getOvulationDates(cycle.ovulation_day);
