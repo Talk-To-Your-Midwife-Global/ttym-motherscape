@@ -14,7 +14,6 @@ export function StartCycleFlowSuccess({ closeAction }) {
       <div className={"flex items-center justify-center my-5"}>
         <IconContinuousButton text={"Done"} variant={"primary"} onClickAction={closeAction} />
       </div>
-
     </section>
   );
 }

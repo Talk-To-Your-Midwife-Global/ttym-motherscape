@@ -16,7 +16,6 @@ export function CombinedCalendar({ accessToken }) {
   const { data, error: cycleError, isLoading: cycleLoading } = useCycleInfo(accessToken);
   const {
     viewLarge,
-    setViewLarge,
     setViewingDate,
     logs,
     setLogs,

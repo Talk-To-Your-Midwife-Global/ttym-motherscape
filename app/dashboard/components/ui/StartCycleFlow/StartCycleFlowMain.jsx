@@ -1,14 +1,8 @@
-import { Log } from "@/app/_lib/utils";
-import { useEffect, useState, useTransition } from "react";
-import { format } from "date-fns";
-import { startCycle, updateUserFlowInfoAction } from "@/app/dashboard/actions/action";
+import { useState, useTransition } from "react";
+import { startCycle } from "@/app/dashboard/actions/action";
 import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  EditCycleFlowBleedEnd,
-  EditCycleFlowNextPeriodStart,
-  EditCycleFlowPeriodStart, EditCycleFlowSuccess, EditCycleFlowSummary, slideVariants
-} from "@/app/dashboard/components/ui/EditCycleFlow";
+import { slideVariants } from "@/app/dashboard/components/ui/EditCycleFlow";
 import { StartCycleFlowContainer } from "@/app/dashboard/components/ui/StartCycleFlow/StartCycleFlowContainer";
 import { StartCycleFlowIntro } from "@/app/dashboard/components/ui/StartCycleFlow/StartCycleFlowIntro";
 import { StartCycleFlowPeriodStart } from "@/app/dashboard/components/ui/StartCycleFlow/StartCycleFlowPeriodStart";
@@ -21,10 +15,7 @@ import { StartCycleFlowNothingToday } from "@/app/dashboard/components/ui/StartC
 
 
 export function StartCycleFlowMain({ shouldOpen, setShouldOpen, id, info, som }) {
-  const currentCycle = info.filter(cycle => cycle.id === id)[0];
-
   const [isPending, startTransition] = useTransition();
-
   const [step, setStep] = useState(1);
   const [startCycleState, setStartCycleState] = useState({
     periodStart: new Date(),

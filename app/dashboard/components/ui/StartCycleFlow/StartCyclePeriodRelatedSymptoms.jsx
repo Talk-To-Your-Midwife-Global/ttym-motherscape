@@ -40,13 +40,11 @@ export function StartCyclePeriodRelatedSymptoms({ nextAction, saveProgressAction
           </input>;
         })}
       </section>
-
       <section>
         <IconContinuousButton text={"Save today's log"}
                               onClickAction={handleClick}
         />
       </section>
-
     </section>
   );
 }

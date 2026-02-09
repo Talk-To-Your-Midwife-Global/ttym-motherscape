@@ -1,6 +1,6 @@
 "use client";
 import { Log } from "@/app/_lib/utils";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { AnimatePresence, view, motion } from "framer-motion";
 import { IconButton, IconContinuousButton } from "@/app/_components";
 import { DayPicker } from "react-day-picker";
@@ -29,7 +29,7 @@ export const slideVariants = {
 export function EditCycleFlowMain({ shouldOpen, setShouldOpen, id, info, som }) {
   const currentCycle = info.filter(cycle => cycle.id === id)[0];
   Log("periodStart", { id, info, currentCycle });
-  console.log({ currentCycle, id });
+
   const [isPending, startTransition] = useTransition();
 
   const [step, setStep] = useState(1);
@@ -39,7 +39,6 @@ export function EditCycleFlowMain({ shouldOpen, setShouldOpen, id, info, som }) 
       from: new Date(currentCycle.start_date),
       to: new Date(currentCycle.bleed_end_date)
     },
-
     nextPeriodStart: new Date(currentCycle.end_date),
     id: id
   });
@@ -84,7 +83,6 @@ export function EditCycleFlowMain({ shouldOpen, setShouldOpen, id, info, som }) 
         paused: false
       };
 
-      console.log({ reqBody });
       const updateUserFlowInfo = await updateUserFlowInfoAction(id, reqBody);
 
       if (updateUserFlowInfo.success) {
@@ -95,9 +93,6 @@ export function EditCycleFlowMain({ shouldOpen, setShouldOpen, id, info, som }) 
 
     });
   };
-  useEffect(() => {
-    console.log({ som, info });
-  }, []);
 
   const views = {
     "1": <EditCycleFlowIntro nextAction={handleNext} closeAction={handleClose} state={editCycleState} />,
