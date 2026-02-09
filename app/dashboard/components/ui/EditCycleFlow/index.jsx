@@ -34,7 +34,7 @@ export function EditCycleFlowMain({ shouldOpen, setShouldOpen, id, info, som }) 
 
   const [step, setStep] = useState(1);
   const [editCycleState, setEditCycleState] = useState({
-    periodStart: new Date(currentCycle.start_date),
+    periodStart: currentCycle ? new Date(currentCycle.start_date) : new Date(),
     periodEnd: {
       from: new Date(currentCycle.start_date),
       to: new Date(currentCycle.bleed_end_date)
@@ -210,7 +210,7 @@ export function EditCycleFlowPeriodStart({ nextAction, closeAction, saveProgress
         endMonth={new Date(new Date().getFullYear(), new Date().getMonth())}
         selected={state.periodStart}
         onSelect={handleDateChange}
-        defaultMonth={new Date(new Date().getFullYear(), new Date(state.periodStart).getMonth() - 1)}
+        defaultMonth={new Date(new Date().getFullYear(), new Date(state.periodStart).getMonth())}
         classNames={{
           today: `border-2 text-black rounded-full`, // Add a border to today's date
           selected: `border-pink text-white bg-[#E82A73] rounded-full`, // Highlight the selected day
@@ -243,7 +243,7 @@ export function EditCycleFlowBleedEnd({ nextAction, prevAction, saveProgressActi
         mode="range"
         min={2}
         max={8}
-        defaultMonth={new Date(new Date().getFullYear(), new Date(state.periodStart).getMonth() - 1)}
+        defaultMonth={new Date(new Date().getFullYear(), new Date(state.periodStart).getMonth())}
         startMonth={new Date(new Date().getFullYear(), new Date().getMonth() - 1)}
         endMonth={new Date(new Date().getFullYear(), new Date().getMonth())}
         selected={state.periodEnd}
@@ -287,7 +287,6 @@ export function EditCycleFlowNextPeriodStart({ nextAction, prevAction, saveProgr
         endMonth={new Date(new Date().getFullYear(), new Date().getMonth())}
         selected={state.nextPeriodStart}
         onSelect={handleDateChange}
-        // timeZone="UTC"
         classNames={{
           today: `border-2 text-black rounded-full`, // Add a border to today's date
           selected: `border-pink text-white bg-[#E82A73] rounded-full`, // Highlight the selected day
