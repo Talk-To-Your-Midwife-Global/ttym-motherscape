@@ -29,7 +29,7 @@ export function StartCycleFlowPeriodStart({ nextAction, closeAction, saveProgres
         endMonth={new Date(new Date().getFullYear(), new Date().getMonth())}
         selected={state.periodStart}
         onSelect={handleDateChange}
-        defaultMonth={new Date(new Date().getFullYear(), new Date(state.periodStart).getMonth() - 1)}
+        defaultMonth={new Date(new Date().getFullYear(), new Date(state.periodStart).getMonth())}
         classNames={{
           today: `border-2 text-black rounded-full`, // Add a border to today's date
           selected: `border-pink text-white bg-[#E82A73] rounded-full`, // Highlight the selected day
