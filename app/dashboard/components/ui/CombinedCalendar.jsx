@@ -1,184 +1,185 @@
-"use client"
-import {Calendar, ShortCalendar} from "@/app/dashboard/components";
-import {useCalendarView} from "@/app/contexts/showCalendarContext";
-import {useCycleInfo, useLogsInfo} from "@/app/dashboard/lib/dataFetching";
-import {UserSymptomsAndLogViewer} from "@/app/dashboard/components/ui/UserSymptpmsAndLogViewer";
-import {Log} from "@/app/_lib/utils";
-import { isAfter, startOfMonth} from "date-fns";
-import {formatDate, necessaryDataForMenstrualUI, parseLogs} from "@/app/_lib/functions";
-import {useEffect, useState } from "react";
-import {useCyclesForTheYear} from "@/app/_lib/calendar-hooks";
-import {enrichMonthsObject} from "@/app/_lib/calendar-utils";
+"use client";
+import { Calendar, ShortCalendar } from "@/app/dashboard/components";
+import { useCalendarView } from "@/app/contexts/showCalendarContext";
+import { useCycleInfo, useLogsInfo } from "@/app/dashboard/lib/dataFetching";
+import { UserSymptomsAndLogViewer } from "@/app/dashboard/components/ui/UserSymptpmsAndLogViewer";
+import { Log } from "@/app/_lib/utils";
+import { isAfter, startOfMonth } from "date-fns";
+import { formatDate, necessaryDataForMenstrualUI, parseLogs } from "@/app/_lib/functions";
+import { useEffect, useState } from "react";
+import { useCyclesForTheYear } from "@/app/_lib/calendar-hooks";
+import { enrichMonthsObject } from "@/app/_lib/calendar-utils";
 import { EditCycleFlowMain } from "@/app/dashboard/components/ui/EditCycleFlow";
+import { StartCycleFlowMain } from "@/app/dashboard/components/ui/StartCycleFlow/StartCycleFlowMain";
 
-export function CombinedCalendar({accessToken}) {
-    const {data, error: cycleError, isLoading: cycleLoading} = useCycleInfo(accessToken);
-    const {
-        viewLarge,
-        setViewLarge,
-        setViewingDate,
-        logs,
-        setLogs,
-        viewLogs,
-        setViewLogs,
-        setIsUsingPredictedCycle,
-        setMonths,
-        currentViewingMonth,
-        currentViewingMonthDates, handleMonthSetting,
-        moveCalendarBackwards, moveCalendarForwards,
-        showMenstrualQuestion, setShowMenstrualQuestion,
-        showUnConfirmMenstrualDateQuestion, setShowUnConfirmMenstrualDateQuestion,
-        setShowConfirmPredictedMenstrualDateQuestion,
-        showEditCycleFlow, setShowEditCycleFlow,
-    } = useCalendarView();
-    const today = new Date();
-    const dateRange = `${formatDate(startOfMonth(today))}&${formatDate(today)}`;
-    const {logData} = useLogsInfo(accessToken, dateRange);
-    const generalCycleInfo = necessaryDataForMenstrualUI(data);
-    const {cyclesForYear, cyclesForYearError} = useCyclesForTheYear(accessToken);
-    const cyclesData = enrichMonthsObject(cyclesForYear || [], generalCycleInfo?.periodLength);
-    const [id, setId] = useState(undefined);
-    Log({data});
+export function CombinedCalendar({ accessToken }) {
+  const { data, error: cycleError, isLoading: cycleLoading } = useCycleInfo(accessToken);
+  const {
+    viewLarge,
+    setViewLarge,
+    setViewingDate,
+    logs,
+    setLogs,
+    viewLogs,
+    setViewLogs,
+    setIsUsingPredictedCycle,
+    setMonths,
+    currentViewingMonth,
+    currentViewingMonthDates, handleMonthSetting,
+    moveCalendarBackwards, moveCalendarForwards,
+    showMenstrualQuestion, setShowMenstrualQuestion,
+    showUnConfirmMenstrualDateQuestion,
+    showEditCycleFlow, setShowEditCycleFlow,
+    showStartCycleFlow, setShowStartCycleFlow
+  } = useCalendarView();
+  const today = new Date();
+  const dateRange = `${formatDate(startOfMonth(today))}&${formatDate(today)}`;
+  const { logData } = useLogsInfo(accessToken, dateRange);
+  const generalCycleInfo = necessaryDataForMenstrualUI(data);
+  const { cyclesForYear, cyclesForYearError } = useCyclesForTheYear(accessToken);
+  const cyclesData = enrichMonthsObject(cyclesForYear || [], generalCycleInfo?.periodLength);
+  const [id, setId] = useState(undefined);
+  const [cycleCondition, setCycleCondition] = useState(undefined);
 
-    const handleDateClick = (calendarDate) => {
-        console.log({calendarDate});
-        const currentDay = new Date(calendarDate.date);
-        setViewingDate({date: currentDay});
-        setId(calendarDate.id);
+  const handleDateClick = (calendarDate) => {
+    console.log({ calendarDate });
+    const currentDay = new Date(calendarDate.date);
+    setViewingDate({ date: currentDay });
+    setId(calendarDate.id);
 
-        const isFutureDate = isAfter(currentDay, today);
-
-        if (isFutureDate) {
-            // TODO: clear all conditional user flows;
-            console.log('clear all conditional user flow')
-            return;
-        }
-
-        if (!isFutureDate) {
-            const isRegisteredCycle = !!calendarDate.id;
-            if (isRegisteredCycle) {
-                console.log("showing edit cycle flow")
-                setShowEditCycleFlow(true);
-            } else {
-                console.log('showing start cycle user flow')
-                // TODO: show start cycle user flow
-            }
-        }
-        // const currentDay = new Date(date.date);
-        // setViewingDate(date);
-        // const dayIsAConfirmedMenstrualDate = date.id && date.stage === STAGES.MENSTRUAL;
-        // const dayIsAMenstrualDateInCurrentCycle = dayIsAConfirmedMenstrualDate && isWithinInterval(currentDay, {
-        //     start: data.current_cycle.start_date,
-        //     end: data.current_cycle.end_date
-        // });
-        // const dayIsNotMenstrual = date.stage !== STAGES.MENSTRUAL || !(date.hasOwnProperty('stage'));
-        // const dayIsAMenstrualDateInPredictedCycle = !date.id && date.stage === STAGES.MENSTRUAL;
-        //
-        // if (dayIsNotMenstrual) {
-        //     setShowUnConfirmMenstrualDateQuestion(false);
-        //     setShowMenstrualQuestion(false);
-        // }
-        // if (dayIsAMenstrualDateInCurrentCycle) {
-        //     if (isPast(currentDay)) {
-        //         setShowUnConfirmMenstrualDateQuestion(true);
-        //         setShowMenstrualQuestion(false);
-        //     } else {
-        //         setShowMenstrualQuestion(false);
-        //         setShowUnConfirmMenstrualDateQuestion(false);
-        //     }
-        // } else if (dayIsAMenstrualDateInPredictedCycle) {
-        //     setShowMenstrualQuestion(true);
-        //     setShowUnConfirmMenstrualDateQuestion(false);
-        //
-        // }
-        //
-        // setViewLogs(true)
-        // save logs in context if it is not having it already
-        if (!logs) {
-            const parsedLogs = parseLogs(logData);
-            setLogs(parsedLogs);
-        }
+    const isFutureDate = isAfter(currentDay, today);
+    if (isFutureDate) {
+      setCycleCondition(undefined);
+      return;
     }
 
-    useEffect(() => {
-        Log({cyclesForYears: cyclesData, cyclesForYear, cyclesForYearError});
-        if (generalCycleInfo) {
-            if (generalCycleInfo.cycleNull === true) {
-                setIsUsingPredictedCycle(true);
-            }
-        } else {
-            setIsUsingPredictedCycle(false);
-        }
+    if (!isFutureDate) {
+      const isRegisteredCycle = !!calendarDate.id;
+      if (isRegisteredCycle) {
+        setViewLogs(true);
+        setCycleCondition("editCycleFlow");
 
-        if (cyclesData) {
-            setMonths(cyclesData)
-            handleMonthSetting(cyclesData);
-        }
-        // determine if is in paused state or has null current_cycle
-        if (cyclesForYear) {
-            const actualRecordedCycles = cyclesForYear.filter(cycle => !!cycle.id);
-            const isInPausedState = actualRecordedCycles[actualRecordedCycles.length - 1]?.paused;
-            Log({isInPausedState, check: generalCycleInfo?.cycleNull})
-            if (isInPausedState || !data) {
-                setIsUsingPredictedCycle(true);
-            }
-        }
-        console.log('me logging cycles for year')
-    }, [cyclesForYear]);
+      } else {
+        setViewLogs(true);
+        setCycleCondition("startCycleFlow");
+      }
+    }
 
-    return (
-        <>
-            {
-                viewLarge ?
-                    <section>
-                        <Calendar
-                            currentMonth={currentViewingMonth}
-                            dateClick={handleDateClick}
-                            moveForwards={moveCalendarForwards}
-                            moveBackwards={moveCalendarBackwards}
-                            accessToken={accessToken}
-                            specialDates={currentViewingMonthDates}
-                            withFlower={true}/>
-                        <div className={'text-[#72777A] text-[10px] px-4 grid grid-cols-3 gap-2'}>
+    // save logs in context if it is not having it already
+    if (!logs) {
+      const parsedLogs = parseLogs(logData);
+      setLogs(parsedLogs);
+    }
+  };
+
+  useEffect(() => {
+    Log({ cyclesForYears: cyclesData, cyclesForYear, cyclesForYearError });
+    if (generalCycleInfo) {
+      if (generalCycleInfo.cycleNull === true) {
+        setIsUsingPredictedCycle(true);
+      }
+    } else {
+      setIsUsingPredictedCycle(false);
+    }
+
+    if (cyclesData) {
+      setMonths(cyclesData);
+      handleMonthSetting(cyclesData);
+    }
+    // determine if is in paused state or has null current_cycle
+    if (cyclesForYear) {
+      const actualRecordedCycles = cyclesForYear.filter(cycle => !!cycle.id);
+      const isInPausedState = actualRecordedCycles[actualRecordedCycles.length - 1]?.paused;
+      Log({ isInPausedState, check: generalCycleInfo?.cycleNull });
+      if (isInPausedState || !data) {
+        setIsUsingPredictedCycle(true);
+      }
+    }
+  }, [cyclesForYear]);
+
+  return (
+    <>
+      {
+        viewLarge ?
+          <section>
+            <Calendar
+              currentMonth={currentViewingMonth}
+              dateClick={handleDateClick}
+              moveForwards={moveCalendarForwards}
+              moveBackwards={moveCalendarBackwards}
+              accessToken={accessToken}
+              specialDates={currentViewingMonthDates}
+              withFlower={true} />
+            <div className={"text-[#72777A] text-[10px] px-4 grid grid-cols-3 gap-2"}>
                             <span className={`flex gap-1 w-fit`}>
                                 <div
-                                    className={'w-4 h-4 border border-dashed border-[#E82A73] rounded-full'}> </div> <span
-                                className="w-fit">Predicted Blood Flow</span>
+                                  className={"w-4 h-4 border border-dashed border-[#E82A73] rounded-full"}> </div> <span
+                              className="w-fit">Predicted Blood Flow</span>
                             </span>
-                            <span className={`flex gap-1 w-fit`}>
-                                <div className={'w-4 h-4 bg-[#F8CEDE] rounded-full'}> </div> <span
-                                className="w-fit line-clamp-2 wrap">Confirmed Blood Flow</span>
+              <span className={`flex gap-1 w-fit`}>
+                                <div className={"w-4 h-4 bg-[#F8CEDE] rounded-full"}> </div> <span
+                className="w-fit line-clamp-2 wrap">Confirmed Blood Flow</span>
                             </span>
-                            <span className={`flex gap-2`}>
-                                <div className={'w-4 h-4 bg-[#DEE4F5] rounded-full'}> </div> <span>Fertile Window</span>
+              <span className={`flex gap-2`}>
+                                <div className={"w-4 h-4 bg-[#DEE4F5] rounded-full"}> </div> <span>Fertile Window</span>
                             </span>
-                            <span className={`flex gap-2`}>
-                                <div className={'w-4 h-4 bg-[#07226B] rounded-full'}> </div> <span>Ovulation day</span>
+              <span className={`flex gap-2`}>
+                                <div className={"w-4 h-4 bg-[#07226B] rounded-full"}> </div> <span>Ovulation day</span>
                             </span>
-                            <span className={`flex gap-2`}>
-                                <div className={'w-4 h-4 bg-[#3CB9FB50] rounded-full'}> </div> <span>Safe days</span>
+              <span className={`flex gap-2`}>
+                                <div className={"w-4 h-4 bg-[#3CB9FB50] rounded-full"}> </div> <span>Safe days</span>
                             </span>
-                        </div>
-                    </section> : <ShortCalendar
-                        specialDates={currentViewingMonthDates}
-                        currentMonth={currentViewingMonth}
-                        dateClick={handleDateClick}
-                        moveForwards={moveCalendarForwards}
-                        moveBackwards={moveCalendarBackwards}
-                        accessToken={accessToken} withFlower={true}/>
-            }
-            <UserSymptomsAndLogViewer accessToken={accessToken} open={viewLogs} setOpen={setViewLogs}
-                                      showMenstrualQuestion={showMenstrualQuestion}
-                                      showUnConfirmMenstrualDateQuestion={showUnConfirmMenstrualDateQuestion}
-                                      cycleInfo={generalCycleInfo}/>
-            {
-              showEditCycleFlow &&
-              <EditCycleFlowMain shouldOpen={showEditCycleFlow} setShouldOpen={setShowEditCycleFlow} id={id} som={currentViewingMonthDates}
-                                 info={cyclesForYear || []}
-              />
+            </div>
+          </section> : <ShortCalendar
+            specialDates={currentViewingMonthDates}
+            currentMonth={currentViewingMonth}
+            dateClick={handleDateClick}
+            moveForwards={moveCalendarForwards}
+            moveBackwards={moveCalendarBackwards}
+            accessToken={accessToken} withFlower={true} />
+      }
+      <UserSymptomsAndLogViewer
+        accessToken={accessToken} open={viewLogs}
+        setOpen={setViewLogs}
+        showMenstrualQuestion={showMenstrualQuestion}
+        showUnConfirmMenstrualDateQuestion={showUnConfirmMenstrualDateQuestion}
+        cycleInfo={generalCycleInfo}
+      >
+        {(cycleCondition && cycleCondition === "editCycleFlow") ? (
+          <div className={"text-pink mt-2 flex items-center gap-2 "}>
+            <span tabIndex={0} onClick={() => setShowEditCycleFlow(true)}
+                  className={"text-sm"}>Edit cycle information</span>
+            <span className={"iconify mdi--arrow-top-right-bold-outline "}></span>
+          </div>
+        ) : null}
 
-            }
-        </>
+        {(cycleCondition && cycleCondition === "startCycleFlow") ? (
+          <div className={"text-yellow-600 mt-2 flex items-center gap-2 "}>
+            <span tabIndex={0} onClick={() => setShowStartCycleFlow(true)}
+                  className={"text-sm"}>Has your cycle started</span>
+            <span className={"iconify mdi--arrow-top-right-bold-outline "}></span>
+          </div>
+        ) : null}
 
-    )
+      </UserSymptomsAndLogViewer>
+      {
+        showEditCycleFlow &&
+        <EditCycleFlowMain shouldOpen={showEditCycleFlow}
+                           setShouldOpen={setShowEditCycleFlow}
+                           id={id}
+                           info={cyclesForYear || []}
+        />
+
+      }
+      {
+        showStartCycleFlow &&
+        <StartCycleFlowMain shouldOpen={showStartCycleFlow}
+                            setShouldOpen={setShowStartCycleFlow}
+                            id={id}
+                            info={cyclesForYear || []}
+        />
+      }
+    </>
+
+  );
 }
