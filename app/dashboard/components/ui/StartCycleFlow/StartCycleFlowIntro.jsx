@@ -1,7 +1,7 @@
 "use client";
 import { IconContinuousButton } from "@/app/_components";
 
-export function StartCycleFlowIntro({ nextAction, closeAction }) {
+export function StartCycleFlowIntro({ nextAction, nothingToday }) {
   return (
     <section className="p-4 bg-white rounded-t-[10px] flex-1 text-black">
       <header className={"flex flex-col justify-center items-center text-center"}>
@@ -16,7 +16,7 @@ export function StartCycleFlowIntro({ nextAction, closeAction }) {
         <IconContinuousButton text={"🌿 No, Not yet"}
                               variant={"secondary"}
                               customStyles={"text-sm text-black border-[#D9D9D9]"}
-                              onClickAction={closeAction} />
+                              onClickAction={nothingToday} />
       </div>
     </section>
   );

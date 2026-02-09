@@ -12,8 +12,8 @@ export function StartCycleFlowContainer({ children, shouldOpen, setShouldOpen, s
           className={"bg-white flex flex-col  mt-24 h-fit fixed bottom-0 left-0 right-0 outline-none"}>
           <Drawer.Title
             className={"w-full h-[200px] rounded-t-[10px] relative overflow-hidden bg-green-radial-bg bg-cover flex flex-col"}>
-            {step < 6 && <section id="reading"
-                                  className="border border-transparent pt-12 relative top-[70px] ">
+            {(step < 6 || step === "end") && <section id="reading"
+                                                      className="border border-transparent pt-12 relative top-[70px] ">
               <div className="relative mx-auto md:container h-72">
                 <div
                   className="bg-white rounded-[50%] w-[686px] h-full absolute top-0 left-1/2 -translate-x-1/2"></div>

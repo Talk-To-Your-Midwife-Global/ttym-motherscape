@@ -68,7 +68,7 @@ export function StartCycleFlowMain({ shouldOpen, setShouldOpen, id, info, som })
     "1": <StartCycleFlowIntro
       nextAction={handleNext}
       closeAction={handleClose}
-      nothinhgToday={handleNothingToday}
+      nothingToday={handleNothingToday}
       state={startCycleState} />,
 
     "2": <StartCycleFlowPeriodStart
