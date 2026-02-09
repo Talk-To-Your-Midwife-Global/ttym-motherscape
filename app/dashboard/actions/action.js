@@ -26,30 +26,31 @@ export async function updateUserFlowInfoAction(id, reqBody) {
       posthog.captureException("dashboard/actions updateUserFlowInfo: Failed to decrypt token");
     }
   }
-
-  const response = await fetch(`${PUBLICHOSTNAME}/menstrual/cycles/${id}/`, {
-    method: "PUT",
-    body: JSON.stringify(reqBody),
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + accessToken
+  try {
+    const response = await fetch(`${PUBLICHOSTNAME}/menstrual/cycles/${id}/`, {
+      method: "PUT",
+      body: JSON.stringify(reqBody),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + accessToken
+      }
+    });
+    if (!response.ok) {
+      return {
+        success: false
+      };
     }
-  });
-  if (!response.ok) {
-    Log("Dashboard/actions/action.js; startCycle", { response });
-    console.log({ response });
+
+    Log("Dashboard/actions/action.js; updateUserFlowInfo");
+    return {
+      success: true
+    };
+  } catch (error) {
+    posthog.captureException(error);
     return {
       success: false
     };
   }
-
-  const data = await response.json();
-
-  Log("Dashboard/actions/action.js; updateUserFlowInfo");
-  console.log({ updateUserFlowInfo: data });
-  return {
-    success: true
-  };
 }
 
 
@@ -65,37 +66,36 @@ export async function startCycle(date) {
     }
   }
   Log("Dashboard/actions/action.js; startCycle", { access_token });
-
-  const response = await fetch(`${PUBLICHOSTNAME}/menstrual/cycles/start/`, {
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${access_token}`
-    },
-    method: "POST",
-    body: JSON.stringify({
-      start_date: day
-    })
-  });
-
-  const data = await response.json();
-  if (!response.ok) {
-    Log("Dashboard/actions/action.js; startCycle", { response });
-    // console.log({ response });
-    // console.log({ data });
+  try {
+    const response = await fetch(`${PUBLICHOSTNAME}/menstrual/cycles/start/`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${access_token}`
+      },
+      method: "POST",
+      body: JSON.stringify({
+        start_date: day
+      })
+    });
+    if (!response.ok) {
+      Log("Dashboard/actions/action.js; startCycle", { response });
+      return {
+        success: false
+      };
+    }
+    const data = await response.json();
+    Log("Dashboard/actions/action.js; startCycle", { data });
+    if (data) {
+      return {
+        success: true
+      };
+    }
+  } catch (e) {
+    posthog.captureException(e);
     return {
       success: false
     };
   }
-
-
-  Log("Dashboard/actions/action.js; startCycle", { data });
-  if (data) {
-    return {
-      success: true
-    };
-
-  }
-
 }
 
 
