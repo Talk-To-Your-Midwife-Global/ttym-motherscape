@@ -34,7 +34,7 @@ export function EditCycleFlowMain({ shouldOpen, setShouldOpen, id, info, som }) 
 
   const [step, setStep] = useState(1);
   const [editCycleState, setEditCycleState] = useState({
-    periodStart: currentCycle ? new Date(currentCycle.start_date) : new Date(),
+    periodStart: currentCycle?.start_date ? new Date(currentCycle.start_date) : new Date(),
     periodEnd: {
       from: new Date(currentCycle.start_date),
       to: new Date(currentCycle.bleed_end_date)
