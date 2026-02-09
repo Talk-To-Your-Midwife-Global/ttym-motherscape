@@ -77,10 +77,10 @@ export async function startCycle(date) {
     })
   });
 
+  const data = await response.json();
   if (!response.ok) {
     Log("Dashboard/actions/action.js; startCycle", { response });
     // console.log({ response });
-    const data = await response.json();
     // console.log({ data });
     return {
       success: false

@@ -23,7 +23,7 @@ export async function middleware(request) {
     try {
       token = await decrypt(encryptedToken);
     } catch (e) {
-      posthog.captureException(`middleware decryption failed ${e}`);
+      // do something
     }
   }
 
