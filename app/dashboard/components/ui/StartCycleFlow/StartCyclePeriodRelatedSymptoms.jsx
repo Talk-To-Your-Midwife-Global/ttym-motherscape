@@ -14,12 +14,11 @@ export function StartCyclePeriodRelatedSymptoms({ nextAction, saveProgressAction
         ? feelingState?.symptoms.filter((i) => i !== item)
         : [...feelingState.symptoms, item]
     });
+    saveProgressAction({ symptoms: feelingState });
   };
 
   const handleClick = () => {
-    saveProgressAction({ symptoms: feelingState });
     submitAction();
-    nextAction();
   };
 
   return (

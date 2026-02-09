@@ -79,15 +79,15 @@ export async function startCycle(date) {
 
   if (!response.ok) {
     Log("Dashboard/actions/action.js; startCycle", { response });
-    console.log({ response });
+    // console.log({ response });
+    const data = await response.json();
+    // console.log({ data });
     return {
       success: false
     };
   }
 
 
-  const data = await response.json();
-  console.log({ data });
   Log("Dashboard/actions/action.js; startCycle", { data });
   if (data) {
     return {
