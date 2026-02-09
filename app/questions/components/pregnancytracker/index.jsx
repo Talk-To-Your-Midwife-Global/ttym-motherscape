@@ -57,7 +57,7 @@ export function PregnancyQuestionParent({question, updateUser}) {
             setTimeout(() => router.push(`/questions/${next}`), 200)
         } else {
             const result = updateUser(JSON.parse(localStorage.getItem("answers"))).then(res => {
-                console.log(res);
+                Log(res);
                 if (res.success === true) {
                     setTimeout(() => router.push(`/dashboard`), 200)
                 } else {
